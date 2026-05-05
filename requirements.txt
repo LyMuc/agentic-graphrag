@@ -1,0 +1,10 @@
+langchain-groq
+langchain
+neo4j
+PyMuPDF
+pydantic
+python-dotenv
+chainlit
+SQLAlchemy
+asyncpg
+psycopg2-binary
