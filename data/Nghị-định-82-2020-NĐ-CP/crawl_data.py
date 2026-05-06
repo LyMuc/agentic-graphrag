@@ -4,7 +4,7 @@ from neo4j import GraphDatabase
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
-from config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
+from adapter.config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
 
 class NghiDinhGraphBuilder:
     def __init__(self, uri, user, password):

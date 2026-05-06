@@ -40,7 +40,7 @@ Thay vì mô hình MVC thuần, hệ thống áp dụng Layered theo các lớp 
      - Domain Retrievers: thư mục `retrievers/`
    - Nhiệm vụ: hiểu ý định pháp lý, chọn công cụ phù hợp, tạo truy vấn và lấy đúng ngữ cảnh pháp lý.
 
-4. **Data Access & Infrastructure Layer (Dữ liệu - hạ tầng)**
+4. **Data Access & adapter Layer (Dữ liệu - hạ tầng)**
    - Thành phần:
      - Kết nối Neo4j + LLM: `config.py`
      - Chainlit SQLAlchemy Data Layer (PostgreSQL): `data_layer.py`
