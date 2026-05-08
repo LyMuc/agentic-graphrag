@@ -31,9 +31,9 @@ async def ket_hon_trai_phap_luat(query: str):
     prompt_extract = """
     Bạn là chuyên gia xác định căn cứ pháp lý. Đọc câu hỏi của người dùng và chọn ĐÚNG các Điều luật cần thiết.
     Chỉ được phép chọn từ danh sách sau:
-    - "Dieu_10": Người có quyền yêu cầu hủy kết hôn trái pháp luật.
-    - "Dieu_11": Xử lý việc kết hôn trái pháp luật
-    - "Dieu_12": Hậu quả pháp lý của việc hủy kết hôn trái pháp luật
+    - "Luat_HNGD_2014_Dieu_10": Người có quyền yêu cầu hủy kết hôn trái pháp luật.
+    - "Luat_HNGD_2014_Dieu_11": Xử lý việc kết hôn trái pháp luật
+    - "Luat_HNGD_2014_Dieu_12": Hậu quả pháp lý của việc hủy kết hôn trái pháp luật
     Bạn cũng cần trích xuất mốc thời gian (nếu có) để hệ thống áp dụng đúng luật thời kỳ đó.
     """
 
@@ -52,11 +52,11 @@ async def ket_hon_trai_phap_luat(query: str):
         print(f"[LLM Filter] Chọn IDs: {target_ids} | Thời điểm: {target_date}")
 
         if not target_ids:
-            target_ids = ["Dieu_10", "Dieu_11", "Dieu_12"]
+            target_ids = ["Luat_HNGD_2014_Dieu_10", "Luat_HNGD_2014_Dieu_11", "Luat_HNGD_2014_Dieu_12"]
 
     except Exception as e:
         print(f"[Lỗi LLM Filter] {e}. Sử dụng mặc định toàn bộ Điều.")
-        target_ids = ["Dieu_10", "Dieu_11", "Dieu_12"]
+        target_ids = ["Luat_HNGD_2014_Dieu_10", "Luat_HNGD_2014_Dieu_11", "Luat_HNGD_2014_Dieu_12"]
         target_date = None
 
     cypher_query = """

@@ -38,17 +38,17 @@ async def dang_ky_ket_hon(query: str):
     (:DieuLuat)-[:KET_HON_KHONG_CO_YEU_TO_NUOC_NGOAI]->(:DieuLuat)
     (:DieuLuat)-[:KET_HON_KHONG_CO_YEU_TO_NUOC_NGOAI]->(:DieuKhoanLuat)
 
-    Các node căn cứ pháp luật cần truy vấn: ["Dieu_9", "Dieu_13"]
+    Các node căn cứ pháp luật cần truy vấn: ["Luat_HNGD_2014_Dieu_9", "Luat_HNGD_2014_Dieu_13"]
     Thông tin về các node căn cứ pháp luật:
-    Dieu_9: Đăng ký kết hôn (Quy định chung, thẩm quyền đăng ký kết hôn, thủ tục đăng ký kết hôn)
-    Dieu_13: Xử lý việc đăng ký kết hôn không đúng thẩm quyền
+    Luat_HNGD_2014_Dieu_9: Đăng ký kết hôn (Quy định chung, thẩm quyền đăng ký kết hôn, thủ tục đăng ký kết hôn)
+    Luat_HNGD_2014_Dieu_13: Xử lý việc đăng ký kết hôn không đúng thẩm quyền
     """
 
     registration_examples = """
     Câu hỏi: Kết hôn chồng cũ có được không?
     Cypher Query:
     // 1. Chọn node quy định chung
-    MATCH (luat_goc:DieuLuat {id: "Dieu_9"})
+    MATCH (luat_goc:DieuLuat {id: "Luat_HNGD_2014_Dieu_9"})
 
     // 2. Quét dọc (Top-Down) để lấy trọn vẹn nội dung của Điều 9 (bao gồm Khoản và Điểm)
     OPTIONAL MATCH (luat_goc)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_goc)
@@ -64,7 +64,7 @@ async def dang_ky_ket_hon(query: str):
 
     Câu hỏi: Kết hôn chồng cũ có được không và thủ tục như thế nào?
     // 1. Lấy node gốc Điều 9 (Quy định về việc đăng ký kết hôn lại)
-    MATCH (luat_goc:DieuLuat {id: "Dieu_9"})
+    MATCH (luat_goc:DieuLuat {id: "Luat_HNGD_2014_Dieu_9"})
 
     // 2. Vét cạn chi tiết nội dung Điều 9 (Khoản, Điểm)
     OPTIONAL MATCH (luat_goc)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_goc)
@@ -89,7 +89,7 @@ async def dang_ky_ket_hon(query: str):
 
     Câu hỏi: Chồng tôi là người nước ngoài, vậy khi tôi muốn đăng ký kết hôn thì thủ tục như thế nào ạ?
     Cypher Query:
-    MATCH (luat_goc:DieuLuat {id: "Dieu_9"})
+    MATCH (luat_goc:DieuLuat {id: "Luat_HNGD_2014_Dieu_9"})
     OPTIONAL MATCH (luat_goc)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_goc)
     OPTIONAL MATCH (luat_goc)-[:KET_HON_CO_YEU_TO_NUOC_NGOAI]->(luat_lien_quan)
     OPTIONAL MATCH (luat_lien_quan)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_lien_quan)
@@ -100,7 +100,7 @@ async def dang_ky_ket_hon(query: str):
 
     Câu hỏi: Tôi kết hôn với người trong nước nhưng đăng ký kết hôn sai thẩm quyền thì sao
     Cypher Query:
-    MATCH (luat_goc:DieuLuat {id: "Dieu_13"})
+    MATCH (luat_goc:DieuLuat {id: "Luat_HNGD_2014_Dieu_13"})
     OPTIONAL MATCH (luat_goc)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_goc)
     OPTIONAL MATCH (luat_goc)-[:KET_HON_KHONG_CO_YEU_TO_NUOC_NGOAI]->(luat_lien_quan)
     OPTIONAL MATCH (luat_lien_quan)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_lien_quan)

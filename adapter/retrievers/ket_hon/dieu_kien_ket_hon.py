@@ -37,17 +37,17 @@ async def dieu_kien_ket_hon(query: str):
     (:DieuKhoanLuat)-[:THAM_CHIEU_DEN]->(:DieuKhoanDiemLuat)
     (:DieuKhoanLuat)-[:THAM_CHIEU_DEN]->(:DieuLuat)
 
-    Các node căn cứ pháp luật cần truy vấn: ["Dieu_8"]
+    Các node căn cứ pháp luật cần truy vấn: ["Luat_HNGD_2014_Dieu_8"]
     Thông tin về các node căn cứ pháp luật:
-    Dieu_8: Điều kiện kết hôn (Độ tuổi, tự nguyện, năng lực hành vi, không thuộc trường hợp cấm).
+    Luat_HNGD_2014_Dieu_8: Điều kiện kết hôn (Độ tuổi, tự nguyện, năng lực hành vi, không thuộc trường hợp cấm).
     """
 
     example_marriage = """
     Câu hỏi: Điều kiện kết hôn theo quy định pháp luật là gì?
-    Suy luận: Câu hỏi hỏi về điều kiện kết hôn cơ bản, tương ứng với "Dieu_8". Tôi sẽ chọn id "Dieu_8" làm gốc.
+    Suy luận: Câu hỏi hỏi về điều kiện kết hôn cơ bản, tương ứng với "Luat_HNGD_2014_Dieu_8". Tôi sẽ chọn id "Luat_HNGD_2014_Dieu_8" làm gốc.
     Query Cypher:
     // 1. Chọn node gốc dựa trên ID đã xác định
-    MATCH (luat_goc:DieuLuat {id: "Dieu_8"})
+    MATCH (luat_goc:DieuLuat {id: "Luat_HNGD_2014_Dieu_8"})
 
     // 2. Lấy toàn bộ nội dung của Điều luật gốc (bao gồm chính nó, Khoản và Điểm)
     OPTIONAL MATCH (luat_goc)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_goc)

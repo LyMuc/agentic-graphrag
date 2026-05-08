@@ -35,17 +35,17 @@ async def chung_song_nhu_vo_chong(query: str):
     (:DieuKhoanLuat)-[:CO_DIEM]->(:DieuKhoanDiemLuat)
     (:DieuLuat)-[:CO_KHOAN]->(:DieuKhoanLuat)
 
-    Các node căn cứ pháp luật cần truy vấn: [\"Dieu_14\", \"Dieu_15\", \"Dieu_16\"]
+    Các node căn cứ pháp luật cần truy vấn: ["Luat_HNGD_2014_Dieu_14", "Luat_HNGD_2014_Dieu_15", "Luat_HNGD_2014_Dieu_16"]
     Thông tin về các node căn cứ pháp luật:
-    Dieu_14: Giải quyết hậu quả của việc nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn
-    Dieu_15: Quyền, nghĩa vụ của cha mẹ và con trong trường hợp nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn
-    Dieu_16: Giải quyết quan hệ tài sản, nghĩa vụ và hợp đồng của nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn
+    Luat_HNGD_2014_Dieu_14: Giải quyết hậu quả của việc nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn
+    Luat_HNGD_2014_Dieu_15: Quyền, nghĩa vụ của cha mẹ và con trong trường hợp nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn
+    Luat_HNGD_2014_Dieu_16: Giải quyết quan hệ tài sản, nghĩa vụ và hợp đồng của nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn
     """
 
     examples_cohabitation = """
     Câu hỏi: Nam nữ chung sống như vợ chồng mà không đăng ký kết hôn thì có làm phát sinh quyền nghĩa vụ giữa vợ và chồng không?
     Cypher query:
-    MATCH (luat_goc:DieuLuat {id: "Dieu_14"})
+    MATCH (luat_goc:DieuLuat {id: "Luat_HNGD_2014_Dieu_14"})
     OPTIONAL MATCH (luat_goc)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_goc)
     OPTIONAL MATCH (chi_tiet_goc)-[:THAM_CHIEU_DEN]-(luat_tham_chieu)
     OPTIONAL MATCH (luat_tham_chieu)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_tham_chieu)
