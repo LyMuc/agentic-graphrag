@@ -8,3 +8,6 @@ chainlit
 SQLAlchemy
 asyncpg
 psycopg2-binary
+requests
+beautifulsoup4
+pandas
