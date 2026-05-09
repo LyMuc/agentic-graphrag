@@ -1,4 +1,4 @@
-langchain-groq
+langchain-openai
 langchain
 neo4j
 PyMuPDF

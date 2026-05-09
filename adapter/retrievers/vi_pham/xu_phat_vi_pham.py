@@ -1,5 +1,5 @@
 from adapter.text2cypher import Text2Cypher
-from adapter.config import driver, ChatGroq, GROQ_API_KEY
+from adapter.config import driver, build_llm, RETRIEVER_LLM
 from utils.utils import TrichXuatLuat, chuan_hoa_Context_cho_LLM
 
 from datetime import date
@@ -38,7 +38,7 @@ async def xu_phat_vi_pham(query: str):
     - 'NghiDinh_82_2020_ND_CP_Dieu_63': Vi phạm quy định về văn phòng con nuôi nước ngoài tại Việt Nam
     Trích xuất mốc thời gian sự kiện (nếu có) định dạng 'YYYY-MM-DD'. Nếu không có, trả về null.
     """
-    llm = ChatGroq(api_key=GROQ_API_KEY, model="llama-3.3-70b-versatile", temperature=0)
+    llm = build_llm(model=RETRIEVER_LLM, temperature=0)
     structured_llm = llm.with_structured_output(TrichXuatLuat)
 
     try:

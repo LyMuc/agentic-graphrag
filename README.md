@@ -18,7 +18,7 @@ Hệ thống cho phép tra cứu, giải đáp các vấn đề pháp lý (chủ
 - **Python**: 3.9+
 - **Docker & Docker Compose**: Để khởi chạy PostgreSQL (Chainlit Data Layer) dễ dàng.
 - **Neo4j**: CSDL Đồ thị đang chạy ở `localhost:7687` (đã được import dữ liệu pháp luật).
-- **Groq API Key**: (Hoặc OpenAI/các model khác được config trong hệ thống) dùng làm trí tuệ trung tâm của Agentic.
+- **Vercel AI Gateway API Key**: dùng để gọi LLM qua OpenAI-compatible endpoint.
 
 ---
 
@@ -41,7 +41,13 @@ pip install -r requirements.txt
 ### 3. Cấu hình Biến môi trường
 Tạo file `.env` ở thư mục gốc (có thể copy từ `.env.example` nếu có) và cấu hình các thông số:
 ```ini
-GROQ_API_KEY="your-groq-api-key"
+VERCEL_AI_GATEWAY_API_KEY="your-vercel-ai-gateway-key"
+AI_GATEWAY_BASE_URL="https://ai-gateway.vercel.sh/v1"
+
+# (Optional) Model overrides
+RESPONSE_LLM="openai/gpt-oss-120b"
+ROUTER_LLM="meta-llama/llama-4-scout-17b-16e-instruct"
+RETRIEVER_LLM="llama-3.3-70b-versatile"
 
 # Neo4j Graph Database
 NEO4J_URI="bolt://localhost:7687"

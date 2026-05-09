@@ -1,7 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
-from langchain_groq import ChatGroq
-from adapter.config import GROQ_API_KEY, driver
+from adapter.config import driver, build_llm, RETRIEVER_LLM
 from utils.utils import TrichXuatLuat, chuan_hoa_Context_cho_LLM
 
 ket_hon_trai_phap_luat_description = {
@@ -37,7 +36,7 @@ async def ket_hon_trai_phap_luat(query: str):
     Bạn cũng cần trích xuất mốc thời gian (nếu có) để hệ thống áp dụng đúng luật thời kỳ đó.
     """
 
-    llm = ChatGroq(api_key=GROQ_API_KEY, model="openai/gpt-oss-120b", temperature=0)
+    llm = build_llm(model=RETRIEVER_LLM, temperature=0)
     structured_llm = llm.with_structured_output(TrichXuatLuat)
 
     messages = [

@@ -1,5 +1,4 @@
-from langchain_groq import ChatGroq
-from adapter.config import GROQ_API_KEY
+from adapter.config import build_llm, ROUTER_LLM
 
 tool_picker_prompt = """
 Bạn là một hệ thống định tuyến (Router Agent) thông minh.
@@ -45,9 +44,11 @@ async def handle_tool_calls(tools: dict[str, any], llm_tool_calls: list[dict[str
     return output
 
 async def tool_choice(messages, temperature=0, tools=[], config={}, model=None):
-    llm = ChatGroq(api_key=GROQ_API_KEY, model="meta-llama/llama-4-scout-17b-16e-instruct", temperature=0, max_tokens=2048)
+    llm = build_llm(model=ROUTER_LLM, temperature=0, max_tokens=2048)
     llm_with_tools = llm.bind_tools(tools)
     res = await llm_with_tools.ainvoke(messages)
+    if not res.tool_calls:
+        print(f"[Router] No tool_calls returned. model={ROUTER_LLM} content={res.content}")
     return res.tool_calls
 
 async def route_question(question: str, tools: dict[str, any], answers: list[dict[str, str]]):

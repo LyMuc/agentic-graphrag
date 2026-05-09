@@ -24,7 +24,8 @@ pip install -r requirements.txt
 
 2. **Cấu hình file biến môi trường:**
 Đổi tên `.env.example` thành `.env`, sau đó cấp phát các giá trị:
-- `GROQ_API_KEY`: API Key để gọi ChatGroq Llama.
+- `VERCEL_AI_GATEWAY_API_KEY`: API Key để gọi LLM qua Vercel AI Gateway.
+- `AI_GATEWAY_BASE_URL`: (Tuy chon) default la `https://ai-gateway.vercel.sh/v1`.
 - Các thông số liên quan tới NEO4J (`NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`).
 - `DATABASE_URL`: URI của postgresql, dùng asyncpg ví dụ: `postgresql+asyncpg://postgres:123456@localhost:5432/chainlit_db` (Nếu bạn dùng docker CSDL).
 - `CHAINLIT_AUTH_SECRET`: Một chuỗi hash bất kỳ (BẮT BUỘC ĐỂ BẬT AUTH).
@@ -35,9 +36,9 @@ Khi dùng SQLAlchemy Data Layer, Chainlit yêu cầu việc khởi tạo các ta
 
 ## 3. Khởi chạy Chatbot
 
-Chạy lệnh sau tại thư mục chứa file `main.py`:
+Chạy lệnh sau tại thư mục gốc (file chinh nam trong `presentation`):
 ```bash
-chainlit run main.py -w
+chainlit run presentation/main.py -w
 ```
 > Option `-w` chỉ ra bật auto-reload (watch) khi dev.
 

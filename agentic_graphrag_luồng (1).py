@@ -15,10 +15,11 @@ from typing import List, Any, Literal
 
 import neo4j
 from neo4j import GraphDatabase
-from langchain_groq import ChatGroq
+from langchain_openai import ChatOpenAI
 
 from google.colab import userdata
-GROQ_API_KEY = userdata.get('GROQ_API_KEY')
+AI_GATEWAY_API_KEY = userdata.get("VERCEL_AI_GATEWAY_API_KEY")
+AI_GATEWAY_BASE_URL = userdata.get("AI_GATEWAY_BASE_URL") or "https://ai-gateway.vercel.sh/v1"
 NEO4J_URI = userdata.get('NEO4J_URI')
 NEO4J_USERNAME = userdata.get('NEO4J_USERNAME')
 NEO4J_PASSWORD = userdata.get('NEO4J_PASSWORD')
@@ -31,7 +32,13 @@ driver = GraphDatabase.driver(NEO4J_URI,
 
 # KHỞI TẠO LLM GROQ CHUNG
 def chat(messages, **config):
-    llm = ChatGroq(api_key=GROQ_API_KEY, model="meta-llama/llama-4-scout-17b-16e-instruct", temperature=0, max_tokens=2048)
+    llm = ChatOpenAI(
+        api_key=AI_GATEWAY_API_KEY,
+        base_url=AI_GATEWAY_BASE_URL,
+        model="meta-llama/llama-4-scout-17b-16e-instruct",
+        temperature=0,
+        max_tokens=2048,
+    )
     return llm.invoke(messages, **config).content
 
 NODE_PROPERTIES_QUERY = """
@@ -471,7 +478,12 @@ def ket_hon_trai_phap_luat(query: str):
     """
 
     # Khởi tạo LLM (Nên dùng model chạy nhanh và giỏi JSON như llama3-70b hoặc gpt-4o-mini)
-    llm = ChatGroq(api_key=GROQ_API_KEY, model="openai/gpt-oss-120b", temperature=0)
+    llm = ChatOpenAI(
+        api_key=AI_GATEWAY_API_KEY,
+        base_url=AI_GATEWAY_BASE_URL,
+        model="openai/gpt-oss-120b",
+        temperature=0,
+    )
     structured_llm = llm.with_structured_output(TrichXuatLuat)
 
     messages = [
@@ -919,7 +931,13 @@ def handle_tool_calls(tools: dict[str, any], llm_tool_calls: list[dict[str, any]
     return output
 
 def tool_choice(messages, temperature=0, tools=[], config={}, model=None):
-    llm = ChatGroq(api_key=GROQ_API_KEY, model="openai/gpt-oss-120b", temperature=0, max_tokens=2048)
+    llm = ChatOpenAI(
+        api_key=AI_GATEWAY_API_KEY,
+        base_url=AI_GATEWAY_BASE_URL,
+        model="openai/gpt-oss-120b",
+        temperature=0,
+        max_tokens=2048,
+    )
     # Ràng buộc tools vào mô hình Groq
     llm_with_tools = llm.bind_tools(tools)
     return llm_with_tools.invoke(messages).tool_calls
