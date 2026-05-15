@@ -1,0 +1,25 @@
+{
+    "entity_types": [
+        "LegalProvision",
+        "LegalConcept",
+        "Subject",
+        "LegalAction",
+        "Asset",
+        "Condition",
+        "Right_Obligation"
+    ],
+    "relation_types": [
+        "BASED_ON",
+        "REFERENCE_TO",
+        "DEFINED_AS",
+        "IS_A",
+        "HAS_RIGHT",
+        "HAS_DUTY",
+        "IS_PROHIBITED",
+        "REQUIRES_CONDITION",
+        "BLOCKED_BY",
+        "RESULTS_IN",
+        "RESOLVED_BY",
+        "OWNS"
+    ]
+}

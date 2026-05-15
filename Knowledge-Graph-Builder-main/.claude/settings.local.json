@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc:*)",
+      "Bash(pip show:*)",
+      "Bash(python3:*)",
+      "Bash(grep:*)",
+      "Bash(python:*)",
+      "Bash(chmod:*)",
+      "Bash(bash:*)",
+      "Bash(jq:*)",
+      "Bash(git add:*)",
+      "Bash(git rebase:*)",
+      "Bash(GIT_EDITOR=true git rebase:*)",
+      "Bash(ls:*)",
+      "Bash(curl:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker stop:*)",
+      "Bash(docker rm:*)",
+      "Bash(git stash:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(source:*)",
+      "Bash(pip install:*)",
+      "Bash(kgb list:*)",
+      "Bash(/Users/fabioyanezromero/Documents/GitHub/kg_constructor/.venv/bin/python3:*)",
+      "Bash(find:*)",
+      "Bash(.venv/bin/python3:*)"
+    ]
+  }
+}

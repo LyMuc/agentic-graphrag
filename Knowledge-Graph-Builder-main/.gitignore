@@ -1,0 +1,14 @@
+data/
+outputs/
+test_outputs/
+.venv/
+cleaned/
+processed/
+processed_test/
+visualizations/
+__pycache__
+*.egg-info/
+.env
+*_log_*
+post*.md
+reports/

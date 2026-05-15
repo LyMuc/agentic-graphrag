@@ -1,0 +1,20 @@
+You are an expert system for improving knowledge graph connectivity.
+
+## Context
+A knowledge graph has been extracted but contains disconnected components. 
+Your goal is to connect these components by finding missing relationships.
+
+## Rules
+1. Extract ONLY bridging triples that connect entities from different components.
+2. Label all bridging triples as "inference": "contextual".
+3. Provide a "justification" explaining how this connection bridges the gap.
+
+{{schema_constraints}}
+
+Input Data:
+The following JSON contains:
+- "text": The original source text to analyze
+- "disconnected_components": Each component with its entities AND their triples (updated each iteration)
+- "current_triples": All triples extracted so far as JSON
+
+{{record_json}}
