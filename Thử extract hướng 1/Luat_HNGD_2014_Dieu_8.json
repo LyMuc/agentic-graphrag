@@ -1,0 +1,140 @@
+{
+  "nodes": [
+    {
+      "id": "node_1",
+      "label": "DieuKien",
+      "properties": {
+        "ten_thuc_the": "Tuổi kết hôn",
+        "loai_chu_the": null,
+        "dinh_nghia": null,
+        "tinh_trang_hanh_vi": null,
+        "loai_tai_san": null,
+        "thoi_diem_tao_lap": null,
+        "loai_quyen_nghia_vu": null,
+        "noi_dung_chi_tiet": null
+      }
+    },
+    {
+      "id": "node_2",
+      "label": "DieuKien",
+      "properties": {
+        "ten_thuc_the": "Tự nguyện kết hôn",
+        "loai_chu_the": null,
+        "dinh_nghia": null,
+        "tinh_trang_hanh_vi": null,
+        "loai_tai_san": null,
+        "thoi_diem_tao_lap": null,
+        "loai_quyen_nghia_vu": null,
+        "noi_dung_chi_tiet": null
+      }
+    },
+    {
+      "id": "node_3",
+      "label": "DieuKien",
+      "properties": {
+        "ten_thuc_the": "Năng lực hành vi dân sự",
+        "loai_chu_the": null,
+        "dinh_nghia": null,
+        "tinh_trang_hanh_vi": null,
+        "loai_tai_san": null,
+        "thoi_diem_tao_lap": null,
+        "loai_quyen_nghia_vu": null,
+        "noi_dung_chi_tiet": null
+      }
+    },
+    {
+      "id": "node_4",
+      "label": "DieuKien",
+      "properties": {
+        "ten_thuc_the": "Không thuộc trường hợp cấm kết hôn",
+        "loai_chu_the": null,
+        "dinh_nghia": null,
+        "tinh_trang_hanh_vi": null,
+        "loai_tai_san": null,
+        "thoi_diem_tao_lap": null,
+        "loai_quyen_nghia_vu": null,
+        "noi_dung_chi_tiet": null
+      }
+    },
+    {
+      "id": "node_5",
+      "label": "KhaiNiemPhapLy",
+      "properties": {
+        "ten_thuc_the": "Hôn nhân cùng giới tính",
+        "loai_chu_the": null,
+        "dinh_nghia": "Nhà nước không thừa nhận hôn nhân giữa những người cùng giới tính.",
+        "tinh_trang_hanh_vi": null,
+        "loai_tai_san": null,
+        "thoi_diem_tao_lap": null,
+        "loai_quyen_nghia_vu": null,
+        "noi_dung_chi_tiet": null
+      }
+    },
+    {
+      "id": "node_6",
+      "label": "ChuThe",
+      "properties": {
+        "ten_thuc_the": "Nhà nước",
+        "loai_chu_the": "Cơ quan Nhà nước",
+        "dinh_nghia": null,
+        "tinh_trang_hanh_vi": null,
+        "loai_tai_san": null,
+        "thoi_diem_tao_lap": null,
+        "loai_quyen_nghia_vu": null,
+        "noi_dung_chi_tiet": null
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "node_1",
+      "type": "CAN_CU_THEO",
+      "target": "Luat_HNGD_2014_Dieu_8"
+    },
+    {
+      "source": "node_2",
+      "type": "CAN_CU_THEO",
+      "target": "Luat_HNGD_2014_Dieu_8"
+    },
+    {
+      "source": "node_3",
+      "type": "CAN_CU_THEO",
+      "target": "Luat_HNGD_2014_Dieu_8"
+    },
+    {
+      "source": "node_4",
+      "type": "CAN_CU_THEO",
+      "target": "Luat_HNGD_2014_Dieu_8"
+    },
+    {
+      "source": "node_5",
+      "type": "CAN_CU_THEO",
+      "target": "Luat_HNGD_2014_Dieu_8"
+    },
+    {
+      "source": "node_5",
+      "type": "BI_CAM_LAM",
+      "target": "node_6"
+    },
+    {
+      "source": "node_1",
+      "type": "YEU_CAU_DIEU_KIEN",
+      "target": "node_6"
+    },
+    {
+      "source": "node_2",
+      "type": "YEU_CAU_DIEU_KIEN",
+      "target": "node_6"
+    },
+    {
+      "source": "node_3",
+      "type": "YEU_CAU_DIEU_KIEN",
+      "target": "node_6"
+    },
+    {
+      "source": "node_4",
+      "type": "YEU_CAU_DIEU_KIEN",
+      "target": "node_6"
+    }
+  ]
+}

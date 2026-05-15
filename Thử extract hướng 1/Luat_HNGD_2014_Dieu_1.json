@@ -1,0 +1,49 @@
+{
+  "nodes": [
+    {
+      "id": "node_1",
+      "label": "KhaiNiemPhapLy",
+      "properties": {
+        "ten_thuc_the": "Phạm vi điều chỉnh",
+        "loai_chu_the": null,
+        "dinh_nghia": "Luật này quy định chế độ hôn nhân và gia đình; chuẩn mực pháp lý cho cách ứng xử giữa các thành viên gia đình.",
+        "tinh_trang_hanh_vi": null,
+        "loai_tai_san": null,
+        "thoi_diem_tao_lap": null,
+        "loai_quyen_nghia_vu": null,
+        "noi_dung_chi_tiet": null
+      }
+    },
+    {
+      "id": "node_2",
+      "label": "QuyenNghiaVu",
+      "properties": {
+        "ten_thuc_the": "Trách nhiệm xây dựng chế độ hôn nhân và gia đình",
+        "loai_chu_the": null,
+        "dinh_nghia": null,
+        "tinh_trang_hanh_vi": null,
+        "loai_tai_san": null,
+        "thoi_diem_tao_lap": null,
+        "loai_quyen_nghia_vu": "Nghĩa vụ",
+        "noi_dung_chi_tiet": "Cá nhân, tổ chức, Nhà nước và xã hội có trách nhiệm trong việc xây dựng, củng cố chế độ hôn nhân và gia đình."
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "node_1",
+      "type": "CAN_CU_THEO",
+      "target": "Luat_HNGD_2014_Dieu_1"
+    },
+    {
+      "source": "node_1",
+      "type": "CO_NGHIA_VU",
+      "target": "node_2"
+    },
+    {
+      "source": "node_2",
+      "type": "CAN_CU_THEO",
+      "target": "Luat_HNGD_2014_Dieu_1"
+    }
+  ]
+}

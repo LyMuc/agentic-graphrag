@@ -1,0 +1,182 @@
+from adapter.config import driver, build_llm, RETRIEVER_LLM
+from utils.utils import TrichXuatLuat, chuan_hoa_Context_cho_LLM
+
+from datetime import date
+today = date.today()
+formatted_date = today.strftime("%Y-%m-%d")
+
+che_do_tai_san_cua_vo_chong_description = {
+    "type": "function",
+    "function": {
+        "name": "che_do_tai_san_cua_vo_chong",
+        "description": "Tra cứu các quy định về chế độ tài sản của vợ chồng TRƯỚC VÀ TRONG THỜI KỲ HÔN NHÂN.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "Câu hỏi cụ thể của người dùng."
+                }
+            },
+            "required": ["query"],
+        },
+    },
+}
+
+async def che_do_tai_san_cua_vo_chong(query: str):
+    """
+    Tool xử lý các quy định về chế độ tài sản của vợ chồng trước và trong thời kỳ hôn nhân.
+    """
+    print(f"[Agent che_do_tai_san_cua_vo_chong] Đang xử lý: '{query}'...")
+
+    # 1. Trích xuất ID và thời gian
+    prompt_extract = """
+    Bạn là chuyên gia xác định căn cứ pháp lý về chế độ tài sản của vợ chồng. Đọc câu hỏi và chọn đúng các Điều luật để trả lời cho câu hỏi của người dùng. Có thể cần phải chọn nhiều hơn 1 Điều luật nếu cần thiết.
+    Trước tiên, cần xác định xem câu hỏi liên quan đến chế độ tài sản theo luật định hay theo thỏa thuận, hay cả hai.
+    Với các câu hỏi có liên quan đến các giao dịch (mua, bán, tặng cho...) thì phải xác định rõ trong câu hỏi nêu đó là tài sản chung hay tài sản riêng. Nếu không xác định được, phải phân tích câu hỏi theo cả 2 hướng và chọn đủ các Điều luật liên quan đến cả 2 loại tài sản.
+    
+    Chỉ được phép chọn từ danh sách:
+    Các quy định chung về chế độ tài sản:
+    - 'Luat_HNGD_2014_Dieu_28': Áp dụng chế độ tài sản của vợ chồng (theo luật định hoặc theo thỏa thuận)
+    - 'Luat_HNGD_2014_Dieu_29': Nguyên tắc chung về chế độ tài sản của vợ chồng
+    - 'Luat_HNGD_2014_Dieu_30': Quyền, nghĩa vụ của vợ, chồng trong việc đáp ứng nhu cầu thiết yếu của gia đình
+    - 'Luat_HNGD_2014_Dieu_31': Giao dịch liên quan đến nhà là nơi ở duy nhất của vợ chồng
+    - 'Luat_HNGD_2014_Dieu_32': Giao dịch với người thứ ba ngay tình liên quan đến tài khoản ngân hàng, tài khoản chứng khoán và động sản khác mà theo quy định của pháp luật không phải đăng ký quyền sở hữu, quyền sử dụng
+
+    Chế độ tài sản theo luật định:
+    - 'Luat_HNGD_2014_Dieu_33': Tài sản chung của vợ chồng
+    - 'Luat_HNGD_2014_Dieu_34': Đăng ký quyền sở hữu, quyền sử dụng đối với tài sản chung
+    - 'Luat_HNGD_2014_Dieu_35': Chiếm hữu, sử dụng, định đoạt tài sản chung 
+    - 'Luat_HNGD_2014_Dieu_36': Tài sản chung được đưa vào kinh doanh
+    - 'Luat_HNGD_2014_Dieu_37': Nghĩa vụ chung về tài sản của vợ chồng
+    - 'Luat_HNGD_2014_Dieu_38': Chia tài sản chung trong thời kỳ hôn nhân
+    - 'Luat_HNGD_2014_Dieu_39': Thời điểm có hiệu lực của việc chia tài sản chung trong thời kỳ hôn nhân
+    - 'Luat_HNGD_2014_Dieu_40': Hậu quả của việc chia tài sản chung trong thời kỳ hôn nhân
+    - 'Luat_HNGD_2014_Dieu_41': Chấm dứt hiệu lực của việc chia tài sản chung trong thời kỳ hôn nhân
+    - 'Luat_HNGD_2014_Dieu_42': Chia tài sản chung trong thời kỳ hôn nhân bị vô hiệu
+    - 'Luat_HNGD_2014_Dieu_43': Tài sản riêng của vợ, chồng
+    - 'Luat_HNGD_2014_Dieu_44': Chiếm hữu, sử dụng, định đoạt tài sản riêng
+    - 'Luat_HNGD_2014_Dieu_45': Nghĩa vụ riêng về tài sản của vợ, chồng
+    - 'Luat_HNGD_2014_Dieu_46': Nhập tài sản riêng của vợ, chồng vào tài sản chung
+
+    Chế độ tài sản theo thỏa thuận:
+    - 'Luat_HNGD_2014_Dieu_47': Thỏa thuận xác lập chế độ tài sản của vợ chồng
+    - 'Luat_HNGD_2014_Dieu_48': Nội dung cơ bản của thỏa thuận về chế độ tài sản của vợ chồng
+    - 'Luat_HNGD_2014_Dieu_49': Sửa đổi, bổ sung nội dung của thỏa thuận về chế độ tài sản của vợ chồng
+    - 'Luat_HNGD_2014_Dieu_50': Các trường hợp thỏa thuận về chế độ tài sản của vợ chồng bị vô hiệu
+
+    Trích xuất mốc thời gian sự kiện (nếu có) định dạng 'YYYY-MM-DD'. Nếu không có, trả về null.
+    """
+    llm = build_llm(model=RETRIEVER_LLM, temperature=0)
+    structured_llm = llm.with_structured_output(TrichXuatLuat)
+
+    try:
+        extraction = structured_llm.invoke([{"role": "system", "content": prompt_extract}, {"role": "user", "content": query}])
+        target_ids, target_date = extraction.dieu_luat_ids, extraction.thoi_diem_su_kien
+        is_user_provide_date = True if target_date else False
+        if not target_date: target_date = formatted_date
+    except:
+        target_ids, target_date, is_user_provide_date = ["Luat_HNGD_2014_Dieu_33", "Luat_HNGD_2014_Dieu_34", "Luat_HNGD_2014_Dieu_35", "Luat_HNGD_2014_Dieu_44"], formatted_date, False
+
+    # 2. Truy vấn Neo4j
+    cypher = """
+    MATCH (n_goc:DieuLuat) WHERE n_goc.id IN $danh_sach_id
+
+    // 1. MỞ RỘNG THÀNH CÁC KHOẢN/ĐIỂM GỐC (Chưa lọc thời gian vội)
+    OPTIONAL MATCH (n_goc)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_goc)
+
+    // 2. LẤY TOÀN BỘ GIA PHẢ THEO DÒNG THỜI GIAN (QÚA KHỨ + TƯƠNG LAI)
+    OPTIONAL MATCH (chi_tiet_goc)-[:THAY_THE_BOI*0..]-(chi_tiet_gia_toc)
+
+    // Gom tất cả các phiên bản (Bản gốc + Bản quá khứ + Bản tương lai) vào 1 rổ
+    WITH n_goc, collect(chi_tiet_goc) + collect(chi_tiet_gia_toc) AS tat_ca_phien_ban
+    UNWIND tat_ca_phien_ban AS node_xet_duyet
+
+    // 3. TÌM CHÍNH XÁC PHIÊN BẢN CÓ HIỆU LỰC TẠI $target_date
+    WITH DISTINCT n_goc, node_xet_duyet AS chi_tiet_ap_dung
+    WHERE chi_tiet_ap_dung.ngay_co_hieu_luc <= $target_date
+    AND (chi_tiet_ap_dung.ngay_het_hieu_luc IS NULL OR chi_tiet_ap_dung.ngay_het_hieu_luc > $target_date)
+
+    // 4. KIỂM TRA SỬA ĐỔI BỔ SUNG ĐỐI VỚI BẢN ÁP DỤNG NÀY
+    OPTIONAL MATCH (chi_tiet_ap_dung)-[:DUOC_SUA_DOI_BOI]->(van_ban_sua_doi)
+    WHERE van_ban_sua_doi.ngay_co_hieu_luc <= $target_date
+    AND (van_ban_sua_doi.ngay_het_hieu_luc IS NULL OR van_ban_sua_doi.ngay_het_hieu_luc > $target_date)
+
+    // 5. TÌM HƯỚNG DẪN CHI TIẾT ĐỐI VỚI BẢN ÁP DỤNG
+    OPTIONAL MATCH (chi_tiet_ap_dung)-[:HUONG_DAN_BOI]->(huong_dan)
+    WHERE huong_dan.ngay_co_hieu_luc <= $target_date
+    AND (huong_dan.ngay_het_hieu_luc IS NULL OR huong_dan.ngay_het_hieu_luc > $target_date)
+
+    OPTIONAL MATCH (huong_dan)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_huong_dan)
+    WHERE chi_tiet_huong_dan.ngay_co_hieu_luc <= $target_date
+    AND (chi_tiet_huong_dan.ngay_het_hieu_luc IS NULL OR chi_tiet_huong_dan.ngay_het_hieu_luc > $target_date)
+
+    // 6. TÌM LUẬT HIỆN HÀNH (Nếu bản áp dụng đã chết, phóng mũi tên tới tương lai để lấy bản mới nhất đối chiếu)
+    OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*0..]->(hien_hanh)
+    WHERE hien_hanh.ngay_het_hieu_luc IS NULL
+
+    // 7. TÌM CÁC QUY ĐỊNH THAM CHIẾU (THAM_CHIEU_DEN)
+    OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAM_CHIEU_DEN]->(luat_tham_chieu)
+    WHERE luat_tham_chieu.ngay_co_hieu_luc <= $target_date
+    AND (luat_tham_chieu.ngay_het_hieu_luc IS NULL OR luat_tham_chieu.ngay_het_hieu_luc > $target_date)
+
+    OPTIONAL MATCH (luat_tham_chieu)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_tham_chieu)
+    WHERE chi_tiet_tham_chieu.ngay_co_hieu_luc <= $target_date
+    AND (chi_tiet_tham_chieu.ngay_het_hieu_luc IS NULL OR chi_tiet_tham_chieu.ngay_het_hieu_luc > $target_date)
+
+     // 8. TÌM QUY ĐỊNH THAM CHIẾU TỪ VĂN BẢN HƯỚNG DẪN (Nghị định -> Luật khác)
+    OPTIONAL MATCH (chi_tiet_huong_dan)-[:THAM_CHIEU_DEN]->(luat_tham_chieu_tu_hd)
+    WHERE luat_tham_chieu_tu_hd.ngay_co_hieu_luc <= $target_date
+    AND (luat_tham_chieu_tu_hd.ngay_het_hieu_luc IS NULL OR luat_tham_chieu_tu_hd.ngay_het_hieu_luc > $target_date)
+
+    OPTIONAL MATCH (luat_tham_chieu_tu_hd)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_tc_tu_hd)
+    WHERE chi_tiet_tc_tu_hd.ngay_co_hieu_luc <= $target_date
+    AND (chi_tiet_tc_tu_hd.ngay_het_hieu_luc IS NULL OR chi_tiet_tc_tu_hd.ngay_het_hieu_luc > $target_date)
+
+    RETURN {
+        can_cu_chinh: collect(DISTINCT {
+            id_goc_tu_router: n_goc.id,
+            id_thuc_te_ap_dung: chi_tiet_ap_dung.id,
+            noidung: chi_tiet_ap_dung.noidung,
+            cap_bac: chi_tiet_ap_dung.cap_bac_phap_ly,
+            het_hieu_luc: chi_tiet_ap_dung.ngay_het_hieu_luc IS NOT NULL,
+            id_sua_doi: van_ban_sua_doi.id,
+            noidung_sua_doi: van_ban_sua_doi.noidung
+        }),
+        can_cu_huong_dan: collect(DISTINCT {
+            id: huong_dan.id,
+            noidung: huong_dan.noidung,
+            cap_bac: huong_dan.cap_bac_phap_ly
+        }) + collect(DISTINCT {
+            id: chi_tiet_huong_dan.id,
+            noidung: chi_tiet_huong_dan.noidung,
+            cap_bac: chi_tiet_huong_dan.cap_bac_phap_ly
+        }),
+        can_cu_bo_tro: collect(DISTINCT {
+            id: luat_tham_chieu.id,
+            noidung: luat_tham_chieu.noidung,
+            cap_bac: luat_tham_chieu.cap_bac_phap_ly
+        }) + collect(DISTINCT {
+            id: chi_tiet_tham_chieu.id,
+            noidung: chi_tiet_tham_chieu.noidung,
+            cap_bac: chi_tiet_tham_chieu.cap_bac_phap_ly
+        })
+        // [CỘNG THÊM DỮ LIỆU THAM CHIẾU TỪ HƯỚNG DẪN VÀO ĐÂY]
+        + collect(DISTINCT {
+            id: luat_tham_chieu_tu_hd.id,
+            noidung: luat_tham_chieu_tu_hd.noidung,
+            cap_bac: luat_tham_chieu_tu_hd.cap_bac_phap_ly
+        }) + collect(DISTINCT {
+            id: chi_tiet_tc_tu_hd.id,
+            noidung: chi_tiet_tc_tu_hd.noidung,
+            cap_bac: chi_tiet_tc_tu_hd.cap_bac_phap_ly
+        }),
+        quy_dinh_hien_hanh_doi_chieu: collect(DISTINCT hien_hanh.id)
+    } AS Context_Tho
+    """
+    records, _, _ = driver.execute_query(cypher, danh_sach_id=target_ids, target_date=target_date)
+    
+    results = []
+    for r in records:
+        results.append(chuan_hoa_Context_cho_LLM(r, target_date, is_user_provide_date))
+    return results

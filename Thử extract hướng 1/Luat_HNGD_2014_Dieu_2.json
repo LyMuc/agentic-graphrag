@@ -1,0 +1,116 @@
+{
+  "nodes": [
+    {
+      "id": "node_1",
+      "label": "KhaiNiemPhapLy",
+      "properties": {
+        "ten_thuc_the": "Nguyên tắc hôn nhân tự nguyện",
+        "loai_chu_the": null,
+        "dinh_nghia": "Hôn nhân tự nguyện, tiến bộ, một vợ một chồng, vợ chồng bình đẳng.",
+        "tinh_trang_hanh_vi": null,
+        "loai_tai_san": null,
+        "thoi_diem_tao_lap": null,
+        "loai_quyen_nghia_vu": null,
+        "noi_dung_chi_tiet": null
+      }
+    },
+    {
+      "id": "node_2",
+      "label": "KhaiNiemPhapLy",
+      "properties": {
+        "ten_thuc_the": "Nguyên tắc hôn nhân giữa công dân",
+        "loai_chu_the": null,
+        "dinh_nghia": "Hôn nhân giữa công dân Việt Nam thuộc các dân tộc, tôn giáo, giữa người theo tôn giáo với người không theo tôn giáo, giữa người có tín ngưỡng với người không có tín ngưỡng, giữa công dân Việt Nam với người nước ngoài được tôn trọng và được pháp luật bảo vệ.",
+        "tinh_trang_hanh_vi": null,
+        "loai_tai_san": null,
+        "thoi_diem_tao_lap": null,
+        "loai_quyen_nghia_vu": null,
+        "noi_dung_chi_tiet": null
+      }
+    },
+    {
+      "id": "node_3",
+      "label": "QuyenNghiaVu",
+      "properties": {
+        "ten_thuc_the": "Nghĩa vụ tôn trọng và chăm sóc gia đình",
+        "loai_chu_the": null,
+        "dinh_nghia": null,
+        "tinh_trang_hanh_vi": null,
+        "loai_tai_san": null,
+        "thoi_diem_tao_lap": null,
+        "loai_quyen_nghia_vu": "Nghĩa vụ",
+        "noi_dung_chi_tiet": null
+      }
+    },
+    {
+      "id": "node_4",
+      "label": "QuyenNghiaVu",
+      "properties": {
+        "ten_thuc_the": "Trách nhiệm bảo vệ trẻ em và người cao tuổi",
+        "loai_chu_the": null,
+        "dinh_nghia": null,
+        "tinh_trang_hanh_vi": null,
+        "loai_tai_san": null,
+        "thoi_diem_tao_lap": null,
+        "loai_quyen_nghia_vu": "Nghĩa vụ",
+        "noi_dung_chi_tiet": null
+      }
+    },
+    {
+      "id": "node_5",
+      "label": "KhaiNiemPhapLy",
+      "properties": {
+        "ten_thuc_the": "Truyền thống văn hóa về hôn nhân",
+        "loai_chu_the": null,
+        "dinh_nghia": "Kế thừa, phát huy truyền thống văn hóa, đạo đức tốt đẹp của dân tộc Việt Nam về hôn nhân và gia đình.",
+        "tinh_trang_hanh_vi": null,
+        "loai_tai_san": null,
+        "thoi_diem_tao_lap": null,
+        "loai_quyen_nghia_vu": null,
+        "noi_dung_chi_tiet": null
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "node_1",
+      "type": "CAN_CU_THEO",
+      "target": "Luat_HNGD_2014_Dieu_2"
+    },
+    {
+      "source": "node_1",
+      "type": "CO_NGHIA_VU",
+      "target": "node_3"
+    },
+    {
+      "source": "node_2",
+      "type": "CAN_CU_THEO",
+      "target": "Luat_HNGD_2014_Dieu_2"
+    },
+    {
+      "source": "node_2",
+      "type": "CO_NGHIA_VU",
+      "target": "node_4"
+    },
+    {
+      "source": "node_3",
+      "type": "CAN_CU_THEO",
+      "target": "Luat_HNGD_2014_Dieu_2"
+    },
+    {
+      "source": "node_3",
+      "type": "CO_NGHIA_VU",
+      "target": "node_4"
+    },
+    {
+      "source": "node_4",
+      "type": "CAN_CU_THEO",
+      "target": "Luat_HNGD_2014_Dieu_2"
+    },
+    {
+      "source": "node_5",
+      "type": "CAN_CU_THEO",
+      "target": "Luat_HNGD_2014_Dieu_2"
+    }
+  ]
+}
