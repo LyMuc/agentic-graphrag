@@ -14,7 +14,6 @@ class BoLuatGraphBuilder:
             "loai_van_ban": "Bộ Luật",
             "ngay_ban_hanh": "2015-11-24",
             "ngay_co_hieu_luc": "2017-01-01",
-            "ngay_het_hieu_luc": "",
             "tinh_trang_hieu_luc": "Còn hiệu lực",
             "cap_bac_phap_ly": 2
         }
@@ -70,7 +69,7 @@ class BoLuatGraphBuilder:
             # Nhận diện Điều
             if dieu_match := dieu_pattern.match(line):
                 current_dieu_num = dieu_match.group(1)
-                current_dieu_id = f"{self.base_id}_dieu_{current_dieu_num}"
+                current_dieu_id = f"{self.base_id}_Dieu_{current_dieu_num}"
                 
                 current_khoan_num = ""
                 current_khoan_id = ""
@@ -89,7 +88,7 @@ class BoLuatGraphBuilder:
             # Nhận diện Khoản
             if khoan_match := khoan_pattern.match(line):
                 current_khoan_num = khoan_match.group(1)
-                current_khoan_id = f"{current_dieu_id}_khoan_{current_khoan_num}"
+                current_khoan_id = f"{current_dieu_id}_Khoan_{current_khoan_num}"
 
                 khoan_dict = {
                     "id": current_khoan_id,
@@ -106,7 +105,7 @@ class BoLuatGraphBuilder:
             # Nhận diện Điểm
             if diem_match := diem_pattern.match(line):
                 diem_char = diem_match.group(1)
-                diem_id = f"{current_khoan_id}_diem_{diem_char}" if current_khoan_id else f"{current_dieu_id}_diem_{diem_char}"
+                diem_id = f"{current_khoan_id}_Diem_{diem_char}" if current_khoan_id else f"{current_dieu_id}_Diem_{diem_char}"
 
                 diem_dict = {
                     "id": diem_id,

@@ -28,7 +28,7 @@ async def xu_phat_vi_pham(query: str):
     print(f"[Agent xu_phat_vi_pham] Đang xử lý: '{query}'...")
 
     prompt_extract = """
-    Bạn là chuyên gia xác định căn cứ pháp lý. Đọc câu hỏi và chọn đúng các Điều luật về XỬ PHẠT HÀNH CHÍNH.
+    Bạn là chuyên gia xác định căn cứ pháp lý. Đọc câu hỏi và chọn đúng các Điều luật về xử phạt trong lĩnh vực hôn nhân gia đình để trả lời cho câu hỏi của người dùng. Có thể cần phải chọn nhiều hơn 1 Điều luật nếu cần thiết.
     Chỉ được phép chọn từ danh sách:
     - 'NghiDinh_82_2020_ND_CP_Dieu_58': Tảo hôn
     - 'NghiDinh_82_2020_ND_CP_Dieu_59': Vi phạm chế độ một vợ một chồng, vi phạm quy định về kết hôn, ly hôn
@@ -36,6 +36,13 @@ async def xu_phat_vi_pham(query: str):
     - 'NghiDinh_82_2020_ND_CP_Dieu_61': Vi phạm quy định về giám hộ
     - 'NghiDinh_82_2020_ND_CP_Dieu_62': Vi phạm quy định về nuôi con nuôi
     - 'NghiDinh_82_2020_ND_CP_Dieu_63': Vi phạm quy định về văn phòng con nuôi nước ngoài tại Việt Nam
+    - 'BoLuat_HinhSu_2015_Dieu_181': Tội cưỡng ép kết hôn, ly hôn hoặc cản trở hôn nhân tự nguyện, tiến bộ, cản trở ly hôn tự nguyện
+    - 'BoLuat_HinhSu_2015_Dieu_182': Tội vi phạm chế độ một vợ, một chồng
+    - 'BoLuat_HinhSu_2015_Dieu_183': Tội tổ chức tảo hôn
+    - 'BoLuat_HinhSu_2015_Dieu_184': Tội loạn luân
+    - 'BoLuat_HinhSu_2015_Dieu_185': Tội ngược đãi hoặc hành hạ ông bà, cha mẹ, vợ chồng, con, cháu hoặc người có công nuôi dưỡng mình
+    - 'BoLuat_HinhSu_2015_Dieu_186': Tội từ chối hoặc trốn tránh nghĩa vụ cấp dưỡng
+    - 'BoLuat_HinhSu_2015_Dieu_187': Tội tổ chức mang thai hộ vì mục đích thương mại
     Trích xuất mốc thời gian sự kiện (nếu có) định dạng 'YYYY-MM-DD'. Nếu không có, trả về null.
     """
     llm = build_llm(model=RETRIEVER_LLM, temperature=0)
@@ -82,6 +89,15 @@ async def xu_phat_vi_pham(query: str):
     OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*0..]->(hien_hanh)
     WHERE hien_hanh.ngay_het_hieu_luc IS NULL
 
+    // 7. TÌM CÁC QUY ĐỊNH THAM CHIẾU (THAM_CHIEU_DEN)
+    OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAM_CHIEU_DEN]->(luat_tham_chieu)
+    WHERE luat_tham_chieu.ngay_co_hieu_luc <= $target_date
+    AND (luat_tham_chieu.ngay_het_hieu_luc IS NULL OR luat_tham_chieu.ngay_het_hieu_luc > $target_date)
+
+    OPTIONAL MATCH (luat_tham_chieu)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_tham_chieu)
+    WHERE chi_tiet_tham_chieu.ngay_co_hieu_luc <= $target_date
+    AND (chi_tiet_tham_chieu.ngay_het_hieu_luc IS NULL OR chi_tiet_tham_chieu.ngay_het_hieu_luc > $target_date)
+
     RETURN {
         // Tập hợp căn cứ chính
         can_cu_chinh: collect(DISTINCT {
@@ -98,6 +114,16 @@ async def xu_phat_vi_pham(query: str):
             id: huong_dan.id,
             noidung: huong_dan.noidung,
             cap_bac: huong_dan.cap_bac_phap_ly
+        }),
+
+        can_cu_bo_tro: collect(DISTINCT {
+            id: luat_tham_chieu.id,
+            noidung: luat_tham_chieu.noidung,
+            cap_bac: luat_tham_chieu.cap_bac_phap_ly
+        }) + collect(DISTINCT {
+            id: chi_tiet_tham_chieu.id,
+            noidung: chi_tiet_tham_chieu.noidung,
+            cap_bac: chi_tiet_tham_chieu.cap_bac_phap_ly
         }),
 
         quy_dinh_hien_hanh_doi_chieu: collect(DISTINCT hien_hanh.id)

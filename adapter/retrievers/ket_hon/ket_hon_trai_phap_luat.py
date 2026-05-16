@@ -31,7 +31,7 @@ async def ket_hon_trai_phap_luat(query: str):
     Bạn là chuyên gia xác định căn cứ pháp lý. Đọc câu hỏi của người dùng và chọn ĐÚNG các Điều luật cần thiết.
     Chỉ được phép chọn từ danh sách sau:
     - "Luat_HNGD_2014_Dieu_10": Người có quyền yêu cầu hủy kết hôn trái pháp luật.
-    - "Luat_HNGD_2014_Dieu_11": Xử lý việc kết hôn trái pháp luật
+    - "Luat_HNGD_2014_Dieu_11": Xử lý việc kết hôn trái pháp luật (Căn cứ hủy kết hôn, Thẩm quyền giải quyết, Thủ tục giải quyết).
     - "Luat_HNGD_2014_Dieu_12": Hậu quả pháp lý của việc hủy kết hôn trái pháp luật
     Bạn cũng cần trích xuất mốc thời gian (nếu có) để hệ thống áp dụng đúng luật thời kỳ đó.
     """
@@ -44,10 +44,16 @@ async def ket_hon_trai_phap_luat(query: str):
         {"role": "user", "content": f"Câu hỏi: {query}"}
     ]
 
+    from datetime import date
+    today = date.today()
+    formatted_date = today.strftime("%Y-%m-%d")
+
     try:
         extraction = structured_llm.invoke(messages)
         target_ids = extraction.dieu_luat_ids
         target_date = extraction.thoi_diem_su_kien
+        is_user_provide_date = True if target_date else False
+        if not target_date: target_date = formatted_date
         print(f"[LLM Filter] Chọn IDs: {target_ids} | Thời điểm: {target_date}")
 
         if not target_ids:
@@ -56,49 +62,84 @@ async def ket_hon_trai_phap_luat(query: str):
     except Exception as e:
         print(f"[Lỗi LLM Filter] {e}. Sử dụng mặc định toàn bộ Điều.")
         target_ids = ["Luat_HNGD_2014_Dieu_10", "Luat_HNGD_2014_Dieu_11", "Luat_HNGD_2014_Dieu_12"]
-        target_date = None
+        target_date = formatted_date
+        is_user_provide_date = False
 
     cypher_query = """
     MATCH (n_goc:DieuLuat) WHERE n_goc.id IN $danh_sach_id
 
-    // 1. TÌM LUẬT GỐC & CÁC KHOẢN/ĐIỂM CÓ HIỆU LỰC TẠI THỜI ĐIỂM $target_date
-    OPTIONAL MATCH (n_goc)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet)
-    WHERE chi_tiet.ngay_co_hieu_luc <= $target_date 
-    AND (chi_tiet.ngay_het_hieu_luc IS NULL OR chi_tiet.ngay_het_hieu_luc > $target_date)
+    // 1. MỞ RỘNG THÀNH CÁC KHOẢN/ĐIỂM GỐC (Chưa lọc thời gian vội)
+    OPTIONAL MATCH (n_goc)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_goc)
 
-    // 2. KIỂM TRA SỬA ĐỔI BỔ SUNG (Tại thời điểm $target_date)
-    OPTIONAL MATCH (chi_tiet)<-[:DUOC_SUA_DOI_BOI]-(goc_bi_sua_doi)
+    // 2. LẤY TOÀN BỘ GIA PHẢ THEO DÒNG THỜI GIAN (QÚA KHỨ + TƯƠNG LAI)
+    OPTIONAL MATCH (chi_tiet_goc)-[:THAY_THE_BOI*0..]-(chi_tiet_gia_toc)
 
-    // 3. TÌM HƯỚNG DẪN CHI TIẾT (Có hiệu lực tại $target_date)
-    OPTIONAL MATCH (chi_tiet)-[:HUONG_DAN_BOI]->(huong_dan)
-    WHERE huong_dan.ngay_co_hieu_luc <= $target_date 
+    // Gom tất cả các phiên bản (Bản gốc + Bản quá khứ + Bản tương lai) vào 1 rổ
+    WITH n_goc, collect(chi_tiet_goc) + collect(chi_tiet_gia_toc) AS tat_ca_phien_ban
+    UNWIND tat_ca_phien_ban AS node_xet_duyet
+
+    // 3. TÌM CHÍNH XÁC PHIÊN BẢN CÓ HIỆU LỰC TẠI $target_date
+    WITH DISTINCT n_goc, node_xet_duyet AS chi_tiet_ap_dung
+    WHERE chi_tiet_ap_dung.ngay_co_hieu_luc <= $target_date
+    AND (chi_tiet_ap_dung.ngay_het_hieu_luc IS NULL OR chi_tiet_ap_dung.ngay_het_hieu_luc > $target_date)
+
+    // 4. KIỂM TRA SỬA ĐỔI BỔ SUNG ĐỐI VỚI BẢN ÁP DỤNG NÀY
+    OPTIONAL MATCH (chi_tiet_ap_dung)-[:DUOC_SUA_DOI_BOI]->(van_ban_sua_doi)
+    WHERE van_ban_sua_doi.ngay_co_hieu_luc <= $target_date
+    AND (van_ban_sua_doi.ngay_het_hieu_luc IS NULL OR van_ban_sua_doi.ngay_het_hieu_luc > $target_date)
+
+    // 5. TÌM HƯỚNG DẪN CHI TIẾT ĐỐI VỚI BẢN ÁP DỤNG
+    OPTIONAL MATCH (chi_tiet_ap_dung)-[:HUONG_DAN_BOI]->(huong_dan)
+    WHERE huong_dan.ngay_co_hieu_luc <= $target_date
     AND (huong_dan.ngay_het_hieu_luc IS NULL OR huong_dan.ngay_het_hieu_luc > $target_date)
 
-    // 4. NẾU QUY ĐỊNH Ở MỤC 1 ĐÃ HẾT HIỆU LỰC Ở HIỆN TẠI, LẤY LUẬT HIỆN HÀNH ĐỂ ĐỐI CHIẾU
-    OPTIONAL MATCH (chi_tiet)-[:THAY_THE_BOI*1..]->(hien_hanh)
-    WHERE chi_tiet.ngay_het_hieu_luc IS NOT NULL 
-    AND hien_hanh.ngay_het_hieu_luc IS NULL
+    OPTIONAL MATCH (huong_dan)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_huong_dan)
+    WHERE chi_tiet_huong_dan.ngay_co_hieu_luc <= $target_date
+    AND (chi_tiet_huong_dan.ngay_het_hieu_luc IS NULL OR chi_tiet_huong_dan.ngay_het_hieu_luc > $target_date)
+
+    // 6. TÌM LUẬT HIỆN HÀNH (Nếu bản áp dụng đã chết, phóng mũi tên tới tương lai để lấy bản mới nhất đối chiếu)
+    OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*0..]->(hien_hanh)
+    WHERE hien_hanh.ngay_het_hieu_luc IS NULL
+
+    // 7. TÌM CÁC QUY ĐỊNH THAM CHIẾU (THAM_CHIEU_DEN)
+    OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAM_CHIEU_DEN]->(luat_tham_chieu)
+    WHERE luat_tham_chieu.ngay_co_hieu_luc <= $target_date
+    AND (luat_tham_chieu.ngay_het_hieu_luc IS NULL OR luat_tham_chieu.ngay_het_hieu_luc > $target_date)
+
+    OPTIONAL MATCH (luat_tham_chieu)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_tham_chieu)
+    WHERE chi_tiet_tham_chieu.ngay_co_hieu_luc <= $target_date
+    AND (chi_tiet_tham_chieu.ngay_het_hieu_luc IS NULL OR chi_tiet_tham_chieu.ngay_het_hieu_luc > $target_date)
 
     RETURN {
-        // Tập hợp căn cứ chính (Có check xem có phải là bản sửa đổi không)
         can_cu_chinh: collect(DISTINCT {
-            id: chi_tiet.id, 
-            noidung: chi_tiet.noidung, 
-            cap_bac: chi_tiet.cap_bac_phap_ly,
-            het_hieu_luc: chi_tiet.ngay_het_hieu_luc IS NOT NULL,
-            la_sua_doi_cua: goc_bi_sua_doi.id 
+            id_goc_tu_router: n_goc.id,
+            id_thuc_te_ap_dung: chi_tiet_ap_dung.id,
+            noidung: chi_tiet_ap_dung.noidung,
+            cap_bac: chi_tiet_ap_dung.cap_bac_phap_ly,
+            het_hieu_luc: chi_tiet_ap_dung.ngay_het_hieu_luc IS NOT NULL,
+            id_sua_doi: van_ban_sua_doi.id,
+            noidung_sua_doi: van_ban_sua_doi.noidung
         }),
-        
-        // Tập hợp căn cứ hướng dẫn
         can_cu_huong_dan: collect(DISTINCT {
-            id: huong_dan.id, 
-            noidung: huong_dan.noidung, 
+            id: huong_dan.id,
+            noidung: huong_dan.noidung,
             cap_bac: huong_dan.cap_bac_phap_ly
+        }) + collect(DISTINCT {
+            id: chi_tiet_huong_dan.id,
+            noidung: chi_tiet_huong_dan.noidung,
+            cap_bac: chi_tiet_huong_dan.cap_bac_phap_ly
         }),
-        
-        // Tập hợp luật hiện hành (chỉ có data nếu luật mục 1 đã chết)
+        can_cu_bo_tro: collect(DISTINCT {
+            id: luat_tham_chieu.id,
+            noidung: luat_tham_chieu.noidung,
+            cap_bac: luat_tham_chieu.cap_bac_phap_ly
+        }) + collect(DISTINCT {
+            id: chi_tiet_tham_chieu.id,
+            noidung: chi_tiet_tham_chieu.noidung,
+            cap_bac: chi_tiet_tham_chieu.cap_bac_phap_ly
+        }),
         quy_dinh_hien_hanh_doi_chieu: collect(DISTINCT hien_hanh.id)
-    } AS Context_TraLoi
+    } AS Context_Tho
     """
 
     print(f"Cypher Query:\n{cypher_query}\nVới IDs: {target_ids} và Thời điểm: {target_date}")
@@ -110,7 +151,10 @@ async def ket_hon_trai_phap_luat(query: str):
             danh_sach_id=target_ids,
             target_date=target_date
         )
-        return [record["Context_TraLoi"] for record in records]
+        results = []
+        for r in records:
+            results.append(chuan_hoa_Context_cho_LLM(r, target_date, is_user_provide_date))
+        return results
 
     except Exception as e:
         return [{"Lỗi Database": str(e)}]

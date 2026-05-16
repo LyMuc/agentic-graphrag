@@ -31,6 +31,7 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
 
     context_sach = {
         "danh_sach_can_cu": [],
+        "danh_sach_bo_tro": [],
         "FLAG_CANH_BAO_LICH_SU": "",
         "FLAG_CANH_BAO_THU_TU_UU_TIEN": "",
         "FLAG_CANH_BAO_SUA_DOI": ""
@@ -40,30 +41,43 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
     luat_da_het_hieu_luc = False
 
     # 1. Xử lý Căn cứ chính & Check Sửa đổi
-    for item in data['can_cu_chinh']:
+    for item in data.get('can_cu_chinh', []):
         if not item.get('id_thuc_te_ap_dung'): continue
 
-        tat_ca_cap_bac.add(item['cap_bac'])
-        if item['het_hieu_luc']: luat_da_het_hieu_luc = True
+        tat_ca_cap_bac.add(item.get('cap_bac'))
+        if item.get('het_hieu_luc'): luat_da_het_hieu_luc = True
 
         id_dang_dung = item['id_thuc_te_ap_dung']
 
         # [UPDATE MỚI] - Xử lý format nếu CÓ văn bản sửa đổi
         if item.get('id_sua_doi'):
             # ÉP LLM đọc cả 2 tên văn bản, nhưng NỘI DUNG đưa cho LLM là nội dung mới nhất đã sửa!
-            noidung_hien_thi = f"[{id_dang_dung}] (được sửa đổi, bổ sung bởi [{item['id_sua_doi']}]): {item['noidung_sua_doi']}"
+            noidung_hien_thi = f"[{id_dang_dung}] (được sửa đổi, bổ sung bởi [{item.get('id_sua_doi')}]): {item.get('noidung_sua_doi')}"
             context_sach["FLAG_CANH_BAO_SUA_DOI"] = "CÓ_VĂN_BẢN_SỬA_ĐỔI"
         else:
             # Luật nguyên bản, không bị ai sửa
-            noidung_hien_thi = f"[{id_dang_dung}]: {item['noidung']}"
+            noidung_hien_thi = f"[{id_dang_dung}]: {item.get('noidung')}"
 
-        context_sach["danh_sach_can_cu"].append({"cap_bac": item['cap_bac'], "text": noidung_hien_thi})
+        context_sach["danh_sach_can_cu"].append({"cap_bac": item.get('cap_bac'), "text": noidung_hien_thi})
 
     # 2. Xử lý Hướng dẫn
-    for hd in data['can_cu_huong_dan']:
+    for hd in data.get('can_cu_huong_dan', []):
         if not hd.get('id'): continue
-        tat_ca_cap_bac.add(hd['cap_bac'])
-        context_sach["danh_sach_can_cu"].append({"cap_bac": hd['cap_bac'], "text": f"[{hd['id']}]: {hd['noidung']}"})
+        tat_ca_cap_bac.add(hd.get('cap_bac'))
+        # [THÊM MỚI]: Bắt sự kiện Văn bản Hướng dẫn bị sửa đổi
+        if hd.get('id_sua_doi'):
+            noidung_hd_hien_thi = f"[{hd['id']}] (được sửa đổi, bổ sung bởi [{hd['id_sua_doi']}]): {hd['noidung_sua_doi']}"
+            context_sach["FLAG_CANH_BAO_SUA_DOI"] = "CÓ_VĂN_BẢN_SỬA_ĐỔI"
+        else:
+            noidung_hd_hien_thi = f"[{hd['id']}]: {hd['noidung']}"
+
+        context_sach["danh_sach_can_cu"].append({"cap_bac": hd['cap_bac'], "text": noidung_hd_hien_thi})
+
+    # 3. [MỚI] XỬ LÝ CĂN CỨ BỔ TRỢ (THAM CHIẾU)
+    can_cu_bo_tro = data.get('can_cu_bo_tro', []) if 'can_cu_bo_tro' in data else []
+    for bt in can_cu_bo_tro:
+        if not bt.get('id'): continue  # Bỏ qua các object rỗng do OPTIONAL MATCH sinh ra
+        context_sach["danh_sach_bo_tro"].append({"cap_bac": bt.get('cap_bac'), "text": f"[{bt.get('id')}]: {bt.get('noidung')}"})
 
     # 3. KÍCH HOẠT CÁC CỜ (FLAGS)
     # Cờ Ưu tiên
@@ -71,8 +85,9 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
         context_sach["FLAG_CANH_BAO_THU_TU_UU_TIEN"] = "CÓ_NHIỀU_CẤP_BẬC_PHÁP_LÝ"
 
     # Cờ Lịch sử
-    if is_user_provide_date and luat_da_het_hieu_luc and data['quy_dinh_hien_hanh_doi_chieu']:
-        luat_moi = ", ".join([str(i) for i in data['quy_dinh_hien_hanh_doi_chieu'] if i])
+    quy_dinh_hien_hanh = data.get('quy_dinh_hien_hanh_doi_chieu', []) if 'quy_dinh_hien_hanh_doi_chieu' in data else []
+    if is_user_provide_date and luat_da_het_hieu_luc and quy_dinh_hien_hanh:
+        luat_moi = ", ".join([str(i) for i in quy_dinh_hien_hanh if i])
         context_sach["FLAG_CANH_BAO_LICH_SU"] = f"ÁP DỤNG LUẬT CŨ TẠI THỜI ĐIỂM {target_date}. LUẬT HIỆN HÀNH BÂY GIỜ LÀ: {luat_moi}"
 
     # Sắp xếp danh sách căn cứ từ Cấp 1 -> Cấp 3
@@ -86,5 +101,11 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
     final_context_string += "--- NỘI DUNG CĂN CỨ ---\n"
     for idx, item in enumerate(context_sach["danh_sach_can_cu"]):
         final_context_string += f"{idx+1}. (Cấp bậc {item['cap_bac']}): {item['text']}\n"
+
+    # NẾU CÓ CĂN CỨ BỔ TRỢ THÌ MỚI IN RA
+    if context_sach["danh_sach_bo_tro"]:
+        final_context_string += "\n--- CĂN CỨ THAM CHIẾU BỔ TRỢ (ÁP DỤNG KÈM THEO) ---\n"
+        for idx, item in enumerate(context_sach["danh_sach_bo_tro"]):
+            final_context_string += f"{idx+1}. (Cấp bậc {item['cap_bac']}): {item['text']}\n"
 
     return final_context_string
