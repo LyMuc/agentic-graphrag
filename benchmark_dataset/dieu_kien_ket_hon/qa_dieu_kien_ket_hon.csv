@@ -1,4 +1,4 @@
-﻿question,ground_truth
+﻿question,ground_truth,chatbot_answer,chu_de_phap_ly,loai_cau_hoi,van_ban_phap_luat_lien_quan,dieu_khoan_ap_dung,tinh_trang_hieu_luc,can_cu_phap_ly_chinh,can_cu_phap_ly_bo_tro,van_ban_huong_dan_sua_doi_bo_sung_thay_the,can_cu_khong_nen_ap_dung,quan_he_chong_cheo_mau_thuan,legal_citation_accuracy,legal_validity_accuracy,citation_prioritization_accuracy,invalid_citation_rate,context_conflict_detection_rate,hallucination_rate,faithfulness,context_recall,answer_correctness
 Những người có họ trong phạm vi ba đời gồm những ai?,"Căn cứ tại khoản 18 Điều 3 Luật Hôn nhân và gia đình 2014 quy định về những người có họ trong phạm vi ba đời như sau:
 
 Điều 3. Giải thích từ ngữ
@@ -21,7 +21,7 @@ Như vậy, những người có họ trong phạm vi ba đời là những ngư
 
 - Đời thứ hai là anh, chị, em cùng cha mẹ, cùng cha khác mẹ, cùng mẹ khác cha;
 
-- Đời thứ ba là anh, chị, em con chú, con bác, con cô, con cậu, con dì."
+- Đời thứ ba là anh, chị, em con chú, con bác, con cô, con cậu, con dì.",,,,,,,,,,,,,,,,,,,,
 Có được đăng ký kết hôn trong phạm vi ba đời không? Tại sao cấm kết hôn trong phạm vi ba đời?,"Căn cứ theo Điều 8 Luật Hôn nhân và gia đình 2014 quy định về điều kiện kết hôn như sau:
 
 Điều 8. Điều kiện kết hôn
@@ -74,7 +74,7 @@ Theo đó, kết hôn trong phạm vi ba đời thuộc một trong những hàn
 
 Không chỉ theo pháp luật cấm mà còn theo y học, khi kết hôn giữa những người có họ hàng gần thì đời con có tỷ lệ kiểu gen dị hợp giảm, đồng hợp tăng, tạo điều kiện cho các gen lặn có hại biểu hiện ra kiểu hình. Do vậy, khi đẻ ra, con cái thường bị dị tật. quái thai,…
 
-Như vậy, không được đăng ký kết hôn trong phạm vi ba đời."
+Như vậy, không được đăng ký kết hôn trong phạm vi ba đời.",,,,,,,,,,,,,,,,,,,,
 Mức xử phạt đối với hành vi kết hôn giữa những người có họ trong phạm vi ba đời là bao nhiêu?,"Căn cứ tại điểm a khoản 2 Điều 59 Nghị định 82/2020/NĐ-CP quy định về hành vi vi phạm quy định về kết hôn như sau:
 
 Điều 59. Hành vi vi phạm quy định về kết hôn, ly hôn và vi phạm chế độ hôn nhân một vợ, một chồng
@@ -93,7 +93,7 @@ d) Lợi dụng việc kết hôn để xuất cảnh, nhập cảnh, cư trú, 
 
 [...]
 
-Như vậy, mức xử phạt đối với hành vi kết hôn giữa những người có họ trong phạm vi ba đời có thể bị phạt tiền từ 10.000.000 đồng đến 20.000.000 đồng."
+Như vậy, mức xử phạt đối với hành vi kết hôn giữa những người có họ trong phạm vi ba đời có thể bị phạt tiền từ 10.000.000 đồng đến 20.000.000 đồng.",,,,,,,,,,,,,,,,,,,,
 Kết hôn cận huyết là gì?,"Căn cứ Điều 5 Luật Hôn nhân và gia đình 2014 quy định bảo vệ chế độ hôn nhân và gia đình:
 
 Điều 5. Bảo vệ chế độ hôn nhân và gia đình
@@ -126,7 +126,7 @@ Các khái niệm về cùng dòng máu trực hệ và cùng có họ trong ph�
 
 + Đời thứ ba bao gồm anh, chị, em con cậu, con bác, con chú, con cô, con dì;
 
-Như vậy, kết hôn cận huyết là hôn nhân giữa những người thuộc một trong các trường hợp nêu trên."
+Như vậy, kết hôn cận huyết là hôn nhân giữa những người thuộc một trong các trường hợp nêu trên.",,,,,,,,,,,,,,,,,,,,
 Hôn nhân cận huyết có được đăng ký kết hôn?,"Căn cứ Điều 8 Luật Hôn nhân và gia đình 2014 quy định điều kiện kết hôn:
 
 Điều 8. Điều kiện kết hôn
@@ -161,7 +161,7 @@ d) Kết hôn hoặc chung sống như vợ chồng giữa những người cùn
 
 [...]
 
-Như vậy, từ những quy định trên có thể thấy hôn nhân cận huyết là một trong những trường hợp cấm theo quy định của Luật Hôn nhân và gia đình 2014 . Do đó, hôn nhân cận huyết không được đăng ký kết hôn."
+Như vậy, từ những quy định trên có thể thấy hôn nhân cận huyết là một trong những trường hợp cấm theo quy định của Luật Hôn nhân và gia đình 2014 . Do đó, hôn nhân cận huyết không được đăng ký kết hôn.",,,,,,,,,,,,,,,,,,,,
 Kết hôn cận huyết bị phạt thế nào?,"Do kết hôn cận huyết là một trong những hành vi bị pháp luật nghiêm cấm. Hiện nay, hành vi này được quy định mức xử phạt hành chính tại điểm a khoản 2 Điều 59 Nghị định 82/2020/NĐ-CP như sau:
 
 Điều 59. Hành vi vi phạm quy định về kết hôn, ly hôn và vi phạm chế độ hôn nhân một vợ, một chồng
@@ -178,7 +178,7 @@ Như vậy, những người có hành vi kết hôn hoặc chỉ chung sống n
 
 Đồng thời, tại Điều 184 Bộ luật Hình sự 2015 quy định thì Kết hôn cận huyết cũng được xem là tội loạn luân
 
-Do đó, người nào giao cấu với người mà biết rõ người đó cùng dòng máu về trực hệ, là anh chị em cùng cha mẹ, anh chị em cùng cha khác mẹ hoặc cùng mẹ khác cha, thì bị phạt tù từ 01 năm đến 05 năm."
+Do đó, người nào giao cấu với người mà biết rõ người đó cùng dòng máu về trực hệ, là anh chị em cùng cha mẹ, anh chị em cùng cha khác mẹ hoặc cùng mẹ khác cha, thì bị phạt tù từ 01 năm đến 05 năm.",,,,,,,,,,,,,,,,,,,,
 Tái hôn là gì?,"Căn cứ Điều 9 Luật Hôn nhân và gia đình 2014 quy định đăng ký kết hôn :
 
 Đăng ký kết hôn
@@ -193,7 +193,7 @@ Theo đó, tái hôn là việc vợ chồng đã ly hôn nhưng muốn xác l�
 
 Tái hôn là một sự kiện pháp lý hoàn toàn khác với việc đăng ký lại kết hôn. Việc đăng ký lại kết hôn chỉ áp dụng đối với những trường hợp giấy đăng ký kết hôn bị mất hoặc hư hỏng.
 
-Còn việc tái hôn áp dụng với những trường hợp đã ly hôn nhưng muốn xác lập lại quan hệ vợ chồng."
+Còn việc tái hôn áp dụng với những trường hợp đã ly hôn nhưng muốn xác lập lại quan hệ vợ chồng.",,,,,,,,,,,,,,,,,,,,
 Thủ tục tái hôn năm 2024 cấp xã được thực hiện như thế nào?,"Căn cứ Điều 8 Luật Hôn nhân và gia đình 2014 quy định điều kiện kết hôn:
 
 Điều kiện kết hôn
@@ -262,7 +262,7 @@ Trường hợp cần xác minh điều kiện kết hôn của hai bên nam, n�
 
 Bước 3 : Nam nữ cùng ký vào Giấy chứng nhận kết hôn nếu đủ điều kiện
 
-Bước 4 : Công chức tư pháp - hộ tịch báo cáo Chủ tịch Ủy ban nhân dân cấp xã tổ chức trao Giấy chứng nhận kết hôn cho hai bên nam, nữ."
+Bước 4 : Công chức tư pháp - hộ tịch báo cáo Chủ tịch Ủy ban nhân dân cấp xã tổ chức trao Giấy chứng nhận kết hôn cho hai bên nam, nữ.",,,,,,,,,,,,,,,,,,,,
 Lệ phí tái hôn năm 2024 là bao nhiêu?,"Căn cứ Điều 11 Luật Hộ tịch 2014 quy định lệ phí hộ tịch:
 
 Lệ phí hộ tịch
@@ -279,7 +279,7 @@ Bộ Tài chính quy định chi tiết thẩm quyền thu, mức thu, nộp, ch
 
 Theo quy định trên, đăng ký kết hôn của công dân Việt Nam cư trú ở trong nước thuộc trường hợp được miễn lệ phí. Vì vậy, công dân Việt Nam cư trú ở trong nước đăng ký tái hôn thì được miễn lệ phí.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Hôn nhân đồng giới là gì?,"Theo Điều 5 Luật Bình đẳng giới 2006 quy định về giới tính như sau:
 
 Giải thích từ ngữ
@@ -310,7 +310,7 @@ Hôn nhân đồng giới mang lại cho các cặp vợ chồng đồng giới 
 
 Hôn nhân đồng giới là một vấn đề gây tranh cãi ở nhiều quốc gia. Những người ủng hộ hôn nhân đồng giới cho rằng hôn nhân là một quyền cơ bản của con người và nên được mở rộng cho tất cả mọi người, bất kể giới tính của họ. Những người phản đối hôn nhân đồng giới cho rằng hôn nhân là một định nghĩa truyền thống chỉ dành cho nam và nữ.
 
-Hôn nhân đồng giới đang trở nên phổ biến hơn trên toàn thế giới. Số lượng quốc gia hợp pháp hóa hôn nhân đồng giới đang tăng lên và ngày càng có nhiều người ủng hộ hôn nhân bình đẳng."
+Hôn nhân đồng giới đang trở nên phổ biến hơn trên toàn thế giới. Số lượng quốc gia hợp pháp hóa hôn nhân đồng giới đang tăng lên và ngày càng có nhiều người ủng hộ hôn nhân bình đẳng.",,,,,,,,,,,,,,,,,,,,
 Việt Nam có chấp nhận hôn nhân đồng giới không?,"Theo khoản 3 Điều 3 Luật Hôn nhân và gia đình 2014 quy định về chế độ hôn nhân và gia đình như sau:
 
 Giải thích từ ngữ
@@ -345,7 +345,7 @@ Theo đó tại Luật Hôn nhân và gia đình 2014 đang có hiệu lực thi
 
 Tuy nhiên theo quy định cũng đã nêu rõ, Nhà nước không thừa nhận hôn nhân đồng giới chứ không cấm hôn nhân đồng giới
 
-Tức là các cặp vợ chồng đồng giới đang sinh sống tại Việt Nam và đã kết hôn hợp pháp theo quy định của pháp luật nước ngoài thì cũng không phải là vi phạm pháp luật Việt Nam"
+Tức là các cặp vợ chồng đồng giới đang sinh sống tại Việt Nam và đã kết hôn hợp pháp theo quy định của pháp luật nước ngoài thì cũng không phải là vi phạm pháp luật Việt Nam",,,,,,,,,,,,,,,,,,,,
 Những điều cấm trong bảo vệ hôn nhân và gia đình Việt Nam là gì?,"Theo khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 quy định về những điều cấm trong bảo vệ hôn nhân và gia đình như sau:
 
 - Kết hôn giả tạo, ly hôn giả tạo;
@@ -366,7 +366,7 @@ Những điều cấm trong bảo vệ hôn nhân và gia đình Việt Nam là 
 
 - Lợi dụng việc thực hiện quyền về hôn nhân và gia đình để mua bán người, bóc lột sức lao động, xâm phạm tình dục hoặc có hành vi khác nhằm mục đích trục lợi.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Luật hôn nhân và gia đình được áp dụng năm 2024 là luật nào?,"Ngày 19/06/2014, Quốc hội ban hành Luật Hôn nhân và gia đình 2014 và có hiệu lực kể từ 01/01/2015.
 
 Luật Hôn nhân và gia đình 2014 quy định chế độ hôn nhân và gia đình; chuẩn mực pháp lý cho cách ứng xử giữa các thành viên gia đình; trách nhiệm của cá nhân, tổ chức, Nhà nước và xã hội trong việc xây dựng, củng cố chế độ hôn nhân và gia đình.
@@ -375,7 +375,7 @@ Luật Hôn nhân và gia đình 2014 quy định chế độ hôn nhân và gia
 
 Các văn bảo hướng dẫn thi hành Luật Hôn nhân và gia đình 2014 , bao gồm:
 
-Văn bản bị thay thế Luật Hôn nhân và Gia đình 2000 Văn bản được dẫn chiếu Luật Nuôi con nuôi 2010 Bộ luật Dân sự 2005 (hết hiệu lực được thay thế bởi Bộ luật Dân sự 2015 ) Bộ luật Tố tụng dân sự 2004 (hết hiệu lực được thay thế bởi Bộ luật Tố tụng dân sự 2015 ) Văn bản được căn cứ Hiến pháp 2013 Văn bản hướng dẫn Nghị định 82/2020/NĐ-CP quy định về xử phạt vi phạm hành chính trong lĩnh vực bổ trợ tư pháp; hành chính tư pháp; hôn nhân và gia đình; thi hành án dân sự; phá sản doanh nghiệp, hợp tác xã Nghị định 98/2016/NĐ-CP sửa đổi Nghị định 10/2015/NĐ-CP quy định về sinh con bằng kỹ thuật thụ tinh trong ống nghiệm và điều kiện mang thai hộ vì mục đích nhân đạo Thông tư liên tịch 01/2016/TTLT-TANDTC-VKSNDTC-BTP hướng dẫn thi hành quy định của Luật hôn nhân và gia đình do Chánh án Tòa án nhân dân tối cao - Viện trưởng Viện kiểm sát nhân dân tối cao - Bộ trưởng Bộ Tư pháp ban hành Nghị định 123/2015/NĐ-CP hướng dẫn Luật hộ tịch Nghị định 10/2015/NĐ-CP quy định về sinh con bằng kỹ thuật thụ tinh trong ống nghiệm và điều kiện mang thai hộ vì mục đích nhân đạo Nghị định 126/2014/NĐ-CP hướng dẫn thi hành Luật Hôn nhân và gia đình"
+Văn bản bị thay thế Luật Hôn nhân và Gia đình 2000 Văn bản được dẫn chiếu Luật Nuôi con nuôi 2010 Bộ luật Dân sự 2005 (hết hiệu lực được thay thế bởi Bộ luật Dân sự 2015 ) Bộ luật Tố tụng dân sự 2004 (hết hiệu lực được thay thế bởi Bộ luật Tố tụng dân sự 2015 ) Văn bản được căn cứ Hiến pháp 2013 Văn bản hướng dẫn Nghị định 82/2020/NĐ-CP quy định về xử phạt vi phạm hành chính trong lĩnh vực bổ trợ tư pháp; hành chính tư pháp; hôn nhân và gia đình; thi hành án dân sự; phá sản doanh nghiệp, hợp tác xã Nghị định 98/2016/NĐ-CP sửa đổi Nghị định 10/2015/NĐ-CP quy định về sinh con bằng kỹ thuật thụ tinh trong ống nghiệm và điều kiện mang thai hộ vì mục đích nhân đạo Thông tư liên tịch 01/2016/TTLT-TANDTC-VKSNDTC-BTP hướng dẫn thi hành quy định của Luật hôn nhân và gia đình do Chánh án Tòa án nhân dân tối cao - Viện trưởng Viện kiểm sát nhân dân tối cao - Bộ trưởng Bộ Tư pháp ban hành Nghị định 123/2015/NĐ-CP hướng dẫn Luật hộ tịch Nghị định 10/2015/NĐ-CP quy định về sinh con bằng kỹ thuật thụ tinh trong ống nghiệm và điều kiện mang thai hộ vì mục đích nhân đạo Nghị định 126/2014/NĐ-CP hướng dẫn thi hành Luật Hôn nhân và gia đình",,,,,,,,,,,,,,,,,,,,
 Các hành vi nào bị nghiêm cấm nhằm bảo vệ chế độ hôn nhân và gia đình?,"Căn cứ Điều 5 Luật Hôn nhân và gia đình 2014 quy định bảo vệ chế độ hôn nhân và gia đình:
 
 Bảo vệ chế độ hôn nhân và gia đình
@@ -414,7 +414,7 @@ Theo đó, nhằm bảo vệ chế độ hôn nhân và gia đình thì nghiêm 
 
 - Bạo lực gia đình;
 
-- Lợi dụng việc thực hiện quyền về hôn nhân và gia đình để mua bán người, bóc lột sức lao động, xâm phạm tình dục hoặc có hành vi khác nhằm mục đích trục lợi."
+- Lợi dụng việc thực hiện quyền về hôn nhân và gia đình để mua bán người, bóc lột sức lao động, xâm phạm tình dục hoặc có hành vi khác nhằm mục đích trục lợi.",,,,,,,,,,,,,,,,,,,,
 Điều kiện kết hôn theo quy định Luật Hôn nhân gia đình 2014?,"Căn cứ Điều 8 Luật Hôn nhân và gia đình 2014 quy định điều kiện kết hôn:
 
 Điều kiện kết hôn
@@ -451,7 +451,7 @@ Theo đó, điều kiện kết hôn theo quy định Luật Hôn nhân và gia 
 
 Lưu ý : Nhà nước không thừa nhận hôn nhân giữa những người cùng giới tính.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Có bắt buộc phải xét nghiệm HIV trước khi kết hôn hay không?,"Căn cứ quy định Điều 13 Luật Phòng, chống nhiễm vi rút gây ra hội chứng suy giảm miễn dịch mắc phải ở người (HIV/AIDS) 2006 quy định về phòng, chống HIV/AIDS tại gia đình như sau:
 
 Phòng, chống HIV/AIDS tại gia đình
@@ -478,7 +478,7 @@ Như vậy, theo quy định hiện nay thì pháp luật chỉ khuyến khích 
 
 Do đó, pháp luật không bắt buộc phải thực hiện xét nghiệm trước khi kết hôn.
 
-Tuy nhiên, để tránh các trường hợp ngoài ý muốn thì các cặp đôi trước khi kết hôn nên tự nguyện đi xét nghiệm HIV."
+Tuy nhiên, để tránh các trường hợp ngoài ý muốn thì các cặp đôi trước khi kết hôn nên tự nguyện đi xét nghiệm HIV.",,,,,,,,,,,,,,,,,,,,
 Xét nghiệm HIV tự nguyện được quy định như thế nào?,"Căn quy định Điều 27 Luật Phòng, chống nhiễm vi rút gây ra hội chứng suy giảm miễn dịch mắc phải ở người (HIV/AIDS) 2006 được sửa đổi bởi khoản 8 Điều 1 Luật Phòng, chống nhiễm vi rút gây ra hội chứng suy giảm miễn dịch mắc phải ở người (HIV/AIDS) sửa đổi 2020 quy định về xét nghiệm HIV tự nguyện như sau:
 
 Xét nghiệm HIV tự nguyện
@@ -495,7 +495,7 @@ Như vậy, xét nghiệm HIV tự nguyện được quy định như sau:
 
 - Người từ đủ 15 tuổi trở lên và có năng lực hành vi dân sự được tự nguyện yêu cầu xét nghiệm HIV.
 
-- Việc xét nghiệm HIV đối với người dưới 15 tuổi, người mất năng lực hành vi dân sự, người có khó khăn trong nhận thức, làm chủ hành vi và người bị hạn chế năng lực hành vi dân sự chỉ được thực hiện khi có sự đồng ý bằng văn bản của cha, mẹ hoặc người giám hộ, người đại diện của người đó."
+- Việc xét nghiệm HIV đối với người dưới 15 tuổi, người mất năng lực hành vi dân sự, người có khó khăn trong nhận thức, làm chủ hành vi và người bị hạn chế năng lực hành vi dân sự chỉ được thực hiện khi có sự đồng ý bằng văn bản của cha, mẹ hoặc người giám hộ, người đại diện của người đó.",,,,,,,,,,,,,,,,,,,,
 Kết quả xét nghiệm HIV dương tính chỉ được thông báo cho những người nào?,"Căn cứ quy định khoản 2 Điều 30 Luật Phòng, chống nhiễm vi rút gây ra hội chứng suy giảm miễn dịch mắc phải ở người (HIV/AIDS) 2006 được sửa đổi bởi Khoản 10 Điều 1 Luật Phòng, chống nhiễm vi rút gây ra hội chứng suy giảm miễn dịch mắc phải ở người (HIV/AIDS) sửa đổi 2020 có quy định kết quả xét nghiệm HIV dương tính chỉ được thông báo cho những người sau đây:
 
 - Người được xét nghiệm;
@@ -512,7 +512,7 @@ Kết quả xét nghiệm HIV dương tính chỉ được thông báo cho nhữ
 
 - Người đứng đầu và cán bộ, công chức được giao trách nhiệm của các cơ quan quy định.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 "Hành vi kết hôn với người đã từng là cha nuôi, mẹ nuôi bị xử phạt bao nhiêu tiền?","Căn cứ tại Điều 59 Nghị định 82/2020/NĐ-CP quy định về việc xử lý hành vi vi phạm quy định về kết hôn, ly hôn và vi phạm chế độ hôn nhân một vợ, một chồng cụ thể như sau:
 
 Hành vi vi phạm quy định về kết hôn, ly hôn và vi phạm chế độ hôn nhân một vợ, một chồng
@@ -533,7 +533,7 @@ d) Kết hôn hoặc chung sống như vợ chồng giữa người đã từng 
 
 Như vậy, đối với hành vi kết hôn với người đã từng là cha nuôi, mẹ nuôi sẽ bị phạt tiền từ 3.000.000 đến 5.000.000 đồng theo quy định của pháp luật và tùy vào mức độ nghiêm trọng của vụ việc.
 
-Lưu ý: Mức phạt đối với hành vi này là dành cho cá nhân (tại khoản 4 Điều 4 Nghị định 82/2020/NĐ-CP )."
+Lưu ý: Mức phạt đối với hành vi này là dành cho cá nhân (tại khoản 4 Điều 4 Nghị định 82/2020/NĐ-CP ).",,,,,,,,,,,,,,,,,,,,
 Hành vi kết hôn với người đã chuyển giới có phải là hành vi cấm?,"Theo quy định tại Điều 37 Bộ luật Dân sự 2015 quy định về việc chuyển đổi giới tính cụ thể như sau:
 
 Chuyển đổi giới tính
@@ -542,7 +542,7 @@ Việc chuyển đổi giới tính được thực hiện theo quy định củ
 
 Như vậy, đối với hành vi kết hôn với người đã chuyển giới không phải là hành vi cấm theo quy định của pháp luật.
 
-Căn bản khi một người chuyển giới thì họ cũng đã có quyền và nghĩa vụ thay đổi hộ tịch. Cho nên, sau khi chuyển giới thì phải đăng ký thay đổi hộ tịch thì người chuyển giới được quyền đăng ký kết hôn với người khác giới tính khi đã hoàn thành xong thủ tục thay đổi hộ tịch và quan hệ hôn nhân này sẽ được pháp luật công nhận."
+Căn bản khi một người chuyển giới thì họ cũng đã có quyền và nghĩa vụ thay đổi hộ tịch. Cho nên, sau khi chuyển giới thì phải đăng ký thay đổi hộ tịch thì người chuyển giới được quyền đăng ký kết hôn với người khác giới tính khi đã hoàn thành xong thủ tục thay đổi hộ tịch và quan hệ hôn nhân này sẽ được pháp luật công nhận.",,,,,,,,,,,,,,,,,,,,
 Hành vi kết hôn với người đồng giới có phải là hành vi cấm không?,"Căn cứ theo Điều 5 Luật Hôn nhân và gia đình 2014 quy định về việc bảo vệ chế độ hôn nhân và gia đình như sau:
 
 Bảo vệ chế độ hôn nhân và gia đình
@@ -577,7 +577,7 @@ Cơ quan, tổ chức, cá nhân có quyền yêu cầu Tòa án, cơ quan khác
 
 Như vậy, theo quy định trên thì hiện tại hành vi kết hôn với người đồng giới không phải là một hành vi cấm theo quy định của pháp luật. Tuy nhiên, pháp luật Việt Nam sẽ không thừa nhận hôn nhân giữa những người cùng giới tính. (căn cứ tại khoản 2 Điều 8 Luật Hôn nhân và gia đình 2014 ).
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Phải qua mấy đời họ hàng mới được kết hôn với nhau?,"Tại điểm d khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 có quy định về bảo vệ chế độ hôn nhân và gia đình trong đó cấm hành vi sau đây:
 
 Bảo vệ chế độ hôn nhân và gia đình
@@ -606,7 +606,7 @@ i) Lợi dụng việc thực hiện quyền về hôn nhân và gia đình đ�
 
 ...
 
-Như vậy, họ hàng trong phạm vi 4 đời trở lên thì được kết hôn với nhau. Nếu có họ trong phạm vi ba đời trở xuống thì không được kết hôn."
+Như vậy, họ hàng trong phạm vi 4 đời trở lên thì được kết hôn với nhau. Nếu có họ trong phạm vi ba đời trở xuống thì không được kết hôn.",,,,,,,,,,,,,,,,,,,,
 Điều kiện được kết hôn với nhau là gì?,"Tại khoản 1 Điều 8 Luật Hôn nhân và gia đình 2014 quy định điều kiện kết hôn như sau:
 
 Điều kiện kết hôn
@@ -639,7 +639,7 @@ Như vậy, nam nữ được kết hôn với nhau phải đáp ứng điều k
 
 + Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ;
 
-+ Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng."
++ Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng.",,,,,,,,,,,,,,,,,,,,
 Có phải ly hôn muốn xác lập lại quan hệ vợ chồng thì phải đăng ký kết hôn không?,"Tại Điều 9 Luật Hôn nhân và gia đình 2014 có quy định đăng ký kết hôn như sau:
 
 Đăng ký kết hôn
@@ -652,7 +652,7 @@ Việc kết hôn không được đăng ký theo quy định tại khoản này
 
 Như vậy, khi vợ chồng đã ly hôn nếu muốn xác lập lại quan hệ vợ chồng thì bắt buộc vợ chồng phải đăng ký kết hôn tại cơ quan nhà nước có thẩm quyền.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Điều kiện để kết hôn là gì?,"Theo quy định tại Điều 8 Luật Hôn nhân và gia đình 2014 về điều kiện kết hôn như sau:
 
 Điều kiện kết hôn
@@ -691,7 +691,7 @@ Quy định về điều kiện kết hôn phải tuân theo các điều kiện
 
 + Giữa cha chồng với con dâu, mẹ vợ với con rể,
 
-+ Giữa cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng."
++ Giữa cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng.",,,,,,,,,,,,,,,,,,,,
 Việc đăng ký kết hôn được tiến hành như thế nào?,"Căn cứ tại Điều 9 Luật Hôn nhân và gia đình 2014 về đăng ký kết hôn như sau:
 
 Đăng ký kết hôn
@@ -726,7 +726,7 @@ Thẩm quyền đăng ký kết hôn
 
 Do đó, khi đăng ký kết hôn, Ủy ban nhân dân cấp xã là cơ quan nhà nước có thẩm quyền cấp Giấy chứng nhận kết hôn đối với kết hôn giữa công dân Việt Nam với nhau.
 
-Trường hợp đăng ký kế hôn giữa công dân Việt Nam với người nước ngoài; giữa công dân Việt Nam cư trú ở trong nước với công dân Việt Nam định cư ở nước ngoài; giữa công dân Việt Nam định cư ở nước ngoài với nhau; giữa công dân Việt Nam đồng thời có quốc tịch nước ngoài với công dân Việt Nam hoặc với người nước ngoài thì Ủy ban nhân dân cấp huyện là cơ quan có thẩm quyền đăng ký kết hôn."
+Trường hợp đăng ký kế hôn giữa công dân Việt Nam với người nước ngoài; giữa công dân Việt Nam cư trú ở trong nước với công dân Việt Nam định cư ở nước ngoài; giữa công dân Việt Nam định cư ở nước ngoài với nhau; giữa công dân Việt Nam đồng thời có quốc tịch nước ngoài với công dân Việt Nam hoặc với người nước ngoài thì Ủy ban nhân dân cấp huyện là cơ quan có thẩm quyền đăng ký kết hôn.",,,,,,,,,,,,,,,,,,,,
 "Người có khó khăn trong nhận thức, làm chủ hành vi thì có được phép kết hôn hay không?","Tại Điều 22 Bộ luật Dân sự 2015 có quy định về người mất năng lực hành vi dân sự như sau:
 
 Mất năng lực hành vi dân sự
@@ -749,7 +749,7 @@ Vậy, một người được xem là mất hành vi dân sự khi người đ�
 
 Chính vì thế, người có khó khăn trong nhận thức, làm chủ hành vi nếu đáp ứng đầy đủ các điều kiện kết hôn theo Điều 8 Luật Hôn nhân và gia đình 2014 và không nằm trong trường hợp bị cấm kết hôn thì vẫn được kết hôn như bình thường.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Con riêng của chồng có được kết hôn với con riêng của vợ hay không?,"Tại khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 có quy định về bảo vệ chế độ hôn nhân và gia đình như sau:
 
 Bảo vệ chế độ hôn nhân và gia đình
@@ -780,7 +780,7 @@ i) Lợi dụng việc thực hiện quyền về hôn nhân và gia đình đ�
 
 ...
 
-Như vậy, trường hợp con riêng của chồng kết hôn với con riêng của vợ không nằm trong các hành vi bị nghiêm cấm. Cho nên, con riêng của chồng được kết hôn với con riêng của vợ nếu đáp ứng các điều kiện kết hôn."
+Như vậy, trường hợp con riêng của chồng kết hôn với con riêng của vợ không nằm trong các hành vi bị nghiêm cấm. Cho nên, con riêng của chồng được kết hôn với con riêng của vợ nếu đáp ứng các điều kiện kết hôn.",,,,,,,,,,,,,,,,,,,,
 Điều kiện kết hôn đối với con riêng của chồng kết hôn với con riêng của vợ là gì?,"Tại Điều 8 Luật Hôn nhân và gia đình 2014 có quy định về điều kiện kết hôn như sau:
 
 Điều kiện kết hôn
@@ -805,7 +805,7 @@ Như vậy, điều kiện kết hôn đối với con riêng của chồng kế
 
 - Không bị mất năng lực hành vi dân sự;
 
-- Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn."
+- Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn.",,,,,,,,,,,,,,,,,,,,
 Con riêng của chồng có được mang thai hộ cho con riêng của vợ hay không?,"Tại Điều 95 Luật Hôn nhân và gia đình 2014 có quy định về điều kiện mang thai hộ vì mục đích nhân đạo như sau:
 
 Điều kiện mang thai hộ vì mục đích nhân đạo
@@ -838,7 +838,7 @@ d) Trường hợp người phụ nữ mang thai hộ có chồng thì phải c�
 
 Như vậy, người được nhờ mang thai hộ phải là người thân thích cùng hàng của bên vợ hoặc bên chồng nhờ mang thai hộ. Cho nên, con riêng của chồng không thể mang thai hộ cho con riêng của vợ được.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Thách cưới có phải là yêu sách của cải trong kết hôn?,"Tại khoản 12 Điều 3 Luật Hôn nhân và gia đình 2014 quy định:
 
 Giải thích từ ngữ
@@ -847,7 +847,7 @@ Giải thích từ ngữ
 
 12. Yêu sách của cải trong kết hôn là việc đòi hỏi về vật chất một cách quá đáng và coi đó là điều kiện để kết hôn nhằm cản trở việc kết hôn tự nguyện của nam, nữ.
 
-Như vậy , thách cưới còn có thể được xem là yêu sách của cải trong kết hôn nếu việc thách cưới đòi hỏi về vật chất một cách quá đáng và coi đó là điều kiện để kết hôn nhằm cản trở việc kết hôn tự nguyện."
+Như vậy , thách cưới còn có thể được xem là yêu sách của cải trong kết hôn nếu việc thách cưới đòi hỏi về vật chất một cách quá đáng và coi đó là điều kiện để kết hôn nhằm cản trở việc kết hôn tự nguyện.",,,,,,,,,,,,,,,,,,,,
 Muốn kết hôn cần đáp ứng những điều kiện nào?,"Tại Điều 8 Luật Hôn nhân và gia đình 2014 có quy định điều kiện kết hôn như sau:
 
 - Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây:
@@ -866,7 +866,7 @@ Muốn kết hôn cần đáp ứng những điều kiện nào?,"Tại Điều 
 
 ++ Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ;
 
-++ Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng."
+++ Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng.",,,,,,,,,,,,,,,,,,,,
 Người có hành vi thách cưới bị xử lý như thế nào?,"Tại điểm đ khoản 1 Điều 59 Nghị đinh 82/2020/NĐ-CP quy định người có hành vi vi phạm quy định về kết hôn sẽ bị xử lý như sau:
 
 Hành vi vi phạm quy định về kết hôn, ly hôn và vi phạm chế độ hôn nhân một vợ, một chồng
@@ -891,7 +891,7 @@ Buộc nộp lại số lợi bất hợp pháp có được do thực hiện h�
 
 Như vậy, cá nhân nếu có hành vi vi phạm sẽ bị phạt tiền từ 10.000.000 đồng đến 20.000.000 đồng. Trường hợp tổ chức có hành vi vi phạm hành chính như của cá nhân thì mức phạt tiền bằng 02 lần mức phạt tiền đối với cá nhân (khoản 4 Điều 4 Nghị định 82/2020/NĐ-CP ).
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Em trai chồng kết hôn với em gái vợ có vi phạm việc kết hôn trong phạm vi ba đời không?,"Theo quy định tại khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 quy định về các hành vi bị cấm trong hôn nhân như sau:
 
 a) Kết hôn giả tạo, ly hôn giả tạo;
@@ -916,7 +916,7 @@ Ngoài ra, theo khoản 18 Điều 3 Luật Hôn nhân và gia đình 2014 giả
 
 Những người có họ trong phạm vi ba đời là những người cùng một gốc sinh ra gồm cha mẹ là đời thứ nhất; anh, chị, em cùng cha mẹ, cùng cha khác mẹ, cùng mẹ khác cha là đời thứ hai; anh, chị, em con chú, con bác, con cô, con cậu, con dì là đời thứ ba.
 
-Theo đó, em trai của người chồng và em gái của người vợ không thuộc những người có họ trong phạm vi ba đời. Vậy việc em trai bạn kết hôn với em gái của vợ bạn không rơi vào hành vi bị cấm trong hôn nhân. Do đó, em trai của chồng hoàn toàn có thể kết hôn với em gái của người vợ."
+Theo đó, em trai của người chồng và em gái của người vợ không thuộc những người có họ trong phạm vi ba đời. Vậy việc em trai bạn kết hôn với em gái của vợ bạn không rơi vào hành vi bị cấm trong hôn nhân. Do đó, em trai của chồng hoàn toàn có thể kết hôn với em gái của người vợ.",,,,,,,,,,,,,,,,,,,,
 Điều kiện để em trai chồng kết hôn với em gái vợ là gì?,"Theo quy định tại Điều 8 Luật Hôn nhân và gia đình 2014 quy định về điều kiện kết hôn như sau:
 
 1. Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây:
@@ -931,7 +931,7 @@ d) Việc kết hôn không thuộc một trong các trường hợp cấm kết
 
 2. Nhà nước không thừa nhận hôn nhân giữa những người cùng giới tính.
 
-Do em trai người chồng và em gái người vợ không thuộc hành vi bị cấm hay trường hợp đặc biệt trong kết hôn nên điều kiện để kết hôn được áp dụng như quy định về điều kiện kết hôn thông thường nêu trên."
+Do em trai người chồng và em gái người vợ không thuộc hành vi bị cấm hay trường hợp đặc biệt trong kết hôn nên điều kiện để kết hôn được áp dụng như quy định về điều kiện kết hôn thông thường nêu trên.",,,,,,,,,,,,,,,,,,,,
 Ai là người có quyền yêu cầu hủy việc kết hôn trái pháp luật?,"Căn cứ quy định tại Điều 10 Luật Hôn nhân và gia đình 2014 quy định về người có quyền yêu cầu hủy việc kết hôn trái pháp luật như sau:
 
 1. Người bị cưỡng ép kết hôn, bị lừa dối kết hôn, theo quy định của pháp luật về tố tụng dân sự, có quyền tự mình yêu cầu hoặc đề nghị cá nhân, tổ chức quy định tại khoản 2 Điều này yêu cầu Tòa án hủy việc kết hôn trái pháp luật do việc kết hôn vi phạm quy định tại điểm b khoản 1 Điều 8 của Luật này.
@@ -950,7 +950,7 @@ d) Hội liên hiệp phụ nữ.
 
 Trên đây là quy định về có người có quyền yêu cầu hủy việc kết hôn trái pháp luật. Vậy khi gặp trường hợp kết hôn trái luật, bạn có thể đề nghị cơ quan có thẩm quyền yêu cầu Tòa hủy việc kết hôn trái pháp luật và các hành động khác theo quy định nêu trên.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Con ruột và con riêng có được kết hôn hay không?,"Tại Điều 8 Luật Hôn nhân và gia đình 2014 có quy định về điều kiện kết hôn như sau:
 
 Điều kiện kết hôn
@@ -989,7 +989,7 @@ h) Bạo lực gia đình;
 
 i) Lợi dụng việc thực hiện quyền về hôn nhân và gia đình để mua bán người, bóc lột sức lao động, xâm phạm tình dục hoặc có hành vi khác nhằm mục đích trục lợi.
 
-Căn cứ theo quy định hiện hành, pháp luật không cấm việc kết hôn giữa con ruột và con riêng. Chính vì vậy, hai bạn vẫn có thể kết hôn."
+Căn cứ theo quy định hiện hành, pháp luật không cấm việc kết hôn giữa con ruột và con riêng. Chính vì vậy, hai bạn vẫn có thể kết hôn.",,,,,,,,,,,,,,,,,,,,
 "Sau khi kết hôn, có bắt buộc vợ chồng phải sống chung với nhau?","Tại Điều 19 Luật Hôn nhân và gia đình 2014 có quy định về vấn đề tình nghĩa vợ chồng như sau:
 
 Tình nghĩa vợ chồng
@@ -998,7 +998,7 @@ Tình nghĩa vợ chồng
 
 2. Vợ chồng có nghĩa vụ sống chung với nhau, trừ trường hợp vợ chồng có thỏa thuận khác hoặc do yêu cầu của nghề nghiệp, công tác, học tập, tham gia các hoạt động chính trị, kinh tế, văn hóa, xã hội và lý do chính đáng khác.
 
-Vợ chồng phải có nghĩa vụ sống chung với nhau. Trong trường hợp có thỏa thuận hoặc có lý do thuộc trường hợp được nêu trên thì có thể không sống chung."
+Vợ chồng phải có nghĩa vụ sống chung với nhau. Trong trường hợp có thỏa thuận hoặc có lý do thuộc trường hợp được nêu trên thì có thể không sống chung.",,,,,,,,,,,,,,,,,,,,
 "Giải quyết hậu quả của việc nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn như thế nào?","Tại Điều 14 Luật Hôn nhân và gia đình 2014 có quy định về giải quyết hậu quả của việc nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn như sau:
 
 Giải quyết hậu quả của việc nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn
@@ -1009,7 +1009,7 @@ Giải quyết hậu quả của việc nam, nữ chung sống với nhau như v
 
 Việc giải quyết hậu quả của việc nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn sẽ được thực hiện theo quy định trên.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Người chồng biệt tích bao nhiêu năm thì người vợ có thể kết hôn với chồng mới?,"Tại Điều 65 Luật Hôn nhân và gia đình 2014 có quy định về thời điểm chấm dứt hôn nhân như sau:
 
 Hôn nhân chấm dứt kể từ thời điểm vợ hoặc chồng chết.
@@ -1032,7 +1032,7 @@ d) Biệt tích 05 năm liền trở lên và không có tin tức xác thực l
 
 3. Quyết định của Tòa án tuyên bố một người là đã chết phải được gửi cho Ủy ban nhân dân cấp xã nơi cư trú của người bị tuyên bố là đã chết để ghi chú theo quy định của pháp luật về hộ tịch.
 
-Căn cứ theo quy định hiện hành, tùy vào từng trường hợp cụ thể mà sau 02 năm, 03 năm hoặc 05 năm, bạn có thể yêu cầu tòa án sẽ tuyên bố chết đối với người chồng. Sau khi được tòa án tuyên bố chồng bạn đã chết, bạn có thể kết hôn với người chồng mới."
+Căn cứ theo quy định hiện hành, tùy vào từng trường hợp cụ thể mà sau 02 năm, 03 năm hoặc 05 năm, bạn có thể yêu cầu tòa án sẽ tuyên bố chết đối với người chồng. Sau khi được tòa án tuyên bố chồng bạn đã chết, bạn có thể kết hôn với người chồng mới.",,,,,,,,,,,,,,,,,,,,
 Người bị tòa án tuyên bố đã chết mà trở về thì quan hệ hôn nhân trước đó có còn được pháp luật thừa nhận?,"Tại Điều 67 Luật Hôn nhân và gia đình 2014 có quy định về quan hệ nhân thân, tài sản khi vợ, chồng bị tuyên bố là đã chết mà trở về như sau:
 
 1. Khi Tòa án ra quyết định hủy bỏ tuyên bố một người là đã chết mà vợ hoặc chồng của người đó chưa kết hôn với người khác thì quan hệ hôn nhân được khôi phục kể từ thời điểm kết hôn. Trong trường hợp có quyết định cho ly hôn của Tòa án theo quy định tại khoản 2 Điều 56 của Luật này thì quyết định cho ly hôn vẫn có hiệu lực pháp luật. Trong trường hợp vợ, chồng của người đó đã kết hôn với người khác thì quan hệ hôn nhân được xác lập sau có hiệu lực pháp luật.
@@ -1043,7 +1043,7 @@ a) Trong trường hợp hôn nhân được khôi phục thì quan hệ tài s�
 
 b) Trong trường hợp hôn nhân không được khôi phục thì tài sản có được trước khi quyết định của Tòa án về việc tuyên bố vợ, chồng là đã chết có hiệu lực mà chưa chia được giải quyết như chia tài sản khi ly hôn.
 
-Theo đó, trong trường hợp người bị tòa án tuyên bố đã chết mà trở về, nếu vợ hoặc chồng của người đó chưa kết hôn với người khác thì quan hệ hôn nhân được khôi phục kể từ thời điểm kết hôn. Trong trường hợp vợ/chồng của người đó đã kết hôn với người khác thì quan hệ hôn nhân sau có hiệu lực pháp luật."
+Theo đó, trong trường hợp người bị tòa án tuyên bố đã chết mà trở về, nếu vợ hoặc chồng của người đó chưa kết hôn với người khác thì quan hệ hôn nhân được khôi phục kể từ thời điểm kết hôn. Trong trường hợp vợ/chồng của người đó đã kết hôn với người khác thì quan hệ hôn nhân sau có hiệu lực pháp luật.",,,,,,,,,,,,,,,,,,,,
 Điều kiện kết hôn hiện nay tại Việt Nam được quy định như thế nào?,"Tại Điều 8 Luật Hôn nhân và gia đình 2014 có quy định về điều kiện kết hôn hiện nay tại Việt Nam như sau:
 
 1. Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây:
@@ -1060,7 +1060,7 @@ d) Việc kết hôn không thuộc một trong các trường hợp cấm kết
 
 Như vậy, tại Việt Nam, việc nam,nữ có mong muốn kết hôn với nhau cần đáp ứng điều kiện trên.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Có được kết hôn khi là người đang chấp hành án treo hay không?,"Tại Điều 8 Luật Hôn nhân và gia đình 2014 có quy định về điều kiện để được kết hôn như sau:
 
 1. Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây:
@@ -1087,7 +1087,7 @@ c) Người đang có vợ, có chồng mà kết hôn hoặc chung sống như 
 
 d) Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng;
 
-Như vậy, nếu cả 2 bạn đáp ứng các điều kiện trên và không thuộc một trong các trường hợp cấm kết hôn thì dù bạn trai bạn đang chấp hành án treo thì vẫn được kết hôn bạn nhé."
+Như vậy, nếu cả 2 bạn đáp ứng các điều kiện trên và không thuộc một trong các trường hợp cấm kết hôn thì dù bạn trai bạn đang chấp hành án treo thì vẫn được kết hôn bạn nhé.",,,,,,,,,,,,,,,,,,,,
 Cha mẹ đăng ký kết hôn thay cho con được không?,"Theo quy định tại Luật Hôn nhân và gia đình 2014 thì nam, nữ được đăng ký kết hôn tại cơ quan có thẩm quyền của Việt Nam, nhưng phải đáp ứng các điều kiện sau đây:
 
 (1) Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên;
@@ -1134,7 +1134,7 @@ Cũng theo Luật cư trú 2020 thì cư trú được hiểu là việc công d
 
 - Nơi tạm trú là nơi công dân sinh sống ngoài nơi đăng ký thường trú và đã đăng ký tạm trú.
 
-Như vậy, căn cứ các quy định trên đây thì không nhất thiết hai bạn phải về quê thì mới làm thủ tục đăng ký kết hôn được mà chỉ cần các bạn có đăng ký tạm trú tại địa phương nơi các bạn đang sinh sống và làm việc, thì các bạn có thể liên hệ với Ủy ban nhân dân xã, phường, thị trấn nơi mình đang tạm trú để làm thủ tục đăng ký kết hôn."
+Như vậy, căn cứ các quy định trên đây thì không nhất thiết hai bạn phải về quê thì mới làm thủ tục đăng ký kết hôn được mà chỉ cần các bạn có đăng ký tạm trú tại địa phương nơi các bạn đang sinh sống và làm việc, thì các bạn có thể liên hệ với Ủy ban nhân dân xã, phường, thị trấn nơi mình đang tạm trú để làm thủ tục đăng ký kết hôn.",,,,,,,,,,,,,,,,,,,,
 Chưa được xóa án tích có được đăng ký kết hôn không?,"Tại Điều 8 Luật Hôn nhân và gia đình 2014 có quy định về điều kiện kết hôn như sau:
 
 Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây:
@@ -1157,7 +1157,7 @@ Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây:
 
 Như vậy, anh, chị bạn nếu đáp ứng được các điều kiện nêu trên thì có thể cùng nhau hoàn tất các thủ tục hồ sơ để đến Ủy ban xã nơi cư trú của một trong hai bên để thực hiện đăng ký kết hôn nhé. Còn việc có được xóa án tích chưa thì trong trường hợp này không bị ảnh hưởng gì.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Có thai trước khi kết hôn có được xem là con chung của vợ chồng?,"Tại Điều 88 Luật Hôn nhân và gia đình 2014 có quy định về xác định cha, mẹ như sau:
 
 1. Con sinh ra trong thời kỳ hôn nhân hoặc do người vợ có thai trong thời kỳ hôn nhân là con chung của vợ chồng.
@@ -1168,7 +1168,7 @@ Con sinh ra trước ngày đăng ký kết hôn và được cha mẹ thừa nh
 
 2. Trong trường hợp cha, mẹ không thừa nhận con thì phải có chứng cứ và phải được Tòa án xác định.
 
-Căn cứ theo quy định hiện hành, trong trường hợp vợ bạn có thai trước khi kết hôn và sinh ra trong thời kỳ hôn nhân thì pháp luật sẽ thừa nhận đây là con chung của hai bạn. Mặc khác, trong trường hợp c on sinh ra trước ngày đăng ký kết hôn và được hai vợ chồng bạn thừa nhận là con chung của vợ chồng thì pháp luật cũng sẽ thừa nhận đây là con chung của hai bạn."
+Căn cứ theo quy định hiện hành, trong trường hợp vợ bạn có thai trước khi kết hôn và sinh ra trong thời kỳ hôn nhân thì pháp luật sẽ thừa nhận đây là con chung của hai bạn. Mặc khác, trong trường hợp c on sinh ra trước ngày đăng ký kết hôn và được hai vợ chồng bạn thừa nhận là con chung của vợ chồng thì pháp luật cũng sẽ thừa nhận đây là con chung của hai bạn.",,,,,,,,,,,,,,,,,,,,
 "Người mẹ không kết hôn, con sinh ra có được lấy họ của mẹ?","Tại Điều 26 Bộ luật Dân sự 2015 có quy định về quyền có họ, tên như sau:
 
 1. Cá nhân có quyền có họ, tên (bao gồm cả chữ đệm, nếu có) . Họ, tên của một người được xác định theo họ, tên khai sinh của người đó.
@@ -1189,7 +1189,7 @@ Tên của công dân Việt Nam phải bằng tiếng Việt hoặc tiếng dâ
 
 5. Việc sử dụng bí danh, bút danh không được gây thiệt hại đến quyền, lợi ích hợp pháp của người khác.
 
-Theo đó, trong trường hợp người mẹ không kết hôn thì con sinh ra được phép lấy họ của mẹ."
+Theo đó, trong trường hợp người mẹ không kết hôn thì con sinh ra được phép lấy họ của mẹ.",,,,,,,,,,,,,,,,,,,,
 Điều kiện kết hôn giữa nam và nữ được quy định như thế nào?,"Tại Điều 8 Luật Hôn nhân và gia đình 2014 có quy định về điều kiện kết hôn như sau:
 
 1. Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây:
@@ -1206,7 +1206,7 @@ d) Việc kết hôn không thuộc một trong các trường hợp cấm kết
 
 Như vậy, nếu đáp ứng được các điều kiện trên thì nam nữ sẽ được kết hôn.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Có được kết hôn với nhau khi là anh em cùng cha khác mẹ hay không?,"Tại điểm d khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 có quy định:
 
 Bảo vệ chế độ hôn nhân và gia đình
@@ -1241,7 +1241,7 @@ Mà theo như thông tin bạn cung cấp cho chúng tôi thì bạn và bạn g
 
 Do đó, bạn nên thực hiện kiểm tra ADN để có kết luận chính xác nhất về trường hợp này. Nếu sau khi kiểm tra ADN mà cho ra kết quả hai người là anh em cùng cha khác mẹ thì hai bạn không thể kết hôn với nhau.
 
-Trường hợp khi kiểm tra ADN mà cho ra kết quả không trùng khớp - tức hai bạn không phải là anh em cùng cha khác mẹ thì hai bạn có thể đăng ký kết hôn với nhau. Tuy nhiên hai người cần phải đáp ứng đủ các điều kiện kết hôn được quy định tại Điều 8 Luật Hôn nhân và gia đình 2014 ."
+Trường hợp khi kiểm tra ADN mà cho ra kết quả không trùng khớp - tức hai bạn không phải là anh em cùng cha khác mẹ thì hai bạn có thể đăng ký kết hôn với nhau. Tuy nhiên hai người cần phải đáp ứng đủ các điều kiện kết hôn được quy định tại Điều 8 Luật Hôn nhân và gia đình 2014 .",,,,,,,,,,,,,,,,,,,,
 Có thể kết hôn với người bị bại liệt nửa người không?,"Căn cứ Điều 5 Luật Hôn nhân và gia đình 2014 và Điều 8 Luật Hôn nhân và gia đình 2014 quy đinh về các trường hợp cấm kết hôn và điều kiện để nam nữ kết hôn cụ thể như sau:
 
 Cấm các hành vi sau đây:
@@ -1278,7 +1278,7 @@ Thủ tục đăng ký kết hôn
 
 ...
 
-Như vậy, vì người yêu bạn bị bại liệt do vậy sẽ rất khó khăn trong việc di chuyển để có mặt tại cơ quan tư pháp xã phường để cùng bạn đăng ký kết hôn, nếu giải quyết được vấn đề này thì bạn hoàn toàn có thể đăng ký kết hôn bình thường theo quy định của pháp luật."
+Như vậy, vì người yêu bạn bị bại liệt do vậy sẽ rất khó khăn trong việc di chuyển để có mặt tại cơ quan tư pháp xã phường để cùng bạn đăng ký kết hôn, nếu giải quyết được vấn đề này thì bạn hoàn toàn có thể đăng ký kết hôn bình thường theo quy định của pháp luật.",,,,,,,,,,,,,,,,,,,,
 Thủ tục đăng ký kết hôn với người Việt Nam ở trong nước như thế nào?,"1. Căn cứ pháp lý:
 
 - Luật Hôn nhân và gia đình 2014 .
@@ -1325,7 +1325,7 @@ Hồ sơ đăng ký kết hôn do hai bên nộp trực tiếp và cùng có m�
 
 7. Lệ phí: Được miễn phí.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Vi phạm các điều kiện kết hôn là kết hôn trái pháp luật,"Khoản 1 Điều 8 Luật Hôn nhân và Gia đình quy định nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây:
 
 a) Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên;
@@ -1338,7 +1338,7 @@ d) Việc kết hôn không thuộc một trong các trường hợp cấm kết
 
 Theo khoản 6 Điều 3 Luật Hôn nhân và Gia đình: Kết hôn trái pháp luật là việc nam, nữ đã đăng ký kết hôn tại cơ quan nhà nước có thẩm quyền nhưng một bên hoặc cả hai bên vi phạm điều kiện kết hôn theo quy định tại Điều 8 của luật này.
 
-Như vậy, nếu việc kết hôn của em anh không do cô ấy tự nguyện mà bị ép buộc xem như đã vi phạm một trong các điều kiện được phép kết hôn. Do vậy, em gái anh và gia đình nên bàn bạc lại vấn đề này."
+Như vậy, nếu việc kết hôn của em anh không do cô ấy tự nguyện mà bị ép buộc xem như đã vi phạm một trong các điều kiện được phép kết hôn. Do vậy, em gái anh và gia đình nên bàn bạc lại vấn đề này.",,,,,,,,,,,,,,,,,,,,
 Xử lý việc kết hôn trái pháp luật được quy định như thế nào?,"Tại Điều 11 Luật Hôn nhân và gia đình 2014 có quy định về xử lý việc kết hôn trái pháp luật như sau:
 
 1. Xử lý việc kết hôn trái pháp luật được Tòa án thực hiện theo quy định tại Luật này và pháp luật về tố tụng dân sự.
@@ -1349,7 +1349,7 @@ Xử lý việc kết hôn trái pháp luật được quy định như thế n�
 
 4. Tòa án nhân dân tối cao chủ trì phối hợp với Viện kiểm sát nhân dân tối cao và Bộ Tư pháp hướng dẫn Điều này.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Xung khắc tuối thì có lấy nhau được không?,"Căn cứ quy định Điều 8 Luật Hôn nhân gia đình 2014 điều kiện kết hôn, như sau:
 
 1. Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây:
@@ -1384,7 +1384,7 @@ h) Bạo lực gia đình;
 
 i) Lợi dụng việc thực hiện quyền về hôn nhân và gia đình để mua bán người, bóc lột sức lao động, xâm phạm tình dục hoặc có hành vi khác nhằm mục đích trục lợi.
 
-Vì vậy, căn cứ theo các quy định trên, nếu bạn và bạn trai đáp ứng các điều kiện về độ tuổi kết hôn, hoàn toàn tự nguyện và không thuộc các điều kiện cấm kết hôn thì hai bạn có thể kết hôn với nhau."
+Vì vậy, căn cứ theo các quy định trên, nếu bạn và bạn trai đáp ứng các điều kiện về độ tuổi kết hôn, hoàn toàn tự nguyện và không thuộc các điều kiện cấm kết hôn thì hai bạn có thể kết hôn với nhau.",,,,,,,,,,,,,,,,,,,,
 Có chế tài nào xử lý khi ra sức cản trở người khác kết hôn hay không?,"Tùy theo tính chất, mức độ mà hành vi cản trở kết hôn có thể bị phạt hành chính hoặc thậm chí bị truy cứu trách nhiệm hình sự. Cụ thể:
 
 Theo quy định khoản 1 Điều 59 Nghị định 82/2020/NĐ-CP , Phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng đối với hành vi cản trở kết hôn, yêu sách của cải trong kết hôn hoặc cản trở ly hôn.
@@ -1407,7 +1407,7 @@ Người nào cưỡng ép người khác kết hôn trái với sự tự nguy�
 
 Theo đó, hành vi cản trở kết hôn có thể bị phạt hành chính với mức phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng. Ngoài ra, còn có thể bị truy cứu trách nhiệm hình sự với mức phạt cảnh cáo, phạt cải tạo không giam giữ hoặc phạt tù đến 03 năm.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
 Giáo viên có được kết hôn với học sinh không?,"Căn cứ Điều 8 Luật Hôn nhân và gia đình 2014 có quy định điều kiện kết hôn như sau:
 
 1. Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây: a) Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên; b) Việc kết hôn do nam và nữ tự nguyện quyết định; c) Không bị mất năng lực hành vi dân sự; d) Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn theo quy định tại các điểm a, b, c và d khoản 2 Điều 5 của Luật này. 2. Nhà nước không thừa nhận hôn nhân giữa những người cùng giới tính.
@@ -1416,11 +1416,364 @@ Tại Khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 nghiêm cấm c�
 
 a) Kết hôn giả tạo, ly hôn giả tạo; b) Tảo hôn, cưỡng ép kết hôn, lừa dối kết hôn, cản trở kết hôn; c) Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ; d) Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng; đ) Yêu sách của cải trong kết hôn; e) Cưỡng ép ly hôn, lừa dối ly hôn, cản trở ly hôn; g) Thực hiện sinh con bằng kỹ thuật hỗ trợ sinh sản vì mục đích thương mại, mang thai hộ vì mục đích thương mại, lựa chọn giới tính thai nhi, sinh sản vô tính; h) Bạo lực gia đình; i) Lợi dụng việc thực hiện quyền về hôn nhân và gia đình để mua bán người, bóc lột sức lao động, xâm phạm tình dục hoặc có hành vi khác nhằm mục đích trục lợi.
 
-Như vậy, theo quy định như trên, không có quy định nghiêm cấm việc giáo viên không được kết hôn với học sinh. Tuy nhiên, để được kết hôn với học sinh này thì bạn và học sinh này phải đáp ứng đầy đủ các điều kiện theo quy định kể trên."
+Như vậy, theo quy định như trên, không có quy định nghiêm cấm việc giáo viên không được kết hôn với học sinh. Tuy nhiên, để được kết hôn với học sinh này thì bạn và học sinh này phải đáp ứng đầy đủ các điều kiện theo quy định kể trên.",,,,,,,,,,,,,,,,,,,,
 Giáo viên kết hôn với học sinh có bị kỷ luật không?,"Theo Điều 16 Nghị định 112/2020/NĐ-CP hình thức kỷ luật khiển trách áp dụng đối với hành vi vi phạm lần đầu, gây hậu quả ít nghiêm trọng, trừ các hành vi vi phạm quy định tại khoản 3 Điều 17 Nghị định này, thuộc một trong các trường hợp sau đây:
 
 1. Không tuân thủ quy trình, quy định chuyên môn, nghiệp vụ, đạo đức nghề nghiệp và quy tắc ứng xử trong khi thực hiện hoạt động nghề nghiệp, đã được cấp có thẩm quyền nhắc nhở bằng văn bản; 2. Vi phạm quy định của pháp luật về: thực hiện chức trách, nhiệm vụ của viên chức; kỷ luật lao động; quy định, nội quy, quy chế làm việc của đơn vị sự nghiệp công lập đã được cấp có thẩm quyền nhắc nhở bằng văn bản; 3. Lợi dụng vị trí công tác nhằm mục đích vụ lợi; có thái độ hách dịch, cửa quyền hoặc gây khó khăn, phiền hà đối với nhân dân trong quá trình thực hiện công việc, nhiệm vụ được giao; xác nhận hoặc cấp giấy tờ pháp lý cho người không đủ điều kiện; xúc phạm danh dự, nhân phẩm, uy tín của người khác trong khi thực hiện hoạt động nghề nghiệp; 4. Không chấp hành quyết định phân công công tác của cấp có thẩm quyền; không thực hiện nhiệm vụ được giao mà không có lý do chính đáng; gây mất đoàn kết trong đơn vị; 5. Vi phạm quy định của pháp luật về: phòng, chống tội phạm; phòng, chống tệ nạn xã hội; trật tự, an toàn xã hội; phòng, chống tham nhũng; thực hành tiết kiệm, chống lãng phí; 6. Vi phạm quy định của pháp luật về bảo vệ bí mật nhà nước; 7. Vi phạm quy định của pháp luật về khiếu nại, tố cáo; 8. Vi phạm quy định của pháp luật về: đầu tư, xây dựng; đất đai, tài nguyên môi trường; tài chính, kế toán, ngân hàng; quản lý, sử dụng tài sản công trong quá trình hoạt động nghề nghiệp; 9. Vi phạm quy định của pháp luật về: phòng, chống bạo lực gia đình; dân số, hôn nhân và gia đình; bình đẳng giới; an sinh xã hội; quy định khác của pháp luật liên quan đến viên chức.
 
 Theo đó, nếu bạn kết hôn với học sinh mà không đáp ứng được các điều kiện kết hôn như phần trên thì có bị kỷ luật với hình thức khiển trách, hình thức kỷ luật cụ thể phụ thuộc vào hậu quả gây ra.
 
-Trân trọng!"
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
+Người nước ngoài và Đảng viên có được kết hôn với nhau không?,"Căn cứ Điều 8 Luật Hôn nhân và gia đình 2014 có quy định về điều kiện kết hôn như sau:
+
+1. Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây:
+
+a) Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên;
+
+b) Việc kết hôn do nam và nữ tự nguyện quyết định;
+
+c) Không bị mất năng lực hành vi dân sự;
+
+d) Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn theo quy định tại các điểm a, b, c và d khoản 2 Điều 5 của Luật này.
+
+2. Nhà nước không thừa nhận hôn nhân giữa những người cùng giới tính.
+
+Tại Khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 cấm các hành vi sau đây:
+
+a) Kết hôn giả tạo, ly hôn giả tạo;
+
+b) Tảo hôn, cưỡng ép kết hôn, lừa dối kết hôn, cản trở kết hôn;
+
+c) Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ;
+
+d) Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng;
+
+đ) Yêu sách của cải trong kết hôn;
+
+e) Cưỡng ép ly hôn, lừa dối ly hôn, cản trở ly hôn;
+
+g) Thực hiện sinh con bằng kỹ thuật hỗ trợ sinh sản vì mục đích thương mại, mang thai hộ vì mục đích thương mại, lựa chọn giới tính thai nhi, sinh sản vô tính;
+
+h) Bạo lực gia đình;
+
+i) Lợi dụng việc thực hiện quyền về hôn nhân và gia đình để mua bán người, bóc lột sức lao động, xâm phạm tình dục hoặc có hành vi khác nhằm mục đích trục lợi.
+
+Như vậy, không có quy định nào cấm Đảng viên kết hôn với người nước ngoài. Nếu bạn đáp ứng đầy đủ các điều kiện như trên thì được quyền kết hôn với người nước ngoài.",,,,,,,,,,,,,,,,,,,,
+Đảng viên kết hôn với người nước ngoài có bị kỷ luật không?,"Căn cứ Điều 53 Quy định 69-QĐ/TW năm 2022 quy định kỷ luật Đảng viên vi phạm quy định về kết hôn với người nước ngoài:
+
+1. Đảng viên vi phạm một trong các trường hợp sau gây hậu quả ít nghiêm trọng thì kỷ luật bằng hình thức khiển trách:
+
+a) Có con kết hôn với người nước ngoài hoặc người Việt Nam định cư ở nước ngoài mà không báo cáo trung thực bằng văn bản với chi bộ nơi sinh hoạt, cấp ủy quản lý mình về lai lịch, thái độ chính trị của con dâu (hoặc con rể) và cha, mẹ ruột của họ.
+
+b) Biết nhưng để con kết hôn với người nước ngoài vi phạm quy định của Đảng, pháp luật của Nhà nước về hôn nhân và gia đình.
+
+c) Xác nhận tình trạng hôn nhân để người khác đăng ký kết hôn có yếu tố nước ngoài không đúng quy định.
+
+2. Trường hợp đã kỷ luật theo Khoản 1 Điều này mà tái phạm hoặc vi phạm lần đầu gây hậu quả nghiêm trọng hoặc vi phạm một trong các trường hợp sau thì kỷ luật bằng hình thức cảnh cáo hoặc cách chức (nếu có chức vụ):
+
+a) Có vợ (chồng) là người nước ngoài, người Việt Nam định cư ở nước ngoài hoặc kết hôn với người nước ngoài, người Việt Nam định cư ở nước ngoài nhưng không báo cáo với cấp ủy trực tiếp quản lý và cấp ủy nơi mình sinh hoạt.
+
+b) Biết mà không có biện pháp ngăn chặn việc con kết hôn với người nước ngoài, người Việt Nam định cư ở nước ngoài có hành vi chống Đảng, Nhà nước.
+
+c) Có hành vi ép con kết hôn với người nước ngoài, người Việt Nam định cư ở nước ngoài.
+
+d) Môi giới kết hôn giữa người Việt Nam với người nước ngoài trái quy định của pháp luật.
+
+3. Trường hợp vi phạm Khoản 1, Khoản 2 Điều này gây hậu quả rất nghiêm trọng hoặc vi phạm một trong các trường hợp sau thì kỷ luật bằng hình thức khai trừ:
+
+a) Kết hôn với người nước ngoài hoặc người Việt Nam định cư ở nước ngoài không đủ điều kiện được kết hôn theo quy định của pháp luật Việt Nam.
+
+b) Kết hôn với người nước ngoài hoặc người Việt Nam định cư ở nước ngoài có hoạt động phạm tội nghiêm trọng, có thái độ hoặc hoạt động chống Đảng, Nhà nước.
+
+c) Kết hôn với người nước ngoài hoặc người Việt Nam định cư ở nước ngoài nhưng không báo cáo bằng văn bản với chi bộ về lai lịch của người đó hoặc tổ chức đảng có thẩm quyền không đồng ý nhưng vẫn thực hiện.
+
+d) Che giấu việc con kết hôn với người nước ngoài, người Việt Nam định cư ở nước ngoài trái quy định của Đảng, pháp luật của Nhà nước.
+
+đ) Làm hồ sơ để kết hôn với người nước ngoài, làm thủ tục để sinh sống, định cư hoặc nhập quốc tịch ở nước ngoài trái pháp luật.
+
+Theo đó, Đảng viên chỉ bị kỷ luật Đảng nếu kết hôn với người nước ngoài nhưng không báo cáo với cấp ủy trực tiếp quản lý và cấp ủy nơi mình sinh hoạt hoặc kết hôn với người nước ngoài có hoạt động phạm tội nghiêm trọng, có thái độ hoặc hoạt động chống Đảng, Nhà nước.
+
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
+Có được kết hôn với con riêng của bố hay không?,"Điều 8 Luật Hôn nhân và gia đình 2014 có quy định về điều kiện kết hôn như sau:
+
+1. Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây:
+
+a) Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên;
+
+b) Việc kết hôn do nam và nữ tự nguyện quyết định;
+
+c) Không bị mất năng lực hành vi dân sự;
+
+d) Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn theo quy định tại các điểm a, b, c và d khoản 2 Điều 5 của Luật này.
+
+2. Nhà nước không thừa nhận hôn nhân giữa những người cùng giới tính.
+
+Điểm d Khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 có quy định trường hợp cấm như sau:
+
+d) Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời ; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng;
+
+Khoản 18 Điều 3 Luật Hôn nhân và gia đình 2014 có quy định:
+
+18. Những người có họ trong phạm vi ba đời là những người cùng một gốc sinh ra gồm cha mẹ là đời thứ nhất; anh, chị, em cùng cha mẹ, cùng cha khác mẹ, cùng mẹ khác cha là đời thứ hai; anh, chị, em con chú, con bác, con cô, con cậu, con dì là đời thứ ba.
+
+Theo đó, vấn đề của bạn thuộc trường hợp anh, chị, em cùng cha khác mẹ. Chính vì vậy, hai bạn không thể kết hôn.",,,,,,,,,,,,,,,,,,,,
+"Sau khi kết hôn, vợ chồng có bắt buộc phải sống chung hay không?","Tại Điều 19 Luật Hôn nhân và gia đình 2014 có quy định về tình nghĩa vợ chồng như sau:
+
+1. Vợ chồng có nghĩa vụ thương yêu, chung thủy, tôn trọng, quan tâm, chăm sóc, giúp đỡ nhau; cùng nhau chia sẻ, thực hiện các công việc trong gia đình.
+
+2. Vợ chồng có nghĩa vụ sống chung với nhau, trừ trường hợp vợ chồng có thỏa thuận khác hoặc do yêu cầu của nghề nghiệp, công tác, học tập, tham gia các hoạt động chính trị, kinh tế, văn hóa, xã hội và lý do chính đáng khác.
+
+Theo đó, pháp luật không bắt buộc vợ chồng phải sống chung với nhau, nếu vợ chồng thuộc các trường hợp được liệt kê trên thì có thể không sống chung.
+
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
+Nam nữ đều 18 tuổi có được kết hôn với nhau?,"Điều 8 Luật Hôn nhân và gia đình 2014 có quy định về điều kiện kết hôn như sau:
+
+1. Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây:
+
+a) Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên;
+
+b) Việc kết hôn do nam và nữ tự nguyện quyết định;
+
+c) Không bị mất năng lực hành vi dân sự;
+
+d) Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn theo quy định tại các điểm a, b, c và d khoản 2 Điều 5 của Luật này.
+
+2. Nhà nước không thừa nhận hôn nhân giữa những người cùng giới tính.
+
+Căn cứ theo quy định hiện hành, trường hợp cả nam và nữ đều 18 tuổi thì chưa đủ điều kiện để đăng ký kết hôn.",,,,,,,,,,,,,,,,,,,,
+Có được đăng ký kết hôn ở nơi tạm trú hay không?,"Điều 17 Luật Hộ tịch 2014 có quy định về nơi đăng ký kết hôn như sau:
+
+1. Ủy ban nhân dân cấp xã nơi cư trú của một trong hai bên nam, nữ thực hiện đăng ký kết hôn.
+
+2. Giấy chứng nhận kết hôn phải có các thông tin sau đây:
+
+a) Họ, chữ đệm và tên; ngày, tháng, năm sinh; dân tộc; quốc tịch; nơi cư trú; thông tin về giấy tờ chứng minh nhân thân của hai bên nam, nữ;
+
+b) Ngày, tháng, năm đăng ký kết hôn;
+
+c) Chữ ký hoặc điểm chỉ của hai bên nam, nữ và xác nhận của cơ quan đăng ký hộ tịch.
+
+Tại Điều 11 Luât Cư trú 2020 có quy định như sau:
+
+1. Nơi cư trú của công dân bao gồm nơi thường trú, nơi tạm trú.
+
+2. Trường hợp không xác định được nơi thường trú, nơi tạm trú thì nơi cư trú của công dân là nơi ở hiện tại được xác định theo quy định tại khoản 1 Điều 19 của Luật này.
+
+Theo đó, nơi cư trú của công dân sẽ bao gồm nơi tạm trú, chính vì vậy, vợ chồng có thể đăng ký kết hôn ở nơi tạm trú.
+
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
+Người Việt Nam kết hôn đồng giới ở nước ngoài có được không?,"Căn cứ Điều 34 Nghị định 123/2015/NĐ-CP quy định điều kiện ghi vào Sổ hộ tịch việc kết hôn của công dân Việt Nam đã được giải quyết tại cơ quan có thẩm quyền của nước ngoài ở nước ngoài như sau:
+
+1. Việc kết hôn giữa công dân Việt Nam với nhau hoặc với người nước ngoài đã được giải quyết tại cơ quan có thẩm quyền của nước ngoài ở nước ngoài được ghi vào Sổ hộ tịch nếu tại thời điểm kết hôn, các bên đáp ứng đủ điều kiện kết hôn và không vi phạm điều cấm theo quy định của Luật Hôn nhân và gia đình Việt Nam.
+
+2. Nếu vào thời điểm đăng ký tại cơ quan có thẩm quyền nước ngoài, việc kết hôn không đáp ứng điều kiện kết hôn, nhưng không vi phạm điều cấm theo quy định của Luật Hôn nhân và gia đình, nhưng vào thời điểm yêu cầu ghi vào Sổ hộ tịch việc kết hôn, hậu quả đã được khắc phục hoặc việc ghi chú kết hôn là nhằm bảo vệ quyền lợi của công dân Việt Nam và trẻ em, thì việc kết hôn cũng được ghi vào Sổ hộ tịch.
+
+Như vậy, việc kết hôn đồng giới ở một số nước đã công nhận và bạn có thể đăng ký kết hôn tại các quốc gia đã công nhận việc này. Tuy nhiên, Việt Nam sẽ không công nhận việc kết hôn đồng giới để ghi vào Sổ hộ tịch do pháp luật Việt Nam không công nhận kết hôn đồng giới.",,,,,,,,,,,,,,,,,,,,
+Được giữ quốc tịch Việt Nam không?,"Theo quy định tại Điều 27 Luật quốc tịch 2008 về thôi quốc tịch như sau:
+
+1. Công dân Việt Nam có đơn xin thôi quốc tịch Việt Nam để nhập quốc tịch nước ngoài thì có thể được thôi quốc tịch Việt Nam.
+
+2. Người xin thôi quốc tịch Việt Nam chưa được thôi quốc tịch Việt Nam, nếu thuộc một trong những trường hợp sau đây:
+
+a) Đang nợ thuế đối với Nhà nước hoặc đang có nghĩa vụ tài sản đối với cơ quan, tổ chức hoặc cá nhân ở Việt Nam;
+
+b) Đang bị truy cứu trách nhiệm hình sự;
+
+c) Đang chấp hành bản án, quyết định của Toà án Việt Nam;
+
+d) Đang bị tạm giam để chờ thi hành án;
+
+đ) Đang chấp hành quyết định áp dụng biện pháp xử lý hành chính đưa vào cơ sở giáo dục, cơ sở chữa bệnh, trường giáo dưỡng.
+
+3. Người xin thôi quốc tịch Việt Nam không được thôi quốc tịch Việt Nam, nếu việc đó làm phương hại đến lợi ích quốc gia của Việt Nam.
+
+4. Cán bộ, công chức và những người đang phục vụ trong lực lượng vũ trang nhân dân Việt Nam không được thôi quốc tịch Việt Nam.
+
+5. Chính phủ quy định cụ thể các điều kiện được thôi quốc tịch Việt Nam.
+
+Vậy, nếu không nằm trong mục thôi quốc tịch, tước quốc tịch thì bạn vẫn sẽ giữ được quốc tịch của mình.
+
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
+Có được kết hôn với anh em cùng cha khác mẹ?,Tôi và người yêu tôi hiện tại là anh em cùng cha khác mẹ. Do chúng tôi từ nhỏ đã không sống chung với nhau và cũng hai bên gia đình cũng không nói về chuyện tôi có em gái. Nay đưa người yêu về ra mắt mới biết là người yêu tôi là em gái của tôi. Nếu chúng tôi vẫn kết hôn với nhau thì có bị sao không ạ?,,,,,,,,,,,,,,,,,,,,
+"Ông bà nội không đồng ý, có kết hôn với nhau được không?","Dạ, năm nay em 25 tuổi, có quen và muốn tiến tới hôn nhân với một bạn gái 23 tuổi. Do tín ngưỡng hai bên khác nhau nên ông bà nội không đồng ý, bố mẹ em thì ly hôn lâu rồi, em ở với ông bà nội. Bây giờ, nếu chúng em kết hôn có được không?",,,,,,,,,,,,,,,,,,,,
+Phải đăng ký kết hôn trước mới được tổ chức đám cưới?,Hiện nay có rất nhiều trường hợp nam nữ tổ chức đám cưới rồi về chung sống với nhau nhưng không đăng ký kết hôn. Vậy luật có bắt buộc đăng ký kết hôn trước mới được tổ chức đám cưới không?,,,,,,,,,,,,,,,,,,,,
+Cháu nội của người vợ trước và cháu nội của người vợ sau có được kết hôn với nhau hay không?,"Tại Điều 8 Luật Hôn nhân và gia đình 2014 có quy định về điều kiện kết hôn như sau:
+
+1. Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây:
+
+a) Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên;
+
+b) Việc kết hôn do nam và nữ tự nguyện quyết định;
+
+c) Không bị mất năng lực hành vi dân sự;
+
+d) Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn theo quy định tại các điểm a, b, c và d khoản 2 Điều 5 của Luật này.
+
+2. Nhà nước không thừa nhận hôn nhân giữa những người cùng giới tính.
+
+Điểm d Khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 có quy định như sau:
+
+d) Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời ; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng;
+
+Khoản 18 Điều 3 Luật Hôn nhân và gia đình 2014 cũng có quy định:
+
+18. Những người có họ trong phạm vi ba đời là những người cùng một gốc sinh ra gồm cha mẹ là đời thứ nhất; anh, chị, em cùng cha mẹ, cùng cha khác mẹ, cùng mẹ khác cha là đời thứ hai; anh, chị, em con chú, con bác, con cô, con cậu, con dì là đời thứ ba.
+
+Trong trường của bạn, có thể xác định ông bà nội của bạn là đời thứ nhất, ba mẹ bạn và ba mẹ bạn gái bạn là đời thứ hai, bạn và bạn gái bạn là đời thứ ba. Chính vì vậy, hai bạn không thể kết hôn với nhau.",,,,,,,,,,,,,,,,,,,,
+Có được đăng ký kết hôn ở nhà vợ?,"Tại Điều 17 Luật Hộ tịch 2014 có quy định về nơi đăng ký kết hôn như sau:
+
+1. Ủy ban nhân dân cấp xã nơi cư trú của một trong hai bên nam, nữ thực hiện đăng ký kết hôn.
+
+2. Giấy chứng nhận kết hôn phải có các thông tin sau đây:
+
+a) Họ, chữ đệm và tên; ngày, tháng, năm sinh; dân tộc; quốc tịch; nơi cư trú; thông tin về giấy tờ chứng minh nhân thân của hai bên nam, nữ;
+
+b) Ngày, tháng, năm đăng ký kết hôn;
+
+c) Chữ ký hoặc điểm chỉ của hai bên nam, nữ và xác nhận của cơ quan đăng ký hộ tịch.
+
+Theo đó, có thể tiến hành đăng ký kết hôn nơi cư trú của bên nhà vợ.
+
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
+Hai vợ chồng đã ly hôn có được kết hôn lại hay không?,"Tại Điều 9 Luật Hôn nhân và gia đình 2014 có quy định như sau:
+
+1. Việc kết hôn phải được đăng ký và do cơ quan nhà nước có thẩm quyền thực hiện theo quy định của Luật này và pháp luật về hộ tịch.
+
+Việc kết hôn không được đăng ký theo quy định tại khoản này thì không có giá trị pháp lý.
+
+2. Vợ chồng đã ly hôn muốn xác lập lại quan hệ vợ chồng thì phải đăng ký kết hôn.
+
+Căn cứ theo quy định hiện hành, trong trường hợp hai vợ chồng đã ly hôn mà muốn kết hôn lại thì hoàn toàn có thể đăng ký kết hôn lại theo quy định.",,,,,,,,,,,,,,,,,,,,
+Nơi đăng ký kết hôn đối với trường hợp kết hôn lại là ở đâu?,"Tại Điều 17 Luật Hộ tịch 2014 có quy định về thẩm quyền đăng ký kết hôn và nội dung Giấy chứng nhận kết hôn như sau:
+
+1. Ủy ban nhân dân cấp xã nơi cư trú của một trong hai bên nam, nữ thực hiện đăng ký kết hôn.
+
+2. Giấy chứng nhận kết hôn phải có các thông tin sau đây:
+
+a) Họ, chữ đệm và tên; ngày, tháng, năm sinh; dân tộc; quốc tịch; nơi cư trú; thông tin về giấy tờ chứng minh nhân thân của hai bên nam, nữ;
+
+b) Ngày, tháng, năm đăng ký kết hôn;
+
+c) Chữ ký hoặc điểm chỉ của hai bên nam, nữ và xác nhận của cơ quan đăng ký hộ tịch.
+
+Như vậy, trong trường hợp hai vợ chồng là người Việt Nam thì Ủy ban nhân dân cấp xã nơi cư trú của một trong hai bên nam, nữ sẽ là nơi đăng ký kết hôn đối với trường hợp kết hôn lại.
+
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
+Giải quyết việc xác minh điều kiện kết hôn của hai bên trong vòng bao nhiêu ngày?,"Căn cứ khoản 2 Điều 18 Luật Hộ tịch 2014 có quy định về thủ tục đăng ký kết hôn như sau:
+
+1. Hai bên nam, nữ nộp tờ khai đăng ký kết hôn theo mẫu quy định cho cơ quan đăng ký hộ tịch và cùng có mặt khi đăng ký kết hôn.
+
+2. Ngay sau khi nhận đủ giấy tờ theo quy định tại khoản 1 Điều này, nếu thấy đủ điều kiện kết hôn theo quy định của Luật hôn nhân và gia đình, công chức tư pháp - hộ tịch ghi việc kết hôn vào Sổ hộ tịch, cùng hai bên nam, nữ ký tên vào Sổ hộ tịch. Hai bên nam, nữ cùng ký vào Giấy chứng nhận kết hôn; công chức tư pháp - hộ tịch báo cáo Chủ tịch Ủy ban nhân dân cấp xã tổ chức trao Giấy chứng nhận kết hôn cho hai bên nam, nữ.
+
+Trường hợp cần xác minh điều kiện kết hôn của hai bên nam, nữ thì thời hạn giải quyết không quá 05 ngày làm việc.
+
+Như vậy, khi cần xác minh điều kiện kết hôn của cả 2 bên thì thời hạn giải quyết không quá 05 ngày làm việc.",,,,,,,,,,,,,,,,,,,,
+Nội dung Giấy chứng nhận kết hôn phải có các thông tin gì?,"Theo Điều 17 nội dung Giấy chứng nhận kết hôn phải có các thông tin sau đây:
+
+a) Họ, chữ đệm và tên; ngày, tháng, năm sinh; dân tộc; quốc tịch; nơi cư trú; thông tin về giấy tờ chứng minh nhân thân của hai bên nam, nữ;
+
+b) Ngày, tháng, năm đăng ký kết hôn;
+
+c) Chữ ký hoặc điểm chỉ của hai bên nam, nữ và xác nhận của cơ quan đăng ký hộ tịch.
+
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
+Du học sinh có thể kết hôn với nhau tại Nhật Bản có được không?,Cho hỏi: Du học sinh với thực tập sinh muốn kết hôn với nhau tại Nhật Bản có được không? Mong sớm nhận phản hồi.,,,,,,,,,,,,,,,,,,,,
+Cản trở kết hôn bị phạt bao nhiêu theo quy định mới?,Cản trở kết hôn là hành vi bị cấm theo Luật Hôn nhân Gia đình 2014. Vậy theo quy định mới thì hành vi cản trở kết hôn sẽ bị phạt bao nhiêu?,,,,,,,,,,,,,,,,,,,,
+Chưa cắt khẩu khỏi nhà chồng cũ có được đăng ký kết hôn với người mới không?,"Em ly hôn với chồng được 1 năm rồi nhưng khẩu vẫn ở nhà chồng cũ, em chưa cắt khẩu đi. Vậy giờ em kết hôn với chồng mới được không ạ? Mong anh chị giải đáp.",,,,,,,,,,,,,,,,,,,,
+Có được kết hôn với người nước ngoài hay không?,"Tôi là Việt kiều, thời gian qua tôi có quen với một người phụ nữ Việt. Cô ấy đã lập gia đình và có con riêng. Trước đây cô ấy đã từng kết hôn, sau một thời gian sống chung với nhau nên cô ấy có về sống cùng bố mẹ. Vì không đăng ký kết hôn nên cô ấy không ra tòa xác nhận ly hôn. Vậy Ban biên tập cho hỏi. Tình trạng hôn nhân nhân như vậy theo pháp luật Việt Nam nếu tôi kết hôn và tổ chức lễ cưới với cô ấy có vi phạm pháp luật không?",,,,,,,,,,,,,,,,,,,,
+Cần đáp ứng điều kiện gì để được kết hôn với người nước ngoài?,"Tôi và anh ấy quan nhau sau một lần tình cờ, anh ấy là người Anh qua Việt Nam du lịch. Qua thời gian tìm hiểu thì chúng tôi tiến đến kết hôn. Nên tôi muốn tìm hiểu, cần đáp ứng những điều kiện gì để được kết hôn với người nước ngoài? Rất mong các bạn hỗ trợ giúp.",,,,,,,,,,,,,,,,,,,,
+"Trình tự, thủ tục đăng ký kết hôn với người nước ngoài","Tôi có thời gian du học ở Mỹ, có quen với một người gốc Việt nhưng sinh ra và lớn lên ở Mỹ. Qua thời gian tìm hiểu chúng tôi tiến tới hôn nhân, vừa qua anh có bay qua Việt Nam, anh chỉ ở lại được hơn 01 tuần, không được dài để làm thủ tục đăng ký kết hôn. Nên tôi nhờ Ban biên tập hường dẫn giúp tôi trình tự, thủ tục đăng ký kết hôn với người nước ngoài để có thể tiến hành cho nhanh. Rất mong nhận được sự hỗ trợ.",,,,,,,,,,,,,,,,,,,,
+Con của Đảng viên có được kết hôn với người có quốc tịch Mỹ hay không?,"Tại Điều 25 Quy định 102-QĐ/TW năm 2017 có quy định về hình thức kỷ luật đối với Đảng viên vi phạm quy định về kết hôn với người nước ngoài như sau:
+
+1- Đảng viên vi phạm một trong các trường hợp sau gây hậu quả ít nghiêm trọng thì kỷ luật bằng hình thức khiển trách:
+
+a) Có con kết hôn với người nước ngoài hoặc người Việt Nam định cư ở nước ngoài mà không báo cáo trung thực bằng văn bản với chi bộ, thường trực cấp ủy quản lý mình về lai lịch, thái độ chính trị của con dâu (hoặc con rể) và cha, mẹ ruột của họ.
+
+b) Biết nhưng để con kết hôn với người nước ngoài vi phạm quy định của pháp luật về hôn nhân và gia đình Việt Nam.
+
+2- Trường hợp vi phạm đã bị xử lý kỷ luật theo quy định tại Khoản 1 Điều này mà tái phạm hoặc vi phạm lần đầu gây hậu quả nghiêm trọng hoặc vi phạm một trong các trường hợp sau thì kỷ luật bằng hình thức cảnh cáo hoặc cách chức (nếu có chức vụ):
+
+a) Có vợ (chồng) là người nước ngoài, người Việt Nam định cư ở nước ngoài hoặc kết hôn với người nước ngoài, người Việt Nam định cư ở nước ngoài nhưng không báo cáo với cấp ủy trực tiếp quản lý và cấp ủy nơi mình sinh hoạt.
+
+b) Bản thân biết mà không có biện pháp ngăn chặn việc con kết hôn với người nước ngoài, người Việt Nam định cư ở nước ngoài có hành vi chống Đảng và Nhà nước.
+
+c) Có hành vi ép con kết hôn với người nước ngoài, người Việt Nam định cư ở nước ngoài nhằm vụ lợi.
+
+d) Môi giới kết hôn giữa người Việt Nam với người nước ngoài trái quy định của pháp luật Việt Nam.
+
+Theo đó, con của Đảng viên được phép kết hôn với người có quốc tịch Mỹ. Tuy nhiên, khi tiến hành kết hôn, Đảng viên cần phải báo cáo trung thực bằng văn bản với chi bộ, thường trực cấp ủy quản lý mình về lai lịch, thái độ chính trị của con dâu và cha, mẹ ruột của họ.",,,,,,,,,,,,,,,,,,,,
+"Đảng viên cản trở kết hôn, ly hôn trái pháp luật hoặc để con tảo hôn gây hậu quả ít nghiêm trọng sẽ bị xử lý như thế nào?","Tại Điều 24 Quy định 102-QĐ/TW năm 2017 có quy định về hình thức xử lý Đảng viên khi v i phạm quy định về hôn nhân và gia đình như sau:
+
+1- Đảng viên vi phạm một trong các trường hợp sau gây hậu quả ít nghiêm trọng thì kỷ luật bằng hình thức khiển trách:
+
+a) Cản trở kết hôn, ly hôn trái pháp luật hoặc để con tảo hôn.
+
+b) Trốn tránh nghĩa vụ chăm sóc, nuôi dưỡng con, lạm dụng sức lao động của con chưa thành niên.
+
+c) Cản trở người không trực tiếp nuôi con thăm nom con sau khi ly hôn (trừ trường hợp cha mẹ bị hạn chế quyền thăm nom con theo quyết định của tòa án).
+
+d) Trốn tránh, không thực hiện nghĩa vụ giám hộ sau khi đã làm thủ tục công nhận giám hộ tại Ủy ban nhân dân xã, phường, thị trấn theo quy định của pháp luật.
+
+đ) Sửa chữa, làm sai lệch nội dung, giả mạo giấy tờ để đăng ký nuôi con nuôi.
+
+...
+
+Như vậy, nếu Đảng viên cản trở kết hôn, ly hôn trái pháp luật hoặc để con tảo hôn nếu gây hậu quả ít nghiêm trọng thì kỷ luật bằng hình thức khiển trách.
+
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
+Cha chồng kết hôn với con dâu được không?,"Căn cứ điểm d Khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 quy định các trường hợp cấm kết hôn như sau:
+
+Như vậy , theo quy định trên thì cha chồng và con dâu không thể kết hôn với nhau.
+
+Cha chồng với con dâu có được kết hôn không? (Hình từ Internet)",,,,,,,,,,,,,,,,,,,,
+Ai có quyền yêu cầu hủy việc kết hôn trái pháp luật?,"Căn cứ Điều 10 Luật Luật Hôn nhân và gia đình 2014 quy định về người có quyền yêu cầu hủy việc kết hôn trải pháp luật như sau:
+
+Theo đó , chủ thể có quyền yêu cầu hủy việc kết hôn trái pháp luật là các chủ thể nêu trên.
+
+Trân trọng!",,,,,,,,,,,,,,,,,,,,
+Chưa đủ tuổi kết hôn mà kết hôn có bị xử phạt không?,"Căn cứ Điều 8 Luật Hôn nhân và gia đình 2014 quy định về điều kiện kết hôn như sau:
+
+Điều kiện kết hôn
+
+1. Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây:
+
+a) Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên;
+
+b) Việc kết hôn do nam và nữ tự nguyện quyết định;
+
+c) Không bị mất năng lực hành vi dân sự;
+
+d) Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn theo quy định tại các điểm a, b, c và d khoản 2 Điều 5 của Luật này.
+
+2. Nhà nước không thừa nhận hôn nhân giữa những người cùng giới tính.
+
+Ngoài ra, tại Điểm b Khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 quy định về cấm các hành vi như sau:
+
+...
+
+b) Tảo hôn, cưỡng ép kết hôn, lừa dối kết hôn, cản trở kết hôn;
+
+...
+
+Tại Khoản 8 Điều 3 Luật Hôn nhân và gia đình 2014 quy định như sau:
+
+Tảo hôn là việc lấy vợ, lấy chồng khi một bên hoặc cả hai bên chưa đủ tuổi kết hôn theo quy định tại điểm a khoản 1 Điều 8 của Luật này.
+
+Như vậy, hành vi tảo hôn là hành vi bị cấm theo quy định pháp luật về Hôn nhân và gia đình.
+
+Đối với vấn đề xử phạt hành vi tảo hôn, căn cứ theo Điều 58 Nghị định số 82/2020/NĐ-CP quy định về xử phạt hành vi tảo hôn, tổ chức tảo hôn như sau:
+
+1. Phạt tiền từ 1.000.000 đồng đến 3.000.000 đồng đối với hành vi tổ chức lấy vợ, lấy chồng cho người chưa đủ tuổi kết hôn.
+
+2. Phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng đối với hành vi duy trì quan hệ vợ chồng trái pháp luật với người chưa đủ tuổi kết hôn mặc dù đã có bản án, quyết định đã có hiệu lực pháp luật của Toà án.
+
+Như vậy, chưa đủ tuổi kết hôn mà kết hôn, người vi phạm có thể bị phạt từ 3.000.000 đồng đến 5.000.000 đồng.",,,,,,,,,,,,,,,,,,,,
+Bố mẹ tổ chức hôn lễ cho con chưa đủ tuổi có bị xử lý trách nhiệm hình sự không?,"Căn cứ Điều 183 Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017) quy định về tội tổ chức tảo hôn như sau:
+
+Người nào tổ chức việc lấy vợ, lấy chồng cho những người chưa đến tuổi kết hôn, đã bị xử phạt vi phạm hành chính về hành vi này mà còn vi phạm, thì bị phạt tiền từ 10.000.000 đồng đến 30.000.000 đồng hoặc phạt cải tạo không giam giữ đến 02 năm.
+
+Như vậy, trường hợp tổ chức tảo hôn cho con, ngoài việc bị xử phạt hành chính, người vi phạm còn có thể bị truy cứu trách nhiệm hình sự.
+
+Trong trường hợp trên, tùy vào mức độ vi phạm mà bác của bạn có thể bị phạt hành chính từ 3.000.000 đồng đến 5.000.000 đồng. Bên cạnh đó, nếu nghiêm trọng còn có thể bị truy cứu trách nhiệm hình sự, phạt tiền từ 10.000.000 đồng đến 30.000.000 đồng hoặc phạt cải tạo không giam giữ đến 02 năm.
+
+Trân trọng!",,,,,,,,,,,,,,,,,,,,

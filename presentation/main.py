@@ -14,6 +14,17 @@ from adapter.retrievers.ket_hon.dieu_kien_ket_hon import dieu_kien_ket_hon, dieu
 from adapter.retrievers.ket_hon.dang_ky_ket_hon import dang_ky_ket_hon, dang_ky_ket_hon_description
 from adapter.retrievers.ket_hon.ket_hon_trai_phap_luat import ket_hon_trai_phap_luat, ket_hon_trai_phap_luat_description
 from adapter.retrievers.ket_hon.chung_song_nhu_vo_chong import chung_song_nhu_vo_chong, chung_song_nhu_vo_chong_description
+from adapter.retrievers.hon_nhan_cham_dut_do_vo_chong_chet import hon_nhan_cham_dut_do_vo_chong_chet, hon_nhan_cham_dut_do_vo_chong_chet_description
+from adapter.retrievers.quy_dinh_chung_khai_niem_phap_ly import quy_dinh_chung_khai_niem_phap_ly, quy_dinh_chung_khai_niem_phap_ly_description
+from adapter.retrievers.cap_duong import cap_duong, cap_duong_description
+from adapter.retrievers.quan_he_hon_nhan_co_yeu_to_nuoc_ngoai import quan_he_hon_nhan_co_yeu_to_nuoc_ngoai, quan_he_hon_nhan_co_yeu_to_nuoc_ngoai_description
+from adapter.retrievers.tai_san_rieng_cua_con import tai_san_rieng_cua_con, tai_san_rieng_cua_con_description
+from adapter.retrievers.ly_hon.quy_dinh_chung_ly_hon import quy_dinh_chung_ly_hon, quy_dinh_chung_ly_hon_description
+from adapter.retrievers.ly_hon.chia_tai_san_sau_ly_hon import chia_tai_san_sau_ly_hon, chia_tai_san_sau_ly_hon_description
+from adapter.retrievers.ly_hon.cha_me_con_sau_ly_hon import cha_me_con_sau_ly_hon, cha_me_con_sau_ly_hon_description
+from adapter.retrievers.quan_he_giua_vo_va_chong.quyen_nghia_vu_vo_chong import quyen_nghia_vu_vo_chong, quyen_nghia_vu_vo_chong_description
+from adapter.retrievers.quan_he_giua_vo_va_chong.dai_dien_trach_nhiem_vo_chong import dai_dien_trach_nhiem_vo_chong, dai_dien_trach_nhiem_vo_chong_description
+from adapter.retrievers.quan_he_giua_vo_va_chong.che_do_tai_san_cua_vo_chong import che_do_tai_san_cua_vo_chong, che_do_tai_san_cua_vo_chong_description
 from utils.general import text2cypher, text2cypher_description, answer_given, answer_given_description
 from adapter.retrievers.vi_pham.xu_phat_vi_pham import xu_phat_vi_pham, xu_phat_vi_pham_description
 from chainlit.types import ThreadDict
@@ -36,9 +47,53 @@ tools = {
         "description": chung_song_nhu_vo_chong_description,
         "function": chung_song_nhu_vo_chong
     },
+    "hon_nhan_cham_dut_do_vo_chong_chet": {
+        "description": hon_nhan_cham_dut_do_vo_chong_chet_description,
+        "function": hon_nhan_cham_dut_do_vo_chong_chet
+    },
     "xu_phat_vi_pham": {
         "description": xu_phat_vi_pham_description,
         "function": xu_phat_vi_pham
+    },
+    "quy_dinh_chung_khai_niem_phap_ly": {
+        "description": quy_dinh_chung_khai_niem_phap_ly_description,
+        "function": quy_dinh_chung_khai_niem_phap_ly
+    },
+    "cap_duong": {
+        "description": cap_duong_description,
+        "function": cap_duong
+    },
+    "quan_he_hon_nhan_co_yeu_to_nuoc_ngoai": {
+        "description": quan_he_hon_nhan_co_yeu_to_nuoc_ngoai_description,
+        "function": quan_he_hon_nhan_co_yeu_to_nuoc_ngoai
+    },
+    "tai_san_rieng_cua_con": {
+        "description": tai_san_rieng_cua_con_description,
+        "function": tai_san_rieng_cua_con
+    },
+    "quy_dinh_chung_ly_hon": {
+        "description": quy_dinh_chung_ly_hon_description,
+        "function": quy_dinh_chung_ly_hon
+    },
+    "chia_tai_san_sau_ly_hon": {
+        "description": chia_tai_san_sau_ly_hon_description,
+        "function": chia_tai_san_sau_ly_hon
+    },
+    "cha_me_con_sau_ly_hon": {
+        "description": cha_me_con_sau_ly_hon_description,
+        "function": cha_me_con_sau_ly_hon
+    },
+    "quyen_nghia_vu_vo_chong": {
+        "description": quyen_nghia_vu_vo_chong_description,
+        "function": quyen_nghia_vu_vo_chong
+    },
+    "dai_dien_trach_nhiem_vo_chong": {
+        "description": dai_dien_trach_nhiem_vo_chong_description,
+        "function": dai_dien_trach_nhiem_vo_chong
+    },
+    "che_do_tai_san_cua_vo_chong": {
+        "description": che_do_tai_san_cua_vo_chong_description,
+        "function": che_do_tai_san_cua_vo_chong
     },
     "text2cypher": {
         "description": text2cypher_description,
