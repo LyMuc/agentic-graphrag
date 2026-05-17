@@ -1,37 +1,46 @@
-"""Crawler kết hợp cả 2 chiến lược parse trang chi tiết.
+"""Crawler kết hợp 3 chiến lược parse trang chi tiết.
 
-Trên thuvienphapluat.vn, các trang chi tiết Q&A xuất hiện ở 2 layout khác
-nhau, vì vậy script này thử lần lượt:
+Trên thuvienphapluat.vn, layout trang Q&A có 3 dạng phổ biến, script thử
+lần lượt từ specific tới generic:
 
-- Strategy B (giống crawl2.py): trong `<section class="tvpl-detail-prose"
-  id="news-content">`, với mỗi `<h2>` chỉ đọc các `<p>` liên tiếp tới `<h2>`
-  kế tiếp. Cấu trúc gọn nên thử trước.
-- Strategy A (giống crawl.py): tìm tất cả `<h2>` trên toàn document, đọc
-  mọi sibling không rỗng (p/ul/ol/div/blockquote/...) giữa hai `<h2>` làm
-  câu trả lời; bỏ qua các `<h2>` thuộc block phụ ("Bài viết mới nhất",
-  "Đọc nhiều nhất", ...); lọc bỏ caption ảnh nằm dưới <p><img></p>.
+- Strategy B: trong `<section class="tvpl-detail-prose" id="news-content">`,
+  với mỗi `<h2>` chỉ đọc các `<p>` liên tiếp tới `<h2>` kế tiếp.
+- Strategy A: tìm tất cả `<h2>` trên toàn document, đọc mọi sibling không
+  rỗng (p/ul/ol/div/blockquote/...) giữa hai `<h2>` làm câu trả lời; bỏ
+  qua các `<h2>` thuộc block phụ ("Bài viết mới nhất", ...); lọc bỏ caption
+  ảnh nằm dưới <p><img></p>.
+- Strategy C: trang dạng "1 bài = 1 Q&A". Câu hỏi lấy từ
+  `<div class="tvpl-article-sapo ...">`, câu trả lời là toàn bộ `<p>` trong
+  `<section class="tvpl-detail-prose" id="news-content">`.
 
-Với mỗi article, nếu Strategy B trích được ít nhất 1 Q&A thì dùng kết quả
-B, ngược lại fallback sang Strategy A.
+Với mỗi article: thử B -> A -> C; chiến lược nào trả về >= 1 cặp Q&A
+thì dùng kết quả đó.
 
-Mode ghi dataset: merge/append, dedup theo `question` đã chuẩn hoá
-whitespace + lowercase. Không ghi đè bản ghi cũ.
+Mode ghi dataset:
+- Output dir + tên file tự derive theo slug cuối của `--category-url`
+  (vd. `dang-ky-ket-hon` -> `dang_ky_ket_hon/qa_dang_ky_ket_hon.{csv,json}`).
+- Merge/append, dedup theo `question` đã chuẩn hoá (whitespace + lowercase).
+- **Save sau mỗi article có Q&A mới** (incremental), an toàn nếu bị Ctrl+C.
 
 Cách dùng:
-    python crawl_combine.py                      # crawl page 1..10
-    python crawl_combine.py --start 1 --end 5
-    python crawl_combine.py --start 2 --end 20 --sleep 2.0
+    # Crawl chuyên mục mặc định (điều kiện kết hôn) page 1..10
+    python crawl_combine.py
+
+    # Chuyên mục khác + khoảng trang tuỳ ý
+    python crawl_combine.py \\
+        --category-url https://thuvienphapluat.vn/hoi-dap-phap-luat/chu-de/dang-ky-ket-hon \\
+        --start 1 --end 20 --sleep 2.0
 
     # Khi gặp CloudFlare challenge (trang phân trang trả 403 + "Just a
     # moment..."), copy cookie từ browser rồi truyền vào:
     python crawl_combine.py --start 2 --end 5 \\
         --cookies "cf_clearance=...; __cf_bm=..."
 
-Lấy cookie:
-    1) Mở https://thuvienphapluat.vn/hoi-dap-phap-luat/chu-de/dieu-kien-ket-hon?page=2
-    2) F12 -> Application -> Cookies -> https://thuvienphapluat.vn
-    3) Copy giá trị `cf_clearance` (và `__cf_bm` nếu có). Cookie sống ~30
-       phút; nếu hết hạn giữa chừng thì lấy lại và chạy tiếp.
+Lấy cookie khi gặp CloudFlare challenge:
+    1) Mở browser truy cập URL `?page=2` của chuyên mục.
+    2) F12 -> Network -> Reload -> click request đầu tiên ->
+       Request Headers -> copy nguyên dòng `Cookie:`.
+    3) Truyền vào `--cookies "..."`. Cookie thường sống ~30 phút.
 """
 
 from __future__ import annotations
@@ -43,7 +52,7 @@ import shutil
 import tempfile
 import time
 from pathlib import Path
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
 
@@ -100,15 +109,31 @@ except ImportError:  # pragma: no cover
     _IMPERSONATE = None
     _USING_CURL_CFFI = False
 
-CATEGORY_URL = "https://thuvienphapluat.vn/hoi-dap-phap-luat/chu-de/dieu-kien-ket-hon"
+DEFAULT_CATEGORY_URL = (
+    "https://thuvienphapluat.vn/hoi-dap-phap-luat/chu-de/dieu-kien-ket-hon"
+)
 
 SCRIPT_DIR = Path(__file__).parent
-DATA_DIR = SCRIPT_DIR / "dieu_kien_ket_hon"
-CSV_PATH = DATA_DIR / "qa_dieu_kien_ket_hon.csv"
-JSON_PATH = DATA_DIR / "qa_dieu_kien_ket_hon.json"
 
 # Các id/class của <h2> không phải là câu hỏi (block phụ trong layout cũ).
 IGNORE_H2_IDENTIFIERS = ["tvpl-latest-posts-heading", "tvpl-detail-rail-most"]
+
+
+def derive_paths(category_url: str) -> tuple[str, Path, Path, Path]:
+    """Từ URL chuyên mục, derive (slug, data_dir, csv_path, json_path).
+
+    Vd: '.../chu-de/dang-ky-ket-hon' -> slug='dang-ky-ket-hon',
+        folder='dang_ky_ket_hon',
+        files='qa_dang_ky_ket_hon.{csv,json}'.
+    """
+    raw_slug = urlparse(category_url).path.rstrip("/").rsplit("/", 1)[-1]
+    if not raw_slug:
+        raise ValueError(f"Không lấy được slug từ URL: {category_url}")
+    folder_name = raw_slug.replace("-", "_")
+    data_dir = SCRIPT_DIR / folder_name
+    csv_path = data_dir / f"qa_{folder_name}.csv"
+    json_path = data_dir / f"qa_{folder_name}.json"
+    return raw_slug, data_dir, csv_path, json_path
 
 
 # ---------------------------------------------------------------------------
@@ -199,7 +224,7 @@ def fetch_soup(url: str, referer: str | None = None) -> BeautifulSoup | None:
     return BeautifulSoup(content, "html.parser")
 
 
-def warm_up_session() -> None:
+def warm_up_session(category_url: str) -> None:
     """Truy cập trang chủ + chuyên mục page 1 để server set cookie session.
 
     Sau bước này, các request tới page 2+ sẽ được gửi kèm cookie và đi qua
@@ -207,7 +232,7 @@ def warm_up_session() -> None:
     """
     print("Warm-up: truy cập trang chủ + chuyên mục page 1 để seed cookie...")
     fetch_html(BASE_URL + "/")
-    fetch_html(CATEGORY_URL, referer=BASE_URL + "/")
+    fetch_html(category_url, referer=BASE_URL + "/")
 
 
 # ---------------------------------------------------------------------------
@@ -293,6 +318,42 @@ def extract_qa_strategy_a(soup: BeautifulSoup) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
+# Strategy C: 1 article = 1 Q&A.
+#   - Question: text của <div class="tvpl-article-sapo ...">.
+#   - Answer:   tất cả <p> trong <section class="tvpl-detail-prose">.
+# Dùng cho các bài viết "tin pháp luật" (không có h2 chia mục), nội dung
+# nằm trọn trong section.tvpl-detail-prose.
+# ---------------------------------------------------------------------------
+def extract_qa_strategy_c(soup: BeautifulSoup) -> list[dict]:
+    sapo = soup.find("div", class_="tvpl-article-sapo")
+    if sapo is None:
+        return []
+
+    question = sapo.get_text(separator=" ", strip=True)
+    if not question:
+        return []
+
+    section = soup.find("section", class_="tvpl-detail-prose")
+    if section is None:
+        section = soup.find(id="news-content")
+    if section is None:
+        return []
+
+    answer_parts: list[str] = []
+    for p in section.find_all("p"):
+        text = p.get_text(separator=" ", strip=True)
+        if not text:
+            continue
+        answer_parts.append(text)
+
+    answer = "\n\n".join(answer_parts)
+    if not answer:
+        return []
+
+    return [make_empty_record(question=question, ground_truth=answer)]
+
+
+# ---------------------------------------------------------------------------
 # Orchestrator.
 # ---------------------------------------------------------------------------
 def extract_qa_from_article(article_url: str, referer: str | None = None) -> tuple[list[dict], str]:
@@ -308,6 +369,10 @@ def extract_qa_from_article(article_url: str, referer: str | None = None) -> tup
     qa_a = extract_qa_strategy_a(soup)
     if qa_a:
         return qa_a, "A"
+
+    qa_c = extract_qa_strategy_c(soup)
+    if qa_c:
+        return qa_c, "C"
 
     return [], "empty"
 
@@ -398,6 +463,15 @@ def merge_records(existing: list[dict], new_records: list[dict]) -> tuple[list[d
 # ---------------------------------------------------------------------------
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--category-url",
+        type=str,
+        default=DEFAULT_CATEGORY_URL,
+        help=(
+            "URL chuyên mục cần crawl. Output dir + tên file sẽ được derive từ "
+            "slug cuối của URL (vd. dang-ky-ket-hon -> dang_ky_ket_hon/qa_dang_ky_ket_hon.*)."
+        ),
+    )
     parser.add_argument("--start", type=int, default=1, help="Trang bắt đầu (mặc định 1)")
     parser.add_argument("--end", type=int, default=10, help="Trang kết thúc, đã tính cả (mặc định 10)")
     parser.add_argument(
@@ -466,73 +540,101 @@ def main() -> None:
             "challenge, hãy copy cookie từ browser và chạy lại."
         )
 
-    existing = load_existing_records(JSON_PATH)
+    category_url = args.category_url
+    slug, data_dir, csv_path, json_path = derive_paths(category_url)
+    data_dir.mkdir(parents=True, exist_ok=True)
+    print(f"Crawl chuyên mục: {category_url}")
+    print(f"Output: {csv_path}")
+    print(f"        {json_path}")
+
+    existing = load_existing_records(json_path)
     print(f"Đã có sẵn {len(existing)} bản ghi trong dataset.")
 
-    warm_up_session()
+    warm_up_session(category_url)
 
-    all_new: list[dict] = []
-    strategy_counter = {"A": 0, "B": 0, "empty": 0, "fetch_failed": 0}
+    # In-memory state. Sau mỗi article có Q&A mới sẽ flush save_dataset()
+    # nên file luôn up-to-date, không bị mất nếu bị Ctrl+C giữa chừng.
+    merged: list[dict] = list(existing)
+    seen: set[str] = {_normalize_question(r.get("question", "")) for r in merged}
+    initial_count = len(merged)
+
+    strategy_counter = {"A": 0, "B": 0, "C": 0, "empty": 0, "fetch_failed": 0}
+    raw_qa_seen = 0
+
+    def _flush() -> None:
+        save_dataset(merged, csv_path=str(csv_path), json_path=str(json_path))
 
     # Bám theo link "trang kế tiếp" trong HTML thay vì đoán URL template.
-    current_url: str | None = CATEGORY_URL
+    current_url: str | None = category_url
     prev_page_url: str = BASE_URL + "/"
     current_page = 1
 
-    while current_url is not None and current_page <= args.end:
-        print(f"\n=== Trang {current_page}: {current_url} ===")
-        page_soup = fetch_soup(current_url, referer=prev_page_url)
-        if page_soup is None:
-            print(f"-> Không tải được trang {current_page}, dừng.")
-            break
+    try:
+        while current_url is not None and current_page <= args.end:
+            print(f"\n=== Trang {current_page}: {current_url} ===")
+            page_soup = fetch_soup(current_url, referer=prev_page_url)
+            if page_soup is None:
+                print(f"-> Không tải được trang {current_page}, dừng.")
+                break
 
-        article_links = _get_article_links_from_soup(page_soup)
-        print(f"  -> Tìm thấy {len(article_links)} bài viết.")
+            article_links = _get_article_links_from_soup(page_soup)
+            print(f"  -> Tìm thấy {len(article_links)} bài viết.")
 
-        if current_page >= args.start:
-            for idx, link in enumerate(article_links):
-                qa_pairs, strategy = extract_qa_from_article(link, referer=current_url)
-                strategy_counter[strategy] = strategy_counter.get(strategy, 0) + 1
-                print(
-                    f"  [{idx + 1}/{len(article_links)}] strategy={strategy} "
-                    f"qa={len(qa_pairs)}  {link}"
-                )
-                all_new.extend(qa_pairs)
-                time.sleep(args.sleep)
-        else:
-            print(f"  (Bỏ qua trang {current_page}, chưa tới --start={args.start})")
+            if current_page >= args.start:
+                for idx, link in enumerate(article_links):
+                    qa_pairs, strategy = extract_qa_from_article(link, referer=current_url)
+                    strategy_counter[strategy] = strategy_counter.get(strategy, 0) + 1
+                    raw_qa_seen += len(qa_pairs)
 
-        if current_page >= args.end:
-            break
+                    added_this = 0
+                    for rec in qa_pairs:
+                        key = _normalize_question(rec.get("question", ""))
+                        if not key or key in seen:
+                            continue
+                        seen.add(key)
+                        full = {col: "" for col in BENCHMARK_COLUMNS}
+                        full.update(rec)
+                        merged.append(full)
+                        added_this += 1
 
-        next_url = find_next_page_link(page_soup, current_url, current_page)
-        if not next_url:
-            print(f"-> Không tìm thấy link trang kế tiếp ở page {current_page}, dừng.")
-            break
-        if next_url == current_url:
-            print(f"-> Link trang kế tiếp trùng trang hiện tại ({next_url}), dừng.")
-            break
+                    if added_this:
+                        _flush()
 
-        prev_page_url = current_url
-        current_url = next_url
-        current_page += 1
+                    print(
+                        f"  [{idx + 1}/{len(article_links)}] strategy={strategy} "
+                        f"qa={len(qa_pairs)} added={added_this} total={len(merged)}  {link}"
+                    )
+                    time.sleep(args.sleep)
+            else:
+                print(f"  (Bỏ qua trang {current_page}, chưa tới --start={args.start})")
+
+            if current_page >= args.end:
+                break
+
+            next_url = find_next_page_link(page_soup, current_url, current_page)
+            if not next_url:
+                print(f"-> Không tìm thấy link trang kế tiếp ở page {current_page}, dừng.")
+                break
+            if next_url == current_url:
+                print(f"-> Link trang kế tiếp trùng trang hiện tại ({next_url}), dừng.")
+                break
+
+            prev_page_url = current_url
+            current_url = next_url
+            current_page += 1
+    except KeyboardInterrupt:
+        print("\n[Ctrl+C] Đang lưu dataset trước khi thoát...")
+    finally:
+        _flush()
 
     print("\n--- Thống kê strategy ---")
     for k, v in strategy_counter.items():
         print(f"  {k}: {v} bài viết")
 
-    if not all_new:
-        print("\nKhông tìm thấy dữ liệu Q&A mới nào.")
-        return
-
-    merged, added = merge_records(existing, all_new)
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    save_dataset(merged, csv_path=str(CSV_PATH), json_path=str(JSON_PATH))
-
     print(
-        f"\nThành công! Trích được {len(all_new)} cặp Q&A thô, "
-        f"bổ sung {added} bản ghi mới (sau khi loại trùng). "
-        f"Tổng dataset hiện tại: {len(merged)} bản ghi."
+        f"\nKết thúc. Q&A thô: {raw_qa_seen}. "
+        f"Bổ sung {len(merged) - initial_count} bản ghi mới "
+        f"(dataset từ {initial_count} -> {len(merged)} bản ghi)."
     )
 
 

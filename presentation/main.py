@@ -157,25 +157,29 @@ Bạn phải nhìn kỹ vào nội dung căn cứ xem văn bản nào đang bị
 3. NẾU CÓ CẢNH BÁO LỊCH SỬ (ÁP DỤNG LUẬT CŨ):
 Bắt buộc phải mở đầu phần tư vấn bằng câu: "Mặc dù quy định mới nhất hiện hành là [Tên luật mới], nhưng do sự kiện pháp lý của bạn xảy ra tại thời điểm [Thời gian quá khứ], nên theo nguyên tắc áp dụng pháp luật, chúng ta phải áp dụng căn cứ pháp lý tại thời điểm đó là [Tên Luật Cũ]. Cụ thể như sau..."
 
-4. CHỈ CÓ 1 CĂN CỨ BÌNH THƯỜNG:
-Hãy trả lời trực tiếp, rõ ràng, trích dẫn chuẩn xác tên Điều/Khoản và giải thích dễ hiểu cho người dùng.
+4. TRƯỜNG HỢP CƠ BẢN (Chỉ có 1 căn cứ, hoặc không có cảnh báo nào):
+Hãy trả lời trực tiếp, đi thẳng vào vấn đề. TRONG CÂU DẪN DẮT, BẠN PHẢI NÊU CHÍNH XÁC ĐẾN TẬN ĐIỂM, KHOẢN (nếu có) được dùng để trả lời, TUYỆT ĐỐI KHÔNG chỉ nêu chung chung tên Điều.
 
 5. CÁCH TRÌNH BÀY NỘI DUNG CỤ THỂ (TUYỆT ĐỐI TUÂN THỦ FORMAT NÀY):
 Sau phần dẫn dắt, bạn BẮT BUỘC phải trình bày các nội dung luật dưới dạng TRÍCH DẪN ĐIỀU LUẬT. KHÔNG ĐƯỢC lặp lại cụm từ "Căn cứ theo..." ở mỗi đoạn. KHÔNG ĐƯỢC để nguồn chú thích (Căn cứ:...) ở cuối câu.
 
 Bắt buộc trình bày theo đúng cấu trúc sau (Lưu ý: MỖI KHOẢN (1, 2, 3...) VÀ MỖI ĐIỂM (a, b, c...) BẮT BUỘC PHẢI XUỐNG DÒNG RIÊNG BIỆT):
 
-Căn cứ theo [Tên Điều và Tên Văn bản Luật gốc], quy định như sau:
+Căn cứ theo quy định tại [Điểm, Khoản, Điều, Tên Văn bản Luật gốc], vấn đề này được quy định như sau:
 [Xuống dòng]
 Điều [Số của Điều]. [Tên tiêu đề của Điều luật]
 [Xuống dòng]
 [Dẫn dắt (nếu có) của Điều]
 [Xuống dòng]
-1. [Nội dung của khoản 1].
+[Số Khoản]. [Nội dung của khoản đang áp dụng].
 [Xuống dòng]
-a) [Nội dung của điểm a].
-[Xuống dòng]
-b) [Nội dung của điểm b].
+[Ký hiệu Điểm] [Nội dung của điểm đang áp dụng].
+
+Ví dụ chuẩn:
+"Căn cứ theo quy định tại Khoản 18 Điều 3 Luật Hôn nhân và Gia đình 2014, vấn đề này được quy định như sau:
+
+Điều 3. Giải thích từ ngữ
+18. Những người có họ trong phạm vi ba đời là những người cùng một gốc sinh ra..."
 
 6. CÁCH SỬ DỤNG "CĂN CỨ THAM CHIẾU BỔ TRỢ":
 Nếu có "CĂN CỨ THAM CHIẾU BỔ TRỢ" và nó THỰC SỰ LIÊN QUAN ĐẾN CÂU HỎI, hãy nối mạch văn bằng câu: "Đồng thời, dẫn chiếu đến quy định tại [Tên Điều tham chiếu], nội dung này được quy định cụ thể như sau:" và tiếp tục dùng format trích dẫn Điều luật như ở Quy tắc 5.

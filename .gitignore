@@ -2,3 +2,7 @@
 __pycache__
 *.pyc
 docs
+
+# Benchmark pipeline: keep manifest, exclude rolling backups & pre-recovery dumps
+benchmark_dataset/_state/backups/
+benchmark_dataset/benchmark/_pre_recovery_backup_*/

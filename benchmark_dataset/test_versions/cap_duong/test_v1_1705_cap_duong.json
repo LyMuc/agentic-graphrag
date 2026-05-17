@@ -1,0 +1,189 @@
+[
+  {
+    "question": "Cấp dưỡng nuôi con đến bao nhiêu tuổi sau khi ly hôn?",
+    "ground_truth": "Tại khoản 2 Điều 82 Luật Hôn nhân và gia đình năm 2014 có quy định về nghĩa vụ, quyền của cha, mẹ không trực tiếp nuôi con sau khi ly hôn như sau:\n\nTại Điều 110 Luật Hôn nhân và gia đình 2014 có quy định về nghĩa vụ cấp dưỡng của cha, mẹ đối với con như sau:\n\nTại khoản 1 Điều 21 Bộ Luật Dân sự 2015 có quy định về người chưa thành niên như sau:\n\nNhư vậy, sau ly hôn người không trực tiếp nuôi con có nghĩa vụ cấp dưỡng cho con đến năm con đủ 18 tuổi. Tuy nhiên đối với trường hợp con đã thành niên (đủ 18 tuổi) nhưng không có khả năng lao động và không có tài sản để tự nuôi mình thì vẫn phải cấp dưỡng cho con.\n\nMẫu đơn yêu cầu cấp dưỡng nuôi con mới nhất hiện nay? (Hình từ Internet)",
+    "chatbot_answer": "",
+    "chu_de_phap_ly": "cap_duong",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014",
+      "BoLuat_DanSu_2015"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_82": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_110": "CON_HIEU_LUC",
+      "BoLuat_DanSu_2015_Dieu_21_Khoan_1": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_82",
+      "Luat_HNGD_2014_Dieu_110"
+    ],
+    "can_cu_phap_ly_bo_tro": [
+      "BoLuat_DanSu_2015_Dieu_21_Khoan_1"
+    ],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": [],
+    "legal_citation_accuracy": "",
+    "so_can_cu_con_hieu_luc": "",
+    "tong_so_can_cu_duoc_neu_ra": "",
+    "context": "",
+    "citation_prioritization_accuracy": "",
+    "co_loi_hieu_luc": "",
+    "hallucination_rate": "",
+    "faithfulness": "",
+    "context_recall": "",
+    "answer_correctness": ""
+  },
+  {
+    "question": "Người nào có quyền yêu cầu thực hiện nghĩa vụ cấp dưỡng?",
+    "ground_truth": "Căn cứ Điều 119 Luật Hôn nhân và gia đình 2014 quy định như sau:\n\nNhư vậy, người có quyền yêu cầu thực hiện nghĩa vụ cấp dưỡng gồm:\n\n- Người được cấp dưỡng, cha, mẹ hoặc người giám hộ của người đó, theo quy định của pháp luật về tố tụng dân sự, có quyền yêu cầu Tòa án buộc người không tự nguyện thực hiện nghĩa vụ cấp dưỡng phải thực hiện nghĩa vụ đó.\n\n- Cá nhân, cơ quan, tổ chức sau đây, theo quy định của pháp luật về tố tụng dân sự, có quyền yêu cầu Tòa án buộc người không tự nguyện thực hiện nghĩa vụ cấp dưỡng phải thực hiện nghĩa vụ đó:\n\n+ Người thân thích;\n\n+ Cơ quan quản lý nhà nước về gia đình;\n\n+ Cơ quan quản lý nhà nước về trẻ em;\n\n+ Hội liên hiệp phụ nữ.\n\n- Cá nhân, cơ quan, tổ chức khác khi phát hiện hành vi trốn tránh thực hiện nghĩa vụ cấp dưỡng có quyền đề nghị cơ quan, tổ chức quy định tại các điểm b, c và d khoản 2 Điều 119 Luật Hôn nhân và Gia đình 2014 yêu cầu Tòa án buộc người không tự nguyện thực hiện nghĩa vụ cấp dưỡng phải thực hiện nghĩa vụ đó.",
+    "chatbot_answer": "",
+    "chu_de_phap_ly": "cap_duong",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_119": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_119"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": [],
+    "legal_citation_accuracy": "",
+    "so_can_cu_con_hieu_luc": "",
+    "tong_so_can_cu_duoc_neu_ra": "",
+    "context": "",
+    "citation_prioritization_accuracy": "",
+    "co_loi_hieu_luc": "",
+    "hallucination_rate": "",
+    "faithfulness": "",
+    "context_recall": "",
+    "answer_correctness": ""
+  },
+  {
+    "question": "Không đăng ký kết hôn người cha có nghĩa vụ cấp dưỡng cho con không?",
+    "ground_truth": "Căn cứ tại khoản 24 Điều 3 Luật Hôn nhân và gia đình 2014 quy định về cấp dưỡng như sau:\n\nCăn cứ tại khoản 1 Điều 107 Luật Hôn nhân và gia đình 2014 quy định về nghĩa vụ cấp dưỡng như sau:\n\nNhư vậy, trong trường hợp cha mẹ không đăng ký kết hôn mà có con thì dù cha mẹ không đăng ký kết hôn nhưng quyền, nghĩa vụ đối với con vẫn không khác với khi đăng ký kết hôn. Sau khi sinh con ra mà mẹ muốn yêu cầu người cha cấp dưỡng thì mẹ phải làm thủ tục nhận cha con theo quy định trên.",
+    "chatbot_answer": "",
+    "chu_de_phap_ly": "cap_duong",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_107": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_3_Khoan_24",
+      "Luat_HNGD_2014_Dieu_107_Khoan_1"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": [],
+    "legal_citation_accuracy": "",
+    "so_can_cu_con_hieu_luc": "",
+    "tong_so_can_cu_duoc_neu_ra": "",
+    "context": "",
+    "citation_prioritization_accuracy": "",
+    "co_loi_hieu_luc": "",
+    "hallucination_rate": "",
+    "faithfulness": "",
+    "context_recall": "",
+    "answer_correctness": ""
+  },
+  {
+    "question": "Tiền trợ cấp nuôi con sau khi ly hôn có thể được thay đổi không?",
+    "ground_truth": "Căn cứ Điều 116 Luật Hôn nhân và gia đình 2014 quy định mức cấp dưỡng:\n\nTheo quy định trên, tiền trợ cấp nuôi con sau khi ly hôn do các bên thỏa thuận; nếu không thỏa thuận được thì yêu cầu Tòa án giải quyết.\n\nTiền trợ cấp nuôi con sau ly hôn dựa vào thu nhập, khả năng thực tế của người có nghĩa vụ cấp dưỡng và nhu cầu thiết yếu của người được cấp dưỡng.\n\nNhư vậy, tiền trợ cấp nuôi con sau khi ly hôn có thể được thay đổi nếu có lý do chính đáng và có sự thỏa thuận của cha mẹ hoặc quyết định của Tòa án.\n\nTiền trợ cấp nuôi con sau khi ly hôn có thể được thay đổi không? (Hình từ Internet)",
+    "chatbot_answer": "",
+    "chu_de_phap_ly": "cap_duong",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_116": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_116"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": [],
+    "legal_citation_accuracy": "",
+    "so_can_cu_con_hieu_luc": "",
+    "tong_so_can_cu_duoc_neu_ra": "",
+    "context": "",
+    "citation_prioritization_accuracy": "",
+    "co_loi_hieu_luc": "",
+    "hallucination_rate": "",
+    "faithfulness": "",
+    "context_recall": "",
+    "answer_correctness": ""
+  },
+  {
+    "question": "Đối tượng nào có quyền yêu cầu Tòa án buộc người không tự nguyện thực hiện nghĩa vụ cấp dưỡng phải thực hiện?",
+    "ground_truth": "Căn cứ Điều 119 Luật Hôn nhân và gia đình 2014 quy định người có quyền yêu cầu thực hiện nghĩa vụ cấp dưỡng:\n\nTheo đó, người có quyền yêu cầu Tòa án buộc người không tự nguyện thực hiện nghĩa vụ cấp dưỡng phải thực hiện nghĩa vụ cấp dưỡng, bao gồm:\n\n- Người được cấp dưỡng;\n\n- Cha hoặc mẹ của người được cấp dưỡng;\n\n- Người giám hộ của người được cấp dưỡng;\n\n- Người thân thích;\n\n- Cơ quan quản lý nhà nước về gia đình;\n\n- Cơ quan quản lý nhà nước về trẻ em;\n\n- Hội liên hiệp phụ nữ.\n\nNgoài ra, cá nhân, cơ quan, tổ chức khác khi phát hiện người có nghĩa vụ cấp dưỡng thực hiện hành vi trốn tránh thực hiện nghĩa vụ cấp dưỡng có quyền đề nghị các cơ quan sau yêu cầu Tòa án buộc người không tự nguyện thực hiện nghĩa vụ cấp dưỡng phải thực hiện nghĩa vụ đó:\n\n- Cơ quan quản lý nhà nước về gia đình;\n\n- Cơ quan quản lý nhà nước về trẻ em;\n\n- Hội liên hiệp phụ nữ.\n\nTrân trọng!",
+    "chatbot_answer": "",
+    "chu_de_phap_ly": "cap_duong",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_119": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_119"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": [],
+    "legal_citation_accuracy": "",
+    "so_can_cu_con_hieu_luc": "",
+    "tong_so_can_cu_duoc_neu_ra": "",
+    "context": "",
+    "citation_prioritization_accuracy": "",
+    "co_loi_hieu_luc": "",
+    "hallucination_rate": "",
+    "faithfulness": "",
+    "context_recall": "",
+    "answer_correctness": ""
+  },
+  {
+    "question": "Mức cấp dưỡng mà người cha phải cấp dưỡng cho con khi không đăng ký kết hôn là bao nhiêu?",
+    "ground_truth": "Căn cứ tại khoản 1 Điều 116 Luật Hôn nhân và gia đình 2014 quy định mức cấp dưỡng như sau:\n\nNhư vậy, mức cấp dưỡng mà người cha phải cấp dưỡng cho con khi không đăng ký kết hôn thỏa thuận căn cứ vào thu nhập, khả năng thực tế của người có nghĩa vụ cấp dưỡng và nhu cầu thiết yếu của người được cấp dưỡng; nếu không thỏa thuận được thì yêu cầu Tòa án giải quyết.",
+    "chatbot_answer": "",
+    "chu_de_phap_ly": "cap_duong",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_116_Khoan_1": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_116_Khoan_1"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": [],
+    "legal_citation_accuracy": "",
+    "so_can_cu_con_hieu_luc": "",
+    "tong_so_can_cu_duoc_neu_ra": "",
+    "context": "",
+    "citation_prioritization_accuracy": "",
+    "co_loi_hieu_luc": "",
+    "hallucination_rate": "",
+    "faithfulness": "",
+    "context_recall": "",
+    "answer_correctness": ""
+  }
+]

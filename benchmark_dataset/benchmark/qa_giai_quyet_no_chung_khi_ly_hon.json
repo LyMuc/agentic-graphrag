@@ -28,7 +28,7 @@
   {
     "question": "Quyền sử dụng đất là tài sản riêng thì ly hôn có phải chia đôi không?",
     "ground_truth": "Tại Điều 62 Luật Hôn nhân và gia đình 2014 quy định:\n\nTheo đó, quyền sử dụng đất là tài sản riêng của bên nào thì khi ly hôn vẫn thuộc về bên đó.\n\nTrân trọng!",
-    "chu_de_phap_ly": ["chia_tai_san_sau_ly_hon", "che_do_tai_san_cua_vo_chong"],
+    "chu_de_phap_ly": "chia_tai_san_sau_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -41,19 +41,6 @@
   {
     "question": "Do có quá nhiều mâu thuẫn nên tôi và chồng quyết định đi đến ly hôn, chúng tôi đã thỏa thuận về nuôi con chung cũng như tài sản chung, Quyết định thuận tình ly hôn đã có, và nay tôi biết một vấn đề là trước đó (trong thời kỳ hôn nhân) do kinh doanh có vấn đề nên chồng tôi có vay số tiền để lớn, nay không có khả năng chi trả, tôi không rõ là mình đã ly hôn thì có phải cùng chịu trách nhiệm chi trả khoản vay đó không?",
     "ground_truth": "Để biết bạn có phải cùng chi trả khoản vay đó hay không thì bạn nên xác định rõ, trong thời kỳ hôn nhân, chồng bạn vay để dùng vào việc việc gì?\n\n- Nếu nhằm đáp ứng nhu cầu thiết yếu của gia đình. (Điều 30 Luật hôn nhân và gia đình 2014)\n\n- Hoặc thực hiện các giao dịch khác phù hợp với quy định về đại diện giữa vợ chồng (Điều 24, 25, 26 Luật hôn nhân và gia đình 2014). Vợ chồng kinh doanh chung, khi đó giao dịch do vợ hoặc chồng thực hiện theo ý định, mong muốn của cả hai vợ chồng. Tài sản được sử dụng vào mục đích kinh doanh hai vợ chồng cùng phải có trách nhiệm thực hiện nghĩa vụ đối với bên thứ ba trong quan hệ tài sản.\n\nDo đó, theo quy định tại Điều 27 Luật hôn nhân và gia đình 2014, nếu thuộc một trong các trường hợp trên thì đây là nghĩa vụ chung của vợ chồng, vợ chồng phải liên đới chịu trách nhiệm đối với giao dịch do một bên vợ hoặc chồng xác lập.\n\nTrên đây là nội dung tư vấn. Mong là những thông tin chia sẻ này sẽ giúp ích cho bạn.\n\nTrân trọng và chúc sức khỏe!",
-    "chu_de_phap_ly": "chia_tai_san_sau_ly_hon",
-    "loai_cau_hoi": "",
-    "van_ban_phap_luat_lien_quan": "",
-    "tinh_trang_hieu_luc": "",
-    "can_cu_phap_ly_chinh": "",
-    "can_cu_phap_ly_bo_tro": "",
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": "",
-    "can_cu_khong_nen_ap_dung": "",
-    "quan_he_chong_cheo_mau_thuan": ""
-  },
-  {
-    "question": "Chào anh chị. Cho em hỏi là em và chồng em đang có những bất đồng không thể hòa giải được và muốn ly hôn. Nhưng cả hai vợ chồng đang có một khoản nợ chung do trước đây mua xe nhưng chưa trả. Không biết vợ chồng em có ly hôn được không ạ?",
-    "ground_truth": "Điều 55, Điều 56 Luật Hôn nhân Gia đình 2014 quy định:\n\nĐiều 55. Thuận tình ly hôn\n\nTrong trường hợp vợ chồng cùng yêu cầu ly hôn, nếu xét thấy hai bên thật sự tự nguyện ly hôn và đã thỏa thuận về việc chia tài sản, việc trông nom, nuôi dưỡng, chăm sóc, giáo dục con trên cơ sở bảo đảm quyền lợi chính đáng của vợ và con thì Tòa án công nhận thuận tình ly hôn; nếu không thỏa thuận được hoặc có thỏa thuận nhưng không bảo đảm quyền lợi chính đáng của vợ và con thì Tòa án giải quyết việc ly hôn.\n\nĐiều 56. Ly hôn theo yêu cầu của một bên\n\n1. Khi vợ hoặc chồng yêu cầu ly hôn mà hòa giải tại Tòa án không thành thì Tòa án giải quyết cho ly hôn nếu có căn cứ về việc vợ, chồng có hành vi bạo lực gia đình hoặc vi phạm nghiêm trọng quyền, nghĩa vụ của vợ, chồng làm cho hôn nhân lâm vào tình trạng trầm trọng, đời sống chung không thể kéo dài, mục đích của hôn nhân không đạt được.\n\n2. Trong trường hợp vợ hoặc chồng của người bị Tòa án tuyên bố mất tích yêu cầu ly hôn thì Tòa án giải quyết cho ly hôn.\n\n3. Trong trường hợp có yêu cầu ly hôn theo quy định tại khoản 2 Điều 51 của Luật này thì Tòa án giải quyết cho ly hôn nếu có căn cứ về việc chồng, vợ có hành vi bạo lực gia đình làm ảnh hưởng nghiêm trọng đến tính mạng, sức khỏe, tinh thần của người kia.\n\nNhư vậy, ly hôn là quyền của vợ chồng, pháp luật không bắt buộc vợ chồng phải giải quyết xong nợ nần mới được ly hôn, nếu các bên thỏa thuận được vấn đề nợ chung, tài sản, con cái... thì thuận tình ly hôn. Nếu không giải quyết được thì Tòa án sẽ ra phán quyết, về nguyên tắc nợ chung sẽ chia đều cho cả hai bên.\n\nTrân trọng!",
     "chu_de_phap_ly": "chia_tai_san_sau_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",

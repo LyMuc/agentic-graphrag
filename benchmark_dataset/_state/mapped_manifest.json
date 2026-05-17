@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-05-17T18:04:19+07:00",
+  "topics": {
+    "hon_nhan_cham_dut_do_vo_chong_chet": {
+      "mapped_question_ids": [
+        "3f51639b032d",
+        "55d98240a948",
+        "51371d63ae2b"
+      ],
+      "versions": [
+        {
+          "version": 1,
+          "date": "1705",
+          "files": [
+            "test_versions/hon_nhan_cham_dut_do_vo_chong_chet/test_v1_1705_hon_nhan_cham_dut_do_vo_chong_chet.json",
+            "test_versions/hon_nhan_cham_dut_do_vo_chong_chet/test_v1_1705_hon_nhan_cham_dut_do_vo_chong_chet.csv"
+          ],
+          "added_question_ids": [
+            "3f51639b032d",
+            "55d98240a948",
+            "51371d63ae2b"
+          ]
+        }
+      ]
+    },
+    "cap_duong": {
+      "mapped_question_ids": [
+        "e0e1d550eb5c",
+        "bdc6aca8d9dc",
+        "6b775edb4aed",
+        "d7239899cf19",
+        "8b0d072675ad",
+        "7277fe006c7a"
+      ],
+      "versions": [
+        {
+          "version": 1,
+          "date": "1705",
+          "files": [
+            "test_versions/cap_duong/test_v1_1705_cap_duong.json",
+            "test_versions/cap_duong/test_v1_1705_cap_duong.csv"
+          ],
+          "added_question_ids": [
+            "e0e1d550eb5c",
+            "bdc6aca8d9dc",
+            "6b775edb4aed",
+            "d7239899cf19",
+            "8b0d072675ad",
+            "7277fe006c7a"
+          ]
+        }
+      ]
+    },
+    "cha_me_con_sau_ly_hon": {
+      "mapped_question_ids": [
+        "d4a64f5ebd29",
+        "8499f583ac38",
+        "08cdfd37ef7c",
+        "623aa944e2aa",
+        "5a6413a21a13",
+        "3e8964a8d930",
+        "1c552d7f353a"
+      ],
+      "versions": [
+        {
+          "version": 1,
+          "date": "1705",
+          "files": [
+            "test_versions/cha_me_con_sau_ly_hon/test_v1_1705_cha_me_con_sau_ly_hon.json",
+            "test_versions/cha_me_con_sau_ly_hon/test_v1_1705_cha_me_con_sau_ly_hon.csv"
+          ],
+          "added_question_ids": [
+            "d4a64f5ebd29",
+            "8499f583ac38",
+            "08cdfd37ef7c",
+            "623aa944e2aa",
+            "5a6413a21a13",
+            "3e8964a8d930",
+            "1c552d7f353a"
+          ]
+        }
+      ]
+    },
+    "che_do_tai_san_cua_vo_chong": {
+      "mapped_question_ids": [
+        "40209a4f40a0",
+        "848352c0c85e",
+        "41473843d399",
+        "fbba42e5572e",
+        "7e65e3d0dc02",
+        "cfe17c543d2b",
+        "3aca78ddbf27",
+        "1a4b003263a5",
+        "59d009383d31",
+        "3c1f82d4f001",
+        "e6074766a555",
+        "d18a1140db03",
+        "85a07151e74f",
+        "43b595725072",
+        "a346fa3e95c0",
+        "4b4eee51fd24",
+        "74812a1ad8ad",
+        "fe559b7469aa",
+        "0ef3e2ad414b",
+        "1b498c6118ba",
+        "039790c1042f",
+        "412cb5bb8d93",
+        "52df882d2e16",
+        "cb51d197526d",
+        "d322f7802e91",
+        "cc06d58a97cb",
+        "2022e9c79825",
+        "fca73e2559b3",
+        "32ae1dd54d59",
+        "00a70be8d185"
+      ],
+      "versions": [
+        {
+          "version": 1,
+          "date": "1705",
+          "files": [
+            "test_versions/che_do_tai_san_cua_vo_chong/test_v1_1705_che_do_tai_san_cua_vo_chong.json",
+            "test_versions/che_do_tai_san_cua_vo_chong/test_v1_1705_che_do_tai_san_cua_vo_chong.csv"
+          ],
+          "added_question_ids": [
+            "40209a4f40a0",
+            "848352c0c85e",
+            "41473843d399",
+            "fbba42e5572e",
+            "7e65e3d0dc02",
+            "cfe17c543d2b",
+            "3aca78ddbf27",
+            "1a4b003263a5",
+            "59d009383d31",
+            "3c1f82d4f001",
+            "e6074766a555",
+            "d18a1140db03",
+            "85a07151e74f",
+            "43b595725072",
+            "a346fa3e95c0",
+            "4b4eee51fd24",
+            "74812a1ad8ad",
+            "fe559b7469aa",
+            "0ef3e2ad414b",
+            "1b498c6118ba",
+            "039790c1042f",
+            "412cb5bb8d93",
+            "52df882d2e16",
+            "cb51d197526d",
+            "d322f7802e91",
+            "cc06d58a97cb",
+            "2022e9c79825",
+            "fca73e2559b3",
+            "32ae1dd54d59",
+            "00a70be8d185"
+          ]
+        }
+      ]
+    },
+    "chia_tai_san_sau_ly_hon": {
+      "mapped_question_ids": [
+        "a77cc1692089",
+        "0c11471b0b96",
+        "0c06d54ba581",
+        "78bb3d6b2931",
+        "7d253b749df9",
+        "88fc32a865a3",
+        "d311ad6e3828",
+        "5e9113508864",
+        "2dd2c436f028",
+        "18fd76f5b935",
+        "90ca1b04e223",
+        "925445ce6fc4",
+        "7cc0c7a86a05",
+        "bfcaa9f096df",
+        "3c4dc86ed962",
+        "4df0fb1b6f34"
+      ],
+      "versions": [
+        {
+          "version": 1,
+          "date": "1705",
+          "files": [
+            "test_versions/chia_tai_san_sau_ly_hon/test_v1_1705_chia_tai_san_sau_ly_hon.json",
+            "test_versions/chia_tai_san_sau_ly_hon/test_v1_1705_chia_tai_san_sau_ly_hon.csv"
+          ],
+          "added_question_ids": [
+            "a77cc1692089",
+            "0c11471b0b96",
+            "0c06d54ba581",
+            "78bb3d6b2931",
+            "7d253b749df9",
+            "88fc32a865a3",
+            "d311ad6e3828",
+            "5e9113508864",
+            "2dd2c436f028",
+            "18fd76f5b935",
+            "90ca1b04e223",
+            "925445ce6fc4",
+            "7cc0c7a86a05",
+            "bfcaa9f096df",
+            "3c4dc86ed962",
+            "4df0fb1b6f34"
+          ]
+        }
+      ]
+    },
+    "chung_song_nhu_vo_chong": {
+      "mapped_question_ids": [],
+      "versions": []
+    },
+    "dang_ky_ket_hon": {
+      "mapped_question_ids": [],
+      "versions": []
+    },
+    "dieu_kien_ket_hon": {
+      "mapped_question_ids": [],
+      "versions": []
+    },
+    "ket_hon_trai_phap_luat": {
+      "mapped_question_ids": [],
+      "versions": []
+    },
+    "quan_he_hon_nhan_co_yeu_to_nuoc_ngoai": {
+      "mapped_question_ids": [],
+      "versions": []
+    },
+    "quy_dinh_chung_khai_niem_phap_ly": {
+      "mapped_question_ids": [],
+      "versions": []
+    },
+    "quy_dinh_chung_ly_hon": {
+      "mapped_question_ids": [],
+      "versions": []
+    },
+    "quyen_nghia_vu_vo_chong": {
+      "mapped_question_ids": [],
+      "versions": []
+    },
+    "xu_phat_vi_pham": {
+      "mapped_question_ids": [],
+      "versions": []
+    }
+  }
+}
