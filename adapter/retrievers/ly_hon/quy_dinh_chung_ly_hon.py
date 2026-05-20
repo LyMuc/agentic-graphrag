@@ -116,35 +116,49 @@ async def quy_dinh_chung_ly_hon(query: str):
             noidung: chi_tiet_ap_dung.noidung,
             cap_bac: chi_tiet_ap_dung.cap_bac_phap_ly,
             het_hieu_luc: chi_tiet_ap_dung.ngay_het_hieu_luc IS NOT NULL,
+            ngay_hieu_luc: chi_tiet_ap_dung.ngay_co_hieu_luc,
+            ngay_het_hieu_luc: chi_tiet_ap_dung.ngay_het_hieu_luc,
             id_sua_doi: van_ban_sua_doi.id,
             noidung_sua_doi: van_ban_sua_doi.noidung
         }),
         can_cu_huong_dan: collect(DISTINCT {
             id: huong_dan.id,
             noidung: huong_dan.noidung,
-            cap_bac: huong_dan.cap_bac_phap_ly
+            cap_bac: huong_dan.cap_bac_phap_ly,
+            ngay_hieu_luc: huong_dan.ngay_co_hieu_luc,
+            ngay_het_hieu_luc: huong_dan.ngay_het_hieu_luc
         }) + collect(DISTINCT {
             id: chi_tiet_huong_dan.id,
             noidung: chi_tiet_huong_dan.noidung,
-            cap_bac: chi_tiet_huong_dan.cap_bac_phap_ly
+            cap_bac: chi_tiet_huong_dan.cap_bac_phap_ly,
+            ngay_hieu_luc: chi_tiet_huong_dan.ngay_co_hieu_luc,
+            ngay_het_hieu_luc: chi_tiet_huong_dan.ngay_het_hieu_luc
         }),
         can_cu_bo_tro: collect(DISTINCT {
             id: luat_tham_chieu.id,
             noidung: luat_tham_chieu.noidung,
-            cap_bac: luat_tham_chieu.cap_bac_phap_ly
+            cap_bac: luat_tham_chieu.cap_bac_phap_ly,
+            ngay_hieu_luc: luat_tham_chieu.ngay_co_hieu_luc,
+            ngay_het_hieu_luc: luat_tham_chieu.ngay_het_hieu_luc
         }) + collect(DISTINCT {
             id: chi_tiet_tham_chieu.id,
             noidung: chi_tiet_tham_chieu.noidung,
-            cap_bac: chi_tiet_tham_chieu.cap_bac_phap_ly
+            cap_bac: chi_tiet_tham_chieu.cap_bac_phap_ly,
+            ngay_hieu_luc: chi_tiet_tham_chieu.ngay_co_hieu_luc,
+            ngay_het_hieu_luc: chi_tiet_tham_chieu.ngay_het_hieu_luc
         })
         + collect(DISTINCT {
             id: luat_tham_chieu_tu_hd.id,
             noidung: luat_tham_chieu_tu_hd.noidung,
-            cap_bac: luat_tham_chieu_tu_hd.cap_bac_phap_ly
+            cap_bac: luat_tham_chieu_tu_hd.cap_bac_phap_ly,
+            ngay_hieu_luc: luat_tham_chieu_tu_hd.ngay_co_hieu_luc,
+            ngay_het_hieu_luc: luat_tham_chieu_tu_hd.ngay_het_hieu_luc
         }) + collect(DISTINCT {
             id: chi_tiet_tc_tu_hd.id,
             noidung: chi_tiet_tc_tu_hd.noidung,
-            cap_bac: chi_tiet_tc_tu_hd.cap_bac_phap_ly
+            cap_bac: chi_tiet_tc_tu_hd.cap_bac_phap_ly,
+            ngay_hieu_luc: chi_tiet_tc_tu_hd.ngay_co_hieu_luc,
+            ngay_het_hieu_luc: chi_tiet_tc_tu_hd.ngay_het_hieu_luc
         }),
         quy_dinh_hien_hanh_doi_chieu: collect(DISTINCT hien_hanh.id)
     } AS Context_Tho

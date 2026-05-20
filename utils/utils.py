@@ -1,6 +1,7 @@
 import re
 from pydantic import BaseModel, Field
 from typing import List, Optional
+from datetime import date
 
 def strip_code_fences(text: str) -> str:
     text = text.strip()
@@ -26,6 +27,47 @@ class TrichXuatLuat(BaseModel):
         default=None
     )
 
+def _format_date_vn(date_str):
+    """Chuyển đổi ngày từ YYYY-MM-DD sang DD-MM-YYYY."""
+    if not date_str:
+        return None
+    try:
+        if isinstance(date_str, date):
+            return date_str.strftime("%d-%m-%Y")
+        parts = str(date_str).split("-")
+        if len(parts) == 3:
+            return f"{parts[2]}-{parts[1]}-{parts[0]}"
+    except:
+        pass
+    return None
+
+
+def _extract_doc_name(node_id):
+    """Trích xuất tên văn bản từ node ID (phần trước _Dieu_)."""
+    if not node_id:
+        return None
+    match = re.match(r'^(.+?)_Dieu_', str(node_id))
+    return match.group(1) if match else str(node_id)
+
+
+def _collect_hieu_luc(items, doc_hieu_luc_map):
+    """Thu thập thông tin hiệu lực từ danh sách items vào doc_hieu_luc_map."""
+    for item in items:
+        node_id = item.get('id_thuc_te_ap_dung') or item.get('id')
+        if not node_id:
+            continue
+        doc_name = _extract_doc_name(node_id)
+        ngay_hl = item.get('ngay_hieu_luc')
+        ngay_het = item.get('ngay_het_hieu_luc')
+        if doc_name and ngay_hl:
+            if doc_name not in doc_hieu_luc_map:
+                doc_hieu_luc_map[doc_name] = {"ngay_hieu_luc": ngay_hl, "ngay_het_hieu_luc": ngay_het}
+            else:
+                existing = doc_hieu_luc_map[doc_name]
+                if ngay_het and not existing.get("ngay_het_hieu_luc"):
+                    existing["ngay_het_hieu_luc"] = ngay_het
+
+
 def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
     data = neo4j_record['Context_Tho']
 
@@ -39,6 +81,7 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
 
     tat_ca_cap_bac = set()
     luat_da_het_hieu_luc = False
+    doc_hieu_luc_map = {}
 
     # 1. Xử lý Căn cứ chính & Check Sửa đổi
     for item in data.get('can_cu_chinh', []):
@@ -49,22 +92,20 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
 
         id_dang_dung = item['id_thuc_te_ap_dung']
 
-        # [UPDATE MỚI] - Xử lý format nếu CÓ văn bản sửa đổi
         if item.get('id_sua_doi'):
-            # ÉP LLM đọc cả 2 tên văn bản, nhưng NỘI DUNG đưa cho LLM là nội dung mới nhất đã sửa!
             noidung_hien_thi = f"[{id_dang_dung}] (được sửa đổi, bổ sung bởi [{item.get('id_sua_doi')}]): {item.get('noidung_sua_doi')}"
             context_sach["FLAG_CANH_BAO_SUA_DOI"] = "CÓ_VĂN_BẢN_SỬA_ĐỔI"
         else:
-            # Luật nguyên bản, không bị ai sửa
             noidung_hien_thi = f"[{id_dang_dung}]: {item.get('noidung')}"
 
         context_sach["danh_sach_can_cu"].append({"cap_bac": item.get('cap_bac'), "text": noidung_hien_thi})
+
+    _collect_hieu_luc(data.get('can_cu_chinh', []), doc_hieu_luc_map)
 
     # 2. Xử lý Hướng dẫn
     for hd in data.get('can_cu_huong_dan', []):
         if not hd.get('id'): continue
         tat_ca_cap_bac.add(hd.get('cap_bac'))
-        # [THÊM MỚI]: Bắt sự kiện Văn bản Hướng dẫn bị sửa đổi
         if hd.get('id_sua_doi'):
             noidung_hd_hien_thi = f"[{hd['id']}] (được sửa đổi, bổ sung bởi [{hd['id_sua_doi']}]): {hd['noidung_sua_doi']}"
             context_sach["FLAG_CANH_BAO_SUA_DOI"] = "CÓ_VĂN_BẢN_SỬA_ĐỔI"
@@ -73,18 +114,20 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
 
         context_sach["danh_sach_can_cu"].append({"cap_bac": hd['cap_bac'], "text": noidung_hd_hien_thi})
 
-    # 3. [MỚI] XỬ LÝ CĂN CỨ BỔ TRỢ (THAM CHIẾU)
+    _collect_hieu_luc(data.get('can_cu_huong_dan', []), doc_hieu_luc_map)
+
+    # 3. XỬ LÝ CĂN CỨ BỔ TRỢ (THAM CHIẾU)
     can_cu_bo_tro = data.get('can_cu_bo_tro', []) if 'can_cu_bo_tro' in data else []
     for bt in can_cu_bo_tro:
-        if not bt.get('id'): continue  # Bỏ qua các object rỗng do OPTIONAL MATCH sinh ra
+        if not bt.get('id'): continue
         context_sach["danh_sach_bo_tro"].append({"cap_bac": bt.get('cap_bac'), "text": f"[{bt.get('id')}]: {bt.get('noidung')}"})
 
-    # 3. KÍCH HOẠT CÁC CỜ (FLAGS)
-    # Cờ Ưu tiên
+    _collect_hieu_luc(can_cu_bo_tro, doc_hieu_luc_map)
+
+    # 4. KÍCH HOẠT CÁC CỜ (FLAGS)
     if len(tat_ca_cap_bac) > 1:
         context_sach["FLAG_CANH_BAO_THU_TU_UU_TIEN"] = "CÓ_NHIỀU_CẤP_BẬC_PHÁP_LÝ"
 
-    # Cờ Lịch sử
     quy_dinh_hien_hanh = data.get('quy_dinh_hien_hanh_doi_chieu', []) if 'quy_dinh_hien_hanh_doi_chieu' in data else []
     if is_user_provide_date and luat_da_het_hieu_luc and quy_dinh_hien_hanh:
         luat_moi = ", ".join([str(i) for i in quy_dinh_hien_hanh if i])
@@ -98,11 +141,22 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
     final_context_string += f"Lịch sử: {context_sach['FLAG_CANH_BAO_LICH_SU']}\n"
     final_context_string += f"Ưu tiên: {context_sach['FLAG_CANH_BAO_THU_TU_UU_TIEN']}\n"
     final_context_string += f"Sửa đổi: {context_sach['FLAG_CANH_BAO_SUA_DOI']}\n\n"
+
+    # THÔNG TIN HIỆU LỰC VĂN BẢN
+    final_context_string += "--- THÔNG TIN HIỆU LỰC VĂN BẢN ---\n"
+    for doc_name, dates in doc_hieu_luc_map.items():
+        ngay_hl_fmt = _format_date_vn(dates["ngay_hieu_luc"])
+        ngay_het_fmt = _format_date_vn(dates.get("ngay_het_hieu_luc"))
+        line = f"- {doc_name}: Có hiệu lực từ ngày {ngay_hl_fmt}"
+        if ngay_het_fmt:
+            line += f" | HẾT HIỆU LỰC vào ngày {ngay_het_fmt}"
+        final_context_string += line + "\n"
+    final_context_string += "\n"
+
     final_context_string += "--- NỘI DUNG CĂN CỨ ---\n"
     for idx, item in enumerate(context_sach["danh_sach_can_cu"]):
         final_context_string += f"{idx+1}. (Cấp bậc {item['cap_bac']}): {item['text']}\n"
 
-    # NẾU CÓ CĂN CỨ BỔ TRỢ THÌ MỚI IN RA
     if context_sach["danh_sach_bo_tro"]:
         final_context_string += "\n--- CĂN CỨ THAM CHIẾU BỔ TRỢ (ÁP DỤNG KÈM THEO) ---\n"
         for idx, item in enumerate(context_sach["danh_sach_bo_tro"]):
