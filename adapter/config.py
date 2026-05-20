@@ -1,5 +1,6 @@
 import os
 import ssl
+from typing import AsyncIterator
 from neo4j import GraphDatabase
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
@@ -44,3 +45,11 @@ async def chat(messages, **config):
     llm = build_llm(model=RESPONSE_LLM, temperature=0, max_tokens=2048)
     res = await llm.ainvoke(messages, **config)
     return res.content
+
+
+async def chat_stream(messages, **config) -> AsyncIterator[str]:
+    llm = build_llm(model=RESPONSE_LLM, temperature=0, max_tokens=2048)
+    async for chunk in llm.astream(messages, **config):
+        content = chunk.content
+        if isinstance(content, str) and content:
+            yield content

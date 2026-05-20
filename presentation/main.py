@@ -6,7 +6,7 @@ import chainlit as cl
 # Gọi data_layer để Chainlit thiết lập PostgreSQL connection lúc khởi động
 from adapter import data_layer 
 from chainlit import data as cl_data
-from adapter.config import chat
+from adapter.config import chat_stream
 from application.query_updater import query_update
 from application.router import route_question
 
@@ -302,21 +302,23 @@ async def main(message: cl.Message):
         "content": f"Dữ liệu lấy được từ hệ thống cho câu hỏi '{updated_question}': {json.dumps(tool_response, ensure_ascii=False)}"
     })
 
-    # Sinh câu trả lời cuối cùng
+    # Sinh câu trả lời cuối cùng (streaming)
+    llm_messages = [
+        {"role": "system", "content": main_prompt},
+        *current_context,
+        {"role": "user", "content": f"Câu hỏi của người dùng: {input_text}"},
+    ]
+    msg = cl.Message(content="")
+    llm_response = ""
     async with cl.Step(name="Tổng hợp đáp án", type="llm") as ans_step:
         ans_step.input = "Context: " + str(tool_response)
-        llm_response = await chat(
-            [
-                {"role": "system", "content": main_prompt},
-                *current_context,
-                {"role": "user", "content": f"Câu hỏi của người dùng: {input_text}"},
-            ]
-        )
+        async for token in chat_stream(llm_messages):
+            llm_response += token
+            await msg.stream_token(token)
         ans_step.output = llm_response
+    await msg.update()
 
     session_history.append({"role": "user", "content": input_text})
     session_history.append({"role": "assistant", "content": llm_response})
     cl.user_session.set("session_history", session_history)
-
-    await cl.Message(content=llm_response).send()
 
