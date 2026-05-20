@@ -259,10 +259,6 @@ async def on_chat_resume(thread: ThreadDict):
              session_history.append({"role": "assistant", "content": step.get("output", "")})
                  
     cl.user_session.set("session_history", session_history)
-    
-    await cl.Message(
-        content="*(Bạn đang xem lại một phiên tư vấn cũ trong lịch sử. Hệ thống đã khôi phục luồng trò chuyện!)*"
-    ).send()
 
 @cl.on_message
 async def main(message: cl.Message):
