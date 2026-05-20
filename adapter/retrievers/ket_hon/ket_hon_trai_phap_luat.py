@@ -1,7 +1,7 @@
-from pydantic import BaseModel, Field
+﻿from pydantic import BaseModel, Field
 from typing import List, Optional
 from adapter.config import driver, build_llm, RETRIEVER_LLM
-from utils.utils import TrichXuatLuat, chuan_hoa_Context_cho_LLM, lay_target_date_tu_extraction
+from utils.utils import TrichXuatLuat, chuan_hoa_ket_qua_retriever, lay_target_date_tu_extraction
 
 ket_hon_trai_phap_luat_description = {
     "type": "function",
@@ -101,7 +101,7 @@ async def ket_hon_trai_phap_luat(query: str):
     AND (sua_doi_cua_hd.ngay_het_hieu_luc IS NULL OR sua_doi_cua_hd.ngay_het_hieu_luc > $target_date)
 
     // 6. TÌM LUẬT HIỆN HÀNH (Nếu bản áp dụng đã chết, phóng mũi tên tới tương lai để lấy bản mới nhất đối chiếu)
-    OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*0..]->(hien_hanh)
+    OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(hien_hanh)
     WHERE hien_hanh.ngay_het_hieu_luc IS NULL
 
     // 7. TÌM CÁC QUY ĐỊNH THAM CHIẾU (THAM_CHIEU_DEN)
@@ -174,10 +174,7 @@ async def ket_hon_trai_phap_luat(query: str):
             danh_sach_id=target_ids,
             target_date=target_date
         )
-        results = []
-        for r in records:
-            results.append(chuan_hoa_Context_cho_LLM(r, target_date, is_user_provide_date))
-        return results
+        return chuan_hoa_ket_qua_retriever(records, target_date, is_user_provide_date)
 
     except Exception as e:
         return [{"Lỗi Database": str(e)}]

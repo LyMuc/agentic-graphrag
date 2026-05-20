@@ -1,7 +1,6 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import json
 import chainlit as cl
 # Gọi data_layer để Chainlit thiết lập PostgreSQL connection lúc khởi động
 from adapter import data_layer 
@@ -333,7 +332,7 @@ async def main(message: cl.Message):
     input_text = message.content
     session_history = cl.user_session.get("session_history")
 
-    async with cl.Step(name="Luồng phân tích câu hỏi") as p_step:
+    async with cl.Step(name="Luồng truy xuất ngữ cảnh") as p_step:
         # 1. Cập nhật câu hỏi dựa trên lịch sử
         # async with cl.Step(name="Query Updater", type="tool") as step1:
         #     step1.input = input_text
@@ -344,26 +343,35 @@ async def main(message: cl.Message):
 
         # 2. Lấy dữ liệu lần 1
         async with cl.Step(name="Router Agent", type="tool") as step2:
-            step2.input = updated_question
+            step2.input = f'Router Input: "{updated_question}"'
             tool_response = await route_question(updated_question, tools, session_history)
-            
-            # Format lại tool_response để hiển thị đẹp hơn trên UI thay vì dùng JSON dumps thô
-            formatted_output = ""
-            for idx, res in enumerate(tool_response):
-                formatted_output += f"**Kết quả từ Retriever {idx + 1}:**\n"
-                if isinstance(res, str):
-                    formatted_output += f"{res}\n\n"
-                else:
-                    formatted_output += f"```json\n{json.dumps(res, ensure_ascii=False, indent=2)}\n```\n\n"
-                    
-            step2.output = formatted_output
+            step2.metadata = {"tool_response": tool_response}
+            retriever_names = []
+            # for res in tool_response:
+            #     if isinstance(res, dict):
+            #         retriever_names.append(
+            #             f"- {len(res.get('contexts', []))} context, "
+            #             f"{len(res.get('raw_ids', {}).get('can_cu_chinh', []))} căn cứ chính"
+            #         )
+            #     else:
+            #         retriever_names.append(f"- {str(res)}")
+            step2.output = "Retriever cuối cùng đã chạy xong."
         
         p_step.output = "Hoàn tất truy xuất ngữ cảnh pháp lý."
+
+    contexts_for_llm = []
+    for res in tool_response:
+        if isinstance(res, dict) and "contexts" in res:
+            contexts_for_llm.extend(res["contexts"])
+        else:
+            contexts_for_llm.append(res)
+
+    contexts_text_for_llm = "\n\n".join(str(ctx) for ctx in contexts_for_llm)
 
     current_context = list(session_history)
     current_context.append({
         "role": "system",
-        "content": f"Dữ liệu lấy được từ hệ thống cho câu hỏi '{updated_question}': {json.dumps(tool_response, ensure_ascii=False)}"
+        "content": f"Dữ liệu lấy được từ hệ thống cho câu hỏi '{updated_question}':\n{contexts_text_for_llm}"
     })
 
     # Sinh câu trả lời cuối cùng (streaming)
@@ -375,7 +383,7 @@ async def main(message: cl.Message):
     msg = cl.Message(content="")
     llm_response = ""
     async with cl.Step(name="Tổng hợp đáp án", type="llm") as ans_step:
-        ans_step.input = "Context: " + str(tool_response)
+        ans_step.input = "Context:\n" + contexts_text_for_llm
         async for token in chat_stream(llm_messages):
             llm_response += token
             await msg.stream_token(token)

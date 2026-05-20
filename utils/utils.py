@@ -142,6 +142,8 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
     context_sach = {
         "danh_sach_can_cu": [],
         "danh_sach_bo_tro": [],
+        "danh_sach_huong_dan": [],
+        "danh_sach_van_ban_thay_the": [],
         "FLAG_CANH_BAO_LICH_SU": "",
         "FLAG_CANH_BAO_THU_TU_UU_TIEN": "",
         "FLAG_CANH_BAO_SUA_DOI": ""
@@ -180,7 +182,7 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
         else:
             noidung_hd_hien_thi = f"[{hd['id']}]: {hd['noidung']}"
 
-        context_sach["danh_sach_can_cu"].append({"cap_bac": hd['cap_bac'], "text": noidung_hd_hien_thi})
+        context_sach["danh_sach_huong_dan"].append({"cap_bac": hd['cap_bac'], "text": noidung_hd_hien_thi})
 
     _collect_hieu_luc(data.get('can_cu_huong_dan', []), doc_hieu_luc_map)
 
@@ -197,12 +199,14 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
         context_sach["FLAG_CANH_BAO_THU_TU_UU_TIEN"] = "CÓ_NHIỀU_CẤP_BẬC_PHÁP_LÝ"
 
     quy_dinh_hien_hanh = data.get('quy_dinh_hien_hanh_doi_chieu', []) if 'quy_dinh_hien_hanh_doi_chieu' in data else []
+    context_sach["danh_sach_van_ban_thay_the"] = [str(i) for i in quy_dinh_hien_hanh if i]
     if is_user_provide_date and luat_da_het_hieu_luc and quy_dinh_hien_hanh:
         luat_moi = ", ".join([str(i) for i in quy_dinh_hien_hanh if i])
         context_sach["FLAG_CANH_BAO_LICH_SU"] = f"ÁP DỤNG LUẬT CŨ TẠI THỜI ĐIỂM {target_date}. LUẬT HIỆN HÀNH BÂY GIỜ LÀ: {luat_moi}"
 
     # Sắp xếp danh sách căn cứ từ Cấp 1 -> Cấp 3
     context_sach["danh_sach_can_cu"] = sorted(context_sach["danh_sach_can_cu"], key=lambda x: x['cap_bac'])
+    context_sach["danh_sach_huong_dan"] = sorted(context_sach["danh_sach_huong_dan"], key=lambda x: x['cap_bac'])
 
     # Format lại thành string đưa vào Prompt
     final_context_string = f"--- THÔNG TIN CẢNH BÁO ---\n"
@@ -221,7 +225,7 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
         final_context_string += line + "\n"
     final_context_string += "\n"
 
-    final_context_string += "--- NỘI DUNG CĂN CỨ ---\n"
+    final_context_string += "--- CĂN CỨ CHÍNH ---\n"
     for idx, item in enumerate(context_sach["danh_sach_can_cu"]):
         final_context_string += f"{idx+1}. (Cấp bậc {item['cap_bac']}): {item['text']}\n"
 
@@ -230,4 +234,70 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
         for idx, item in enumerate(context_sach["danh_sach_bo_tro"]):
             final_context_string += f"{idx+1}. (Cấp bậc {item['cap_bac']}): {item['text']}\n"
 
+    if context_sach["danh_sach_huong_dan"]:
+        final_context_string += "\n--- CĂN CỨ HƯỚNG DẪN ---\n"
+        for idx, item in enumerate(context_sach["danh_sach_huong_dan"]):
+            final_context_string += f"{idx+1}. (Cấp bậc {item['cap_bac']}): {item['text']}\n"
+
+    if context_sach["danh_sach_van_ban_thay_the"]:
+        final_context_string += "\n--- VĂN BẢN THAY THẾ ---\n"
+        for idx, item in enumerate(context_sach["danh_sach_van_ban_thay_the"]):
+            final_context_string += f"{idx+1}. {item}\n"
+
     return final_context_string
+
+
+def _unique_non_empty(values):
+    result = []
+    for value in values:
+        if value and value not in result:
+            result.append(value)
+    return result
+
+
+def extract_raw_ids_from_context(context_tho):
+    """Trích xuất các ID cần kiểm tra từ kết quả Cypher chưa chuẩn hóa."""
+    can_cu_chinh = [
+        item.get("id_thuc_te_ap_dung") or item.get("id")
+        for item in context_tho.get("can_cu_chinh", [])
+        if item
+    ]
+    can_cu_huong_dan = [
+        item.get("id")
+        for item in context_tho.get("can_cu_huong_dan", [])
+        if item
+    ]
+    can_cu_bo_tro = [
+        item.get("id")
+        for item in context_tho.get("can_cu_bo_tro", [])
+        if item
+    ]
+
+    return {
+        "can_cu_chinh": _unique_non_empty(can_cu_chinh),
+        "can_cu_huong_dan": _unique_non_empty(can_cu_huong_dan),
+        "can_cu_bo_tro": _unique_non_empty(can_cu_bo_tro),
+    }
+
+
+def chuan_hoa_ket_qua_retriever(records, target_date, is_user_provide_date):
+    """Trả về đồng nhất raw_ids + contexts cho mọi retriever."""
+    raw_ids = {
+        "can_cu_chinh": [],
+        "can_cu_huong_dan": [],
+        "can_cu_bo_tro": [],
+    }
+    contexts = []
+
+    for record in records:
+        context_tho = record["Context_Tho"]
+        ids = extract_raw_ids_from_context(context_tho)
+        for key, values in ids.items():
+            raw_ids[key] = _unique_non_empty([*raw_ids[key], *values])
+
+        contexts.append(chuan_hoa_Context_cho_LLM(record, target_date, is_user_provide_date))
+
+    return {
+        "raw_ids": raw_ids,
+        "contexts": contexts,
+    }

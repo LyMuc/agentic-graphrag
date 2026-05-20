@@ -41,15 +41,19 @@ async def handle_tool_calls(tools: dict[str, any], llm_tool_calls: list[dict[str
 
             called_tools.add(tool_name)
 
-            async with cl.Step(name=f"Tool: {tool_name}") as step:
+            async with cl.Step(name=f"Retriever: {tool_name}") as step:
                 function_to_call = tools[tool_name]["function"]
                 function_args = {
                     "query": updated_question
                 } if updated_question else tool_call.get("args", {})
                 
-                step.input = function_args
+                step.input = f'Retriever Input: "{function_args.get("query", "")}"'
                 res = await function_to_call(**function_args)
-                step.output = res
+                if isinstance(res, dict) and "contexts" in res:
+                    step.output = "\n\n".join(res["contexts"]) if res["contexts"] else "Không tìm thấy context phù hợp."
+                else:
+                    step.output = str(res)
+                step.metadata = {"raw_result": res}
                 
                 output.append(res)
     return output

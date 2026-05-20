@@ -1,6 +1,6 @@
-from adapter.text2cypher import Text2Cypher
+﻿from adapter.text2cypher import Text2Cypher
 from adapter.config import driver, build_llm, RETRIEVER_LLM
-from utils.utils import TrichXuatLuat, chuan_hoa_Context_cho_LLM, lay_target_date_tu_extraction
+from utils.utils import TrichXuatLuat, chuan_hoa_ket_qua_retriever, lay_target_date_tu_extraction
 
 from datetime import date
 today = date.today()
@@ -86,7 +86,7 @@ async def xu_phat_vi_pham(query: str):
     AND (huong_dan.ngay_het_hieu_luc IS NULL OR huong_dan.ngay_het_hieu_luc > $target_date)
 
     // 6. TÌM LUẬT HIỆN HÀNH (Nếu bản áp dụng đã chết, phóng mũi tên tới tương lai để lấy bản mới nhất đối chiếu)
-    OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*0..]->(hien_hanh)
+    OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(hien_hanh)
     WHERE hien_hanh.ngay_het_hieu_luc IS NULL
 
     // 7. TÌM CÁC QUY ĐỊNH THAM CHIẾU (THAM_CHIEU_DEN)
@@ -142,10 +142,4 @@ async def xu_phat_vi_pham(query: str):
 
     print(f"Cypher Query với IDs: {target_ids} và Thời điểm: {target_date}")
     records, _, _ = driver.execute_query(cypher, danh_sach_id=target_ids, target_date=target_date)
-
-    results = []
-    for r in records:
-        final_string = chuan_hoa_Context_cho_LLM(r, target_date, is_user_provide_date)
-        results.append(final_string)
-
-    return "\n\n***\n\n".join(results) if results else "Không tìm thấy kết quả phù hợp."
+    return chuan_hoa_ket_qua_retriever(records, target_date, is_user_provide_date)
