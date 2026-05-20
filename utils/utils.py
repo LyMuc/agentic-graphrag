@@ -1,5 +1,5 @@
 import re
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import List, Optional
 from datetime import date
 
@@ -18,14 +18,71 @@ def strip_code_cypher(text: str) -> str:
 # ==========================================
 # CẤU TRÚC JSON LLM CHUNG CHO CÁC TOOL TRÍCH XUẤT
 # ==========================================
+def chuan_hoa_thoi_diem_su_kien(thoi_diem) -> Optional[str]:
+    """
+    Chuẩn hóa mốc thời gian sự kiện về YYYY-MM-DD.
+    - Chỉ có năm (YYYY) -> YYYY-01-01
+    - Chỉ có năm-tháng (YYYY-MM) -> YYYY-MM-01
+    - Đã đủ ngày (YYYY-MM-DD) -> giữ nguyên
+    """
+    if thoi_diem is None:
+        return None
+
+    if isinstance(thoi_diem, date):
+        return thoi_diem.strftime("%Y-%m-%d")
+
+    s = str(thoi_diem).strip()
+    if not s or s.lower() in ("null", "none"):
+        return None
+
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", s):
+        return s
+
+    m = re.fullmatch(r"(\d{4})-(\d{1,2})", s)
+    if m:
+        year, month = m.groups()
+        return f"{year}-{month.zfill(2)}-01"
+
+    if re.fullmatch(r"\d{4}", s):
+        return f"{s}-01-01"
+
+    m = re.fullmatch(r"(\d{1,2})[/-](\d{1,2})[/-](\d{4})", s)
+    if m:
+        day, month, year = m.groups()
+        return f"{year}-{month.zfill(2)}-{day.zfill(2)}"
+
+    m = re.search(r"\b(19|20)\d{2}\b", s)
+    if m:
+        return f"{m.group()}-01-01"
+
+    return s
+
+
+def lay_target_date_tu_extraction(thoi_diem_su_kien, formatted_date: str):
+    """Trả về (target_date, is_user_provide_date) sau khi chuẩn hóa mốc thời gian."""
+    normalized = chuan_hoa_thoi_diem_su_kien(thoi_diem_su_kien)
+    is_user_provide_date = bool(normalized)
+    target_date = normalized or formatted_date
+    return target_date, is_user_provide_date
+
+
 class TrichXuatLuat(BaseModel):
     dieu_luat_ids: List[str] = Field(
         description="Danh sách ID điều luật cần dùng. (Có thể cần nhiều điều luật để trả lời đầy đủ câu hỏi)"
     )
     thoi_diem_su_kien: Optional[str] = Field(
-        description="Năm/tháng/ngày xảy ra sự kiện trong câu hỏi. Định dạng 'YYYY-MM-DD'. Nếu người dùng KHÔNG nhắc đến mốc thời gian, bắt buộc trả về null.",
-        default=None
+        description=(
+            "Năm/tháng/ngày xảy ra sự kiện trong câu hỏi. "
+            "Định dạng 'YYYY-MM-DD'. Nếu người dùng chỉ nêu năm (vd: 2023), trả về 'YYYY' hoặc 'YYYY-01-01'. "
+            "Nếu người dùng KHÔNG nhắc đến mốc thời gian, bắt buộc trả về null."
+        ),
+        default=None,
     )
+
+    @field_validator("thoi_diem_su_kien", mode="before")
+    @classmethod
+    def _normalize_thoi_diem(cls, value):
+        return chuan_hoa_thoi_diem_su_kien(value)
 
 def _format_date_vn(date_str):
     """Chuyển đổi ngày từ YYYY-MM-DD sang DD-MM-YYYY."""
@@ -52,20 +109,31 @@ def _extract_doc_name(node_id):
 
 def _collect_hieu_luc(items, doc_hieu_luc_map):
     """Thu thập thông tin hiệu lực từ danh sách items vào doc_hieu_luc_map."""
+
+    def _add_doc(doc_id, ngay_hl, ngay_het):
+        if not doc_id or not ngay_hl:
+            return
+        doc_name = _extract_doc_name(doc_id)
+        if not doc_name:
+            return
+        if doc_name not in doc_hieu_luc_map:
+            doc_hieu_luc_map[doc_name] = {"ngay_hieu_luc": ngay_hl, "ngay_het_hieu_luc": ngay_het}
+        else:
+            existing = doc_hieu_luc_map[doc_name]
+            if ngay_het and not existing.get("ngay_het_hieu_luc"):
+                existing["ngay_het_hieu_luc"] = ngay_het
+
     for item in items:
         node_id = item.get('id_thuc_te_ap_dung') or item.get('id')
-        if not node_id:
-            continue
-        doc_name = _extract_doc_name(node_id)
-        ngay_hl = item.get('ngay_hieu_luc')
-        ngay_het = item.get('ngay_het_hieu_luc')
-        if doc_name and ngay_hl:
-            if doc_name not in doc_hieu_luc_map:
-                doc_hieu_luc_map[doc_name] = {"ngay_hieu_luc": ngay_hl, "ngay_het_hieu_luc": ngay_het}
-            else:
-                existing = doc_hieu_luc_map[doc_name]
-                if ngay_het and not existing.get("ngay_het_hieu_luc"):
-                    existing["ngay_het_hieu_luc"] = ngay_het
+        if node_id:
+            _add_doc(node_id, item.get('ngay_hieu_luc'), item.get('ngay_het_hieu_luc'))
+
+        if item.get('id_sua_doi'):
+            _add_doc(
+                item.get('id_sua_doi'),
+                item.get('ngay_hieu_luc_sua_doi'),
+                item.get('ngay_het_hieu_luc_sua_doi'),
+            )
 
 
 def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):

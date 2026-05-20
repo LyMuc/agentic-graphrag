@@ -1,5 +1,5 @@
 from adapter.config import driver, build_llm, RETRIEVER_LLM
-from utils.utils import TrichXuatLuat, chuan_hoa_Context_cho_LLM
+from utils.utils import TrichXuatLuat, chuan_hoa_Context_cho_LLM, lay_target_date_tu_extraction
 
 from datetime import date
 today = date.today()
@@ -33,7 +33,7 @@ async def dieu_kien_ket_hon(query: str):
     Bạn là chuyên gia xác định căn cứ pháp lý. Đọc câu hỏi của người dùng và chọn ĐÚNG các Điều luật cần thiết.
     Chỉ được phép chọn từ danh sách sau:
     - 'Luat_HNGD_2014_Dieu_8': Điều kiện kết hôn.
-    Trích xuất mốc thời gian sự kiện (nếu có) định dạng 'YYYY-MM-DD'. Nếu không có, trả về null.
+    Trích xuất mốc thời gian sự kiện (nếu có) định dạng 'YYYY-MM-DD'. Nếu người dùng chỉ nêu năm (vd: 2023), trả về 'YYYY' hoặc 'YYYY-01-01'. Nếu không có, trả về null.
     """
     llm = build_llm(model=RETRIEVER_LLM, temperature=0)
     structured_llm = llm.with_structured_output(TrichXuatLuat)
@@ -43,10 +43,8 @@ async def dieu_kien_ket_hon(query: str):
             {"role": "system", "content": prompt_extract},
             {"role": "user", "content": query}
         ])
-        target_ids, target_date = extraction.dieu_luat_ids, extraction.thoi_diem_su_kien
-        is_user_provide_date = True if target_date else False
-        if not target_date:
-            target_date = formatted_date
+        target_ids = extraction.dieu_luat_ids
+        target_date, is_user_provide_date = lay_target_date_tu_extraction(extraction.thoi_diem_su_kien, formatted_date)
     except:
         target_ids, target_date, is_user_provide_date = ["Luat_HNGD_2014_Dieu_8"], formatted_date, False
 
@@ -101,7 +99,9 @@ async def dieu_kien_ket_hon(query: str):
             ngay_hieu_luc: chi_tiet_ap_dung.ngay_co_hieu_luc,
             ngay_het_hieu_luc: chi_tiet_ap_dung.ngay_het_hieu_luc,
             id_sua_doi: van_ban_sua_doi.id,
-            noidung_sua_doi: van_ban_sua_doi.noidung
+            noidung_sua_doi: van_ban_sua_doi.noidung,
+            ngay_hieu_luc_sua_doi: van_ban_sua_doi.ngay_co_hieu_luc,
+            ngay_het_hieu_luc_sua_doi: van_ban_sua_doi.ngay_het_hieu_luc
         }),
         can_cu_huong_dan: collect(DISTINCT {
             id: huong_dan.id,

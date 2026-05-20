@@ -1,5 +1,5 @@
 from adapter.config import driver, build_llm, RETRIEVER_LLM
-from utils.utils import TrichXuatLuat, chuan_hoa_Context_cho_LLM
+from utils.utils import TrichXuatLuat, chuan_hoa_Context_cho_LLM, lay_target_date_tu_extraction
 from datetime import date
 
 today = date.today()
@@ -39,16 +39,15 @@ async def dang_ky_ket_hon(query: str):
     - 'Luat_HoTich_2014_Dieu_18': Thủ tục đăng ký kết hôn (Áp dụng cho người Việt Nam kết hôn với nhau)
     - 'Luat_HoTich_2014_Dieu_37': Thẩm quyền đăng ký kết hôn (Áp dụng cho hôn nhân có yếu tố nước ngoài)
     - 'Luat_HoTich_2014_Dieu_38': Thủ tục đăng ký kết hôn (Áp dụng cho hôn nhân có yếu tố nước ngoài)
-    Trích xuất mốc thời gian sự kiện (nếu có) định dạng 'YYYY-MM-DD'. Nếu không có, trả về null.
+    Trích xuất mốc thời gian sự kiện (nếu có) định dạng 'YYYY-MM-DD'. Nếu người dùng chỉ nêu năm (vd: 2023), trả về 'YYYY' hoặc 'YYYY-01-01'. Nếu không có, trả về null.
     """
     llm = build_llm(model=RETRIEVER_LLM, temperature=0)
     structured_llm = llm.with_structured_output(TrichXuatLuat)
 
     try:
         extraction = structured_llm.invoke([{"role": "system", "content": prompt_extract}, {"role": "user", "content": query}])
-        target_ids, target_date = extraction.dieu_luat_ids, extraction.thoi_diem_su_kien
-        is_user_provide_date = True if target_date else False
-        if not target_date: target_date = formatted_date
+        target_ids = extraction.dieu_luat_ids
+        target_date, is_user_provide_date = lay_target_date_tu_extraction(extraction.thoi_diem_su_kien, formatted_date)
     except:
         target_ids, target_date, is_user_provide_date = ["Luat_HNGD_2014_Dieu_9"], formatted_date, False
 
@@ -119,20 +118,30 @@ async def dang_ky_ket_hon(query: str):
             ngay_hieu_luc: chi_tiet_ap_dung.ngay_co_hieu_luc,
             ngay_het_hieu_luc: chi_tiet_ap_dung.ngay_het_hieu_luc,
             id_sua_doi: van_ban_sua_doi.id,
-            noidung_sua_doi: van_ban_sua_doi.noidung
+            noidung_sua_doi: van_ban_sua_doi.noidung,
+            ngay_hieu_luc_sua_doi: van_ban_sua_doi.ngay_co_hieu_luc,
+            ngay_het_hieu_luc_sua_doi: van_ban_sua_doi.ngay_het_hieu_luc
         }),
         can_cu_huong_dan: collect(DISTINCT {
             id: huong_dan.id,
             noidung: huong_dan.noidung,
             cap_bac: huong_dan.cap_bac_phap_ly,
             ngay_hieu_luc: huong_dan.ngay_co_hieu_luc,
-            ngay_het_hieu_luc: huong_dan.ngay_het_hieu_luc
+            ngay_het_hieu_luc: huong_dan.ngay_het_hieu_luc,
+            id_sua_doi: null,
+            noidung_sua_doi: null,
+            ngay_hieu_luc_sua_doi: null,
+            ngay_het_hieu_luc_sua_doi: null
         }) + collect(DISTINCT {
             id: chi_tiet_huong_dan.id,
             noidung: chi_tiet_huong_dan.noidung,
-            cap_bac: chi_tiet_huong_dan.cap_bac_phap_ly, 
-            id_sua_doi: sua_doi_cua_hd.id,           // Sửa đổi của hướng dẫn
-            noidung_sua_doi: sua_doi_cua_hd.noidung
+            cap_bac: chi_tiet_huong_dan.cap_bac_phap_ly,
+            ngay_hieu_luc: chi_tiet_huong_dan.ngay_co_hieu_luc,
+            ngay_het_hieu_luc: chi_tiet_huong_dan.ngay_het_hieu_luc,
+            id_sua_doi: sua_doi_cua_hd.id,
+            noidung_sua_doi: sua_doi_cua_hd.noidung,
+            ngay_hieu_luc_sua_doi: sua_doi_cua_hd.ngay_co_hieu_luc,
+            ngay_het_hieu_luc_sua_doi: sua_doi_cua_hd.ngay_het_hieu_luc
         }),
         can_cu_bo_tro: collect(DISTINCT {
             id: luat_tham_chieu.id,
