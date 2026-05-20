@@ -36,6 +36,7 @@ async def xu_phat_vi_pham(query: str):
     - 'NghiDinh_82_2020_ND_CP_Dieu_61': Vi phạm quy định về giám hộ
     - 'NghiDinh_82_2020_ND_CP_Dieu_62': Vi phạm quy định về nuôi con nuôi
     - 'NghiDinh_82_2020_ND_CP_Dieu_63': Vi phạm quy định về văn phòng con nuôi nước ngoài tại Việt Nam
+    - 'NghiDinh_282_2025_ND_CP_Dieu_42': Hành vi ngăn cản việc thực hiện quyền, nghĩa vụ giữa ông, bà và cháu; giữa cha, mẹ và con; giữa vợ và chồng; giữa anh, chị, em
     - 'BoLuat_HinhSu_2015_Dieu_181': Tội cưỡng ép kết hôn, ly hôn hoặc cản trở hôn nhân tự nguyện, tiến bộ, cản trở ly hôn tự nguyện
     - 'BoLuat_HinhSu_2015_Dieu_182': Tội vi phạm chế độ một vợ, một chồng
     - 'BoLuat_HinhSu_2015_Dieu_183': Tội tổ chức tảo hôn

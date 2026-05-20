@@ -219,9 +219,9 @@
     "chu_de_phap_ly": "che_do_tai_san_cua_vo_chong",
     "loai_cau_hoi": "Lý thuyết",
     "van_ban_phap_luat_lien_quan": ["Luat_HNGD_2014"],
-    "tinh_trang_hieu_luc": {"Luat_HNGD_2014_Dieu_45": "CON_HIEU_LUC", "Luat_HNGD_2014_Dieu_3_Khoan_20": "CON_HIEU_LUC"},
+    "tinh_trang_hieu_luc": {"Luat_HNGD_2014_Dieu_45": "CON_HIEU_LUC"},
     "can_cu_phap_ly_chinh": ["Luat_HNGD_2014_Dieu_45"],
-    "can_cu_phap_ly_bo_tro": ["Luat_HNGD_2014_Dieu_3_Khoan_20"],
+    "can_cu_phap_ly_bo_tro": [],
     "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
     "can_cu_khong_nen_ap_dung": [],
     "quan_he_chong_cheo_mau_thuan": []
@@ -287,19 +287,6 @@
     "tinh_trang_hieu_luc": {"Luat_HNGD_2014_Dieu_33": "CON_HIEU_LUC"},
     "can_cu_phap_ly_chinh": ["Luat_HNGD_2014_Dieu_33"],
     "can_cu_phap_ly_bo_tro": [],
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
-    "can_cu_khong_nen_ap_dung": [],
-    "quan_he_chong_cheo_mau_thuan": []
-  },
-  {
-    "question": "Tài sản chung của vợ chồng có được từ hoa lợi phát sinh từ tài sản riêng trong thời kỳ hôn nhân xác định như thế nào?",
-    "ground_truth": "Căn cứ quy định khoản 1 Điều 33 Luật Hôn nhân gia đinh 2014 quy định về tài sản chung của vợ chồng như sau:\n\nCăn cứ quy định khoản 1 Điều 40 Luật Hôn nhân gia đinh 2014 quy định về hậu quả của việc chia tài sản chung trong thời kỳ hôn nhân như sau:\n\nTài sản chung của vợ chồng gồm tài sản do vợ, chồng tạo ra, thu nhập do lao động, hoạt động sản xuất, kinh doanh, hoa lợi, lợi tức phát sinh từ tài sản riêng và thu nhập hợp pháp khác trong thời kỳ hôn nhân.\n\nTheo quy định nêu trên thì trong trường hợp chia tài sản chung của vợ chồng thì phần tài sản được chia, hoa lợi, lợi tức phát sinh từ tài sản riêng của mỗi bên sau khi chia tài sản chung là tài sản riêng của vợ, chồng.\n\nPhần tài sản còn lại không chia vẫn là tài sản chung của vợ chồng.\n\nLưu ý: Trường hợp các bên có thỏa thuận khác thì sẽ được xử lý theo thỏa thuận đó.\n\nTài sản chung của vợ chồng có được từ hoa lợi phát sinh từ tài sản riêng trong thời kỳ hôn nhân xác định như thế nào? (Hình từ Internet)",
-    "chu_de_phap_ly": "che_do_tai_san_cua_vo_chong",
-    "loai_cau_hoi": "Lý thuyết",
-    "van_ban_phap_luat_lien_quan": ["Luat_HNGD_2014"],
-    "tinh_trang_hieu_luc": {"Luat_HNGD_2014_Dieu_33_Khoan_1": "CON_HIEU_LUC", "Luat_HNGD_2014_Dieu_40_Khoan_1": "CON_HIEU_LUC"},
-    "can_cu_phap_ly_chinh": ["Luat_HNGD_2014_Dieu_33_Khoan_1"],
-    "can_cu_phap_ly_bo_tro": ["Luat_HNGD_2014_Dieu_40_Khoan_1"],
     "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
     "can_cu_khong_nen_ap_dung": [],
     "quan_he_chong_cheo_mau_thuan": []
