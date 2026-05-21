@@ -1,0 +1,12 @@
+[
+  {
+    "chu_de_phap_ly": "cha_me_con_sau_ly_hon",
+    "so_cau_hoi": 7,
+    "cau_hoi_ly_thuyet": 7,
+    "cau_hoi_tinh_huong": 0,
+    "legal_citation_accuracy": 0.9057,
+    "legal_validity_accuracy": 1.0,
+    "citation_prioritization_accuracy": 0.8571,
+    "invalid_citation_rate": 0.0
+  }
+]

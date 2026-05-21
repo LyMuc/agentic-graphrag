@@ -1,72 +1,221 @@
-# Agentic GraphRAG Chatbot Luật 
+# Agentic GraphRAG Chatbot Luật
 
-Hệ thống Chatbot vấn đáp pháp luật Việt Nam thông minh, ứng dụng kiến trúc **Agentic GraphRAG** (Retrieval-Augmented Generation kết hợp Knowledge Graph và AI Agent). 
+Hệ thống chatbot vấn đáp pháp luật Việt Nam, ứng dụng kiến trúc **Agentic GraphRAG**: LLM định tuyến câu hỏi tới các bộ truy xuất chuyên biệt, mỗi bộ sinh truy vấn **Cypher** trên **Neo4j** để lấy căn cứ pháp lý (Điều, Khoản, Điểm, mối quan hệ tham chiếu, hiệu lực văn bản), rồi LLM tổng hợp câu trả lời có trích dẫn.
 
-Hệ thống cho phép tra cứu, giải đáp các vấn đề pháp lý (chủ đề Hôn nhân & Gia đình, Xử phạt vi phạm hành chính,...) một cách chính xác dựa trên cơ sở dữ liệu đồ thị (Neo4j) thay vì chỉ tìm kiếm văn bản thuần túy.
-
----
-
-## Tính Năng Nổi Bật
-
-- **Agentic Router**: Sử dụng LLM để tự động phân tích ý định câu hỏi và điều hướng (route) đến các bộ truy xuất (retriever) chuyên biệt (ví dụ: điều kiện kết hôn, xử phạt vi phạm,...).
-- **GraphRAG (Text2Cypher)**: Chuyển đổi ngôn ngữ tự nhiên thành câu lệnh Cypher để truy vấn trực tiếp vào Cơ sở dữ liệu đồ thị Neo4j, giúp trích xuất các điều luật, khoản, điểm và mối liên hệ tham chiếu mượt mà.
-- **Lưu trữ ngữ cảnh hội thoại**: Giao diện và luồng hội thoại được quản lý qua **Chainlit**, tích hợp Data Layer bằng **PostgreSQL** để theo dõi (tracing), lưu lịch sử chat và các bước can thiệp của Agent.
-- **Clean Architecture**: Tổ chức thư mục theo kiến trúc phân lớp (Application, Adapter, Presentation) giúp dễ dàng bảo trì và mở rộng thêm các domain luật mới.
-
-## Yêu Cầu Hệ Thống (Prerequisites)
-
-- **Python**: 3.9+
-- **Docker & Docker Compose**: Để khởi chạy PostgreSQL (Chainlit Data Layer) dễ dàng.
-- **Neo4j**: CSDL Đồ thị đang chạy ở `localhost:7687` (đã được import dữ liệu pháp luật).
-- **Vercel AI Gateway API Key**: dùng để gọi LLM qua OpenAI-compatible endpoint.
+Trọng tâm hiện tại: **Luật Hôn nhân và Gia đình** và các văn bản liên quan; có thêm retriever **xử phạt vi phạm hành chính** (Nghị định, Bộ luật Hình sự khi cần).
 
 ---
 
-## Hướng Dẫn Cài Đặt & Chạy Dự Án
+## Tính năng nổi bật
 
-### 1. Chuẩn bị Cơ sở dữ liệu
-Hệ thống sử dụng **Neo4j** (chứa luật) và **PostgreSQL** (chứa lịch sử chat của Chainlit).
-Sử dụng Docker để chạy nhanh PostgreSQL:
-```bash
-docker run --name chainlit_pg -e POSTGRES_PASSWORD=123456 -e POSTGRES_DB=chainlit_db -p 5432:5432 -d postgres
+- **Agentic Router**: LLM phân tích câu hỏi (kể cả nhiều ý trong một câu), chọn **một hoặc nhiều** retriever phù hợp và chạy **song song**.
+- **GraphRAG theo domain**: Mỗi retriever có schema Cypher và danh sách Điều luật gợi ý riêng; hỗ trợ lọc theo **thời điểm sự kiện** (áp dụng luật tại thời điểm quá khứ nếu người dùng nêu).
+- **Text2Cypher dự phòng**: Retriever tổng quát khi không khớp domain cụ thể.
+- **Tổng hợp đáp án có kiểm soát**: Prompt phản hồi quy định cách trích dẫn Điều/Khoản/Điểm, thứ bậc văn bản, hiệu lực, văn bản sửa đổi và cảnh báo đa cấp pháp lý.
+- **Giao diện Chainlit**: Streaming câu trả lời, hiển thị từng bước (Router, Retriever, tổng hợp).
+- **Lưu hội thoại**: PostgreSQL qua Chainlit Data Layer (thread, step, resume chat).
+- **Đánh giá benchmark**: Bộ câu hỏi chuẩn, script điền đáp án chatbot và tính metric trích dẫn pháp lý.
+
+---
+
+## Kiến trúc
+
+```text
+Người dùng (Chainlit UI)
+        │
+        ▼
+presentation/main.py          ← Đăng ký tools, prompt, lifecycle
+        │
+        ├── application/router.py      ← Chọn tool (ROUTER_LLM)
+        ├── application/query_updater.py  ← (tùy chọn) làm rõ câu hỏi theo lịch sử
+        │
+        ▼
+adapter/retrievers/*          ← Trích xuất Điều luật (RETRIEVER_LLM) → Cypher → Neo4j
+utils/general.py              ← text2cypher, answer_given
+        │
+        ▼
+adapter/config.py             ← Neo4j driver, LLM (Vercel AI Gateway)
+        │
+        ▼
+LLM tổng hợp (RESPONSE_LLM)   ← Streaming câu trả lời cuối
 ```
-*(Đối với Neo4j, hãy chắc chắn instance đã chạy và import các Entity, Relationship của Luật học)*.
 
-### 2. Cài đặt Môi trường Python
-Tạo môi trường ảo (Virtualenv/Conda khuyến nghị) và cài đặt dependencies:
+| Lớp | Thư mục | Vai trò |
+|-----|---------|---------|
+| **Presentation** | `presentation/` | Entry Chainlit, registry tools, OAuth, session |
+| **Application** | `application/` | Router, query updater |
+| **Adapter** | `adapter/` | Cấu hình Neo4j/LLM/DB, retriever theo chủ đề |
+| **Domain** | `domain/` | Schema DB (nếu dùng) |
+| **Utils** | `utils/` | Chuẩn hóa kết quả Cypher, text2cypher, tiện ích chung |
+
+---
+
+## Retriever (tools) hiện có
+
+| Tool | Chủ đề |
+|------|--------|
+| `quy_dinh_chung_khai_niem_phap_ly` | Quy định chung, khái niệm pháp lý |
+| `dieu_kien_ket_hon` | Điều kiện kết hôn |
+| `dang_ky_ket_hon` | Đăng ký kết hôn |
+| `ket_hon_trai_phap_luat` | Kết hôn trái pháp luật |
+| `chung_song_nhu_vo_chong` | Chung sống như vợ chồng |
+| `hon_nhan_cham_dut_do_vo_chong_chet` | Hôn nhân chấm dứt do vợ/chồng chết |
+| `cap_duong` | Nghĩa vụ cấp dưỡng |
+| `quan_he_hon_nhan_co_yeu_to_nuoc_ngoai` | Quan hệ hôn nhân có yếu tố nước ngoài |
+| `tai_san_rieng_cua_con` | Tài sản riêng của con |
+| `quy_dinh_chung_ly_hon` | Quy định chung ly hôn |
+| `chia_tai_san_sau_ly_hon` | Chia tài sản sau ly hôn |
+| `cha_me_con_sau_ly_hon` | Cha mẹ, con sau ly hôn |
+| `quyen_nghia_vu_vo_chong` | Quyền, nghĩa vụ vợ chồng |
+| `dai_dien_trach_nhiem_vo_chong` | Đại diện, trách nhiệm vợ chồng |
+| `che_do_tai_san_cua_vo_chong` | Chế độ tài sản vợ chồng |
+| `xu_phat_vi_pham` | Xử phạt vi phạm hành chính |
+| `text2cypher` | Truy vấn đồ thị tổng quát |
+| `respond` | Trả lời không cần truy xuất (ít dùng) |
+
+Thêm retriever mới: tạo module trong `adapter/retrievers/`, khai báo `description` + hàm async, rồi đăng ký trong `presentation/main.py` (`tools` dict).
+
+---
+
+## Yêu cầu hệ thống
+
+- **Python** 3.9+ (khuyến nghị 3.11+)
+- **Docker & Docker Compose** — PostgreSQL (và tùy chọn pgAdmin) cho Chainlit
+- **Neo4j** — instance đã import dữ liệu pháp luật (`bolt://localhost:7687` mặc định)
+- **Vercel AI Gateway API Key** — gọi LLM qua endpoint OpenAI-compatible
+
+---
+
+## Cài đặt & chạy
+
+### 1. PostgreSQL (Chainlit)
+
+Từ thư mục gốc dự án:
+
 ```bash
+docker compose up -d
+```
+
+- PostgreSQL: `localhost:5432`, DB `chainlit_db`, user/pass `postgres` / `123456` (theo `docker-compose.yml`)
+- pgAdmin (tùy chọn): http://localhost:5050
+
+### 2. Neo4j
+
+Đảm bảo Neo4j đang chạy và graph đã có node/quan hệ pháp luật (Điều luật, văn bản, hiệu lực, tham chiếu, …). Cấu hình qua biến môi trường (xem bước 3).
+
+### 3. Môi trường Python
+
+```bash
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# Linux/macOS: source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 3. Cấu hình Biến môi trường
-Tạo file `.env` ở thư mục gốc (có thể copy từ `.env.example` nếu có) và cấu hình các thông số:
+### 4. Biến môi trường
+
+Copy `.env.example` thành `.env` và điền giá trị:
+
 ```ini
-VERCEL_AI_GATEWAY_API_KEY="your-vercel-ai-gateway-key"
-AI_GATEWAY_BASE_URL="https://ai-gateway.vercel.sh/v1"
+# Bắt buộc — Vercel AI Gateway
+VERCEL_AI_GATEWAY_API_KEY=your-vercel-ai-gateway-key
+AI_GATEWAY_BASE_URL=https://ai-gateway.vercel.sh/v1
 
-# (Optional) Model overrides
-RESPONSE_LLM="openai/gpt-oss-120b"
-ROUTER_LLM="meta-llama/llama-4-scout-17b-16e-instruct"
-RETRIEVER_LLM="llama-3.3-70b-versatile"
+# Model (tùy chọn, mặc định trong adapter/config.py)
+RESPONSE_LLM=openai/gpt-4.1
+ROUTER_LLM=openai/gpt-4o
+RETRIEVER_LLM=openai/o3
 
-# Neo4j Graph Database
-NEO4J_URI="bolt://localhost:7687"
-NEO4J_USERNAME="neo4j"
-NEO4J_PASSWORD="your-neo4j-password"
+# Neo4j
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=your-neo4j-password
+NEO4J_DATABASE=neo4j
 
-# PostgreSQL (Chainlit Data Layer)
-DATABASE_URL="postgresql+asyncpg://postgres:123456@localhost:5432/chainlit_db"
-CHAINLIT_AUTH_SECRET="random_super_secret_hash"
+# PostgreSQL — Chainlit Data Layer
+DATABASE_URL=postgresql+asyncpg://postgres:123456@localhost:5432/chainlit_db
+CHAINLIT_AUTH_SECRET=change-me-to-a-long-random-string
+
+# OAuth (tùy chọn — bật trong .chainlit/config.toml)
+OAUTH_GOOGLE_CLIENT_ID=
+OAUTH_GOOGLE_CLIENT_SECRET=
+OAUTH_GITHUB_CLIENT_ID=
+OAUTH_GITHUB_CLIENT_SECRET=
 ```
 
-### 4. Khởi chạy Ứng dụng
-Khởi chạy UI Chainlit từ thư mục gốc (*Lưu ý file chính nằm trong presentation*):
+Trong `adapter/config.py` có sẵn khối cấu hình **Gemini API trực tiếp** (đang comment) nếu muốn chuyển provider sau này.
+
+### 5. Khởi chạy ứng dụng
+
 ```bash
 chainlit run presentation/main.py -w
 ```
-> *-w: Bật chế độ auto-reload khi chỉnh sửa code.*
 
-Chainlit sẽ tự động tạo bảng (schema) trong PostgreSQL trong lần chạy đầu tiên. Mở trình duyệt tại địa chỉ: **http://localhost:8000** để thử nghiệm chatbot.
+- `-w`: auto-reload khi sửa code
+- UI: **http://localhost:8000**
+- Lần chạy đầu, Chainlit tạo schema PostgreSQL tự động nếu `DATABASE_URL` hợp lệ
+
+**OAuth (tùy chọn):** Điền client ID/secret trong `.env`, bật `auth` trong `.chainlit/config.toml` (hiện `enabled = false` cho password; OAuth providers đã khai báo Google/GitHub).
 
 ---
 
+## Cấu trúc thư mục (phần chính)
+
+```text
+├── presentation/main.py       # Entry Chainlit
+├── application/
+│   ├── router.py              # Định tuyến tool
+│   └── query_updater.py         # Làm rõ câu hỏi theo lịch sử
+├── adapter/
+│   ├── config.py                # Neo4j, LLM, DATABASE_URL
+│   ├── data_layer.py            # Chainlit ↔ PostgreSQL
+│   └── retrievers/              # Retriever theo chủ đề
+├── utils/                       # Chuẩn hóa context, text2cypher
+├── benchmark_dataset/           # QA benchmark & script đánh giá
+│   ├── benchmark/               # Bộ câu hỏi gốc theo chủ đề
+│   ├── test_versions/           # Phiên bản test (JSON)
+│   ├── scripts/                 # fill_test_answers, gen_test_results, …
+│   └── result/                  # Tổng hợp kết quả chạy test
+├── data/                        # Nguồn văn bản, script crawl (tham khảo)
+├── docker-compose.yml           # PostgreSQL + pgAdmin
+├── requirements.txt
+└── .env.example
+```
+
+---
+
+## Benchmark & đánh giá
+
+Pipeline gợi ý (cần `.env` và Neo4j giống lúc chạy chat):
+
+```bash
+# Điền chatbot_answer + context cho file test
+python -m benchmark_dataset.scripts.fill_test_answers benchmark_dataset/test_versions/cap_duong/test_v1_1705_cap_duong.json
+
+# Gộp metric theo chủ đề / toàn bộ
+python -m benchmark_dataset.scripts.gen_test_results
+
+# Chấm metric trích dẫn pháp lý (tùy file)
+python -m benchmark_dataset.scripts.score_legal_metrics path/to/test.json
+```
+
+Các script khác: `build_test_version.py`, `build_grouped_benchmark.py`, `normalize_benchmark.py`, `merge_test_versions.py` — xem docstring trong từng file.
+
+---
+
+## Luồng xử lý một câu hỏi (tóm tắt)
+
+1. Người dùng gửi tin nhắn trên Chainlit.
+2. **Router** (`ROUTER_LLM`) chọn một hoặc nhiều tool; mỗi tool chạy trong `cl.Step` riêng.
+3. Retriever: LLM structured output chọn `dieu_luat_ids` (+ thời điểm nếu có) → thực thi Cypher trên Neo4j → `chuan_hoa_ket_qua_retriever`.
+4. Gộp `contexts` từ các retriever → **Response LLM** stream câu trả lời theo `main_prompt` (trích dẫn, hiệu lực, thứ bậc văn bản).
+5. Lưu lịch sử session; thread/steps persist qua PostgreSQL.
+
+---
+
+## Ghi chú vận hành
+
+- Thiếu `VERCEL_AI_GATEWAY_API_KEY` → lỗi khi khởi tạo LLM.
+- Thiếu `DATABASE_URL` → chat vẫn chạy nhưng **không** lưu thread lâu dài (cảnh báo trong `adapter/data_layer.py`).
+- `query_update` theo lịch sử hiện **tắt** trong `main.py` (`updated_question = input_text`); có thể bật lại bằng cách gọi `query_update`.
+- Dữ liệu thô văn bản pháp luật nằm ở `data/`; đồ thị Neo4j cần được chuẩn bị/import riêng trước khi chạy chatbot.

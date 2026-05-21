@@ -1,4 +1,6 @@
-from adapter.config import build_llm, ROUTER_LLM
+import asyncio
+
+from adapter.config import build_router_llm, ROUTER_LLM
 
 tool_picker_prompt = """
 Bạn là một hệ thống định tuyến (Router Agent) thông minh.
@@ -27,40 +29,61 @@ Ví dụ 2 (MỘT Ý HỎI nhưng CẦN NHIỀU BỐI CẢNH PHÁP LÝ):
 => BẠN PHẢI GỌI CẢ 2 CÔNG CỤ NÀY để có đầy đủ căn cứ pháp lý cho câu trả lời.
 """
 
+async def _execute_tool_call(tools: dict[str, any], tool_call: dict[str, any], updated_question):
+    import chainlit as cl
+
+    tool_name = tool_call["name"]
+    async with cl.Step(name=f"Retriever: {tool_name}") as step:
+        function_to_call = tools[tool_name]["function"]
+        function_args = (
+            {"query": updated_question}
+            if updated_question
+            else tool_call.get("args", {})
+        )
+
+        step.input = f'Retriever Input: "{function_args.get("query", "")}"'
+        res = await function_to_call(**function_args)
+        if isinstance(res, dict) and "contexts" in res:
+            step.output = (
+                "\n\n".join(res["contexts"])
+                if res["contexts"]
+                else "Không tìm thấy context phù hợp."
+            )
+        else:
+            step.output = str(res)
+        step.metadata = {"raw_result": res}
+        return res
+
+
 async def handle_tool_calls(tools: dict[str, any], llm_tool_calls: list[dict[str, any]], updated_question):
-    output = []
-    called_tools = set()
-    if llm_tool_calls:
-        import chainlit as cl
-        print('llm_tool_calls:', llm_tool_calls)
-        for tool_call in llm_tool_calls:
-            tool_name = tool_call['name']
+    if not llm_tool_calls:
+        return []
 
-            if tool_name in called_tools:
-                continue
+    print("llm_tool_calls:", llm_tool_calls)
 
-            called_tools.add(tool_name)
+    seen_tools = set()
+    unique_tool_calls = []
+    for tool_call in llm_tool_calls:
+        tool_name = tool_call["name"]
+        if tool_name in seen_tools:
+            continue
+        seen_tools.add(tool_name)
+        unique_tool_calls.append(tool_call)
 
-            async with cl.Step(name=f"Retriever: {tool_name}") as step:
-                function_to_call = tools[tool_name]["function"]
-                function_args = {
-                    "query": updated_question
-                } if updated_question else tool_call.get("args", {})
-                
-                step.input = f'Retriever Input: "{function_args.get("query", "")}"'
-                res = await function_to_call(**function_args)
-                if isinstance(res, dict) and "contexts" in res:
-                    step.output = "\n\n".join(res["contexts"]) if res["contexts"] else "Không tìm thấy context phù hợp."
-                else:
-                    step.output = str(res)
-                step.metadata = {"raw_result": res}
-                
-                output.append(res)
-    return output
+    return list(
+        await asyncio.gather(
+            *(
+                _execute_tool_call(tools, tool_call, updated_question)
+                for tool_call in unique_tool_calls
+            )
+        )
+    )
 
 async def tool_choice(messages, temperature=0, tools=[], config={}, model=None):
-    llm = build_llm(model=ROUTER_LLM, temperature=0, max_tokens=2048)
-    llm_with_tools = llm.bind_tools(tools)
+    # Cấu hình Gemini (tạm comment):
+    # res = await ainvoke_router_with_tools(messages, tools)
+    llm = build_router_llm()
+    llm_with_tools = llm.bind_tools(tools, tool_choice="any")
     res = await llm_with_tools.ainvoke(messages)
     if not res.tool_calls:
         print(f"[Router] No tool_calls returned. model={ROUTER_LLM} content={res.content}")

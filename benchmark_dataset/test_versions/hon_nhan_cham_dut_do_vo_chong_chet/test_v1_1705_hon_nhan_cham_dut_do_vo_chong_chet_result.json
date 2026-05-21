@@ -1,0 +1,12 @@
+[
+  {
+    "chu_de_phap_ly": "hon_nhan_cham_dut_do_vo_chong_chet",
+    "so_cau_hoi": 3,
+    "cau_hoi_ly_thuyet": 2,
+    "cau_hoi_tinh_huong": 1,
+    "legal_citation_accuracy": 0.8333,
+    "legal_validity_accuracy": 1.0,
+    "citation_prioritization_accuracy": 0.89,
+    "invalid_citation_rate": 0.0
+  }
+]

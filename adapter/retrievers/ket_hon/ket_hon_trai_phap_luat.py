@@ -1,6 +1,7 @@
-﻿from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field
 from typing import List, Optional
 from adapter.config import driver, build_llm, RETRIEVER_LLM
+# Cấu hình Gemini (tạm comment): from adapter.config import driver, ainvoke_structured_retriever
 from utils.utils import TrichXuatLuat, chuan_hoa_ket_qua_retriever, lay_target_date_tu_extraction
 
 ket_hon_trai_phap_luat_description = {
@@ -36,6 +37,8 @@ async def ket_hon_trai_phap_luat(query: str):
     Bạn cũng cần trích xuất mốc thời gian (nếu có) để hệ thống áp dụng đúng luật thời kỳ đó.
     """
 
+    # Cấu hình Gemini (tạm comment):
+    # extraction = await ainvoke_structured_retriever(TrichXuatLuat, messages)
     llm = build_llm(model=RETRIEVER_LLM, temperature=0)
     structured_llm = llm.with_structured_output(TrichXuatLuat)
 
@@ -49,7 +52,7 @@ async def ket_hon_trai_phap_luat(query: str):
     formatted_date = today.strftime("%Y-%m-%d")
 
     try:
-        extraction = structured_llm.invoke(messages)
+        extraction = await structured_llm.ainvoke(messages)
         target_ids = extraction.dieu_luat_ids
         target_date, is_user_provide_date = lay_target_date_tu_extraction(extraction.thoi_diem_su_kien, formatted_date)
         print(f"[LLM Filter] Chọn IDs: {target_ids} | Thời điểm: {target_date}")

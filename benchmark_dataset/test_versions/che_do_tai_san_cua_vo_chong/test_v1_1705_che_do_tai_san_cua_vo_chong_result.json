@@ -1,0 +1,12 @@
+[
+  {
+    "chu_de_phap_ly": "che_do_tai_san_cua_vo_chong",
+    "so_cau_hoi": 28,
+    "cau_hoi_ly_thuyet": 21,
+    "cau_hoi_tinh_huong": 7,
+    "legal_citation_accuracy": 0.8182,
+    "legal_validity_accuracy": 1.0,
+    "citation_prioritization_accuracy": 0.8914,
+    "invalid_citation_rate": 0.0
+  }
+]

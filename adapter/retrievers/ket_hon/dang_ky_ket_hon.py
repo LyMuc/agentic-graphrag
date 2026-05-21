@@ -1,4 +1,5 @@
-﻿from adapter.config import driver, build_llm, RETRIEVER_LLM
+from adapter.config import driver, build_llm, RETRIEVER_LLM
+# Cấu hình Gemini (tạm comment): from adapter.config import driver, ainvoke_structured_retriever
 from utils.utils import TrichXuatLuat, chuan_hoa_ket_qua_retriever, lay_target_date_tu_extraction
 from datetime import date
 
@@ -41,11 +42,13 @@ async def dang_ky_ket_hon(query: str):
     - 'Luat_HoTich_2014_Dieu_38': Thủ tục đăng ký kết hôn (Áp dụng cho hôn nhân có yếu tố nước ngoài)
     Trích xuất mốc thời gian sự kiện (nếu có) định dạng 'YYYY-MM-DD'. Nếu người dùng chỉ nêu năm (vd: 2023), trả về 'YYYY' hoặc 'YYYY-01-01'. Nếu không có, trả về null.
     """
+    # Cấu hình Gemini (tạm comment):
+    # extraction = await structured_llm.ainvoke(...)
     llm = build_llm(model=RETRIEVER_LLM, temperature=0)
     structured_llm = llm.with_structured_output(TrichXuatLuat)
 
     try:
-        extraction = structured_llm.invoke([{"role": "system", "content": prompt_extract}, {"role": "user", "content": query}])
+        extraction = await structured_llm.ainvoke([{"role": "system", "content": prompt_extract}, {"role": "user", "content": query}])
         target_ids = extraction.dieu_luat_ids
         target_date, is_user_provide_date = lay_target_date_tu_extraction(extraction.thoi_diem_su_kien, formatted_date)
     except:
