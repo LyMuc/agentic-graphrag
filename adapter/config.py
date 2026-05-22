@@ -1,6 +1,9 @@
+import asyncio
 import os
 import ssl
 from typing import AsyncIterator
+
+import httpx
 from neo4j import GraphDatabase
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
@@ -14,6 +17,8 @@ AI_GATEWAY_BASE_URL = os.environ.get("AI_GATEWAY_BASE_URL", "https://ai-gateway.
 RESPONSE_LLM = os.environ.get("RESPONSE_LLM", "openai/gpt-4.1")
 ROUTER_LLM = os.environ.get("ROUTER_LLM", "openai/gpt-4o")
 RETRIEVER_LLM = os.environ.get("RETRIEVER_LLM", "openai/o3")
+LLM_REQUEST_TIMEOUT = float(os.environ.get("LLM_REQUEST_TIMEOUT", "180"))
+LLM_STREAM_RETRIES = int(os.environ.get("LLM_STREAM_RETRIES", "2"))
 
 NEO4J_URI = os.environ.get('NEO4J_URI')
 NEO4J_USERNAME = os.environ.get('NEO4J_USERNAME')
@@ -39,6 +44,8 @@ def build_llm(model: str, temperature: float = 0, max_tokens: int = 2048, **kwar
         model=model,
         temperature=temperature,
         max_tokens=max_tokens,
+        timeout=LLM_REQUEST_TIMEOUT,
+        max_retries=2,
         **kwargs,
     )
 
@@ -49,7 +56,41 @@ def build_retriever_llm(**kwargs) -> ChatOpenAI:
     return build_llm(model=RETRIEVER_LLM, temperature=0, max_tokens=1024, **kwargs)
 
 def build_response_llm(**kwargs) -> ChatOpenAI:
-    return build_llm(model=RESPONSE_LLM, temperature=0, max_tokens=4096, **kwargs)
+    return build_llm(
+        model=RESPONSE_LLM,
+        temperature=0,
+        max_tokens=4096,
+        stream_chunk_timeout=None,
+        **kwargs,
+    )
+
+def _is_retryable_llm_error(exc: Exception) -> bool:
+    if isinstance(
+        exc,
+        (
+            httpx.ReadError,
+            httpx.RemoteProtocolError,
+            httpx.ConnectError,
+            httpx.ConnectTimeout,
+            httpx.ReadTimeout,
+            httpx.WriteTimeout,
+            httpx.PoolTimeout,
+        ),
+    ):
+        return True
+
+    message = str(exc).lower()
+    return any(
+        token in message
+        for token in ("connection", "timeout", "read error", "disconnected", "reset")
+    )
+
+
+async def _stream_llm_tokens(llm: ChatOpenAI, messages, **config) -> AsyncIterator[str]:
+    async for chunk in llm.astream(messages, **config):
+        content = chunk.content
+        if isinstance(content, str) and content:
+            yield content
 
 def build_structured_retriever_llm(schema):
     return build_retriever_llm().with_structured_output(schema)
@@ -63,10 +104,33 @@ async def chat(messages, **config):
 
 async def chat_stream(messages, **config) -> AsyncIterator[str]:
     llm = build_response_llm()
-    async for chunk in llm.astream(messages, **config):
-        content = chunk.content
+    last_error: Exception | None = None
+
+    for attempt in range(LLM_STREAM_RETRIES):
+        try:
+            async for token in _stream_llm_tokens(llm, messages, **config):
+                yield token
+            return
+        except Exception as exc:
+            if not _is_retryable_llm_error(exc):
+                raise
+            last_error = exc
+            if attempt < LLM_STREAM_RETRIES - 1:
+                await asyncio.sleep(1 + attempt)
+
+    try:
+        res = await llm.ainvoke(messages, **config)
+        content = res.content if hasattr(res, "content") else str(res)
         if isinstance(content, str) and content:
             yield content
+            return
+    except Exception as invoke_error:
+        if last_error is not None:
+            raise last_error from invoke_error
+        raise
+
+    if last_error is not None:
+        raise last_error
 
 
 # =============================================================================

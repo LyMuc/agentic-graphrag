@@ -366,6 +366,19 @@ async def main(message: cl.Message):
         else:
             contexts_for_llm.append(res)
 
+    if (
+        len(contexts_for_llm) == 1
+        and isinstance(contexts_for_llm[0], str)
+        and not any(isinstance(res, dict) and "contexts" in res for res in tool_response)
+    ):
+        direct_answer = contexts_for_llm[0]
+        msg = cl.Message(content=direct_answer)
+        await msg.send()
+        session_history.append({"role": "user", "content": input_text})
+        session_history.append({"role": "assistant", "content": direct_answer})
+        cl.user_session.set("session_history", session_history)
+        return
+
     contexts_text_for_llm = "\n\n".join(str(ctx) for ctx in contexts_for_llm)
 
     current_context = list(session_history)
@@ -384,9 +397,21 @@ async def main(message: cl.Message):
     llm_response = ""
     async with cl.Step(name="Tổng hợp đáp án", type="llm") as ans_step:
         ans_step.input = "Context:\n" + contexts_text_for_llm
-        async for token in chat_stream(llm_messages):
-            llm_response += token
-            await msg.stream_token(token)
+        try:
+            async for token in chat_stream(llm_messages):
+                llm_response += token
+                await msg.stream_token(token)
+        except Exception:
+            fallback = (
+                "Xin lỗi, hệ thống gặp sự cố kết nối khi sinh câu trả lời. "
+                "Vui lòng thử lại sau vài giây."
+            )
+            if llm_response:
+                llm_response += f"\n\n{fallback}"
+                await msg.stream_token(f"\n\n{fallback}")
+            else:
+                llm_response = fallback
+                await msg.stream_token(fallback)
         ans_step.output = llm_response
     await msg.update()
 

@@ -6,15 +6,10 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from neo4j import GraphDatabase
 
-# Khởi tạo LLM
 os.environ["OPENAI_API_KEY"] = "your_openai_api_key_here"
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
 app = FastAPI(title="Luồng Template Cypher - Kết hôn trái pháp luật")
-
-# =====================================================================
-# BƯỚC 1: ĐỊNH NGHĨA PYDANTIC ĐỂ ÉP LLM TRÍCH XUẤT THAM SỐ (ROUTING)
-# =====================================================================
 
 class ThamSoYeuCauHuy(BaseModel):
     vai_tro_chu_the: Literal["Người bị cưỡng ép", "Người bị lừa dối", "Vợ", "Chồng", "Cha", "Mẹ", "Con", "Cơ quan quản lý", "Không xác định"] = Field(description="Ai đang muốn yêu cầu hủy?")
@@ -31,12 +26,6 @@ class RouterKetHonTraiPL(BaseModel):
     
     tham_so_yeu_cau: Optional[ThamSoYeuCauHuy] = None
     tham_so_cong_nhan: Optional[ThamSoCongNhanHoiTo] = None
-
-# =====================================================================
-# BƯỚC 2: KHO LƯU TRỮ CÁC CYPHER TEMPLATES (MẪU TRIPLE)
-# =====================================================================
-# Thay vì để LLM tự viết Cypher, ta định nghĩa sẵn các khuôn mẫu logic (Triple Patterns)
-# LLM chỉ việc truyền tham số ($vai_tro, $nguyen_nhan...) vào đây.
 
 CYPHER_TEMPLATES = {
     "HOI_QUYEN_YEU_CAU": """

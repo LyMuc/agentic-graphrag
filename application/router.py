@@ -29,19 +29,27 @@ Ví dụ 2 (MỘT Ý HỎI nhưng CẦN NHIỀU BỐI CẢNH PHÁP LÝ):
 => BẠN PHẢI GỌI CẢ 2 CÔNG CỤ NÀY để có đầy đủ căn cứ pháp lý cho câu trả lời.
 """
 
+def _tool_accepts_query(tools: dict[str, any], tool_name: str) -> bool:
+    properties = (
+        tools[tool_name]["description"]
+        .get("function", {})
+        .get("parameters", {})
+        .get("properties", {})
+    )
+    return "query" in properties
+
+
 async def _execute_tool_call(tools: dict[str, any], tool_call: dict[str, any], updated_question):
     import chainlit as cl
 
     tool_name = tool_call["name"]
     async with cl.Step(name=f"Retriever: {tool_name}") as step:
         function_to_call = tools[tool_name]["function"]
-        function_args = (
-            {"query": updated_question}
-            if updated_question
-            else tool_call.get("args", {})
-        )
+        function_args = dict(tool_call.get("args", {}))
+        if updated_question and _tool_accepts_query(tools, tool_name):
+            function_args["query"] = updated_question
 
-        step.input = f'Retriever Input: "{function_args.get("query", "")}"'
+        step.input = f'Tool Input: {function_args}'
         res = await function_to_call(**function_args)
         if isinstance(res, dict) and "contexts" in res:
             step.output = (
