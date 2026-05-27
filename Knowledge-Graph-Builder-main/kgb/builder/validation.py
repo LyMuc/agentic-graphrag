@@ -24,6 +24,29 @@ _TYPE_RELATION_ALIASES = {
     "category_of",
 }
 
+_BASED_ON_HEAD_TYPES = frozenset({
+    "LegalConcept",
+    "LegalAction",
+    "Subject",
+    "Asset",
+    "Right_Obligation",
+    "Condition",
+})
+
+_HNGD_RELATION_PAIR_RULES: dict[str, tuple[frozenset[str], frozenset[str]]] = {
+    "BASED_ON": (_BASED_ON_HEAD_TYPES, frozenset({"LegalProvision"})),
+    "REFERENCE_TO": (frozenset({"LegalProvision"}), frozenset({"LegalProvision"})),
+    "DEFINED_AS": (frozenset({"LegalConcept"}), frozenset({"LegalConcept"})),
+    "HAS_RIGHT": (frozenset({"Subject"}), frozenset({"LegalAction", "Right_Obligation"})),
+    "HAS_DUTY": (frozenset({"Subject"}), frozenset({"LegalAction", "Right_Obligation"})),
+    "IS_PROHIBITED": (frozenset({"Subject"}), frozenset({"LegalAction"})),
+    "REQUIRES_CONDITION": (frozenset({"LegalAction"}), frozenset({"Condition"})),
+    "BLOCKED_BY": (frozenset({"LegalAction"}), frozenset({"Condition"})),
+    "RESULTS_IN": (frozenset({"LegalAction"}), frozenset({"LegalAction", "Right_Obligation"})),
+    "RESOLVED_BY": (frozenset({"LegalAction"}), frozenset({"Subject"})),
+    "OWNS": (frozenset({"Subject"}), frozenset({"Asset"})),
+}
+
 
 @dataclass(frozen=True)
 class SchemaConstraints:
@@ -246,6 +269,37 @@ def extract_explicit_entity_type_labels(raw_triple: dict[str, Any]) -> list[str]
     return labels
 
 
+def is_valid_is_a_pair(head_type: str | None, tail_type: str | None) -> bool:
+    """IS_A allows (Asset, Asset) or (LegalConcept, LegalConcept) only."""
+    if not head_type or not tail_type:
+        return True
+    return (
+        head_type == "Asset" and tail_type == "Asset"
+    ) or (
+        head_type == "LegalConcept" and tail_type == "LegalConcept"
+    )
+
+
+def is_valid_hngd_relation_pair(
+    relation: str,
+    head_type: str | None,
+    tail_type: str | None,
+) -> bool:
+    """Validate head_type/relation/tail_type against the HNGD constrained schema."""
+    if not head_type or not tail_type:
+        return True
+
+    if relation == "IS_A":
+        return is_valid_is_a_pair(head_type, tail_type)
+
+    rule = _HNGD_RELATION_PAIR_RULES.get(relation)
+    if rule is None:
+        return True
+
+    allowed_heads, allowed_tails = rule
+    return head_type in allowed_heads and tail_type in allowed_tails
+
+
 def validate_entity_types(
     triple: Triple,
     raw_triple: dict[str, Any],
@@ -292,6 +346,7 @@ def validate_triples_against_schema(
         "accepted_triples": 0,
         "rejected_triples": 0,
         "rejected_due_to_relation": 0,
+        "rejected_due_to_relation_pair": 0,
         "rejected_due_to_entity_type": 0,
         "entity_type_validation_skipped": 0,
         "rejected_samples": [],
@@ -320,6 +375,14 @@ def validate_triples_against_schema(
         elif not entity_validation_result:
             rejected_for.append("entity_type")
             summary["rejected_due_to_entity_type"] += 1
+
+        if constraints.enforce and not is_valid_hngd_relation_pair(
+            triple.relation,
+            triple.head_type,
+            triple.tail_type,
+        ):
+            rejected_for.append("relation_pair")
+            summary["rejected_due_to_relation_pair"] += 1
 
         if rejected_for:
             summary["rejected_triples"] += 1

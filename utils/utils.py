@@ -107,6 +107,40 @@ def _extract_doc_name(node_id):
     return match.group(1) if match else str(node_id)
 
 
+def _dedupe_maps_by_id(items: list, key: str = "id") -> list:
+    """Gộp list map Cypher, giữ một bản ghi đầu tiên cho mỗi id."""
+    seen = set()
+    out: list = []
+    for item in items or []:
+        if not isinstance(item, dict):
+            continue
+        item_id = item.get(key)
+        if not item_id or item_id in seen:
+            continue
+        seen.add(item_id)
+        out.append(item)
+    return out
+
+
+def _filter_van_ban_thay_the_thuc(
+    quy_dinh_hien_hanh: list,
+    can_cu_chinh: list,
+    flag_lich_su: str,
+) -> list:
+    """Chỉ giữ ID thay thế thật — loại ID trùng căn cứ chính khi không có cảnh báo lịch sử."""
+    raw = [str(i) for i in quy_dinh_hien_hanh if i]
+    if not raw:
+        return []
+    if flag_lich_su:
+        return raw
+    can_cu_ids = {
+        str(item.get("id_thuc_te_ap_dung"))
+        for item in can_cu_chinh
+        if item.get("id_thuc_te_ap_dung")
+    }
+    return [i for i in raw if i not in can_cu_ids]
+
+
 def _collect_hieu_luc(items, doc_hieu_luc_map):
     """Thu thập thông tin hiệu lực từ danh sách items vào doc_hieu_luc_map."""
 
@@ -172,8 +206,8 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
 
     _collect_hieu_luc(data.get('can_cu_chinh', []), doc_hieu_luc_map)
 
-    # 2. Xử lý Hướng dẫn
-    for hd in data.get('can_cu_huong_dan', []):
+    # 2. Xử lý Hướng dẫn (dedup safety-net theo id)
+    for hd in _dedupe_maps_by_id(data.get('can_cu_huong_dan', [])):
         if not hd.get('id'): continue
         tat_ca_cap_bac.add(hd.get('cap_bac'))
         if hd.get('id_sua_doi'):
@@ -187,7 +221,9 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
     _collect_hieu_luc(data.get('can_cu_huong_dan', []), doc_hieu_luc_map)
 
     # 3. XỬ LÝ CĂN CỨ BỔ TRỢ (THAM CHIẾU)
-    can_cu_bo_tro = data.get('can_cu_bo_tro', []) if 'can_cu_bo_tro' in data else []
+    can_cu_bo_tro = _dedupe_maps_by_id(
+        data.get('can_cu_bo_tro', []) if 'can_cu_bo_tro' in data else []
+    )
     for bt in can_cu_bo_tro:
         if not bt.get('id'): continue
         context_sach["danh_sach_bo_tro"].append({"cap_bac": bt.get('cap_bac'), "text": f"[{bt.get('id')}]: {bt.get('noidung')}"})
@@ -199,9 +235,13 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
         context_sach["FLAG_CANH_BAO_THU_TU_UU_TIEN"] = "CÓ_NHIỀU_CẤP_BẬC_PHÁP_LÝ"
 
     quy_dinh_hien_hanh = data.get('quy_dinh_hien_hanh_doi_chieu', []) if 'quy_dinh_hien_hanh_doi_chieu' in data else []
-    context_sach["danh_sach_van_ban_thay_the"] = [str(i) for i in quy_dinh_hien_hanh if i]
-    if is_user_provide_date and luat_da_het_hieu_luc and quy_dinh_hien_hanh:
-        luat_moi = ", ".join([str(i) for i in quy_dinh_hien_hanh if i])
+    context_sach["danh_sach_van_ban_thay_the"] = _filter_van_ban_thay_the_thuc(
+        quy_dinh_hien_hanh,
+        data.get('can_cu_chinh', []),
+        context_sach["FLAG_CANH_BAO_LICH_SU"],
+    )
+    if is_user_provide_date and luat_da_het_hieu_luc and context_sach["danh_sach_van_ban_thay_the"]:
+        luat_moi = ", ".join(context_sach["danh_sach_van_ban_thay_the"])
         context_sach["FLAG_CANH_BAO_LICH_SU"] = f"ÁP DỤNG LUẬT CŨ TẠI THỜI ĐIỂM {target_date}. LUẬT HIỆN HÀNH BÂY GIỜ LÀ: {luat_moi}"
 
     # Sắp xếp danh sách căn cứ từ Cấp 1 -> Cấp 3

@@ -44,6 +44,14 @@ from adapter.retrievers.quy_dinh_chung_khai_niem_phap_ly import (
     quy_dinh_chung_khai_niem_phap_ly,
     quy_dinh_chung_khai_niem_phap_ly_description,
 )
+# from adapter.retrievers.quan_he_giua_vo_va_chong.che_do_tai_san_cua_vo_chong_v2 import (
+#     che_do_tai_san_cua_vo_chong_v2,
+#     che_do_tai_san_cua_vo_chong_v2_description,
+# )
+from adapter.retrievers.quan_he_giua_vo_va_chong.che_do_tai_san_cua_vo_chong_v3 import (
+    che_do_tai_san_cua_vo_chong_v3,
+    che_do_tai_san_cua_vo_chong_v3_description,
+)
 from adapter.retrievers.tai_san_rieng_cua_con import tai_san_rieng_cua_con, tai_san_rieng_cua_con_description
 from adapter.retrievers.vi_pham.xu_phat_vi_pham import xu_phat_vi_pham, xu_phat_vi_pham_description
 from utils.general import text2cypher, text2cypher_description, answer_given, answer_given_description
@@ -107,9 +115,17 @@ tools = {
         "description": dai_dien_trach_nhiem_vo_chong_description,
         "function": dai_dien_trach_nhiem_vo_chong
     },
-    "che_do_tai_san_cua_vo_chong": {
-        "description": che_do_tai_san_cua_vo_chong_description,
-        "function": che_do_tai_san_cua_vo_chong
+    # "che_do_tai_san_cua_vo_chong": {
+    #     "description": che_do_tai_san_cua_vo_chong_description,
+    #     "function": che_do_tai_san_cua_vo_chong
+    # },
+    # "che_do_tai_san_cua_vo_chong_v2": {
+    #     "description": che_do_tai_san_cua_vo_chong_v2_description,
+    #     "function": che_do_tai_san_cua_vo_chong_v2
+    # },
+    "che_do_tai_san_cua_vo_chong_v3": {
+        "description": che_do_tai_san_cua_vo_chong_v3_description,
+        "function": che_do_tai_san_cua_vo_chong_v3
     },
     "xu_phat_vi_pham": {
         "description": xu_phat_vi_pham_description,
@@ -363,15 +379,19 @@ async def main(message: cl.Message):
     for res in tool_response:
         if isinstance(res, dict) and "contexts" in res:
             contexts_for_llm.extend(res["contexts"])
+        elif isinstance(res, list):
+            contexts_for_llm.extend(str(item) for item in res if item is not None)
         else:
             contexts_for_llm.append(res)
 
+    # Chỉ bỏ qua LLM khi tool trả thẳng 1 chuỗi (vd `respond` / answer_given).
+    # Retriever trả list[str] (vd v3) sau khi extend vẫn phải qua bước tổng hợp đáp án.
     if (
-        len(contexts_for_llm) == 1
-        and isinstance(contexts_for_llm[0], str)
+        len(tool_response) == 1
+        and isinstance(tool_response[0], str)
         and not any(isinstance(res, dict) and "contexts" in res for res in tool_response)
     ):
-        direct_answer = contexts_for_llm[0]
+        direct_answer = tool_response[0]
         msg = cl.Message(content=direct_answer)
         await msg.send()
         session_history.append({"role": "user", "content": input_text})

@@ -57,6 +57,13 @@ async def _execute_tool_call(tools: dict[str, any], tool_call: dict[str, any], u
                 if res["contexts"]
                 else "Không tìm thấy context phù hợp."
             )
+        elif isinstance(res, list):
+            parts = [str(item) for item in res if item is not None]
+            step.output = (
+                "\n\n".join(parts)
+                if parts
+                else "Không tìm thấy context phù hợp."
+            )
         else:
             step.output = str(res)
         step.metadata = {"raw_result": res}

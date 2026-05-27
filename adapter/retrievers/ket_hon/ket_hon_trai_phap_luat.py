@@ -75,8 +75,11 @@ async def ket_hon_trai_phap_luat(query: str):
     // 2. LẤY TOÀN BỘ GIA PHẢ THEO DÒNG THỜI GIAN (QÚA KHỨ + TƯƠNG LAI)
     OPTIONAL MATCH (chi_tiet_goc)-[:THAY_THE_BOI*0..]-(chi_tiet_gia_toc)
 
+    // 2b. MỞ RỘNG CHI TIẾT (KHOẢN/ĐIỂM) CỦA VĂN BẢN THAY THẾ
+    OPTIONAL MATCH (chi_tiet_gia_toc)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_thay_the)
+
     // Gom tất cả các phiên bản (Bản gốc + Bản quá khứ + Bản tương lai) vào 1 rổ
-    WITH n_goc, collect(chi_tiet_goc) + collect(chi_tiet_gia_toc) AS tat_ca_phien_ban
+    WITH n_goc, collect(chi_tiet_goc) + collect(chi_tiet_gia_toc) + collect(chi_tiet_thay_the) AS tat_ca_phien_ban
     UNWIND tat_ca_phien_ban AS node_xet_duyet
 
     // 3. TÌM CHÍNH XÁC PHIÊN BẢN CÓ HIỆU LỰC TẠI $target_date

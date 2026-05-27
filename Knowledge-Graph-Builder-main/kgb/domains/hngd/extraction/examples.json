@@ -1,113 +1,5 @@
 [
     {
-        "text": "{\"id\": \"Luat_HNGD_2014_Dieu_8_Khoan_1\", \"text\": \"Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên; Việc kết hôn do nam và nữ tự nguyện quyết định.\"}",
-        "extractions": [
-            {
-                "extraction_class": "Triple",
-                "extraction_text": "Nam từ đủ 20 tuổi trở lên",
-                "char_start": 49,
-                "char_end": 74,
-                "attributes": {
-                    "head": "Kết hôn",
-                    "head_type": "LegalAction",
-                    "relation": "REQUIRES_CONDITION",
-                    "tail": "Nam từ đủ 20 tuổi trở lên",
-                    "tail_type": "Condition",
-                    "inference": "explicit"
-                }
-            },
-            {
-                "extraction_class": "Triple",
-                "extraction_text": "tự nguyện quyết định",
-                "char_start": 128,
-                "char_end": 148,
-                "attributes": {
-                    "head": "Kết hôn",
-                    "head_type": "LegalAction",
-                    "relation": "REQUIRES_CONDITION",
-                    "tail": "Tự nguyện quyết định",
-                    "tail_type": "Condition",
-                    "inference": "explicit"
-                }
-            },
-            {
-                "extraction_class": "Triple",
-                "extraction_text": "Luat_HNGD_2014_Dieu_8_Khoan_1",
-                "char_start": 8,
-                "char_end": 37,
-                "attributes": {
-                    "head": "Kết hôn",
-                    "head_type": "LegalAction",
-                    "relation": "BASED_ON",
-                    "tail": "Luat_HNGD_2014_Dieu_8_Khoan_1",
-                    "tail_type": "LegalProvision",
-                    "inference": "explicit"
-                }
-            }
-        ]
-    },
-    {
-        "text": "{\"id\": \"Luat_HNGD_2014_Dieu_51_Khoan_3\", \"text\": \"Chồng không có quyền yêu cầu ly hôn trong trường hợp vợ đang có thai, sinh con hoặc đang nuôi con dưới 12 tháng tuổi.\"}",
-        "extractions": [
-            {
-                "extraction_class": "Triple",
-                "extraction_text": "Chồng",
-                "char_start": 50,
-                "char_end": 55,
-                "attributes": {
-                    "head": "Chồng",
-                    "head_type": "Subject",
-                    "relation": "HAS_RIGHT",
-                    "tail": "Yêu cầu ly hôn",
-                    "tail_type": "LegalAction",
-                    "inference": "explicit"
-                }
-            },
-            {
-                "extraction_class": "Triple",
-                "extraction_text": "vợ đang có thai",
-                "char_start": 103,
-                "char_end": 118,
-                "attributes": {
-                    "head": "Yêu cầu ly hôn",
-                    "head_type": "LegalAction",
-                    "relation": "BLOCKED_BY",
-                    "tail": "Vợ đang có thai",
-                    "tail_type": "Condition",
-                    "inference": "explicit"
-                }
-            },
-            {
-                "extraction_class": "Triple",
-                "extraction_text": "nuôi con dưới 12 tháng tuổi",
-                "char_start": 139,
-                "char_end": 166,
-                "attributes": {
-                    "head": "Yêu cầu ly hôn",
-                    "head_type": "LegalAction",
-                    "relation": "BLOCKED_BY",
-                    "tail": "Vợ đang nuôi con dưới 12 tháng tuổi",
-                    "tail_type": "Condition",
-                    "inference": "explicit"
-                }
-            },
-            {
-                "extraction_class": "Triple",
-                "extraction_text": "Luat_HNGD_2014_Dieu_51_Khoan_3",
-                "char_start": 8,
-                "char_end": 38,
-                "attributes": {
-                    "head": "Yêu cầu ly hôn",
-                    "head_type": "LegalAction",
-                    "relation": "BASED_ON",
-                    "tail": "Luat_HNGD_2014_Dieu_51_Khoan_3",
-                    "tail_type": "LegalProvision",
-                    "inference": "explicit"
-                }
-            }
-        ]
-    },
-    {
         "text": "{\"id\": \"Luat_HNGD_2014_Dieu_33_Khoan_1\", \"text\": \"Tài sản chung của vợ chồng gồm tài sản do vợ, chồng tạo ra, thu nhập do lao động. Quyền sử dụng đất mà vợ, chồng có được sau khi kết hôn là tài sản chung.\"}",
         "extractions": [
             {
@@ -116,7 +8,21 @@
                 "char_start": 50,
                 "char_end": 76,
                 "attributes": {
-                    "head": "Vợ, Chồng",
+                    "head": "Vợ",
+                    "head_type": "Subject",
+                    "relation": "OWNS",
+                    "tail": "Tài sản chung",
+                    "tail_type": "Asset",
+                    "inference": "explicit"
+                }
+            },
+            {
+                "extraction_class": "Triple",
+                "extraction_text": "Tài sản chung của vợ chồng",
+                "char_start": 50,
+                "char_end": 76,
+                "attributes": {
+                    "head": "Chồng",
                     "head_type": "Subject",
                     "relation": "OWNS",
                     "tail": "Tài sản chung",
@@ -169,79 +75,46 @@
         ]
     },
     {
-        "text": "{\"id\": \"Luat_HNGD_2014_Dieu_3_Khoan_1\", \"text\": \"Hôn nhân là quan hệ giữa vợ và chồng sau khi kết hôn.\"}",
+        "text": "{\"id\": \"Luat_HNGD_2014_Dieu_34_Khoan_2\", \"text\": \"Đăng ký quyền sở hữu, quyền sử dụng đối với tài sản chung: Trong trường hợp giấy chứng nhận chỉ ghi tên một bên vợ hoặc chồng thì giao dịch liên quan đến tài sản này được thực hiện theo quy định tại Điều 26 của Luật này; nếu có tranh chấp về tài sản đó thì được giải quyết theo quy định tại khoản 3 Điều 33 của Luật này.\"}",
         "extractions": [
             {
                 "extraction_class": "Triple",
-                "extraction_text": "Hôn nhân là quan hệ giữa vợ và chồng sau khi kết hôn",
-                "char_start": 49,
-                "char_end": 101,
+                "extraction_text": "theo quy định tại Điều 26 của Luật này",
+                "char_start": 175,
+                "char_end": 214,
                 "attributes": {
-                    "head": "Hôn nhân",
-                    "head_type": "LegalConcept",
-                    "relation": "DEFINED_AS",
-                    "tail": "Quan hệ giữa vợ và chồng sau khi kết hôn",
-                    "tail_type": "LegalConcept",
-                    "inference": "explicit"
-                }
-            },
-            {
-                "extraction_class": "Triple",
-                "extraction_text": "Luat_HNGD_2014_Dieu_3_Khoan_1",
-                "char_start": 8,
-                "char_end": 37,
-                "attributes": {
-                    "head": "Hôn nhân",
-                    "head_type": "LegalConcept",
-                    "relation": "BASED_ON",
-                    "tail": "Luat_HNGD_2014_Dieu_3_Khoan_1",
+                    "head": "Luat_HNGD_2014_Dieu_34_Khoan_2",
+                    "head_type": "LegalProvision",
+                    "relation": "REFERENCE_TO",
+                    "tail": "Luat_HNGD_2014_Dieu_26",
                     "tail_type": "LegalProvision",
                     "inference": "explicit"
                 }
-            }
-        ]
-    },
-    {
-        "text": "{\"id\": \"Luat_HNGD_2014_Dieu_11_Khoan_2\", \"text\": \"Tòa án giải quyết hủy việc kết hôn trái pháp luật theo quy định tại điểm b khoản 1 Điều 8 của Luật này.\"}",
-        "extractions": [
+            },
             {
                 "extraction_class": "Triple",
-                "extraction_text": "Tòa án giải quyết hủy việc kết hôn trái pháp luật",
-                "char_start": 49,
-                "char_end": 98,
+                "extraction_text": "khoản 3 Điều 33 của Luật này",
+                "char_start": 268,
+                "char_end": 296,
                 "attributes": {
-                    "head": "Hủy kết hôn trái pháp luật",
-                    "head_type": "LegalAction",
-                    "relation": "RESOLVED_BY",
-                    "tail": "Tòa án",
-                    "tail_type": "Subject",
+                    "head": "Luat_HNGD_2014_Dieu_34_Khoan_2",
+                    "head_type": "LegalProvision",
+                    "relation": "REFERENCE_TO",
+                    "tail": "Luat_HNGD_2014_Dieu_33_Khoan_3",
+                    "tail_type": "LegalProvision",
                     "inference": "explicit"
                 }
             },
             {
                 "extraction_class": "Triple",
-                "extraction_text": "Luat_HNGD_2014_Dieu_11_Khoan_2",
+                "extraction_text": "Luat_HNGD_2014_Dieu_34_Khoan_2",
                 "char_start": 8,
                 "char_end": 38,
                 "attributes": {
-                    "head": "Hủy kết hôn trái pháp luật",
+                    "head": "Giao dịch liên quan đến tài sản chung",
                     "head_type": "LegalAction",
                     "relation": "BASED_ON",
-                    "tail": "Luat_HNGD_2014_Dieu_11_Khoan_2",
-                    "tail_type": "LegalProvision",
-                    "inference": "explicit"
-                }
-            },
-            {
-                "extraction_class": "Triple",
-                "extraction_text": "điểm b khoản 1 Điều 8 của Luật này",
-                "char_start": 113,
-                "char_end": 147,
-                "attributes": {
-                    "head": "Luat_HNGD_2014_Dieu_11_Khoan_2",
-                    "head_type": "LegalProvision",
-                    "relation": "REFERENCE_TO",
-                    "tail": "Luat_HNGD_2014_Dieu_8_Khoan_1_Diem_b",
+                    "tail": "Luat_HNGD_2014_Dieu_34_Khoan_2",
                     "tail_type": "LegalProvision",
                     "inference": "explicit"
                 }
