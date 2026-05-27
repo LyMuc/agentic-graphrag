@@ -18,10 +18,12 @@ Pipeline 3 bước:
     1. CLASSIFY  -> LLM chọn 1+ template name (registry topic 'tai_san').
     2. EXTRACT   -> mỗi template song song: LLM extract param (Pydantic schema)
                    + LLM extract thời điểm sự kiện.
-    3. EXECUTE   -> chạy main cypher + trace cypher song song qua
-                   asyncio.to_thread. Post-process bằng chuan_hoa_Context_cho_LLM.
+    3. EXECUTE   -> chạy main cypher qua asyncio.to_thread.
+                   Post-process bằng chuan_hoa_Context_cho_LLM.
 
-Output: list[str], drop-in cho presentation/main.py.
+Output: dict ``{"contexts": list[str], "debug": str}`` — ``contexts`` chỉ chứa
+căn cứ pháp lý đã chuẩn hoá cho LLM; ``debug`` gồm template + lý do + params
+(hiển thị màn hình / Chainlit step, không gửi LLM).
 """
 from __future__ import annotations
 
@@ -370,7 +372,10 @@ def _run_template_sync(
 def _run_trace_sync(
     template: CypherTemplate, params: BaseModel, target_date: str
 ) -> list[dict[str, Any]]:
-    """Chạy trace cypher → list các triple (sn)-[rel]->(luat)."""
+    """Chạy trace cypher → list các triple (sn)-[rel]->(luat).
+
+    Giữ lại cho smoke_test / benchmark; luồng retriever chính không dùng nữa.
+    """
     if template.trace_cypher is None:
         return []
     runtime_params = template.build_params(params)
@@ -386,63 +391,49 @@ def _run_trace_sync(
     return [t for t in raw if t]
 
 
-def _format_trace(trace: list[dict[str, Any]]) -> str:
-    """Render trace thành chuỗi (node:Label "id") -[REL]-> (node:Label "id")."""
-    if not trace:
-        return "  (rỗng — không match được node ngữ nghĩa nào)"
-    lines = []
-    for t in trace:
-        src = f'({t.get("src_label", "?")} "{t.get("src_id", "?")}")'
-        dst = f'({t.get("dst_label", "?")} "{t.get("dst_id", "?")}")'
-        rel = t.get("rel", "?")
-        lines.append(f"  • {src} -[{rel}]-> {dst}")
-    return "\n".join(lines)
+def _params_for_display(runtime_params: dict[str, Any]) -> dict[str, Any]:
+    """Params hiển thị debug — bỏ các field whitelist nội bộ."""
+    return {
+        k: v
+        for k, v in runtime_params.items()
+        if "whitelist" not in k.lower()
+    }
 
 
-def _format_template_output(
-    template: CypherTemplate,
-    params: BaseModel,
-    target_date: str,
-    trace: list[dict[str, Any]],
-    normalized_context: str | None,
-    error_msg: str | None = None,
+def _format_retrieval_debug(
+    template_name: str,
+    reason: str,
+    runtime_params: dict[str, Any],
 ) -> str:
-    lines = [
-        "--- CONTEXT TỪ GRAPH ---",
-        "",
-        " PARAMS",
-        f"  {template.build_params(params)} | target_date={target_date}",
-        "",
-        " DEBUG TRACE — Semantic Seed → LegalProvision (CAN_CU_TAI)",
-        _format_trace(trace),
-        "",
-    ]
-    if error_msg:
-        lines.append(f"⚠ {error_msg}")
-    elif normalized_context:
-        lines.append(normalized_context.rstrip())
-    else:
-        lines.append("⚠ Không có context (cypher trả 0 record).")
-    return "\n".join(lines)
+    display_params = _params_for_display(runtime_params)
+    return "\n".join(
+        [
+            f"▶ Template: {template_name}",
+            f"  Lý do: {reason}",
+            f"▶ Params: {display_params}",
+        ]
+    )
 
 
 # =============================================================================
 # Public entrypoint cho tool router
 # =============================================================================
-async def che_do_tai_san_cua_vo_chong_v3(query: str) -> List[str]:
+async def che_do_tai_san_cua_vo_chong_v3(query: str) -> dict[str, Any]:
     """3 bước: classify → extract → execute → normalize.
 
-    Trả về list[str] (mỗi string là context đã chuẩn hoá cho LLM downstream),
-    drop-in cho presentation/main.py.
+    Trả về ``{"contexts": [...], "debug": "..."}``:
+    - ``contexts``: chỉ căn cứ pháp lý đã chuẩn hoá (gửi LLM).
+    - ``debug``: template + lý do + params (hiển thị màn hình).
     """
     print(f"[Agent che_do_tai_san_cua_vo_chong_v3] Đang xử lý: '{query}'...")
 
     choices = await _classify_templates(query)
     if not choices:
-        return [
+        msg = (
             "Câu hỏi này không thuộc phạm vi 'Chế độ tài sản của vợ chồng' "
             "(có thể thuộc 'chia tài sản khi ly hôn' — hãy gọi retriever tương ứng)."
-        ]
+        )
+        return {"contexts": [msg], "debug": ""}
 
     # --- Bước 2: extract param song song -------------------------------------
     templates: List[CypherTemplate] = []
@@ -458,45 +449,50 @@ async def che_do_tai_san_cua_vo_chong_v3(query: str) -> List[str]:
     is_user_provide_date = bool(user_dates)
     target_date = user_dates[0] if user_dates else _today_str()
 
-    # --- Bước 3: chạy main + trace song song ---------------------------------
-    run_tasks = []
-    for template, (params, _) in zip(templates, extracted):
-        run_tasks.append(
+    # --- Bước 3: chạy main cypher --------------------------------------------
+    records = await asyncio.gather(
+        *(
             asyncio.to_thread(_run_template_sync, template, params, target_date)
+            for template, (params, _) in zip(templates, extracted)
         )
-        run_tasks.append(
-            asyncio.to_thread(_run_trace_sync, template, params, target_date)
-        )
-    flat = await asyncio.gather(*run_tasks)
-    pairs = [(flat[i], flat[i + 1]) for i in range(0, len(flat), 2)]
+    )
 
     contexts: List[str] = []
-    for template, (params, _), (record, trace) in zip(templates, extracted, pairs):
-        normalized: str | None = None
-        error_msg: str | None = None
-        if record is None or "Context_Tho" not in record:
-            error_msg = "Không tìm thấy căn cứ phù hợp trong KG (main cypher trả 0 record)."
-        else:
-            try:
-                normalized = chuan_hoa_Context_cho_LLM(
-                    record, target_date, is_user_provide_date
-                )
-            except Exception as exc:
-                print(f"[Template:{template.name}] Normalize error: {exc}")
-                error_msg = (
-                    f"Lỗi chuẩn hoá: {exc}\n"
-                    f"Raw (truncated): "
-                    f"{json.dumps(record, ensure_ascii=False, default=str)[:500]}..."
-                )
-        contexts.append(
-            _format_template_output(
-                template=template,
-                params=params,
-                target_date=target_date,
-                trace=trace,
-                normalized_context=normalized,
-                error_msg=error_msg,
-            )
+    debug_parts: List[str] = []
+    for template, choice, (params, _), record in zip(
+        templates, choices, extracted, records
+    ):
+        runtime_params = template.build_params(params)
+        runtime_params["target_date"] = target_date
+        debug_text = _format_retrieval_debug(
+            template_name=template.name,
+            reason=choice.reason,
+            runtime_params=runtime_params,
         )
+        debug_parts.append(debug_text)
+        print(f"[Retriever debug]\n{debug_text}\n")
 
-    return contexts
+        if record is None or "Context_Tho" not in record:
+            contexts.append(
+                "Không tìm thấy căn cứ phù hợp trong KG (main cypher trả 0 record)."
+            )
+            continue
+
+        try:
+            contexts.append(
+                chuan_hoa_Context_cho_LLM(
+                    record, target_date, is_user_provide_date
+                ).rstrip()
+            )
+        except Exception as exc:
+            print(f"[Template:{template.name}] Normalize error: {exc}")
+            contexts.append(
+                f"Lỗi chuẩn hoá: {exc}\n"
+                f"Raw (truncated): "
+                f"{json.dumps(record, ensure_ascii=False, default=str)[:500]}..."
+            )
+
+    return {
+        "contexts": contexts,
+        "debug": "\n\n".join(debug_parts),
+    }

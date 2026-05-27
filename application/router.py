@@ -52,11 +52,15 @@ async def _execute_tool_call(tools: dict[str, any], tool_call: dict[str, any], u
         step.input = f'Tool Input: {function_args}'
         res = await function_to_call(**function_args)
         if isinstance(res, dict) and "contexts" in res:
-            step.output = (
-                "\n\n".join(res["contexts"])
-                if res["contexts"]
-                else "Không tìm thấy context phù hợp."
-            )
+            debug = (res.get("debug") or "").strip()
+            if debug:
+                step.output = debug
+            else:
+                step.output = (
+                    "\n\n".join(res["contexts"])
+                    if res["contexts"]
+                    else "Không tìm thấy context phù hợp."
+                )
         elif isinstance(res, list):
             parts = [str(item) for item in res if item is not None]
             step.output = (
