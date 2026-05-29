@@ -408,9 +408,9 @@ def _format_retrieval_debug(
     display_params = _params_for_display(runtime_params)
     return "\n".join(
         [
-            f"▶ Template: {template_name}",
-            f"  Lý do: {reason}",
-            f"▶ Params: {display_params}",
+            f"Template: {template_name}",
+            f"Lý do: {reason}",
+            f"Params: {display_params}",
         ]
     )
 

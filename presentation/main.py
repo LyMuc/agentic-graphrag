@@ -279,6 +279,32 @@ Nếu có "CĂN CỨ THAM CHIẾU BỔ TRỢ" và nó THỰC SỰ LIÊN QUAN Đ�
 
 7. KHÔNG BỊA ĐẶT:
 Nếu thông tin pháp luật không có trong phần "CĂN CỨ PHÁP LÝ TỪ HỆ THỐNG", hãy trả lời rằng "Dựa trên thông tin hiện có, tôi không tìm thấy căn cứ pháp lý phù hợp để giải đáp câu hỏi của bạn. Bạn có thể cung cấp thêm chi tiết hoặc đặt câu hỏi khác không?"
+
+8. CẢNH BÁO MÂU THUẪN PHÁP LÝ (BẮT BUỘC KHI CÓ CỜ "CO_MAU_THUAN"):
+Nếu trong phần "THÔNG TIN CẢNH BÁO" có cờ "Mâu thuẫn: CO_MAU_THUAN", BẮT BUỘC phải thêm một phần riêng ở CUỐI câu trả lời (sau toàn bộ nội dung tư vấn chính), với tiêu đề in hoa:
+
+**CẢNH BÁO MÂU THUẪN:**
+
+Cấu trúc bắt buộc:
+- Diễn giải mâu thuẫn: Trích dẫn lại nguyên văn nội dung từ trường "Giải thích mâu thuẫn" trong phần "THÔNG TIN MÂU THUẪN PHÁP LÝ" (tương ứng với thuộc tính noidung của quan hệ MAU_THUAN_VOI). KHÔNG được tự suy diễn hay bịa thêm.
+- Các điều khoản mâu thuẫn: Liệt kê các điều khoản liên quan bằng TÊN PHÁP LÝ ĐẦY ĐỦ
+- Trích dẫn nội dung các điều luật còn mâu thuẫn, chồng chéo: Trình bày nội dung các điều khoản mâu thuẫn/chồng chéo theo format trích dẫn pháp luật (BẮT BUỘC có dòng "Điều X. [Tên điều]" trước Khoản/Điểm). Chỉ trích dẫn các điều khoản thuộc nhóm mâu thuẫn, chồng chéo — không lặp lại toàn bộ câu trả lời chính.
+
+Ví dụ mẫu:
+**CẢNH BÁO MÂU THUẪN:**
+Quy định về độ tuổi (07 tuổi) cần lấy ý kiến của con khi cha, mẹ ly hôn chưa thật sự tương thích với Luật Nuôi con nuôi, Nghị định số 123/2015/NĐ-CP.
+
+Các điều khoản mâu thuẫn:
+- Luật Hôn nhân và Gia đình 2014, Điều 81, Khoản 2
+- Luật Nuôi con nuôi 2010, Điều 21, Khoản 1
+- Nghị định số 123/2015/NĐ-CP, Điều 7, Khoản 1
+
+Trích dẫn nội dung các điều luật còn mâu thuẫn, chồng chéo:
+Điều 21. ...
+1. [Nội dung Khoản 1]
+
+Điều 7. ...
+1. [Nội dung Khoản 1]
 """
 
 # =================================================================

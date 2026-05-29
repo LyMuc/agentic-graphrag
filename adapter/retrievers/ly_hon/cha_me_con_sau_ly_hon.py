@@ -116,6 +116,15 @@ async def cha_me_con_sau_ly_hon(query: str):
     WHERE chi_tiet_tc_tu_hd.ngay_co_hieu_luc <= $target_date
     AND (chi_tiet_tc_tu_hd.ngay_het_hieu_luc IS NULL OR chi_tiet_tc_tu_hd.ngay_het_hieu_luc > $target_date)
 
+    // 9. TÌM QUY ĐỊNH MÂU THUẪN (MAU_THUAN_VOI)
+    OPTIONAL MATCH (chi_tiet_ap_dung)-[r_mau_thuan:MAU_THUAN_VOI]->(luat_mau_thuan)
+    WHERE luat_mau_thuan.ngay_co_hieu_luc <= $target_date
+    AND (luat_mau_thuan.ngay_het_hieu_luc IS NULL OR luat_mau_thuan.ngay_het_hieu_luc > $target_date)
+
+    OPTIONAL MATCH (luat_mau_thuan)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_mau_thuan)
+    WHERE chi_tiet_mau_thuan.ngay_co_hieu_luc <= $target_date
+    AND (chi_tiet_mau_thuan.ngay_het_hieu_luc IS NULL OR chi_tiet_mau_thuan.ngay_het_hieu_luc > $target_date)
+
     RETURN {
         can_cu_chinh: collect(DISTINCT {
             id_goc_tu_router: n_goc.id,
@@ -176,6 +185,23 @@ async def cha_me_con_sau_ly_hon(query: str):
             cap_bac: chi_tiet_tc_tu_hd.cap_bac_phap_ly,
             ngay_hieu_luc: chi_tiet_tc_tu_hd.ngay_co_hieu_luc,
             ngay_het_hieu_luc: chi_tiet_tc_tu_hd.ngay_het_hieu_luc
+        }),
+        can_cu_mau_thuan: collect(DISTINCT {
+            id_nguon: chi_tiet_ap_dung.id,
+            id_dich: luat_mau_thuan.id,
+            noidung_giai_thich: r_mau_thuan.noidung,
+            noidung_dich: luat_mau_thuan.noidung,
+            cap_bac: luat_mau_thuan.cap_bac_phap_ly,
+            ngay_hieu_luc: luat_mau_thuan.ngay_co_hieu_luc,
+            ngay_het_hieu_luc: luat_mau_thuan.ngay_het_hieu_luc
+        }) + collect(DISTINCT {
+            id_nguon: chi_tiet_ap_dung.id,
+            id_dich: chi_tiet_mau_thuan.id,
+            noidung_giai_thich: r_mau_thuan.noidung,
+            noidung_dich: chi_tiet_mau_thuan.noidung,
+            cap_bac: chi_tiet_mau_thuan.cap_bac_phap_ly,
+            ngay_hieu_luc: chi_tiet_mau_thuan.ngay_co_hieu_luc,
+            ngay_het_hieu_luc: chi_tiet_mau_thuan.ngay_het_hieu_luc
         }),
         quy_dinh_hien_hanh_doi_chieu: collect(DISTINCT hien_hanh.id)
     } AS Context_Tho

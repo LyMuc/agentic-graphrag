@@ -178,9 +178,11 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
         "danh_sach_bo_tro": [],
         "danh_sach_huong_dan": [],
         "danh_sach_van_ban_thay_the": [],
+        "danh_sach_mau_thuan": [],
         "FLAG_CANH_BAO_LICH_SU": "",
         "FLAG_CANH_BAO_THU_TU_UU_TIEN": "",
-        "FLAG_CANH_BAO_SUA_DOI": ""
+        "FLAG_CANH_BAO_SUA_DOI": "",
+        "FLAG_MAU_THUAN": "",
     }
 
     tat_ca_cap_bac = set()
@@ -230,6 +232,36 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
 
     _collect_hieu_luc(can_cu_bo_tro, doc_hieu_luc_map)
 
+    # 3b. XỬ LÝ MÂU THUẪN (MAU_THUAN_VOI)
+    seen_mau_thuan = set()
+    can_cu_mau_thuan_raw = data.get('can_cu_mau_thuan', []) if 'can_cu_mau_thuan' in data else []
+    for mt in can_cu_mau_thuan_raw:
+        if not isinstance(mt, dict):
+            continue
+        id_nguon = mt.get('id_nguon')
+        id_dich = mt.get('id_dich')
+        if not id_nguon or not id_dich:
+            continue
+        pair_key = (id_nguon, id_dich)
+        if pair_key in seen_mau_thuan:
+            continue
+        seen_mau_thuan.add(pair_key)
+        context_sach["danh_sach_mau_thuan"].append({
+            "id_nguon": id_nguon,
+            "id_dich": id_dich,
+            "noidung_giai_thich": mt.get('noidung_giai_thich'),
+            "noidung_dich": mt.get('noidung_dich'),
+            "cap_bac": mt.get('cap_bac'),
+        })
+        _collect_hieu_luc([{
+            'id': id_dich,
+            'ngay_hieu_luc': mt.get('ngay_hieu_luc'),
+            'ngay_het_hieu_luc': mt.get('ngay_het_hieu_luc'),
+        }], doc_hieu_luc_map)
+
+    if context_sach["danh_sach_mau_thuan"]:
+        context_sach["FLAG_MAU_THUAN"] = "CO_MAU_THUAN"
+
     # 4. KÍCH HOẠT CÁC CỜ (FLAGS)
     if len(tat_ca_cap_bac) > 1:
         context_sach["FLAG_CANH_BAO_THU_TU_UU_TIEN"] = "CÓ_NHIỀU_CẤP_BẬC_PHÁP_LÝ"
@@ -252,7 +284,8 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
     final_context_string = f"--- THÔNG TIN CẢNH BÁO ---\n"
     final_context_string += f"Lịch sử: {context_sach['FLAG_CANH_BAO_LICH_SU']}\n"
     final_context_string += f"Ưu tiên: {context_sach['FLAG_CANH_BAO_THU_TU_UU_TIEN']}\n"
-    final_context_string += f"Sửa đổi: {context_sach['FLAG_CANH_BAO_SUA_DOI']}\n\n"
+    final_context_string += f"Sửa đổi: {context_sach['FLAG_CANH_BAO_SUA_DOI']}\n"
+    final_context_string += f"Mâu thuẫn: {context_sach['FLAG_MAU_THUAN']}\n\n"
 
     # THÔNG TIN HIỆU LỰC VĂN BẢN
     final_context_string += "--- THÔNG TIN HIỆU LỰC VĂN BẢN ---\n"
@@ -284,6 +317,17 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
         for idx, item in enumerate(context_sach["danh_sach_van_ban_thay_the"]):
             final_context_string += f"{idx+1}. {item}\n"
 
+    if context_sach["danh_sach_mau_thuan"]:
+        final_context_string += "\n--- THÔNG TIN MÂU THUẪN PHÁP LÝ ---\n"
+        for idx, item in enumerate(context_sach["danh_sach_mau_thuan"]):
+            final_context_string += (
+                f"{idx+1}. Điều khoản nguồn: [{item['id_nguon']}]\n"
+                f"   Điều khoản mâu thuẫn: [{item['id_dich']}]\n"
+                f"   Giải thích mâu thuẫn: {item['noidung_giai_thich']}\n"
+                f"   Nội dung điều khoản mâu thuẫn (Cấp bậc {item['cap_bac']}): "
+                f"[{item['id_dich']}]: {item['noidung_dich']}\n"
+            )
+
     return final_context_string
 
 
@@ -312,11 +356,17 @@ def extract_raw_ids_from_context(context_tho):
         for item in context_tho.get("can_cu_bo_tro", [])
         if item
     ]
+    can_cu_mau_thuan = [
+        item.get("id_dich")
+        for item in context_tho.get("can_cu_mau_thuan", [])
+        if item
+    ]
 
     return {
         "can_cu_chinh": _unique_non_empty(can_cu_chinh),
         "can_cu_huong_dan": _unique_non_empty(can_cu_huong_dan),
         "can_cu_bo_tro": _unique_non_empty(can_cu_bo_tro),
+        "can_cu_mau_thuan": _unique_non_empty(can_cu_mau_thuan),
     }
 
 
@@ -326,6 +376,7 @@ def chuan_hoa_ket_qua_retriever(records, target_date, is_user_provide_date):
         "can_cu_chinh": [],
         "can_cu_huong_dan": [],
         "can_cu_bo_tro": [],
+        "can_cu_mau_thuan": [],
     }
     contexts = []
 
