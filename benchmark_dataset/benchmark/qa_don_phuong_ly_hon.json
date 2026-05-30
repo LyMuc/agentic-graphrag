@@ -54,7 +54,7 @@
   {
     "question": "Nộp hồ sơ đơn phương ly hôn ở đâu?",
     "ground_truth": "Theo Điều 35 Bộ luật Tố tụng Dân sự 2015 quy định về thẩm quyền của Tòa án nhân dân cấp huyện như sau:\n\nTheo Điều 39 Bộ luật Tố tụng Dân sự 2015 quy định về thẩm quyền của Tòa án theo lãnh thổ như sau:\n\nTheo đó, khi đơn phương ly hôn thì cá nhân đều là người Việt Nam sẽ đến Tòa án nhân dân cấp huyện nơi cư trú hoặc nơi vợ/chồng cư trú.\n\nNgoài ra, Tòa án nhân dân cấp huyện nơi cư trú của công dân Việt Nam cũng sẽ giải quyết ly hôn cho công dân Việt Nam cư trú ở khu vực biên giới với công dân của nước láng giềng cùng cư trú ở khu vực biên giới với Việt Nam\n\nViệc ly hôn có yếu tố nước ngoài (gồm có tài sản hoặc đương sự ở nước ngoài) thì sẽ do Tòa án nhân dân cấp tỉnh giải quyết.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -93,7 +93,7 @@
   {
     "question": "Thủ tục đơn phương ly hôn khi chồng đang ở nước ngoài năm 2024?",
     "ground_truth": "Căn cứ Điều 227 Bộ luật Tố tụng dân sự 2015 quy định sự có mặt của đương sự, người đại diện, người bảo vệ quyền và lợi ích hợp pháp của đương sự:\n\nCăn cứ Công văn 253/TANDTC-PC năm 2018 về giải quyết vụ án ly hôn có bị đơn là người Việt Nam ở nước ngoài nhưng không rõ địa chỉ như sau:\n\nTheo hướng dẫn của Tòa án nhân dân tối cao thì thủ tục đơn phương ly hôn khi chồng ở nước ngoài được thực hiện như sau:\n\nTrường hợp 1 : Chồng đang ở nước ngoài không thể về vì sự kiện bất khả kháng hoặc trở ngại khách quan thì Tòa án có thể hoãn phiên tòa.\n\nNếu người chồng ở nước ngoài không có địa chỉ, không có tin tức gì về họ thì tòa quyết định tạm đình chỉ vụ việc. (Quy định tại Tiểu mục 2 Mục 2 Nghị quyết 01/2003/NQ-HĐTP )\n\nNếu không xác định địa chỉ của người chồng ở nước ngoài thì có thể yêu cầu tòa án đề nghị cơ quan có thẩm quyền xác định địa chỉ hoặc tìm kím người vắng mặt hoặc yêu cầu tòa án tuyên bố người chồng đã mất tích hoặc đã chết theo quy định của pháp luật (Quy định tại khoản 2 Điều 473 Bộ luật Tố tụng dân sự 2015 )\n\nSau khi có tuyên bố mất tích/đã chết, người vợ có yêu cầu ly hôn có thể đính kèm đơn tuyên bố mất tích hoặc đã chết vào hồ sơ ly hôn đơn phương và giải quyết ly hôn theo trường hợp mất tích/đã chết.\n\nTrường hợp 2 : Chồng đang ở nước ngoài cố tình không về Việt Nam để giải quyết ly hôn\n\nNếu người chồng không cung cấp thông tin địa chỉ hoặc thông qua người nhà mà có căn cứ để xác định họ vẫn có liên hệ với người nhà nhưng người nhà không cung cấp địa chỉ thông tin thì tòa án coi đây là trường hợp bị đơn cố tình giấu địa chỉ, từ chối khai báo, từ chối cung cấp những tài liệu cần thiết.\n\nKhi đó, tòa án sẽ yêu cầu lần thứ hai mà người nhà không chịu cung cấp thông tin địa chỉ thì tòa án xét xử vụ án ly hôn vắng mặt của người chồng.\n\nSau khi xét xử thì tòa án gửi cho người nhà của người chồng bản sao bản án hoặc quyết định để những người này chuyển cho người chồng và niêm yết công khai bản sao bản án, quyết định tại các địa điểm sau để người chồng hoặc người nhà có thể kháng cáo.\n\n- Trụ sở UBND cấp xã nơi người chồng cư trú cuối cùng;\n\n- Trụ sở UBND cấp xã nơi người nhà của người chồng cư trú.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -119,7 +119,7 @@
   {
     "question": "Hướng dẫn làm thủ tục đơn phương ly hôn khi bị chồng bạo hành?",
     "ground_truth": "Để thực hiện thủ tục đơn phương ly hôn có thể tham khảo các bước sau:\n\nBước 1: Chuẩn bị hồ sơ gồm:\n\n- Đơn xin đơn phương ly hôn;\n\n- Đăng ký kết hôn (bản chính); nếu không có thì có thể xin cấp bản sao…\n\n- Bản sao có chứng thực Chứng minh nhân dân/Căn cước công dân… của vợ và chồng;\n\n- Bản sao chứng thực giấy khai sinh của con nếu có con chung;\n\n- Nếu có tài sản chung và yêu cầu phân chia tài sản chung khi ly hôn thì chuẩn bị giấy tờ chứng minh quyền sở hữu đối với tài sản chung\n\nBước 2: Nộp đơn đơn phương tại Tòa án có thẩm quyền\n\nBước 3: Tòa án sẽ kiểm tra tính hợp lệ của hồ sơ\n\nBước 4: Tòa án tiến hành thủ tục tố tụng giải quyết vụ án ly hôn\n\nBước 5: Thi hành bản án hoặc quyết định ly hôn",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -132,7 +132,7 @@
   {
     "question": "Mẫu đơn xin đơn phương ly hôn và hướng dẫn cách viết?",
     "ground_truth": "Sau đây là mẫu đơn xin đơn phương ly hôn chuẩn pháp lý mới nhất hiện nay:\n\nTải về miễn phí đơn xin ly hôn đơn phương chuẩn pháp lý tại đây tải về\n\nHướng dẫn cách viết đơn xin ly hôn đơn phương theo Nghị quyết 01/2017/NQ-HĐTP:\n\nMục (1) Ghi địa điểm làm đơn khởi kiện\n\nMục (2) Ghi tên và địa chỉ của Tòa án có thẩm quyền giải quyết việc dân sự:\n\n- Nếu là Toà án nhân dân cấp huyện thì cần ghi rõ Toà án nhân dân huyện nào thuộc tỉnh, thành phố trực thuộc trung ương nào\n\n- Nếu là Tòa án nhân dân cấp tỉnh thì ghi rõ Tòa án nhân dân tỉnh (thành phố) nào\n\nMục (3) Ghi họ tên người khởi kiện. Đối với trường hợp người khởi kiện là người mất năng lực hành vi dân sự, người hạn chế năng lực hành vi dân sự, người có khó khăn trong nhận thức làm chủ hành vi thì ghi họ tên, địa chỉ của người đại diện hợp pháp của cá nhân đó.\n\nMục (4) Ghi đầy đủ nơi cư trú tại thời điểm nộp đơn khởi kiện\n\nMục (5), (7), (9) và (12) Ghi tương tự như hướng dẫn tại mục (3).\n\nMục (6), (8), (10) và (13) Ghi tương tự như hướng dẫn tại mục (4).\n\nMục (11) Nêu cụ thể từng vấn đề yêu cầu Tòa án giải quyết.\n\nMục (14) Ghi rõ tên các tài liệu kèm theo đơn khởi kiện gồm có những tài liệu nào và phải đánh số thứ tự\n\nMục (15) Ghi những thông tin mà người khởi kiện xét thấy cần thiết cho việc giải quyết vụ án (ví dụ: Người khởi kiện thông báo cho Toà án biết khi xảy ra tranh chấp một trong các đương sự đã đi nước ngoài chữa bệnh…).\n\nMục (16) Người khởi kiện phải ký tên và điểm chỉ vào đơn khởi kiện.\n\nTrường hợp người khởi kiện là người mất năng lực hành vi dân sự, người hạn chế năng lực hành vi dân sự, người có khó khăn trong nhận thức làm chủ hành vi thì người đại diện hợp pháp đó phải ký tên điểm chỉ;\n\nTrường hợp người khởi kiện, người đại diện hợp pháp không biết chữ, không nhìn được, không tự mình làm đơn khởi kiện, không tự mình ký tên hoặc điểm chỉ thì người có năng lực hành vi tố tụng dân sự đầy đủ làm chứng, ký xác nhận vào đơn khởi kiện theo quy định tại điểm c khoản 2 Điều 189 Bộ luật Tố tụng dân sự 2015.\n\nTrân trọng!",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -197,7 +197,7 @@
   {
     "question": "Mẫu đơn xin ly hôn đơn phương năm 2023?",
     "ground_truth": "Mẫu đơn xin ly hôn đơn phương năm 2023 là mẫu đơn 23-DS (Đơn khởi kiện) được ban hành kèm theo Nghị quyết 01/2017/NQ-HĐTP\n\nTải Mẫu đơn xin ly hôn đơn phương năm 2023 tại đây. Tải về.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -210,7 +210,7 @@
   {
     "question": "Thủ tục nộp đơn xin ly hôn đơn phương được thực hiện như thế nào?",
     "ground_truth": "Căn cứ theo Điều 53 Luật Hôn nhân và Gia đình 2014 quy định:\n\nCăn cứ theo Điều 191 Bộ luật Tố tụng dân sự 2015 quy định như sau:\n\nTheo quy định trên, thủ tục nộp đơn xin ly hôn bao gồm các bước sau:\n\nBước 1: Nộp đơn trực tiếp hoặc gửi qua dịch vụ bưu chính. Tòa án tiếp nhận đơn và trường hợp Tòa án nhận đơn khởi kiện được gửi bằng phương thức gửi trực tuyến thì Tòa án in ra bản giấy và phải ghi vào sổ nhận đơn.\n\nGửi giấy xác nhận đã nhận đơn khởi kiện cho người khởi kiện.\n\nBước 2: Trong thời hạn 03 ngày làm việc, kể từ ngày nhận được đơn yêu cầu ly hôn, Chánh án Tòa án phân công một Thẩm phán xem xét đơn yêu cầu\n\nBước 3: Thời hạn 05 ngày làm việc, kể từ ngày được phân công, Thẩm phán phải xem xét đơn yêu cầu ly hôn và có một trong các quyết định sau đây.\n\n- Yêu cầu sửa đổi, bổ sung đơn yêu cầu ly hôn.\n\n- Tiến hành thủ tục thụ lý vụ án theo thủ tục thông thường hoặc theo thủ tục rút gọn nếu vụ án có đủ điều kiện để giải quyết theo thủ tục rút gọn quy định.\n\n- Chuyển đơn khởi kiện cho Tòa án có thẩm quyền và thông báo cho người khởi kiện nếu vụ án thuộc thẩm quyền giải quyết của Tòa án khác;\n\n- Trả lại đơn khởi kiện cho người khởi kiện nếu vụ việc đó không thuộc thẩm quyền giải quyết của Tòa án.\n\nBước 4: Thông báo kết quả xử lý đon cho người khởi kiện.\n\nTrân trọng!",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -236,7 +236,7 @@
   {
     "question": "Thủ tục thụ lý đơn yêu cầu ly hôn như thế nào?",
     "ground_truth": "Căn cứ theo Điều 53 Luật Hôn nhân và gia đình 2014 quy định:\n\nCăn cứ theo Điều 191 Bộ luật Tố tụng dân sự 2015 quy định như sau:\n\nTheo quy định trên, thủ tục thụ lý đơn yêu cầu ly hôn bao gồm các bước sau:\n\nBước 1: Nộp đơn trực tiếp hoặc gửi qua dịch vụ bưu chính. Tòa án tiếp nhận đơn và trường hợp Tòa án nhận đơn khởi kiện được gửi bằng phương thức gửi trực tuyến thì Tòa án in ra bản giấy và phải ghi vào sổ nhận đơn.\n\nGửi giấy xác nhận đã nhận đơn khởi kiện cho người khởi kiện.\n\nBước 2: Trong thời hạn 03 ngày làm việc, kể từ ngày nhận được đơn yêu cầu ly hôn, Chánh án Tòa án phân công một Thẩm phán xem xét đơn yêu cầu .\n\nBước 3: Thời hạn 05 ngày làm việc, kể từ ngày được phân công, Thẩm phán phải xem xét đơn yêu cầu ly hôn và có một trong các quyết định sau đây.\n\n- Yêu cầu sửa đổi, bổ sung đơn yêu cầu ly hôn.\n\n- Tiến hành thủ tục thụ lý vụ án theo thủ tục thông thường hoặc theo thủ tục rút gọn nếu vụ án có đủ điều kiện để giải quyết theo thủ tục rút gọn quy định.\n\n- Chuyển đơn khởi kiện cho Tòa án có thẩm quyền và thông báo cho người khởi kiện nếu vụ án thuộc thẩm quyền giải quyết của Tòa án khác;\n\n- Trả lại đơn khởi kiện cho người khởi kiện nếu vụ việc đó không thuộc thẩm quyền giải quyết của Tòa án.\n\nBước 4: Thông báo kết quả xử lý đơn cho người khởi kiện.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -260,22 +260,9 @@
     "quan_he_chong_cheo_mau_thuan": ""
   },
   {
-    "question": "Điều kiện tuyên bố một người mất tích là gì?",
-    "ground_truth": "Theo Điều 68 Bộ luật Dân sự 2015 có quy định về việc tuyên bố mất tích như sau:\n\nTheo Điều 70 Bộ luật Dân sự 2015 có quy định về hủy bỏ quyết định tuyên bố mất tích như sau:\n\nNgười được yêu cầu tuyên bố mất tích là người biệt tích 02 năm liền, đã áp dụng các biện pháp thông báo, tìm kiếm tuy nhiên vẫn không xác thực được thông tin người đó còn sống hay đã chết.\n\nTrường hợp khi người bị tuyên bố mất tích trở về hoặc có tin tức xác thực là người đó còn sống thì theo yêu cầu của người đó hoặc của người có quyền, lợi ích liên quan, Tòa án ra quyết định hủy bỏ quyết định tuyên bố mất tích đối với người đó.\n\nKhi nào thì một người bị tuyên bố là mất tích? Có được quyền ly hôn với người mất tích không? (Hình ảnh Internet)",
-    "chu_de_phap_ly": "",
-    "loai_cau_hoi": "",
-    "van_ban_phap_luat_lien_quan": "",
-    "tinh_trang_hieu_luc": "",
-    "can_cu_phap_ly_chinh": "",
-    "can_cu_phap_ly_bo_tro": "",
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": "",
-    "can_cu_khong_nen_ap_dung": "",
-    "quan_he_chong_cheo_mau_thuan": ""
-  },
-  {
     "question": "Có được ly hôn với với người bị tuyên bố mất tích không?",
     "ground_truth": "Khoản 14 Điều 3 Luật Hôn nhân và gia đình 2014 quy định ly hôn là việc chấm dứt quan hệ vợ chồng theo bản án, quyết định có hiệu lực pháp luật của Tòa án.\n\nĐiều 56 Luật Hôn nhân gia đình 2014 quy định như sau:\n\nTheo đó, trường hợp vợ hoặc chồng của người bị Tòa tuyên bố mất tích yêu cầu ly hôn thì Tòa án giải quyết cho ly hôn .",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -288,7 +275,7 @@
   {
     "question": "Người bị tuyên bố mất tích quay về thì quyết định ly hôn còn hiệu lực không?",
     "ground_truth": "Theo khoản 3 Điều 70 Bộ luật Dân sự 2015 có quy định về việc hủy bỏ quyết định tuyên bố mất tích như sau:\n\nTheo đó, trường hợp người vợ hoặc chồng của người bị tuyên bố mất tích đã được ly hôn thì dù người bị tuyên bố mất tích quay trở về thì quyết định ly hôn vẫn được giữ nguyên.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -301,7 +288,7 @@
   {
     "question": "Thủ tục ly hôn khi một bên mất tích được thực hiện như thế nào?",
     "ground_truth": "Để tiến hành thủ tục đơn phương ly hôn, người vợ hoặc chồng của người bị tuyên bố mất tích phải có quyết định tuyên bố mất tích từ Tòa án có thẩm quyền.\n\nThủ tục giải quyết yêu cầu Tòa án tuyên bố mất tích được quy định tại Chương XXVI Bộ luật Tố tụng dân sự 2015 .\n\nSau khi đã có quyết định từ Tòa án, người vợ hoặc chồng của người bị tuyên bố mất tích thực hiện ly hôn như sau:\n\nBước 1 : Người vợ hoặc chồng của người bị tuyên bố mất tích phải chuẩn bị đầy đủ hồ sơ, giấy tờ, tài liệu trong đó có quyết định tuyên bố mất tích của Tòa án để nộp cho Tòa án, chờ Tòa án thụ lý đơn ly hôn.\n\nBước 2 : Sau khi nhận được đơn ly hôn đơn phương, Tòa án sẽ xem xét có nhận và thụ lý vụ án ly hôn không. Nếu xét thấy có căn cứ để xét đơn ly hôn đơn phương thì yêu cầu người nộp đơn nộp án phí tạm ứng.\n\nBước 3 : Tòa án tiến hành giải quyết vụ án theo thủ tục giải quyết vụ việc tố tụng dân sự.\n\nTrân trọng!",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -314,7 +301,7 @@
   {
     "question": "Chồng ngoại tình và muốn đơn phương ly hôn có được không?",
     "ground_truth": "Tại Điều 56 Luật Hôn nhân và gia đình 2014 quy định ly hôn theo yêu cầu của một bên như sau:\n\nTheo tiết a.1 tiểu mục a Mục 8 Nghị quyết 02/2000/NQ-HĐTP quy định căn cứ cho ly hôn (Điều 89) như sau:\n\nNgười chồng chỉ có quyền đơn phương ly hôn khi chứng minh được lỗi của người vợ dẫn đến hôn nhân rơi vào tình trạng trầm trọng.\n\nTuy nhiên, chồng của bạn là người ngoại tình, là người có lỗi làm cho tình trạng hôn nhân của cả hai trở nên trầm trọng nhưng chồng bạn lại đơn phương ly hôn thì sẽ không được Tòa án giải quyết.\n\nChồng ngoại tình và muốn đơn phương ly hôn có được không? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -327,7 +314,7 @@
   {
     "question": "Đang có gia đình mà ngoại tình bị xử phạt như thế nào?",
     "ground_truth": "Theo khoản 1 Điều 59 Nghị định 82/2020/NĐ-CP quy định hành vi vi phạm quy định về kết hôn, ly hôn và vi phạm chế độ hôn nhân một vợ, một chồng như sau:\n\nTại Điều 182 Bộ luật hình sự 2015 quy định tội vi phạm chế độ một vợ, một chồng như sau:\n\nDo đó, chồng của bạn ngoại tình và chung sống như vợ chồng với cô nhân tình kia có thể bị xử phạt hành chính hoặc truy cứu trách nhiệm hình sự (tùy thuộc vào mức độ hành vi).\n\nNgười đang có gia đình mà ngoại tình chung sống như vợ chồng với người khác sẽ bị phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng. Còn nếu bị truy cứu thì có thể bị phạt cảnh cáo, phạt cải tạo không giam giữ đến 01 hoặc bị đi tù lên đến 03 năm.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "xu_phat_vi_pham",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -340,7 +327,7 @@
   {
     "question": "Ngoại tình thì chia tài sản khi ly hôn có bị bất lợi không?",
     "ground_truth": "Căn cứ khoản 2 Điều 59 Luật Hôn nhân và gia đình 2014 quy định tài sản chung của vợ chồng được chia đôi nhưng có tính đến các yếu tố sau đây:\n\nNhư vậy, khi ly hôn tài sản sẽ được phân chia dựa theo những yếu tố nêu trên. Chồng của bạn ngoại tình thì chồng của bạn đã có lỗi nên việc chia tài sản khi ly hôn chồng bạn sẽ bị bất lợi.\n\nTrân trọng!",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "chia_tai_san_sau_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -353,7 +340,7 @@
   {
     "question": "Đơn phương ly hôn là gì? Những vấn đề xung quanh việc đơn phương ly hôn?",
     "ground_truth": "Trong xã hội hiện đại, ly hôn không còn là điều xa lạ hay đáng sợ mà đã trở nên phổ biến, đặc biệt là với vợ chồng trẻ. Khi cuộc hôn nhân đã không còn ý nghĩa, đời sống chung không thể kéo dài, nhiều người chọn cách ly hôn nhưng một bên lại không đồng ý. Trong trường hợp đó, chúng ta hoàn toàn có thể lựa chọn cách đơn phương ly hôn. Việc đơn phương ly hôn được quy định tại Chương IV Luật Hôn nhân và gia đình 2014 .\n\n1. Các trường hợp đơn phương ly hôn:\n\n- TH1: Đơn phương ly hôn theo yêu cầu của một bên: Khi vợ hoặc chồng yêu cầu ly hôn mà hòa giải tại Tòa án không thành thì Tòa án giải quyết cho ly hôn nếu có căn cứ về việc vợ, chồng có hành vi bạo lực gia đình hoặc vi phạm nghiêm trọng quyền, nghĩa vụ của vợ, chồng làm cho hôn nhân lâm vào tình trạng trầm trọng, đời sống chung không thể kéo dài, mục đích của hôn nhân không đạt được.\n\n- TH2: Đơn phương ly hôn trong trường hợp vợ hoặc chồng của người bị Tòa án tuyên bố mất tích yêu cầu ly hôn thì Tòa án giải quyết cho ly hôn.\n\n- TH3: Đơn phương ly hôn trong trường hợp có yêu cầu ly hôn của cha, mẹ, người thân thích khác yêu cầu Tòa án giải quyết ly hôn khi một bên vợ, chồng do bị bệnh tâm thần hoặc mắc bệnh khác không thể nhận thức, làm chủ được hành vi của mình, đồng thời là nạn nhân của bạo lực gia đình do chồng, vợ của họ gây ra thì Tòa án giải quyết cho ly hôn nếu có căn cứ về việc chồng, vợ có hành vi bạo lực gia đình làm ảnh hưởng nghiêm trọng đến tính mạng, sức khỏe, tinh thần của người kia.\n\nĐơn phương ly hôn (Hình từ Internet)\n\n2. Ai được quyền yêu cầu đơn phương ly hôn?\n\n- Vợ hoặc chồng;\n\n- Vợ hoặc chồng của người bị Tòa án tuyên bố mất tích;\n\n- Cha, mẹ, người thân thích khác có yêu cầu Tòa án giải quyết ly hôn khi một bên vợ, chồng do bị bệnh tâm thần hoặc mắc bệnh khác mà không thể nhận thức, làm chủ được hành vi của mình, đồng thời là nạn nhân của bạo lực gia đình do chồng, vợ của họ gây ra làm ảnh hưởng nghiêm trọng đến tính mạng, sức khỏe, tinh thần của họ.\n\n3. Cơ quan nào giải quyết?\n\nTòa án là cơ quan có thẩm quyền giải quyết vụ án đơn phương ly hôn. Tòa án có thẩm quyền xét xử những vụ án ly hôn là Tòa án nhân dân cấp quận/huyện nơi thường trú hoặc làm việc của bị đơn.\n\n4. Các bước tiến hành thủ tục đơn phương ly hôn:\n\n– Bước 1: Nộp hồ sơ khởi kiện về việc xin đơn phương ly hôn tại TAND có thẩm quyền;\n\n– Bước 2: Nhận kết quả xử lý đơn;\n\n– Bước 3: Nộp tiền tạm ứng án phí dân sự sơ thẩm tại cơ quan thi hành án dân sự có thẩm quyền và nộp lại biên lai tiền tạm ứng án phí đơn phương cho Tòa án;\n\n– Bước 4: Tòa án triệu tập đương sự lấy lời khai, hòa giải và tiến hành thủ tục theo quy định pháp luật tố tụng dân sự.\n\n5. Hồ sơ đơn phương ly hôn gồm những gì?\n\n- Đơn xin ly hôn theo mẫu (Có sẵn tại bộ phận nhận đơn khởi kiện của tất cả các tòa án);\n\n- Bản chính Giấy chứng nhận đăng ký kết hôn;\n\n- 01 Bản sao có chứng thực Sổ hộ khẩu của hai vợ chồng;\n\n- Bản sao có chứng thực CMND/hộ chiếu của hai vợ chồng;\n\n- Giấy khai sinh của con (bản sao có chứng thực; nếu có);\n\n- Các tài liệu, chứng cứ khác chứng minh tài sản chung như: Giấy chứng nhận quyền sử dụng đất quyền sở hữu nhà ở và tài sản khác gắn liền với đất (sổ đỏ); đăng ký xe; sổ tiết kiệm… (bản sao; nếu có)...\n\n6. Tòa giải quyết đơn phương ly hôn trong bao lâu?\n\n– Giải quyết ly hôn tại cấp sơ thẩm: khoảng từ 4 đến 6 tháng (nếu có tranh chấp tài sản, phức tạp thì có thể kéo dài hơn).\n\n– Giải quyết ly hôn tại cấp phúc thẩm: khoảng từ 3 đến 4 tháng (nếu có kháng cáo hoặc kháng nghị).\n\n7. Phân chia tài sản thế nào khi đơn phương ly hôn?\n\nTranh chấp về chia tài sản khi ly hôn sẽ được giải quyết cùng với yêu cầu ly hôn hoặc được tách ra giải quyết ở một vụ án riêng. Pháp luật luôn công nhận việc thỏa thuận phân chia tài sản giữa vợ và chồng, khi hai bên không thỏa thuận được, Tòa án sẽ giải quyết việc phân chia. Việc giải quyết tài sản khi ly hôn sẽ được Tòa án giải quyết dựa trên các nguyên tắc của Luật Hôn nhân và gia đình cũng như Bộ luật dân sự. Theo quy định của pháp luật, việc phân chia tài sản như sau:\n\n-Tài sản riêng: Tài sản riêng của vợ, chồng thuộc quyền sở hữu của người đó, trừ trường hợp tài sản riêng đã nhập vào tài sản chung theo quy định của Luật Hôn nhân và gia đình.\n\n- Tài sản chung: Về nguyên tắc, tài sản chung của vợ chồng được chia đôi nhưng có tính đến các yếu tố: Hoàn cảnh của gia đình của vợ, chồng; Công sức đóng góp của vợ, chồng vào việc tạo lập, duy trì và phát triển khối tài sản chung; và lỗi của mỗi bên trong vi phạm quyền, nghĩa vụ của vợ chồng.\n\nTrong quá trình phân chia tài sản, pháp luật bảo vệ quyền, lợi ích hợp pháp của vợ, con chưa thành niên, con đã thành niên mất năng lực hành vi dân sự hoặc không có khả năng lao động và không có tài sản để tự nuôi mình.\n\n8. Ai có quyền nuôi con khi đơn phương ly hôn?\n\n- Pháp luật tôn trọng sự thỏa thuận của vợ, chồng về người trực tiếp nuôi con, nghĩa vụ, quyền của mỗi bên sau khi ly hôn đối với con; trường hợp không thỏa thuận được thì Tòa án quyết định giao con cho một bên trực tiếp nuôi căn cứ vào quyền lợi về mọi mặt của con.\n\n- Nếu con từ đủ 07 tuổi trở lên thì phải xem xét nguyện vọng của con; Con dưới 36 tháng tuổi được giao cho mẹ trực tiếp nuôi, trừ trường hợp người mẹ không đủ điều kiện để trực tiếp trông nom, chăm sóc, nuôi dưỡng, giáo dục con hoặc cha mẹ có thỏa thuận khác phù hợp với lợi ích của con.\n\n- Người không trực tiếp nuôi con sau ly hôn có nghĩa vụ cấp dưỡng cho con và phải tôn trọng quyền của con được sống chung với người trực tiếp nuôi. Nếu cha, mẹ không trực tiếp nuôi con mà lạm dụng việc thăm nom để cản trở hoặc gây ảnh hưởng xấu đến việc trông nom, chăm sóc, nuôi dưỡng, giáo dục con thì người trực tiếp nuôi con có quyền yêu cầu Tòa án hạn chế quyền thăm nom con của người đó.\n\n9. Án phí khi thực hiện đơn phương ly hôn:\n\n– Án phí dân sự sơ thẩm: 300.000 đồng nếu không có tranh chấp về tài sản (theo quy định tại Nghị quyết 326/2016/UBTVQH14 ).\n\n– Nếu có tranh chấp thì án phí phải đóng như sau:\n\n10. Những lưu ý khi thực hiện thủ tục đơn phương ly hôn:\n\n- Vợ đang mang thai hoặc con dưới 12 tháng tuổi thì chồng không có quyền yêu cầu đơn phương ly hôn;\n\n- Có thể yêu cầu Tòa án nơi làm việc của bị đơn giải quyết nếu không xác định được nơi cư trú bị đơn;\n\n- Tòa sẽ triệu tập các con từ 7 tuổi đến dưới 18 tuổi để lấy lời khai về nguyện vọng sống với bố hoặc mẹ.\n\nTrên thực tế, nhiều người cho rằng việc đơn phương ly hôn sẽ rất khó khăn và thủ tục để đơn phương ly hôn sẽ vô cùng rắc rối. Tuy nhiên, đơn phương ly hôn không quá phức tạp như bạn tưởng. Khi đã tìm hiểu đầy đủ các quy định của pháp luật về hồ sơ, trình tự thủ tục cùng các căn cứ để đơn phương ly hôn thì quá trình ly hôn sẽ dễ dàng hơn rất nhiều. Hy vọng với những thông tin của bài viết sẽ giúp bạn đọc có thêm kiến thức về đơn phương ly hôn để thực hiện thủ tục này một cách nhanh chóng, chính xác, sớm được giải thoát khỏi cuộc sống hôn nhân khi đã rơi vào giai đoạn “địa ngục trần gian”.\n\nTrân trọng!",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -366,7 +353,7 @@
   {
     "question": "Ai phải chịu tiền án phí khi đơn phương ly hôn?",
     "ground_truth": "Tại khoản 4 Điều 147 Bộ luật tố tụng dân sự 2015 quy định về nghĩa vụ chịu án phí sơ thẩm như sau:\n\nTheo quy định này thì nguyên đơn sẽ là người chịu án phí sơ thẩm khi ly hôn đơn phương. Việc chịu án phí không phụ thuộc vào việc Tòa án chấp nhận hay không chấp nhận yêu cầu của nguyên đơn.\n\nĐối với trường hợp của bạn, chồng bạn là nguyên đơn trong vụ án ly hôn, do đó chồng bạn là người chịu án phí sơ thẩm.\n\nAi phải chịu tiền án phí khi đơn phương ly hôn? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -379,7 +366,7 @@
   {
     "question": "Tiền tạm ứng án phí ly hôn do ai đóng?",
     "ground_truth": "Trình tự, thủ tục khởi kiện để Tòa án giải quyết các vụ án về hôn nhân và gia đình thuộc phạm vi điều chỉnh của Bộ luật tố tụng dân sự 2015 quy định tại Điều 1 Bộ luật luật tố tụng dân sự 2015 .\n\nCăn cứ Điều 146 Bộ luật tố tụng dân sự 2015 về nghĩa vụ nộp tiền tạm ứng án phí, tiền tạm ứng lệ phí, quy định cụ thể như sau:\n\nNhư vậy, trong trường hợp này bạn là người nộp tiền tạm ứng án phí.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -392,7 +379,7 @@
   {
     "question": "Mức án phí đơn phương ly hôn 2019",
     "ground_truth": "Theo Điều 195 Bộ luật tố tụng dân sự 2015 có quy định sau khi nhận đơn khởi kiện và tài liệu, chứng cứ kèm theo, nếu xét thấy vụ án thuộc thẩm quyền giải quyết của Tòa án thì Thẩm phán phải thông báo ngay cho người khởi kiện biết để họ đến Tòa án làm thủ tục nộp tiền tạm ứng án phí trong trường hợp họ phải nộp tiền tạm ứng án phí.Trong thời hạn 07 ngày, kể từ ngày nhận được giấy báo của Tòa án về việc nộp tiền tạm ứng án phí, người khởi kiện phải nộp tiền tạm ứng án phí và nộp cho Tòa án biên lai thu tiền tạm ứng án phí.\n\nNhư vậy điều kiện để Tòa có thể thụ lý vụ án ly hôn của bạn là bạn cần phải hoàn tất nghĩ vụ nộp án phí.\n\nTại Nghị quyết 326/2016/UBTVQH14 thì mức án phí được quy định như sau:\n\nNhư vậy, năm 2022 mức án phí đơn phương ly hôn là 300.000 đồng.\n\nTrân trọng!",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -405,7 +392,7 @@
   {
     "question": "Vợ đang mang thai thì chồng có được đơn phương ly hôn không?",
     "ground_truth": "Theo Điều 51 Luật Hôn nhân và gia đình 2014 quy định quyền yêu cầu giải quyết ly hôn:\n\n1. Vợ, chồng hoặc cả hai người có quyền yêu cầu Tòa án giải quyết ly hôn.\n\n2. Cha, mẹ, người thân thích khác có quyền yêu cầu Tòa án giải quyết ly hôn khi một bên vợ, chồng do bị bệnh tâm thần hoặc mắc bệnh khác mà không thể nhận thức, làm chủ được hành vi của mình, đồng thời là nạn nhân của bạo lực gia đình do chồng, vợ của họ gây ra làm ảnh hưởng nghiêm trọng đến tính mạng, sức khỏe, tinh thần của họ.\n\n3. Chồng không có quyền yêu cầu ly hôn trong trường hợp vợ đang có thai, sinh con hoặc đang nuôi con dưới 12 tháng tuổi.\n\nNhư vậy, chồng không có quyền yêu cầu ly hôn trong trường hợp vợ đang mang thai. Trường hợp của bạn, vợ bạn đang mang thai đến tháng thứ 4 thì bạn không được đơn phương ly hôn.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -418,7 +405,7 @@
   {
     "question": "Cơ quan nào tiếp nhận hồ sơ đơn phương ly hôn?",
     "ground_truth": "Đơn phương ly hôn có 2 trường hợp:\n\nTrường hợp 1: Không có yếu tố nước ngoài\n\nCăn cứ Điểm a Khoản 1 và Điểm b Khoản 2 Điều 35 Bộ luật tố tụng dân sự 2015 quy định thẩm quyền của Tòa án nhân dân cấp huyện như sau:\n\n1. Tòa án nhân dân cấp huyện có thẩm quyền giải quyết theo thủ tục sơ thẩm những tranh chấp sau đây:\n\na) Tranh chấp về dân sự, hôn nhân và gia đình quy định tại Điều 26 và Điều 28 của Bộ luật này, trừ tranh chấp quy định tại khoản 7 Điều 26 của Bộ luật này;\n\n…\n\n2. Tòa án nhân dân cấp huyện có thẩm quyền giải quyết những yêu cầu sau đây:\n\nb) Yêu cầu về hôn nhân và gia đình quy định tại các khoản 1, 2, 3, 4, 5, 6, 7, 8, 10 và 11 Điều 29 của Bộ luật này;\n\nTại Điểm a và Điểm b Khoản 1 Điều 39 Bộ luật tố tụng dân sự 2015 quy định thẩm quyền của Tòa án theo lãnh thổ như sau:\n\n1. Thẩm quyền giải quyết vụ án dân sự của Tòa án theo lãnh thổ được xác định như sau:\n\na) Tòa án nơi bị đơn cư trú, làm việc, nếu bị đơn là cá nhân hoặc nơi bị đơn có trụ sở, nếu bị đơn là cơ quan, tổ chức có thẩm quyền giải quyết theo thủ tục sơ thẩm những tranh chấp về dân sự, hôn nhân và gia đình, kinh doanh, thương mại, lao động quy định tại các Điều 26, 28, 30 và 32 của Bộ luật này;\n\nb) Các đương sự có quyền tự thỏa thuận với nhau bằng văn bản yêu cầu Tòa án nơi cư trú, làm việc của nguyên đơn, nếu nguyên đơn là cá nhân hoặc nơi có trụ sở của nguyên đơn, nếu nguyên đơn là cơ quan, tổ chức giải quyết những tranh chấp về dân sự, hôn nhân và gia đình, kinh doanh, thương mại, lao động quy định tại các điều 26, 28, 30 và 32 của Bộ luật này;\n\nTrường hợp 2: Có yếu tố nước ngoài\n\nTại Khoản 3 Điều 35 Bộ luật tố tụng dân sự 2015 thẩm quyền của Tòa án nhân dân cấp huyện như sau:\n\n3. Những tranh chấp, yêu cầu quy định tại khoản 1 và khoản 2 Điều này mà có đương sự hoặc tài sản ở nước ngoài hoặc cần phải ủy thác tư pháp cho cơ quan đại diện nước Cộng hòa xã hội chủ nghĩa Việt Nam ở nước ngoài, cho Tòa án, cơ quan có thẩm quyền của nước ngoài không thuộc thẩm quyền giải quyết của Tòa án nhân dân cấp huyện, trừ trường hợp quy định tại khoản 4 Điều này.\n\nTheo Điểm a và Điểm b Khoản 1 Điều 37 Bộ luật tố tụng dân sự 2015 thẩm quyền của Tòa án nhân dân cấp tỉnh được quy định:\n\n1. Tòa án nhân dân cấp tỉnh có thẩm quyền giải quyết theo thủ tục sơ thẩm những vụ việc sau đây:\n\na) Tranh chấp về dân sự, hôn nhân và gia đình, kinh doanh, thương mại, lao động quy định tại các Điều 26, 28, 30 và 32 của Bộ luật này, trừ những tranh chấp thuộc thẩm quyền giải quyết của Tòa án nhân dân cấp huyện quy định tại khoản 1 và khoản 4 Điều 35 của Bộ luật này;\n\nb) Yêu cầu về dân sự, hôn nhân và gia đình, kinh doanh, thương mại, lao động quy định tại các Điều 27, 29, 31 và 33 của Bộ luật này, trừ những yêu cầu thuộc thẩm quyền giải quyết của Tòa án nhân dân cấp huyện quy định tại khoản 2 và khoản 4 Điều 35 của Bộ luật này;\n\nTheo quy định trên nếu đơn phương ly hôn không có yếu tố nước ngoài thì người muốn ly hôn sẽ nộp hồ sơ về Tòa án nhân dân cấp huyện nơi cư trú, nơi làm việc còn đơn phương ly hôn có yếu tố nước ngoài thì người muốn ly hôn nộp hồ sơ về Tòa án nhân dân cấp tỉnh nơi cư trú, nơi làm việc.\n\nTrân trọng!",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -665,7 +652,7 @@
   {
     "question": "Vợ chồng tôi có nhiều vấn đề mâu thuẫn trong cuộc sống hôn nhân nên tôi muốn ly hôn thì phải làm sao? Nếu muốn ly hôn mà chồng không chịu thì có thể đơn phương ly hôn không?",
     "ground_truth": "Ly hôn là việc chấm dứt quan hệ vợ chồng theo bản án hoặc quyết định có hiệu lực pháp luật. Theo Điều 55 Luật Hôn nhân và Gia đình 2014, trong trường hợp vợ chồng cùng yêu cầu ly hôn, nếu xét thấy hai bên thật sự tự nguyện ly hôn và đã thỏa thuận về việc chia tài sản, việc trông nom, nuôi dưỡng, chăm sóc, giáo dục con trên cơ sở bảo đảm quyền lợi chính đáng của vợ và con thì Tòa án công nhận thuận tình ly hôn.\n\nDo đó, nếu cả hai vợ chồng đều muốn ly hôn và thỏa thuận được các vấn đề như con chung, tài sản thì nộp đơn lên TAND nơi mình đang cư trú để giải quyết ly hôn.\n\nTrường hợp chỉ một bên vợ hoặc chồng muốn ly hôn mà bên còn lại không chịu thì TAND chỉ cho ly hôn khi có một trong các căn cứ sau đây:\n\n- Vợ hoặc chồng có hành vi bạo lực gia đình.\n\n- Vi phạm nghiêm trọng quyền, nghĩa vụ của vợ, chồng làm cho hôn nhân lâm vào tình trạng trầm trọng, đời sống chung không thể kéo dài, mục đích của hôn nhân không đạt được.\n\nKhi tòa tuyên bố một trong hai người đã mất tích.\n\nVì vậy nếu chứng minh được chồng mình vi phạm nghiêm trọng quyền, nghĩa vụ, làm cho hôn nhân lâm vào tình trạng trầm trọng, đời sống chung không thể kéo dài, mục đích hôn nhân không đạt được thì chị có thể làm đơn đơn phương ly hôn gửi tòa án để chấm dứt quan hệ hôn nhân.\n\nTheo như hướng dẫn tại Mục 8 Nghị quyết 02/2000/NQ-HĐTP tình trạng trầm trọng của vợ chồng được hiểu là:\n\n- Vợ, chồng không thương yêu, quý trọng, chăm sóc, giúp đỡ nhau như người nào chỉ biết bổn phận người đó, bỏ mặc người vợ hoặc người chồng muốn sống ra sao thì sống, đã được bà con thân thích của họ hoặc cơ quan, tổ chức nhắc nhở, hòa giải nhiều lần.\n\n- Vợ hoặc chồng luôn có hành vi ngược đãi, hành hạ nhau, như thường xuyên đánh đập hoặc có hành vi khác xúc phạm đến danh dự, nhân phẩm và uy tín của nhau, đã được bà con thân thích của họ hoặc cơ quan, tổ chức, đoàn thể nhắc nhở, hòa giải nhiều lần.\n\n- Vợ chồng không chung thủy với nhau như có quan hệ ngoại tình, đã được người vợ hoặc người chồng hoặc bà con thân thích của họ hoặc cơ quan, tổ chức nhắc nhở, khuyên bảo nhưng vẫn tiếp tục có quan hệ ngoại tình.\n\nTrên đây là nội dung tư vấn của chúng tôi về vấn đề mà bạn thắc mắc.\n\nTrân trọng!",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -678,7 +665,7 @@
   {
     "question": "Chồng tôi ham mê cờ bạc, rượu chè, không lo làm ăn. Ngày nào cũng 3,4 giờ sáng mới về gây khó dễ vợ con và làm ảnh hưởng tới hàng xóm. Tuy nhiên chồng tôi không hề đánh đập tôi. Xin hỏi, tôi có thể đơn phương ly hôn được không? Mong Ban biên tập tư vấn giúp tôi.",
     "ground_truth": "Tại Luật Hôn nhân và gia đình 2014 có quy định về quyền ly hôn như sau: \"Vợ, chồng hoặc cả hai người có quyền yêu cầu Tòa án giải quyết ly hôn\". Căn cứ vào quy định này thì vợ, chồng hoặc cả vợ và chồng đều có quyền yêu cầu Tòa án giải quyết ly hôn.\n\nTại Điều 56 Luật hôn nhân và gia đình năm 2014 quy định về ly hôn theo yêu cầu của một bên như sau:\n\n1. Khi vợ hoặc chồng yêu cầu ly hôn mà hòa giải tại Tòa án không thành thì Tòa án giải quyết cho ly hôn nếu có căn cứ về việc vợ, chồng có hành vi bạo lực gia đình hoặc vi phạm nghiêm trọng quyền, nghĩa vụ của vợ, chồng làm cho hôn nhân lâm vào tình trạng trầm trọng, đời sống chung không thể kéo dài, mục đích của hôn nhân không đạt được.\n\n2. Trong trường hợp vợ hoặc chồng của người bị Tòa án tuyên bố mất tích yêu cầu ly hôn thì Tòa án giải quyết cho ly hôn.\n\n3. Trong trường hợp có yêu cầu ly hôn theo quy định tại khoản 2 Điều 51 của Luật này thì Tòa án giải quyết cho ly hôn nếu có căn cứ về việc chồng, vợ có hành vi bạo lực gia đình làm ảnh hưởng nghiêm trọng đến tính mạng, sức khỏe, tinh thần của người kia\".\n\nTrường hợp của bạn, bạn có quyền tự mình đưa đơn ly hôn đơn phương. Khi vợ hoặc chồng yêu cầu ly hôn mà hòa giải tại Tòa án không thành thì Tòa án sẽ giải quyết cho ly hôn nếu như có căn cứ việc chồng bạn có hành vi bạo lực gia đình hoặc vi phạm nghiêm trọng quyền, nghĩa vụ của vợ, chồng làm cho hôn nhân lâm vào tình trạng trầm trọng, đời sống chung không thể kéo dài, mục đích của hôn nhân không đạt được. Theo đó, định nghĩa về các hành vi đó như sau:\n\n- Hành vi bạo lực gia đình ở đây, là người chồng hoặc người vợ dùng vũ lực với nhau.\n\n- Xâm phạm quyền và nghĩa vụ của vợ chồng làm cho đời sống hôn nhân lâm vào tình trạng trầm trọng như: không thương yêu, chung thủy, tôn trọng, quan tâm, chăm sóc, giúp đỡ nhau; cùng nhau chia sẻ, thực hiện các công việc trong gia đình dẫn đến cuộc hôn nhân của hai bạn không được hạnh phúc.\n\nTheo đó Điều 19 Luật hôn nhân và gia đình 2014 quy định về tình nghĩa vợ chồng được xem như là nghĩa vụ của mỗi bên. Do đó nếu chồng bạn không có trách nhiệm chăm lo cho bạn và cho cuộc sống gia đình thì chồng bạn có thể đã vi phạm nghĩa vụ. Tòa án sẽ xem xét việc vi phạm nghĩa vụ này nhằm làm căn cứ chấp thuận việc đơn phương ly hôn của bạn.\n\nTrên đây là nội dung tư vấn.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -691,7 +678,7 @@
   {
     "question": "Xin chào quý anh chị trong Ban biên tập! Tôi có vấn đề thắc mắc mong được anh chị giải đáp giúp ạ. Chị Trang quốc tịch Việt Nam và chồng chị quốc tịch Thụy Điển. Sau 10 năm kết hôn, hai anh chị xảy ra mâu thuẫn. Người chồng về Thụy Điển và ly thân từ đó. Bây giờ, chị Trang muốn đơn phương ly hôn có được không và thủ tục như thế nào? Tài sản chung của 2 vợ chồng là căn nhà mua ở Thụy Điển thì giải quyết ra sao? Rất mong được anh chị giải đáp ạ. Xin chân thành cảm ơn!",
     "ground_truth": "Khoản 1 Điều 51 Luật Hôn nhân và gia đình 2014 quy định như sau:\n\nVợ, chồng hoặc cả hai người có quyền yêu cầu tòa án giải quyết ly hôn.\n\nBên cạnh đó, Điều 127 Luật Hôn nhân và gia đình 2014 cũng có quy định về ly hôn có yếu tố nước ngoài như sau:\n\n1. Việc ly hôn giữa công dân Việt Nam với người nước ngoài, giữa người nước ngoài với nhau thường trú ở Việt Nam được giải quyết tại cơ quan có thẩm quyền của Việt Nam theo quy định của Luật này.\n\n2. Trong trường hợp bên là công dân Việt Nam không thường trú ở Việt Nam vào thời điểm yêu cầu ly hôn thì việc ly hôn được giải quyết theo pháp luật của nước nơi thường trú chung của vợ chồng; nếu họ không có nơi thường trú chung thì giải quyết theo pháp luật Việt Nam.\n\n3. Việc giải quyết tài sản là bất động sản ở nước ngoài khi ly hôn tuân theo pháp luật của nước nơi có bất động sản đó.\n\nNhư vậy, chị Trang có quyền đơn phương yêu cầu tòa án giải quyết việc ly hôn. Cơ quan có thẩm quyền giải quyết việc đơn phương ly hôn của chị Trang là tòa án nhân dân cấp tỉnh. Ngôi nhà là tài sản chung của vợ chồng chị ở bên Thủy Điển sẽ được giải quyết theo pháp luật Thủy Điển. Còn Tòa án Việt Nam chỉ giải quyết yêu cầu ly hôn và yêu cầu khác của chị Trang liên quan đến việc ly hôn (nếu có), còn vấn đề tài sản sẽ do Tòa án Thủy Điển giải quyết – nếu chị có đơn yêu cầu (trừ trường hợp hai vợ chồng tự thỏa thuận).\n\nVề thủ tục ly hôn, chị Trang cần nộp lên Tòa án nhân dân cấp tỉnh một bộ hồ sơ bao gồm:\n\n- Đơn xin ly hôn;\n\n- Giấy chứng nhận đăng ký kết hôn (bản chính); trường hợp không có bản chính Giấy chứng nhận đăng ký kết hôn, thì bạn phải xin xác nhận của UBND cấp tỉnh nơi đã đăng ký kết hôn.\n\n- Sổ hộ khẩu, chứng minh thư nhân dân (bản sao chứng thực);\n\n- Giấy khai sinh của con (bản sao chứng thực);\n\n- Các tài liệu, chứng cứ khác chứng minh tài sản chung.\n\nTrên đây là ý kiến tư vấn của chúng tôi về vấn đề mà bạn thắc mắc.\n\nTrân trọng!",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -704,7 +691,7 @@
   {
     "question": "Chồng tôi đi làm ăn xa và biệt tích hơn 3 năm, lần cuối cùng tôi nhận được thông tin từ chồng tôi là tháng 7/2016 đến nay đã là tháng 05/2019. Mặc dù đã liên hệ với cơ quan đưa chồng tôi đi xuất khẩu lao động nhằm liên lạc với chồng nhưng cũng không có kết quả. Tôi đã đăng thông tin tìm kiếm trên các phương tiện truyền thông đại chúng nhưng vẫn không có phản hồi. Nay tôi muốn thực hiện thủ tục ly hôn. Xin hỏi tôi có thể đơn phương ly hôn được không?",
     "ground_truth": "Căn cứ Khoản 2 Điều 56 Luật hôn nhân gia đình 2014 quy định về ly hôn theo yêu cầu của một bên như sau:\n\n- Trong trường hợp vợ hoặc chồng của người bị Tòa án tuyên bố mất tích yêu cầu ly hôn thì Tòa án giải quyết cho ly hôn.\n\nNhư vậy, trong trường hợp này chị có thể đơn phương ly hôn khi đã thỏa yêu cầu về điều kiện mất tích của người chồng theo luật định. Việc xác định 01 người mất tích phải dựa vào tuyên bố của tòa án được quy định tại Điều 68 Bộ luật dân sự 2015 như sau:\n\n1. Khi một người biệt tích 02 năm liền trở lên, mặc dù đã áp dụng đầy đủ các biện pháp thông báo, tìm kiếm theo quy định của pháp luật về tố tụng dân sự nhưng vẫn không có tin tức xác thực về việc người đó còn sống hay đã chết thì theo yêu cầu của người có quyền, lợi ích liên quan, Tòa án có thể tuyên bố người đó mất tích.\n\nThời hạn 02 năm được tính từ ngày biết được tin tức cuối cùng về người đó; nếu không xác định được ngày có tin tức cuối cùng thì thời hạn này được tính từ ngày đầu tiên của tháng tiếp theo tháng có tin tức cuối cùng; nếu không xác định được ngày, tháng có tin tức cuối cùng thì thời hạn này được tính từ ngày đầu tiên của năm tiếp theo năm có tin tức cuối cùng.\n\n2. Trường hợp vợ hoặc chồng của người bị tuyên bố mất tích xin ly hôn thì Tòa án giải quyết cho ly hôn theo quy định của pháp luật về hôn nhân và gia đình.\n\n3. Quyết định của Tòa án tuyên bố một người mất tích phải được gửi cho Ủy ban nhân dân cấp xã nơi cư trú cuối cùng của người bị tuyên bố mất tích để ghi chú theo quy định của pháp luật về hộ tịch.\n\nTheo như nội dung chị cung cấp thì lần cuối chị nhận được tin tức của chồng vào 07/2016. Từ đó ngày có tin tức cuối cùng là ngày 01/08/2016. Như vậy vào ngày 01/08/2018 đã thỏa điều kiện 02 năm theo luật định. Đây là căn cứ để tòa án tuyên bố mất tích đối với chồng chị.\n\nKhi đã thỏa mãn các điều kiện nêu trên, chị có thể nộp đơn xin ly hôn tại tòa án.\n\nTrên đây là nội dung tư vấn.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -717,7 +704,7 @@
   {
     "question": "Vợ chồng anh chị Hoàng và Dung đang nuôi con nhỏ 6 tháng tuổi. Do mâu thuẫn trong hôn nhân, anh Hoàng muốn đơn phương ly hôn. Xin hỏi, tòa án có chấp nhận cho anh Hoàng ly hôn không?",
     "ground_truth": "Căn cứ Điều 51 Luật hôn nhân gia đình 2014 quy định về quyền yêu cầu giải quyết ly hôn như sau:\n\n- Vợ, chồng hoặc cả hai người có quyền yêu cầu Tòa án giải quyết ly hôn.\n\n- Cha, mẹ, người thân thích khác có quyền yêu cầu Tòa án giải quyết ly hôn khi một bên vợ, chồng do bị bệnh tâm thần hoặc mắc bệnh khác mà không thể nhận thức, làm chủ được hành vi của mình, đồng thời là nạn nhân của bạo lực gia đình do chồng, vợ của họ gây ra làm ảnh hưởng nghiêm trọng đến tính mạng, sức khỏe, tinh thần của họ.\n\n- Chồng không có quyền yêu cầu ly hôn trong trường hợp vợ đang có thai, sinh con hoặc đang nuôi con dưới 12 tháng tuổi.\n\nNhư vậy: vợ chồng hoặc cả 2 đều có quyền yêu cầu tòa giải quyết ly hôn. Tuy nhiên nếu cả 2 đang nuôi con nhỏ dưới 12 tháng tuổi thì người chồng không được quyền yêu cầu ly hôn. Do đó, yêu cầu ly hôn của anh Hoàng sẽ không được tòa án thụ lý.\n\nTrên đây là nội dung tư vấn.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -730,7 +717,7 @@
   {
     "question": "Chị An được xác định là bị bênh tâm thần sau một thời gian chung sống với anh Bình. Do hoàn cảnh gia đình khó khăn công thêm bệnh tâm thần cùa chị khiến cho anh Bình sa vào rượu chè, từ đó đánh đập chị An. Xin hỏi, trong trường hợp này, chị An có thể đơn phương ly hôn được không?",
     "ground_truth": "Căn cứ Khoản 2 Điều 51 Luật hôn nhân và gia đình 2014 quy định về quyền yêu cầu giải quyết ly hôn như sau:\n\n- Cha, mẹ, người thân thích khác có quyền yêu cầu Tòa án giải quyết ly hôn khi một bên vợ, chồng do bị bệnh tâm thần hoặc mắc bệnh khác mà không thể nhận thức, làm chủ được hành vi của mình, đồng thời là nạn nhân của bạo lực gia đình do chồng, vợ của họ gây ra làm ảnh hưởng nghiêm trọng đến tính mạng, sức khỏe, tinh thần của họ.\n\nĐồng thời căn cứ Khoản 3 Điều 56 Luật hôn nhân gia đình 2014 quy định cụ thể về quyền yêu cầu giải quyết ly hôn trong trường hợp bị bạo hành như sau:\n\n- Trong trường hợp có yêu cầu ly hôn theo quy định tại khoản 2 Điều 51 của Luật này thì Tòa án giải quyết cho ly hôn nếu có căn cứ về việc chồng, vợ có hành vi bạo lực gia đình làm ảnh hưởng nghiêm trọng đến tính mạng, sức khỏe, tinh thần của người kia.\n\nNhư vậy, cha mẹ hoặc người thân thích của chị An có thể yêu cầu tòa án giải quyết ly hôn cho An và Bình, đồng thời phải đưa ra căn cứ cho thấy việc Bình bạo hành An ảnh hưởng nghiêm trọng tính mạng, sức khỏe và tinh thần của An.\n\nTrên đây là nội dung tư vấn.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -743,7 +730,7 @@
   {
     "question": "Tôi và chồng ly thân được gần 01 năm, tuy nhiên chồng vẫn thường xuyên ăn chơi, không chăm lo cho gia đình, tôi muốn ly hôn nhưng anh không đồng ý, chúng tôi có con chung 08 tuổi. Nên tôi định mình đơn phương ly hôn, thế cho tôi hỏi tôi phải đóng mức án phí bao nhiêu?",
     "ground_truth": "Theo quy định tại Điều 195 Bộ luật Tố tụng Dân sự 2015 có quy định sau khi nhận đơn khởi kiện và tài liệu, chứng cứ kèm theo, nếu xét thấy vụ án thuộc thẩm quyền giải quyết của Tòa án thì Thẩm phán phải thông báo ngay cho người khởi kiện biết để họ đến Tòa án làm thủ tục nộp tiền tạm ứng án phí trong trường hợp họ phải nộp tiền tạm ứng án phí.Trong thời hạn 07 ngày, kể từ ngày nhận được giấy báo của Tòa án về việc nộp tiền tạm ứng án phí, người khởi kiện phải nộp tiền tạm ứng án phí và nộp cho Tòa án biên lai thu tiền tạm ứng án phí.\n\n=> Như vậy điều kiện để Tòa có thể thụ lý vụ án ly hôn của bạn là bạn cần phải hoàn tất nghĩ vụ nộp án phí.\n\nVới trường hợp của bạn tại Nghị quyết 326/2016/UBTVQH14, thì án phí dân sự sơ thẩm: 300.000đ nếu không có tranh chấp về tài sản.\n\nNếu có tranh chấp về tài sản thì mức án phí được quy định như sau:\n\nStt\n\nTên án phí\n\nMức thu\n\nII\n\nÁn phí dân sự\n\n1\n\nÁn phí dân sự sơ thẩ m\n\n1.1\n\nĐối với tranh chấp về dân sự, hôn nhân và gia đình, lao động không có giá ngạch\n\n300.000 đồng\n\n1.2\n\nĐối với tranh chấp về kinh doanh, thương mại không có giá ngạch\n\n3.000.000 đồng\n\n1.3\n\nĐối với tranh chấp về dân sự, hôn nhân và gia đình có giá ngạch\n\na\n\nTừ 6.000.000 đồng trở xuống\n\n300.000 đồng\n\nb\n\nTừ trên 6.000.000 đồng đến 400.000.000 đồng\n\n5% giá trị tài sản có tranh chấp\n\nc\n\nTừ trên 400.000.000 đồng đến 800.000.000 đồng\n\n20.000. 000 đồng + 4% của phầngiá trị tài sản có tranh chấp vượt quá 400.000.000 đồng\n\nd\n\nTừ trên 800.000.000 đồng đến 2.000.000.000 đồng\n\n36.000.000 đồng + 3% của phần giá trị tài sản có tranh chấp vượt 800.000.000 đồng\n\nđ\n\nTừ trên 2.000.000.000 đồng đến 4.000.000.000 đồng\n\n72.000.000 đồng + 2% của phần giá trị tài sản có tranh chấp vượt 2.000.000.000 đồng\n\ne\n\nTừ trên 4.000.000.000 đồng\n\n112.000.000 đồng + 0,1% của phần giá trị tài sản tranh chấp vượt 4.000.000.000 đồng.\n\nTham khảo thêm:\n\nLy hôn khi là đảng viên dự bị có ảnh hưởng gì đến việc vào đảng chính thức?\n\nVợ đi xuất khẩu lao động không về thì ly hôn như thế nào?\n\nTrên đây là nội dung tư vấn.\n\nTrân trọng!",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -756,7 +743,7 @@
   {
     "question": "Xin chào Luật sư. Gia đình tôi vợ chồng không hạnh phúc nên đã chia tay mà chưa ta Tòa hơn 2 năm nay. Vì lý do chồng cờ bạc mà đã bán nhà không còn tài sản, lúc đòi bán nhà em có đòi ly hôn nhưng ông không chịu năm 2016. Đến hôm nay thì ông có nhờ Luật sư để làm thủ tục ly hôn mà tôi có thắc mắc là ông Luật sư ấy lại làm đơn khởi kiện kêu tôi đứng tên mà không phải chồng tôi thế có bất lợi gì cho tôi không? Mong Luật sư tư vấn dùm tôi, thành thật biết ơn!",
     "ground_truth": "Điều 55 Luật Hôn nhân Gia đình 2014 quy định: Trong trường hợp vợ chồng cùng yêu cầu ly hôn, nếu xét thấy hai bên thật sự tự nguyện ly hôn và đã thỏa thuận về việc chia tài sản, việc trông nom, nuôi dưỡng, chăm sóc, giáo dục con trên cơ sở bảo đảm quyền lợi chính đáng của vợ và con thì Tòa án công nhận thuận tình ly hôn; nếu không thỏa thuận được hoặc có thỏa thuận nhưng không bảo đảm quyền lợi chính đáng của vợ và con thì Tòa án giải quyết việc ly hôn.\n\nLy hôn theo yêu cầu của một bên theo Điều 56 Luật này thì: Khi vợ hoặc chồng yêu cầu ly hôn mà hòa giải tại Tòa án không thành thì Tòa án giải quyết cho ly hôn nếu có căn cứ về việc vợ, chồng có hành vi bạo lực gia đình hoặc vi phạm nghiêm trọng quyền, nghĩa vụ của vợ, chồng làm cho hôn nhân lâm vào tình trạng trầm trọng, đời sống chung không thể kéo dài, mục đích của hôn nhân không đạt được.\n\nTheo quy định tại Điều 51 Luật Hôn nhân Gia đình 2014 thì: Vợ, chồng hoặc cả hai người có quyền yêu cầu Tòa án giải quyết ly hôn. Chồng không có quyền yêu cầu ly hôn trong trường hợp vợ đang có thai, sinh con hoặc đang nuôi con dưới 12 tháng tuổi.\n\nNhư vậy, ly hôn có hai loại là đơn phương ly hôn và thuân tình ly hôn, trường hợp của bạn nếu chồng muốn làm đơn ly hôn thì phải thỏa mãn các điều kiện nêu trên. Ở đây theo thông tin bạn cung cấp thì người chồng chính là nguyên nhân làm cho mục đích hôn nhân không đạt được nên việc bạn đứng đơn ly hôn là để thuận lợi về mặt thủ tục, Tòa án sẽ xem xét lý do nộp đơn là có căn cứ không để thụ lý giải quyết. Khi giải quyết thì Tòa án sẽ xem xét thỏa thuận của các bên về con chung, tài sản chung, nợ chung..., Tòa án sẽ dựa trên quy định của pháp luật để giải quyết nên sẽ không có bất lợi gì đối với bên nộp đơn. Nếu bạn đơn phương ly hôn và ở phần hòa giải hai bên hòa giải thành thì Tòa án sẽ ra quyết định công nhận hòa giải thành, thủ tục sẽ nhanh hơn trường hợp thuận tình ly hôn.\n\nTrân trọng!",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -769,7 +756,7 @@
   {
     "question": "Tôi và chồng chung sống được hơn 15 năm, đời sống hôn nhân không đến nổi mâu thuẫn nhưng từ ngày vợ chồng tôi tính chuyện kinh tế về ở chung với mẹ tôi vì nghĩ sau này mẹ già thì cũng về ở với chúng tôi, còn căn nhà vợ chồng tôi cho thuê hàng tháng. Sau nhiều năm mâu thuẫn giữa mẹ tôi và chồng làm đời sống gia đình không hạnh phúc, chồng tôi có chơi số đề, cờ bạc không nhiều nhưng tôi nói mãi cũng không bỏ bao nhiêu năm nay. Tôi giờ muốn ly hôn đơn phương vì cứ đứng giữa hai bên tôi thấy rất mệt mỏi, nếu chồng không chấp nhận và không đến Tòa thì Tòa có xử không?",
     "ground_truth": "Theo quy định của Luật Hôn nhân Gia đình thì: Khi vợ hoặc chồng yêu cầu ly hôn mà hòa giải tại Tòa án không thành thì Tòa án giải quyết cho ly hôn nếu có căn cứ về việc vợ, chồng có hành vi bạo lực gia đình hoặc vi phạm nghiêm trọng quyền, nghĩa vụ của vợ, chồng làm cho hôn nhân lâm vào tình trạng trầm trọng, đời sống chung không thể kéo dài, mục đích của hôn nhân không đạt được.\n\nNhư vậy, theo quy định này thì bạn có quyền yêu cầu Toà án giải quyết ly hôn. Tuy nhiên, Toà án chỉ giải quyết cho ly hôn nếu có căn cứ về việc chồng bạn có hành vi bạo lực gia đình hoặc vi phạm nghiêm trọng quyền, nghĩa vụ của vợ, chồng làm cho hôn nhân lâm vào tình trạng trầm trọng, đời sống chung không thể kéo dài, mục đích của hôn nhân không đạt được. Ở đây, đời sống vợ chồng bạn mâu thuẫn do nhiều nguyên nhân cộng với việc chồng bạn có chơi số đề, cờ bạc nói mãi không thay đổi thì cũng có thể xem là mục đích hôn nhân không đạt được. Do đó, Tòa án có thể xem xét thụ lý đơn của bạn.\n\nĐối với việc ly hôn vắng mặt:\n\nĐiều 227 Bộ luật tố tụng dân sự 2015 quy định:\n\n1. Tòa án triệu tập hợp lệ lần thứ nhất, đương sự hoặc người đại diện của họ, người bảo vệ quyền và lợi ích hợp pháp của đương sự phải có mặt tại phiên tòa; nếu có người vắng mặt thì Hội đồng xét xử phải hoãn phiên tòa, trừ trường hợp người đó có đơn đề nghị xét xử vắng mặt.\n\nTòa án phải thông báo cho đương sự, người đại diện, người bảo vệ quyền và lợi ích hợp pháp của đương sự về việc hoãn phiên tòa.\n\n2. Tòa án triệu tập hợp lệ lần thứ hai, đương sự hoặc người đại diện của họ, người bảo vệ quyền và lợi ích hợp pháp của đương sự phải có mặt tại phiên tòa, trừ trường hợp họ có đơn đề nghị xét xử vắng mặt; nếu vắng mặt vì sự kiện bất khả kháng hoặc trở ngại khách quan thì Tòa án có thể hoãn phiên tòa, nếu không vì sự kiện bất khả kháng hoặc trở ngại khách quan thì xử lý như sau:\n\na) Nguyên đơn vắng mặt mà không có người đại diện tham gia phiên tòa thì bị coi là từ bỏ việc khởi kiện và Tòa án ra quyết định đình chỉ giải quyết vụ án đối với yêu cầu khởi kiện của người đó, trừ trường hợp người đó có đơn đề nghị xét xử vắng mặt. Nguyên đơn có quyền khởi kiện lại theo quy định của pháp luật;\n\nb) Bị đơn không có yêu cầu phản tố, người có quyền lợi, nghĩa vụ liên quan không có yêu cầu độc lập vắng mặt mà không có người đại diện tham gia phiên tòa thì Tòa án tiến hành xét xử vắng mặt họ;\n\n...\n\nNhư vậy, chồng bạn vắng mặt không tham gia phiên tòa thì Tòa án vẫn tiến hành giải quyết vụ án mà không phụ thuộc vào việc có hay không có sự có mặt của bị đơn theo trình tự nêu trên.\n\nTrân trọng!",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -782,7 +769,7 @@
   {
     "question": "Do chồng ngoại tình nên tôi quyết định ly hôn và chuyển về nhà ngoại sống. Cho tôi hỏi thời gian Tòa án giải quyết đơn phương ly hôn là bao lâu? \r\nChân thành cảm ơn!",
     "ground_truth": "Điều 56 Luật Hôn nhân Gia đình 2014 quy đinh về Ly hôn theo yêu cầu của một bên như sau:\n\n1. Khi vợ hoặc chồng yêu cầu ly hôn mà hòa giải tại Tòa án không thành thì Tòa án giải quyết cho ly hôn nếu có căn cứ về việc vợ, chồng có hành vi bạo lực gia đình hoặc vi phạm nghiêm trọng quyền, nghĩa vụ của vợ, chồng làm cho hôn nhân lâm vào tình trạng trầm trọng, đời sống chung không thể kéo dài, mục đích của hôn nhân không đạt được.\n\n2. Trong trường hợp vợ hoặc chồng của người bị Tòa án tuyên bố mất tích yêu cầu ly hôn thì Tòa án giải quyết cho ly hôn.\n\n3. Trong trường hợp có yêu cầu ly hôn theo quy định tại khoản 2 Điều 51 của Luật này thì Tòa án giải quyết cho ly hôn nếu có căn cứ về việc chồng, vợ có hành vi bạo lực gia đình làm ảnh hưởng nghiêm trọng đến tính mạng, sức khỏe, tinh thần của người kia.\n\nDo vậy, để yêu cầu ly hôn được tòa án chấp nhận thì bạn cần thu thập chứng cứ để chứng minh cho yêu cầu của mình là có căn cứ và hợp pháp, ở đây chồng bạn ngoại tình có thể xem là mục đích của hôn nhân không đạt được.\n\nLy hôn đơn phương sẽ được giải quyết theo thủ tục của 1 vụ án dân sự theo các quy định của Bộ luật tố tụng dân sự 2015. Theo đó, thời gian giải quyết vụ án ly hôn trong trường hợp này là 4 tháng, tuy nhiên nếu vụ án ly hôn có tính chất phức tạp hoặc có trở ngại khách quan thì thời gian giải quyết là 6 tháng. Trên thực tế, thời gian giải quyết vụ án ly hôn có thể ngắn hơn hoặc kéo dài hơn thời gian luật định tùy thuộc vào tính chất của từng vụ án.\n\nTrân trọng!",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -795,7 +782,7 @@
   {
     "question": "Tôi và chồng đã ly thân 2 năm nay, bây giờ tôi muôn ly hôn chồng do đời sống vợ chồng mâu thuẫn, chồng tôi ngoại tình. Hiện tại chồng tôi đã giữ giấy đăng ký kết hôn. Tôi có được đơn phương ly hôn khi không đủ giấy tờ?",
     "ground_truth": "CCPL: Luật Hôn nhân Gia đình 2014, Luật Hộ tịch 2014\n\nĐiều 56 Luật Hôn nhân Gia đình 2014 quy định về Ly hôn theo yêu cầu của một bên như sau:\n\nKhi vợ hoặc chồng yêu cầu ly hôn mà hòa giải tại Tòa án không thành thì Tòa án giải quyết cho ly hôn nếu có căn cứ về việc vợ, chồng có hành vi bạo lực gia đình hoặc vi phạm nghiêm trọng quyền, nghĩa vụ của vợ, chồng làm cho hôn nhân lâm vào tình trạng trầm trọng, đời sống chung không thể kéo dài, mục đích của hôn nhân không đạt được.\n\nNhư vậy, khi có căn cứ để yêu cầu ly hôn đơn phương thì bạn nộp đơn xin đơn phương ly hôn tại Tòa án nhân dân cấp huyện nơi chồng bạn cư trú để được giải quyết.\n\nĐối với giấy đăng ký kết hôn nếu chồng bạn không cung cấp thì bạn có thể làm thủ tục xin trích lục giấy đăng ký kết hôn theo Luật Hộ tịch năm 2014. Cơ quan có thẩm quyền là Ủy ban nhân dân cấp xã nơi bạn đã đăng ký hộ tịch.\n\nTrân trọng!",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quy_dinh_chung_ly_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",

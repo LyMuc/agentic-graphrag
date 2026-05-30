@@ -223,7 +223,7 @@
   {
     "question": "Việc đăng ký kết hôn bị từ chối trong trường hợp nào?",
     "ground_truth": "Căn cứ theo Điều 33 Nghị định 123/2015/NĐ-CP quy định về từ chối đăng ký kết hôn như sau:\n\nNhư vậy, việc đăng ký kết hôn bị từ chối trong trường hợp một hoặc cả hai bên:\n\n- Vi phạm điều cấm;\n\n- Không đủ điều kiện kết hôn.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -236,7 +236,7 @@
   {
     "question": "Mất thẻ căn cước có đăng ký kết hôn được không?",
     "ground_truth": "Căn cứ tại 1 Điều 2 Nghị định 123/2015/NĐ-CP một số từ bị bãi bỏ bởi khoản 2 Điều 13 Nghị định 104/2022/NĐ-CP quy định về xxuất trình, nộp giấy tờ khi đăng ký hộ tịch, cấp bản sao trích lục hộ tịch như sau:\n\nTheo đó, mất thẻ căn cước có thể xuất trình bản chính một trong các giấy tờ là hộ chiếu hoặc giấy tờ khác có dán ảnh và thông tin cá nhân do cơ quan có thẩm quyền cấp, còn giá trị sử dụng như: giấy khai sinh, giấy xác nhận thông tin về cư trú hoặc giấy thông báo số định danh cá nhân… để thay thế.\n\nMặt khác, tại khoản 4 Điều 46 Luật Căn cước 2023 quy định việc sử dụng căn cước công dân, chứng minh nhân dân trong các văn bản quy phạm pháp luật ban hành trước ngày 01/07/2024 được áp dụng như đối với thẻ căn cước quy định tại Luật Căn cước 2023 cho đến khi văn bản quy phạm pháp luật đó được sửa đổi, bổ sung hoặc thay thế.\n\nNhư vậy, mất thẻ căn cước vẫn được đăng ký kết hôn nếu xuất trình bản chính một trong các giấy tờ là hộ chiếu hoặc giấy tờ khác có dán ảnh và thông tin cá nhân do cơ quan có thẩm quyền cấp, còn giá trị sử dụng để chứng minh về nhân thân.\n\nMất thẻ căn cước có đăng ký kết hôn được không? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -249,7 +249,7 @@
   {
     "question": "Việc đăng ký kết hôn tại UBND cấp huyện bị từ chối trong trường hợp nào?",
     "ground_truth": "Căn cứ theo Điều 33 Nghị định 123/2015/NĐ-CP quy định về từ chối đăng ký kết hôn như sau:\n\nNhư vậy, việc đăng ký kết hôn  tại UBND cấp huyện bị từ chối trong trường hợp một hoặc cả hai bên:\n\n- Vi phạm điều cấm;\n\n- Hoặc không đủ điều kiện kết hôn.\n\nLưu ý: Trường hợp Ủy ban nhân dân cấp huyện từ chối đăng ký kết hôn, Phòng Tư pháp thông báo bằng văn bản nêu rõ lý do cho hai bên nam, nữ.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -262,7 +262,7 @@
   {
     "question": "Lệ phí đăng ký kết hôn với người nước ngoài hiện nay là bao nhiêu?",
     "ground_truth": "Tại Điều 11 Luật Hộ tịch 2014 có quy định về lệ phí hộ tịch như sau:\n\nTại Điều 3 Thông tư 85/2019/TT-BTC có quy định về danh mục các khoản lệ phí thuộc thẩm quyền của Hội đồng nhân dân cấp tỉnh như sau:\n\nNhư vậy, lệ phí đăng ký kết hôn với người nước ngoài sẽ tùy thuộc vào từng tỉnh thành do Hội đồng nhân dân từng tỉnh quy định.\n\nVí dụ: Tại Nghị quyết 06/2020/NQ-HĐND của UBND Hà Nội có quy định mức lệ phí đăng ký kết hôn tại UBND cấp huyện ở Hà Nội là 1.000.000VNĐ/việc.\n\nTại Phụ lục 1B ban hành kèm theo Nghị quyết 124/2016/NQ-HĐND của UBND TP HCM có quy định mức lệ phí đăng ký kết hôn tại UBND cấp huyện là 1.000.000VNĐ/việc.\n\nMẫu tờ khai đăng ký kết hôn với người nước ngoài mới nhất? Lệ phí đăng ký kết hôn với người nước ngoài hiện nay là bao nhiêu? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -275,7 +275,7 @@
   {
     "question": "Đăng ký kết hôn với người nước ngoài ở đâu?",
     "ground_truth": "Tại Điều 37 Luật Hộ tịch 2014 có quy định về thẩm quyền đăng ký kết hôn với người nước ngoài như sau:\n\nNhư vậy, khi làm đăng ký kết hôn với người nước ngoài thì cơ quan có thẩm quyền làm thủ tục đăng ký kết hôn là UBND huyện nơi cư trú của công dân Việt Nam.\n\nTrường hợp người nước ngoài cư trú tại Việt Nam có yêu cầu đăng ký kết hôn tại Việt Nam thì Ủy ban nhân dân cấp huyện nơi cư trú của một trong hai bên thực hiện đăng ký kết hôn.\n\nLưu ý: Khi làm thủ tục đăng ký kết hôn với người nước ngoài thì nam và nữ phải nộp tờ khai theo mẫu quy định và giấy xác nhận của tổ chức y tế có thẩm quyền của Việt Nam hoặc nước ngoài xác nhận người đó không mắc bệnh tâm thần hoặc bệnh khác mà không có khả năng nhận thức, làm chủ được hành vi của mình cho cơ quan đăng ký hộ tịch.\n\nNgười nước ngoài, công dân Việt Nam định cư ở nước ngoài phải nộp thêm giấy tờ chứng minh tình trạng hôn nhân, bản sao hộ chiếu hoặc giấy tờ có giá trị thay hộ chiếu.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -288,7 +288,7 @@
   {
     "question": "Làm bạn gái có thai có bắt buộc phải đăng ký kết hôn không?",
     "ground_truth": "Căn cứ Điều 8 Luật Hôn nhân và gia đình 2014 quy định về điều kiện kết hôn như sau:\n\nTheo quy định nêu trên, việc kết hôn phải được thực hiện dựa trên ý chí tự nguyện của hai bên và đảm bảo các điều kiện khác mới được xem là kết hôn hợp pháp.\n\nTheo đó, việc kết hôn không phải hoạt động bắt buộc. Do đó, bạn nam không bắt buộc đăng ký kết hôn khi làm bạn gái có thai.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -301,7 +301,7 @@
   {
     "question": "Con được sinh ra khi cha mẹ không đăng ký kết hôn thì ai được quyền nuôi con?",
     "ground_truth": "Căn cứ tại khoản 1 Điều 14 Luật Hôn nhân và gia đình 2014 quy định về giải quyết hậu quả của việc nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn như sau:\n\nCăn cứ theo Điều 81 Luật Hôn nhân và gia đình 2014 quy định về việc trông nom, chăm sóc, nuôi dưỡng, giáo dục con sau khi ly hôn như sau:\n\nTheo quy định trên, nam nữ dù có đủ điều kiện đăng ký kết hôn nhưng không đăng ký kết hôn mà chỉ sống chung với nhau như vợ chồng thì sẽ không làm phát sinh quyền, nghĩa vụ giữa vợ và chồng. Tuy nhiên quyền và nghĩa vụ với con thì vẫn được xác lập.\n\nTheo đó, cha mẹ có quyền và nghĩa vụ trông nom, chăm sóc, nuôi dưỡng, giáo dục con chưa thành niên, đã thành niên nhưng mất năng lực hành vi dân sự hoặc không có khả năng lao động và không có tài sản để tự nuôi mình theo quy định của pháp luật. Hai người có thể tự thỏa thuận về việc ai sẽ nuôi con, quyền và nghĩa vụ của mỗi bên khi không chung sống với nhau nữa.\n\nTrong trường hợp không thể đạt được thỏa thuận, Tòa án sẽ quyết định việc nuôi con dựa trên quyền lợi của con cái trong mọi khía cạnh.\n\nNếu con từ đủ 07 tuổi trở lên thì phải xem xét nguyện vọng của con\n\nTrong trường hợp con dưới 36 tháng tuổi, sẽ được giao cho mẹ, trừ khi người mẹ không đủ điều kiện hoặc cha mẹ có thỏa thuận khác\n\nDo đó, quan hệ giữa cha mẹ và con cái vẫn tồn tại mà không phụ thuộc vào tình trạng hôn nhân của hai người.\n\nNhư vậy, để quyết định quyền nuôi con trong trường hợp chưa đăng ký kết hôn thì cha mẹ có thể tự thỏa thuận với nhau. Trường hợp hai bên không đạt được thỏa thuận thì một trong hai người phải chứng minh rằng mình có đủ điều kiện để đảm bảo sự phát triển tốt nhất dành cho con.\n\nMức cấp dưỡng mà người cha phải cấp dưỡng cho con khi không đăng ký kết hôn là bao nhiêu? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "chung_song_nhu_vo_chong",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -314,7 +314,7 @@
   {
     "question": "Vợ có bắt buộc phải chuyển khẩu về nhà chồng sau khi kết hôn hay không?",
     "ground_truth": "Tại khoản 2 Điều 19 Luật Hôn nhân và Gia đình năm 2014 có quy định cụ thể như sau:\n\nĐồng thời, căn cứ Điều 20 Luật Hôn nhân và gia đình 2014 quy định về lựa chọn nơi cư trú của vợ chồng như sau:\n\nNhư vậy, có thể thấy, việc lựa chọn nơi cư trú của vợ chồng hoàn toàn do thỏa thuận của hai bên, không bị ràng buộc bởi phong tục, tập quán, địa giới hành chính. Đồng thời, pháp luật hiện hành cũng không bắt buộc vợ phải chuyển khẩu về nhà chồng sau khi kết hôn và ngược lại.\n\nVợ có bắt buộc phải chuyển khẩu về nhà chồng sau khi kết hôn hay không? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quyen_nghia_vu_vo_chong",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -327,7 +327,7 @@
   {
     "question": "Được cấp mấy bản chính giấy chứng nhận đăng ký kết hôn?",
     "ground_truth": "Căn cứ theo khoản 3 Điều 18 Nghị định 123/2015/NĐ-CP quy định về đăng ký kết hôn như sau:\n\nTheo đó, nếu hai bên nam, nữ đủ điều kiện kết hôn thì sẽ được Chủ tịch Ủy ban nhân dân xã ký Giấy chứng nhận kết hôn, công chức tư pháp - hộ tịch ghi việc kết hôn vào Sổ hộ tịch, cùng hai bên nam, nữ ký, ghi rõ họ tên trong Sổ hộ tịch, Giấy chứng nhận kết hôn; mỗi bên vợ, chồng được cấp 01 bản chính Giấy chứng nhận kết hôn.\n\nNhư vậy, mỗi bên vợ, chồng được cấp 01 bản chính Giấy chứng nhận kết hôn. Do đó, sẽ có 02 bản chính giấy chứng nhận kết hôn khi đăng ký kết hôn.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -340,7 +340,7 @@
   {
     "question": "Trường hợp nào bị cấm kết hôn theo Luật hôn nhân gia đình năm 2014?",
     "ground_truth": "Tại khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 có quy định về các trường hợp cấm kết hôn bao gồm:\n\n(1) Cấm kết hôn giả tạo, ly hôn giả tạo;\n\n(2) Tảo hôn, cưỡng ép kết hôn, lừa dối kết hôn, cản trở kết hôn;\n\n(3) Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ;\n\n(4) Cấm kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng;\n\n(5) Yêu sách của cải trong kết hôn;\n\n(6) Cưỡng ép ly hôn, lừa dối ly hôn, cản trở ly hôn;\n\n(7) Thực hiện sinh con bằng kỹ thuật hỗ trợ sinh sản vì mục đích thương mại, mang thai hộ vì mục đích thương mại, lựa chọn giới tính thai nhi, sinh sản vô tính;\n\n(8) Bạo lực gia đình;\n\n(9) Lợi dụng việc thực hiện quyền về hôn nhân và gia đình để mua bán người, bóc lột sức lao động, xâm phạm tình dục hoặc có hành vi khác nhằm mục đích trục lợi.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dieu_kien_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -353,7 +353,7 @@
   {
     "question": "Việt Nam có giới hạn số lần đăng ký kết hôn không?",
     "ground_truth": "Căn cứ Điều 8 Luật Hôn nhân và gia đình 2014 quy định điều kiện kết hôn:\n\nTheo Luật Hôn nhân và Gia đình 2014 thì không có giới hạn cụ thể về số lần một người có thể kết hôn, miễn là người đó đáp ứng các điều kiện kết hôn sau:\n\n[1] Đủ tuổi kết hôn: Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên\n\n[2] Việc kết hôn do nam và nữ tự nguyện quyết định\n\n[3] Không bị mất năng lực hành vi dân sự\n\n[4] Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn sau:\n\n- Kết hôn giả tạo, ly hôn giả tạo\n\n- Tảo hôn, cưỡng ép kết hôn, lừa dối kết hôn, cản trở kết hôn\n\n- Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ\n\n- Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng\n\nLưu ý : Nhà nước không thừa nhận hôn nhân giữa những người cùng giới tính.\n\nViệt Nam có giới hạn số lần đăng ký kết hôn không? Cơ quan nào có thẩm quyền đăng ký kết hôn? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -366,20 +366,7 @@
   {
     "question": "Cơ quan nào có thẩm quyền đăng ký kết hôn?",
     "ground_truth": "Căn cứ Điều 17 Luật Hộ tịch 2014 quy định thẩm quyền đăng ký kết hôn và nội dung Giấy chứng nhận kết hôn:\n\nCăn cứ Điều 37 Luật Hộ tịch 2014 quy định thẩm quyền đăng ký kết hôn:\n\nNhư vậy, cơ quan có thẩm quyền đăng ký kết hôn được quy định như sau:\n\n- Ủy ban nhân dân cấp xã nơi cư trú của một trong hai bên nam, nữ thực hiện đăng ký kết hôn.\n\n- Ủy ban nhân dân cấp huyện có thẩm quyền đăng ký kết hôn trong trường hợp sau:\n\n+ Công dân Việt Nam thực hiện đăng ký kết hôn giữa công dân Việt Nam với người nước ngoài;\n\n+ Giữa công dân Việt Nam cư trú ở trong nước với công dân Việt Nam định cư ở nước ngoài;\n\n+ Giữa công dân Việt Nam định cư ở nước ngoài với nhau;\n\n+ Giữa công dân Việt Nam đồng thời có quốc tịch nước ngoài với công dân Việt Nam hoặc với người nước ngoài.",
-    "chu_de_phap_ly": "",
-    "loai_cau_hoi": "",
-    "van_ban_phap_luat_lien_quan": "",
-    "tinh_trang_hieu_luc": "",
-    "can_cu_phap_ly_chinh": "",
-    "can_cu_phap_ly_bo_tro": "",
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": "",
-    "can_cu_khong_nen_ap_dung": "",
-    "quan_he_chong_cheo_mau_thuan": ""
-  },
-  {
-    "question": "Người lao động kết hôn được nghỉ bao nhiêu ngày mà vẫn hưởng nguyên lương?",
-    "ground_truth": "Căn cứ Điều 115 Bộ luật Lao động 2019 quy định nghỉ việc riêng, nghỉ không hưởng lương:\n\nTheo quy định trên, người lao động kết hôn thì được nghỉ 03 ngày mà vẫn hưởng nguyên lương và phải thông báo với người sử dụng lao động.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -392,7 +379,7 @@
   {
     "question": "Trong năm 2024, sinh năm 2006 đã đủ tuổi kết hôn chưa?",
     "ground_truth": "Căn cứ theo Điều 8 Luật Hôn nhân và gia đình 2014 quy định như sau:\n\nTheo đó, một trong những điều kiện kết hôn đó là nam, nữ kết hôn với nhau phải đủ tuổi kết hôn. Trong đó, độ tuổi kết hôn với nam là từ đủ 20 tuổi trở lên và nữ là từ đủ 18 tuổi trở lên.\n\nDo đó, trong năm 2024, đối với nữ sinh năm 2006 đã đủ 18 tuổi thì đủ tuổi kết hôn (thời điểm đủ tuổi kết hôn được xác định theo ngày, tháng sinh của người đó).\n\nCòn đối với nam sinh năm 2006 chỉ mới 18 tuổi nên chưa đủ tuổi kết hôn.\n\nTrong năm 2024, sinh năm 2006 đã đủ tuổi kết hôn chưa? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dieu_kien_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -405,7 +392,7 @@
   {
     "question": "Nam nữ có thể đăng ký kết hôn ở đâu?",
     "ground_truth": "Căn cứ theo khoản 1 Điều 17 Luật Hộ tịch 2014 quy định như sau:\n\nCăn cứ theo khoản 1 Điều 11 Luật Cư trú 2020 quy định như sau:\n\nCăn cứ theo Điều 37 Luật Hộ tịch 2014 quy định như sau:\n\nTheo quy định trên, nơi đăng ký kết hôn được xác định như sau:\n\n- Ủy ban nhân dân cấp xã nơi cư trú của một trong hai bên nam, nữ là công dân Việt Nam.\n\n- Ủy ban nhân dân cấp huyện đối với trường hợp đăng ký kết hôn có yếu tố nước ngoài giữa:\n\n+ Công dân Việt Nam với người nước ngoài.\n\n+ Công dân Việt Nam cư trú ở trong nước với công dân Việt Nam định cư ở nước ngoài.\n\n+ Công dân Việt Nam định cư ở nước ngoài với nhau.\n\n+ Công dân Việt Nam đồng thời có quốc tịch nước ngoài với công dân Việt Nam hoặc với người nước ngoài.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -418,7 +405,7 @@
   {
     "question": "Các loại tài sản chung của vợ chồng trong thời kì hôn nhân gồm những gì?",
     "ground_truth": "Căn cứ theo khoản 1 Điều 33 Luật Hôn nhân và gia đình 2014 được hướng dẫn bởi Điều 9 và Điều 10 Nghị định 126/2014/NĐ-CP , tài sản chung của vợ chồng trong thời kì hôn nhân gồm:\n\n- Tài sản do vợ, chồng tạo ra trong thời kì hôn nhân.\n\n- Thu nhập do lao động, hoạt động sản xuất, kinh doanh trong thời kì hôn nhân.\n\n- Hoa lợi, lợi tức phát sinh từ tài sản riêng gồm:\n\n+ Hoa lợi phát sinh từ tài sản riêng của vợ, chồng là sản vật tự nhiên mà vợ, chồng có được từ tài sản riêng của mình.\n\n+ Lợi tức phát sinh từ tài sản riêng của vợ, chồng là khoản lợi mà vợ, chồng thu được từ việc khai thác tài sản riêng của mình.\n\nLưu ý: Hoa lợi, lợi tức phát sinh từ tài sản riêng của mỗi bên sau khi chia tài sản chung là tài sản riêng của vợ, chồng, trừ trường hợp vợ chồng có thỏa thuận khác.\n\n- Thu nhập hợp pháp khác trong thời kỳ hôn nhân gồm:\n\n+ Khoản tiền thưởng, tiền trúng thưởng xổ số, tiền trợ cấp, trừ khoản trợ cấp, ưu đãi mà vợ, chồng được nhận theo quy định của pháp luật về ưu đãi người có công với cách mạng; quyền tài sản khác gắn liền với nhân thân của vợ, chồng.\n\n+. Tài sản mà vợ, chồng được xác lập quyền sở hữu theo quy định đối với vật vô chủ, vật bị chôn giấu, bị chìm đắm, vật bị đánh rơi, bị bỏ quên, gia súc, gia cầm bị thất lạc, vật nuôi dưới nước.\n\n+ Thu nhập hợp pháp khác theo quy định của pháp luật.\n\n- Tài sản mà vợ chồng được thừa kế chung hoặc được tặng cho chung và tài sản khác mà vợ chồng thỏa thuận là tài sản chung.\n\n- Quyền sử dụng đất mà vợ, chồng có được sau khi kết hôn là tài sản chung của vợ chồng, trừ trường hợp vợ hoặc chồng được thừa kế riêng, được tặng cho riêng hoặc có được thông qua giao dịch bằng tài sản riêng.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "che_do_tai_san_cua_vo_chong",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -431,7 +418,7 @@
   {
     "question": "Ai có quyền yêu cầu hủy việc kết hôn trái pháp luật?",
     "ground_truth": "Căn cứ theo quy định tại Điều 10 Luật Hôn nhân và gia đình 2014 , thì người có quyền yêu cầu hủy việc kết hôn trái pháp luật gồm:\n\n- Người bị cưỡng ép kết hôn, bị lừa dối kết hôn, theo quy định của pháp luật về tố tụng dân sự, có quyền tự mình yêu cầu hoặc đề nghị cá nhân, tổ chức quy định tại khoản 2 Điều 10 Luật Hôn nhân và gia đình 2014 yêu cầu Tòa án hủy việc kết hôn trái pháp luật do việc kết hôn vi phạm quy định tại điểm b khoản 1 Điều 8 Luật Hôn nhân và gia đình 2014 .\n\n- Cá nhân, cơ quan, tổ chức sau đây, theo quy định của pháp luật về tố tụng dân sự, có quyền yêu cầu Tòa án hủy việc kết hôn trái pháp luật do việc kết hôn vi phạm quy định tại các điểm a, c và d khoản 1 Điều 8 Luật Hôn nhân và gia đình 2014 :\n\n+ Vợ, chồng của người đang có vợ, có chồng mà kết hôn với người khác; cha, mẹ, con, người giám hộ hoặc người đại diện theo pháp luật khác của người kết hôn trái pháp luật;\n\n+ Cơ quan quản lý nhà nước về gia đình;\n\n+ Cơ quan quản lý nhà nước về trẻ em;\n\n+ Hội liên hiệp phụ nữ.\n\n- Cá nhân, cơ quan, tổ chức khác khi phát hiện việc kết hôn trái pháp luật thì có quyền đề nghị cơ quan, tổ chức quy định tại các điểm b, c và d khoản 2 Điều 10 Luật Hôn nhân và gia đình 2014 yêu cầu Tòa án hủy việc kết hôn trái pháp luật.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "ket_hon_trai_phap_luat",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -444,46 +431,7 @@
   {
     "question": "Việc kết hôn trái pháp luật được xử lý thế nào?",
     "ground_truth": "Căn cứ theo Điều 11 Luật Hôn nhân và gia đình 2014 quy định về xử lý việc kết hôn trái pháp luật như sau:\n\nNhư vậy, việc kết hôn trái pháp luật được xử lý như sau:\n\n- Xử lý việc kết hôn trái pháp luật được Tòa án thực hiện theo quy định tại Luật Hôn nhân và gia đình 2014 và pháp luật về tố tụng dân sự.\n\n- Trong trường hợp tại thời điểm Tòa án giải quyết yêu cầu hủy việc kết hôn trái pháp luật mà cả hai bên kết hôn đã có đủ các điều kiện kết hôn theo quy định tại Điều 8 Luật Hôn nhân và gia đình 2014 và hai bên yêu cầu công nhận quan hệ hôn nhân thì Tòa án công nhận quan hệ hôn nhân đó.\n\nTrong trường hợp này, quan hệ hôn nhân được xác lập từ thời điểm các bên đủ điều kiện kết hôn theo quy định của Luật Hôn nhân và gia đình 2014 .\n\n- Quyết định của Tòa án về việc hủy kết hôn trái pháp luật hoặc công nhận quan hệ hôn nhân phải được gửi cho cơ quan đã thực hiện việc đăng ký kết hôn để ghi vào sổ hộ tịch; hai bên kết hôn trái pháp luật; cá nhân, cơ quan, tổ chức liên quan theo quy định của pháp luật về tố tụng dân sự.",
-    "chu_de_phap_ly": "",
-    "loai_cau_hoi": "",
-    "van_ban_phap_luat_lien_quan": "",
-    "tinh_trang_hieu_luc": "",
-    "can_cu_phap_ly_chinh": "",
-    "can_cu_phap_ly_bo_tro": "",
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": "",
-    "can_cu_khong_nen_ap_dung": "",
-    "quan_he_chong_cheo_mau_thuan": ""
-  },
-  {
-    "question": "Khuyến khích nam nữ kết hôn trước 30 tuổi và sinh đủ 02 con trước 35 tuổi?",
-    "ground_truth": "Vấn đề khuyến khích nam nữ kết hôn trước 30 tuổi và sinh đủ 02 con trước 35 tuổi là một trong những nội dung được đề cập tại Công văn 4737/BYT-VPB1 năm 2024 trả lời kiến nghị của cử tri Thành phố Hồ Chí Minh trước Kỳ họp thứ 7, Quốc hội khóa 15 của Bộ Y tế trả lời vấn đề \" đề nghị có biện pháp cụ thể để nâng tỷ lệ sinh ở các vùng đô thị, không để tình trạng già hóa dân số từ đó dẫn đến thiếu hụt nguồn lao động trong thời gian sắp tới.\"\n\nTheo đó, một trong những biện pháp để giải quyết vấn đề trên là chính quyền địa phương nghiên cứu, ban hành các biện pháp hỗ trợ các cặp vợ chồng sinh đủ hai con. Một số nội dung hỗ trợ, khuyến khích cần thí điểm như sau: (i) Hỗ trợ tư vấn, cung cấp dịch vụ hôn nhân và gia đình: Phát triển câu lạc bộ kết bạn trăm năm, hỗ trợ nam, nữ thanh niên kết bạn; tư vấn sức khỏe trước khi kết hôn; khuyến khích nam nữ kết hôn trước 30 tuổi, không kết hôn muộn và sớm sinh con, phụ nữ sinh con thứ hai trước 35 tuổi,...;\n\nNgoài ra, vấn đề khuyến khích nam nữ kết hôn trước 30 tuổi và sinh đủ 02 con trước 35 tuổi còn được đề cập tại một số văn bản như:\n\n[1] Quyết định 2324/QĐ-BYT năm 2020 về Kế hoạch hành động thực hiện Chương trình Điều chỉnh mức sinh phù hợp các vùng, đối tượng đến năm 2030 do Bộ trưởng Bộ Y tế ban hành\n\n[2] Quyết định 588/QĐ-TTg năm 2020 về phê duyệt \"Chương trình điều chỉnh mức sinh phù hợp các vùng, đối tượng đến năm 2030\" do Thủ tướng Chính phủ ban hành\n\n...và một số văn bản khác...\n\nKhuyến khích nam nữ kết hôn trước 30 tuổi và sinh đủ 02 con trước 35 tuổi? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
-    "loai_cau_hoi": "",
-    "van_ban_phap_luat_lien_quan": "",
-    "tinh_trang_hieu_luc": "",
-    "can_cu_phap_ly_chinh": "",
-    "can_cu_phap_ly_bo_tro": "",
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": "",
-    "can_cu_khong_nen_ap_dung": "",
-    "quan_he_chong_cheo_mau_thuan": ""
-  },
-  {
-    "question": "Mục tiêu cụ thể đến năm 2030 đối với chương trình điều chỉnh mức sinh phù hợp các vùng, đối tượng là gì?",
-    "ground_truth": "Tại Điều 1 Quyết định 588/QĐ-TTg năm 2020 có đề cập đến mục tiêu cụ thể đến năm 2030 đối với chương trình điều chỉnh mức sinh phù hợp các vùng, đối tượng là:\n\n- Tăng 10% tổng tỷ suất sinh ở các tỉnh, thành phố có mức sinh thấp (bình quân mỗi phụ nữ trong độ tuổi sinh đẻ có dưới 2,0 con).\n\n- Giảm 10% tổng tỷ suất sinh ở các tỉnh, thành phố có mức sinh cao (bình quân mỗi phụ nữ trong độ tuổi sinh đẻ có trên 2,2 con).\n\n- Duy trì kết quả ở những tỉnh, thành phố đã đạt mức sinh thay thế (bình quân mỗi phụ nữ trong độ tuổi sinh đẻ có từ 2,0 con đến 2,2 con).",
-    "chu_de_phap_ly": "",
-    "loai_cau_hoi": "",
-    "van_ban_phap_luat_lien_quan": "",
-    "tinh_trang_hieu_luc": "",
-    "can_cu_phap_ly_chinh": "",
-    "can_cu_phap_ly_bo_tro": "",
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": "",
-    "can_cu_khong_nen_ap_dung": "",
-    "quan_he_chong_cheo_mau_thuan": ""
-  },
-  {
-    "question": "Công tác đẩy mạnh tuyên truyền, vận động thay đổi hành vi trong chương trình điều chỉnh mức sinh phù hợp các vùng, đối tượng đến năm 2030 như thế nào?",
-    "ground_truth": "Tại Điều 1 Quyết định 588/QĐ-TTg năm 2020 có quy định về một số nhiệm vụ, giải pháp chủ yếu trong chương trình điều chỉnh mức sinh phù hợp các vùng, đối tượng đến năm 2030. Trong đó, đối với công tác đẩy mạnh tuyên truyền, vận động thay đổi hành vi:\n\n[1] Tiếp tục đẩy mạnh tuyên truyền sâu, rộng các nội dung của Nghị quyết 21-NQ/TW năm 2017 của Ban Chấp hành Trung ương Đảng khóa XII về công tác dân số trong tình hình mới nhằm tạo sự đồng thuận trong toàn xã hội về việc chuyển hướng chính sách dân số từ tập trung vào kế hoạch hóa gia đình sang giải quyết toàn diện các vấn đề dân số bao gồm quy mô, cơ cấu, phân bổ và nâng cao chất lượng dân số.\n\nĐặc biệt tập trung tuyên truyền nội dung chuyển hướng chính sách về quy mô dân số từ tập trung vào nỗ lực giảm sinh sang duy trì mức sinh thay thế trên phạm vi cả nước.\n\nỞ địa phương, phải thực hiện “vận động sinh ít con hơn ở nơi mức sinh còn cao, duy trì ở những nơi đã đạt mức sinh thay thế và sinh thêm con ở những nơi mức sinh đã xuống thấp”.\n\n[2] Phát triển hệ thống thông điệp truyền thông, nội dung tuyên truyền vận động cho từng khu vực có mức sinh khác nhau.\n\n- Đối với địa phương có mức sinh cao, tiếp tục thực hiện tuyên truyền về lợi ích của việc sinh ít con đối với phát triển kinh tế - xã hội và nuôi dạy con tốt, xây dựng gia đình hạnh phúc. Tập trung vận động không kết hôn và sinh con quá sớm, không sinh quá dày và không sinh nhiều con. Đối tượng tuyên truyền, vận động chủ yếu là các cặp vợ chồng đã sinh hai con và có ý định sinh thêm con. Khẩu hiệu vận động là “Dừng ở hai con để nuôi, dạy cho tốt”.\n\n- Đối với địa phương đã đạt mức sinh thay thế và có mức sinh thấp, nội dung tuyên truyền, vận động tập trung vào lợi ích của việc sinh đủ hai con; các yếu tố bất lợi của việc kết hôn, sinh con quá muộn; sinh ít con đối với phát triển kinh tế - xã hội; đối với gia đình và chăm sóc bố, mẹ khi về già. Tập trung vận động nam, nữ thanh niên không kết hôn muộn, không sinh con muộn, mỗi cặp vợ chồng sinh đủ hai con và nuôi dạy con tốt.\n\n[3] Đẩy mạnh các hoạt động tuyên truyền, vận động với các hình thức đa dạng, phong phú, sinh động, hấp dẫn và thuyết phục. Nâng cao hiệu quả của truyền thông qua các phương tiện thông tin đại chúng, chú trọng việc sử dụng các phương tiện truyền thông đa phương tiện, internet và mạng xã hội.\n\nSử dụng hợp lý các loại hình văn hóa, văn nghệ, giải trí. Phát huy vai trò của những người có ảnh hưởng với công chúng, gia đình và dòng họ như: những người nổi tiếng trong các lĩnh vực chính trị, khoa học, văn hóa, nghệ thuật, thể thao, già làng, trưởng bản... Đặc biệt quan tâm đẩy mạnh các hoạt động truyền thông trực tiếp, nhất là các hoạt động truyền thông tại nhà, tại cộng đồng thông qua đội ngũ cộng tác viên, tuyên truyền viên, nhân viên y tế thôn bản.\n\n[4] Đổi mới toàn diện nội dung, chương trình, phương pháp giáo dục về dân số, sức khỏe sinh sản trong và ngoài nhà trường phù hợp với từng cấp học, lứa tuổi trong hệ thống giáo dục.\n\nMục tiêu của giáo dục dân số, sức khỏe sinh sản phải bảo đảm trang bị cho người học các kiến thức, kỹ năng cơ bản, có hệ thống về cấu tạo, cơ chế hoạt động của các cơ quan sinh sản ở người, chăm sóc sức khỏe sinh sản; phòng tránh mang thai ngoài ý muốn, vô sinh và các bệnh lây truyền qua đường tình dục; định hình giá trị mỗi gia đình nên có hai con vì lợi ích gia đình và tương lai bền vững của đất nước.\n\n[5] Thí điểm triển khai mở rộng thực hiện chương trình giáo dục bắt buộc trước khi kết hôn đối với thanh niên nam, nữ chuẩn bị kết hôn.\n\nChương trình phải bảo đảm cung cấp cho nam, nữ thanh niên các kiến thức về chăm sóc sức khỏe sinh sản liên quan trực tiếp đến cuộc sống vợ chồng; chăm sóc, nuôi dạy con, quản lý kinh tế gia đình; củng cố giá trị mỗi gia đình nên có hai con, nuôi dạy con tốt và xây dựng gia đình bình đẳng, ấm no, tiến bộ, hạnh phúc.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "ket_hon_trai_phap_luat",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -496,7 +444,7 @@
   {
     "question": "Phải có đám cưới thì mới được công nhận là vợ chồng theo quy định của pháp luật đúng không?",
     "ground_truth": "Căn cứ tại khoản 1 Điều 8 Luật Hôn nhân và gia đình 2014 quy định về điều kiện kết hôn như sau:\n\nCăn cứ tại khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 quy định phải có đám cưới thì mới được công nhận là vợ chồng theo quy định của pháp luật như sau:\n\nCăn cứ tại khoản 1 Điều 9 Luật Hôn nhân và gia đình 2014 quy định về đăng ký kết hôn như sau:\n\nTheo đó, nếu đủ điều kiện về kết hôn thì có thể tiến hành đăng ký kết hôn tại cơ quan có thẩm quyền để xác lập quan hệ vợ chồng theo quy định của pháp luật.\n\nViệc kết hôn không được đăng ký theo quy định thì không có giá trị pháp lý. Việc tổ chức đám cưới chỉ là duy trì nghi thức truyền thống, là dịp để họ hàng 2 bên công nhận dấu mốc quan trọng của một cặp đôi.\n\nNhư vậy, một vợ chồng theo quy định của pháp luật là cặp vợ chồng phải có đủ điều kiện kết hôn và đăng ký kết hôn theo quy định, không quy định phải có đám cưới thì mới được công nhận là vợ chồng.\n\nPhải có đám cưới thì mới được công nhận là vợ chồng theo quy định của pháp luật đúng không? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dieu_kien_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -509,7 +457,7 @@
   {
     "question": "Vợ chồng đi đăng ký kết hôn ở đâu?",
     "ground_truth": "Căn cứ tại khoản 1 Điều 17 Luật Hộ tịch 2014 quy định thẩm quyền đăng ký kết hôn như sau:\n\nCăn cứ theo Điều 37 Luật Hộ tịch 2014 quy định như sau:\n\nNhư vậy, nơi đăng ký kết hôn là Ủy ban nhân dân cấp huyện hoặc Ủy ban nhân dân cấp xã cụ thể như sau:\n\n- Ủy ban nhân dân cấp huyện nơi cư trú của công dân Việt Nam thực hiện đăng ký kết hôn có yếu tố nước ngoài, cụ thể:\n\n+ Giữa công dân Việt Nam với người nước ngoài;\n\n+ Giữa công dân Việt Nam cư trú ở trong nước với công dân Việt Nam định cư ở nước ngoài; giữa công dân Việt Nam định cư ở nước ngoài với nhau;\n\n+ Giữa công dân Việt Nam đồng thời có quốc tịch nước ngoài với công dân Việt Nam hoặc với người nước ngoài.\n\n- Ủy ban nhân dân cấp xã thực hiện đăng ký kết hôn không có yếu tố nước ngoài.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -522,7 +470,7 @@
   {
     "question": "Đăng ký kết hôn bị từ chối trong trường hợp nào?",
     "ground_truth": "Căn cứ theo Điều 33 Nghị định 123/2015/NĐ-CP quy định về từ chối đăng ký kết hôn như sau:\n\nNhư vậy, việc đăng ký kết hôn bị từ chối trong trường hợp một hoặc cả hai bên:\n\n- Vi phạm điều cấm;\n\n- Không đủ điều kiện kết hôn.\n\nLưu ý: Trường hợp Ủy ban nhân dân cấp huyện từ chối đăng ký kết hôn, Phòng Tư pháp thông báo bằng văn bản nêu rõ lý do cho hai bên nam, nữ.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -535,7 +483,7 @@
   {
     "question": "Đăng ký kết hôn trước khi cưới bao lâu?",
     "ground_truth": "Căn cứ Điều 9 Luật Hôn nhân và gia đình 2014 quy định như sau:\n\nTheo đó, quy định việc kết hôn phải được đăng ký và do cơ quan nhà nước có thẩm quyền thực hiện theo quy định và pháp luật về hộ tịch. Việc kết hôn không được đăng ký theo quy định này thì không có giá trị pháp lý.\n\nĐồng thời, Luật Hộ tịch 2014 và các văn bản hướng dẫn đều không có quy định bắt buộc việc đăng ký kết hôn phải thực hiện trước khi cưới bao lâu.\n\nNhư vậy, để được xác lập lại quan hệ vợ chồng và được pháp luật bảo vệ thì việc đăng ký kết hôn là bắt buộc, nhưng không bắt buộc phải đăng ký kết hôn trước đám cưới.\n\nĐể được đăng ký kết hôn thì phải đáp ứng các điều kiện kết hôn được quy định tại Điều 8 Luật Hôn nhân và gia đình 2014 như sau:\n\n- Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên;\n\n- Việc kết hôn do nam và nữ tự nguyện quyết định;\n\n- Nam, nữ không bị mất năng lực hành vi dân sự;\n\n- Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn sau:\n\n+ Kết hôn giả tạo, ly hôn giả tạo;\n\n+ Tảo hôn, cưỡng ép kết hôn, lừa dối kết hôn, cản trở kết hôn;\n\n+ Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ;\n\n+ Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng.\n\nLưu ý: Nhà nước không thừa nhận hôn nhân giữa những người cùng giới tính.\n\nĐăng ký kết hôn trước khi cưới bao lâu? Mẫu tờ khai đăng ký kết hôn mới nhất 2024 và hướng dẫn cách viết? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -548,7 +496,7 @@
   {
     "question": "Mẫu tờ khai đăng ký kết hôn mới nhất 2024 và hướng dẫn cách viết?",
     "ground_truth": "Theo Phụ lục ban hành kèm theo Thông tư 04/2024/TT-BTP thì mẫu tờ khai đăng ký kết hôn mới nhất 2024 như sau:\n\nTải Mẫu tờ khai đăng ký kết hôn mới nhất 2024:\n\nTải về\n\nHướng dẫn cách viết mẫu tờ khai đăng ký kết hôn mới nhất 2024 như sau:\n\n(1) (2) Trường hợp làm thủ tục đăng ký kết hôn có yếu tố nước ngoài, thì phải dán ảnh của hai bên nam, nữ.\n\n(3) Ghi rõ tên cơ quan đăng ký kết hôn.\n\n(4) Chỉ ghi trong trường hợp người có yêu cầu đăng ký hộ tịch chưa có/không cung cấp số định danh cá nhân/căn cước công dân/thẻ căn cước/chứng minh nhân dân.\n\nTrường hợp phải cung cấp thông tin “Nơi cư trú” thì ghi theo nơi đăng ký thường trú; nếu không có nơi đăng ký thường trú thì ghi theo nơi đăng ký tạm trú; trường hợp không có nơi đăng ký thường trú và nơi đăng ký tạm trú thì ghi theo nơi ở hiện tại.\n\n(5) Ghi số định danh cá nhân/căn cước công dân/thẻ căn cước (ví dụ: Căn cước công dân số 025188001010 do Cục Cảnh sát QLHC về TTXH cấp ngày 20/11/2021). Trường hợp không có số định danh cá nhân/căn cước công dân/thẻ căn cước thì ghi giấy tờ hợp lệ thay thế (hộ chiếu, chứng minh nhân dân,...).\n\n(6) Đề nghị đánh dấu X vào ô nếu có yêu cầu cấp bản sao và ghi rõ số lượng.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -561,7 +509,7 @@
   {
     "question": "Đăng ký kết hôn ở đâu?",
     "ground_truth": "Theo Điều 17 Luật Hộ tịch 2014 quy định như sau:\n\nTheo Điều 37 Luật Hộ tịch 2014 quy định như sau:\n\nTheo đó, nơi đăng ký kết hôn là Ủy ban nhân dân cấp huyện hoặc Ủy ban nhân dân cấp xã như sau:\n\n- Ủy ban nhân dân cấp huyện nơi cư trú của công dân Việt Nam thực hiện đăng ký kết hôn có yếu tố nước ngoài, cụ thể:\n\n+ Giữa công dân Việt Nam với người nước ngoài;\n\n+ Giữa công dân Việt Nam cư trú ở trong nước với công dân Việt Nam định cư ở nước ngoài; giữa công dân Việt Nam định cư ở nước ngoài với nhau;\n\n+ Giữa công dân Việt Nam đồng thời có quốc tịch nước ngoài với công dân Việt Nam hoặc với người nước ngoài.\n\n- Ủy ban nhân dân cấp xã thực hiện đăng ký kết hôn không có yếu tố nước ngoài.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -574,7 +522,7 @@
   {
     "question": "Có được nhờ người khác đăng ký kết hôn giùm?",
     "ground_truth": "Tại Điều 2 Thông tư 04/2020/TT-BTP có quy định về việc ủy quyền đăng ký kết hôn như sau:\n\nTại Điều 18 Luật Hộ tịch 2014 có quy định về thủ tục đăng ký kết hôn như sau:\n\nTại Điều 38 Luật Hộ tịch 2014 có quy định về thủ tục đăng ký kết hôn như sau:\n\nNhư vậy, việc đăng ký kết hôn không được ủy quyền hay nhờ người khác thực hiện.\n\nTheo đó, khi thực hiện thủ tục đăng ký kết hôn thì hai bên nam, nữ phải cùng có mặt và cùng ký vào Giấy chứng nhận kết hôn.\n\nTóm lại, không được nhờ người khác đăng ký kết hôn giùm kể cả người thân của nam và nữ.\n\nCó được nhờ người khác đăng ký kết hôn giùm? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -587,7 +535,7 @@
   {
     "question": "Đăng ký kết hôn tại nơi tạm trú được không?",
     "ground_truth": "Căn cứ Điều 17 Luật Hộ tịch 2014 quy định cơ quan có thẩm quyền thực hiện thủ tục đăng ký kết hôn tại ủy ban nhân dân xã dành cho công dân Việt Nam không liên quan đến yếu tố nước ngoài như sau:\n\nCăn cứ Điều 37 Luật Hộ tịch 2014 quy định cơ quan có thẩm quyền thực hiện thủ tục đăng ký kết hôn tại ủy ban nhân dân huyện như sau:\n\nĐồng thời, theo Điều 11 Luật Cư trú 2020 thì nơi cư trú của công dân bao gồm nơi thường trú, nơi tạm trú.\n\nNhư vậy, công dân hoàn toàn có thể đăng ký kết hôn tại UBND cấp xã nơi tạm trú dành cho công dân Việt Nam không liên quan đến yếu tố nước ngoài hoặc UBND cấp huyện nơi tạm trú đối với trường hợp kết hôn có yếu tố nước ngoài.\n\nĐăng ký kết hôn tại nơi tạm trú được không? Mẫu tờ khai đăng ký kết hôn tại nơi tạm trú cập nhật mới nhất 2024 và hướng dẫn cách viết? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -600,7 +548,7 @@
   {
     "question": "Mẫu tờ khai đăng ký kết hôn tại nơi tạm trú cập nhật mới nhất 2024 và hướng dẫn cách viết?",
     "ground_truth": "Theo Phụ lục ban hành kèm theo Thông tư 04/2024/TT-BTP thì mẫu tờ khai đăng ký kết hôn tại nơi tạm trú cập nhật mới nhất 2024 như sau:\n\nTải Mẫu tờ khai đăng ký kết hôn tại nơi tạm trú cập nhật mới nhất 2024: Tải về\n\nHướng dẫn cách viết mẫu tờ khai đăng ký kết hôn tại nơi tạm trú cập nhật mới nhất 2024 như sau:\n\n(1) (2) Trường hợp làm thủ tục đăng ký kết hôn có yếu tố nước ngoài, thì phải dán ảnh của hai bên nam, nữ.\n\n(3) Ghi rõ tên cơ quan đăng ký kết hôn.\n\n(4) Chỉ ghi trong trường hợp người có yêu cầu đăng ký hộ tịch chưa có/không cung cấp số định danh cá nhân/căn cước công dân/thẻ căn cước/chứng minh nhân dân.\n\nTrường hợp phải cung cấp thông tin “Nơi cư trú” nếu không có nơi đăng ký thường trú thì ghi theo nơi đăng ký tạm trú; trường hợp không có nơi đăng ký thường trú và nơi đăng ký tạm trú thì ghi theo nơi ở hiện tại.\n\n(5) Ghi số định danh cá nhân/căn cước công dân/thẻ căn cước (ví dụ: Căn cước công dân số 025188001010 do Cục Cảnh sát QLHC về TTXH cấp ngày 20/11/2021). Trường hợp không có số định danh cá nhân/căn cước công dân/thẻ căn cước thì ghi giấy tờ hợp lệ thay thế (hộ chiếu, chứng minh nhân dân,...).\n\n(6) Đề nghị đánh dấu X vào ô nếu có yêu cầu cấp bản sao và ghi rõ số lượng.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -613,7 +561,7 @@
   {
     "question": "Giấy chứng nhận kết hôn bao gồm những thông tin cơ bản gì?",
     "ground_truth": "Tại khoản 7 Điều 4 Luật Hộ tịch 2024 có quy định về Giấy chứng nhận kết hôn như sau:\n\nNhư vậy, giấy chứng nhận kết hôn bao gồm các thông tin cơ bản sau:\n\n- Họ, chữ đệm và tên; ngày, tháng, năm sinh; dân tộc; quốc tịch; nơi cư trú; thông tin về giấy tờ chứng minh nhân thân của hai bên nam, nữ;\n\n- Ngày, tháng, năm đăng ký kết hôn;\n\n- Chữ ký hoặc điểm chỉ của hai bên nam, nữ và xác nhận của cơ quan đăng ký hộ tịch.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -626,7 +574,7 @@
   {
     "question": "Mẫu đơn xin cấp lại giấy đăng ký kết hôn mới nhất 2024?",
     "ground_truth": "Tại khoản 1 Điều 27 Nghị định 123/2015/NĐ-CP quy định thủ tục đăng ký lại kết hôn :\n\nNhư vậy, khi làm mất giấy đăng ký kết hôn, cá nhân có thể làm đơn xin cấp lại giấy đăng ký kết hôn và nộp cùng với bản sao Giấy chứng nhận kết hôn được cấp trước đây (nếu không có bản sao thì nộp bản sao hồ sơ, giấy tờ cá nhân có các thông tin liên quan đến nội dung đăng ký kết hôn).\n\nTại Phụ lục 5 ban hành kèm theo Thông tư 04/2024/TT-BTP có quy định đơn xin cấp lại giấy đăng ký kết hôn như sau:\n\nXem chi tiết mẫu đơn xin cấp lại giấy đăng ký kết hôn\n\ntại đây .",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -639,7 +587,7 @@
   {
     "question": "Thủ tục xin cấp lại giấy đăng ký kết hôn mới nhất?",
     "ground_truth": "Tại Điều 27 Nghị định 123/2015/NĐ-CP quy định thủ tục xin cấp lại giấy đăng ký kết hôn như sau:\n\nBước 1: Nộp hồ sơ\n\nHồ sơ gồm có:\n\n- Tờ khai theo mẫu quy định;\n\n- Bản sao Giấy chứng nhận kết hôn được cấp trước đây.\n\nTrường hợp không có bản sao Giấy chứng nhận kết hôn thì nộp bản sao hồ sơ, giấy tờ cá nhân có các thông tin liên quan đến nội dung đăng ký kết hôn.\n\nBước 2: Xử lý hồ sơ\n\nCông chức tư pháp - hộ tịch kiểm tra, xác minh hồ sơ trong thời hạn 05 ngày làm việc, kể từ ngày tiếp nhận hồ sơ.\n\nNếu thấy hồ sơ đăng ký lại kết hôn là đầy đủ, chính xác, đúng quy định pháp luật thì công chức tư pháp - hộ tịch thực hiện đăng ký lại kết hôn như trình tự quy định tại khoản 2 Điều 18 Luật Hộ tịch 2014 .\n\nNếu việc đăng ký lại kết hôn thực hiện tại UBND xã không phải là nơi đã đăng ký kết hôn trước đây thì công chức tư pháp - hộ tịch báo cáo Chủ tịch UBND có văn bản đề nghị UBND nơi đăng ký kết hôn trước đây kiểm tra, xác minh về việc lưu giữ sổ hộ tịch tại địa phương.\n\nTrong thời hạn 05 ngày làm việc, kể từ ngày nhận được văn bản đề nghị, UBND nơi đã đăng ký kết hôn trước đây tiến hành kiểm tra, xác minh và trả lời bằng văn bản về việc còn lưu giữ hoặc không lưu giữ được sổ hộ tịch.\n\nBước 3: Cấp lại giấy đăng ký kết hôn\n\nTrong thời hạn 03 ngày làm việc, kể từ ngày nhận được kết quả xác minh về việc không còn lưu giữ được sổ hộ tịch tại nơi đã đăng ký kết hôn, nếu thấy hồ sơ đầy đủ, chính xác, đúng quy định pháp luật công chức tư pháp - hộ tịch thực hiện việc đăng ký lại kết hôn.\n\nLưu ý: Quan hệ hôn nhân được công nhận kể từ ngày đăng ký kết hôn trước đây và được ghi rõ trong Giấy chứng nhận kết hôn, Sổ hộ tịch.\n\nTrường hợp không xác định được ngày, tháng đăng ký kết hôn trước đây thì quan hệ hôn nhân được công nhận từ ngày 01 tháng 01 của năm đăng ký kết hôn trước đây.\n\nMẫu đơn xin cấp lại giấy đăng ký kết hôn mới nhất 2024? Thủ tục xin cấp lại giấy đăng ký kết hôn mới nhất? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -652,7 +600,7 @@
   {
     "question": "Khi nào được xin cấp lại giấy đăng ký kết hôn?",
     "ground_truth": "Tại Điều 24 Nghị định 123/2015/NĐ-CP có quy định điều kiện đăng ký lại khai sinh, kết hôn, khai tử như sau:\n\nNhư vậy, cá nhân được xin cấp lại giấy đăng ký kết hôn nếu việc đăng ký kết hôn tại cơ quan có thẩm quyền của Việt Nam trước ngày 1/1/2016 nhưng sổ đăng ký kết hôn và bản chính Giấy đăng ký kết hôn đều bị mất.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -665,7 +613,7 @@
   {
     "question": "Nam, nữ kết hôn có được tổ chức lễ trao giấy chứng nhận không?",
     "ground_truth": "Tại khoản 2 Điều 18 Luật Hộ tịch 2014 có quy định về thủ tục đăng ký kết hôn tại UBND xã như sau:\n\nTại Điều 38 Luật Hộ tịch 2014 có quy định về thủ tục đăng ký kết hôn tại UBND huyện như sau:\n\nNhư vậy, sau khi nam, nữ đã hoàn thành thủ tục đăng ký kết hôn thì Chủ tịch UBND xã/ UBND huyện sẽ trao Giấy chứng nhận kết hôn cho hai bên nam, nữ.\n\nTuy nhiên, theo pháp luật hiện hành thì không có quy định bắt buộc phải tổ chức lễ trao giấy chứng nhận kết hôn. Do đó, việc tổ chức trao Giấy chứng nhận kết hôn cho hai bên nam, nữ hay không sẽ phụ thuộc vào nguyện vọng của hai bên nam nữ và chính sách của từng địa phương.\n\nNam, nữ kết hôn có được tổ chức lễ trao giấy chứng nhận không? Giấy chứng nhận kết hôn bao gồm các thông tin cơ bản gì? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -678,7 +626,7 @@
   {
     "question": "Giấy chứng nhận kết hôn bao gồm các thông tin cơ bản gì?",
     "ground_truth": "Tại khoản 7 Điều 4 Luật Hộ tịch 2024 có quy định về Giấy chứng nhận kết hôn như sau:\n\nNhư vậy, giấy chứng nhận kết hôn bao gồm các thông tin cơ bản sau:\n\n- Họ, chữ đệm và tên; ngày, tháng, năm sinh; dân tộc; quốc tịch; nơi cư trú; thông tin về giấy tờ chứng minh nhân thân của hai bên nam, nữ;\n\n- Ngày, tháng, năm đăng ký kết hôn;\n\n- Chữ ký hoặc điểm chỉ của hai bên nam, nữ và xác nhận của cơ quan đăng ký hộ tịch.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -691,7 +639,7 @@
   {
     "question": "Pháp luật Việt Nam hiện nay có cho phép kết hôn cận huyết không?",
     "ground_truth": "Căn cứ tại khoản 17, khoản 18 Điều 3 Luật Hôn nhân và Gia đình 2014 quy định định nghĩa về hôn nhân cận huyết như sau:\n\nTheo quy định trên, hôn nhân cận huyết được hiểu là việc kết hôn giữa những người cùng dòng máu về trực hệ hoặc những người có họ trong phạm vi 3 đời.\n\n- Những người cùng dòng máu về trực hệ là những người có quan hệ huyết thống, trong đó, người này sinh ra người kia kế tiếp nhau\n\n- Những người có họ trong phạm vi ba đời gồm:\n\n+ Những người cùng một gốc sinh ra gồm cha mẹ là đời thứ nhất;\n\n+ Anh, chị, em cùng cha mẹ, cùng cha khác mẹ, cùng mẹ khác cha là đời thứ hai;\n\n+ Anh, chị, em con chú, con bác, con cô, con cậu, con dì là đời thứ ba.\n\nCăn cứ tại điểm d khoản 2 Điều 5 Luật Hôn nhân và Gia đình 2014 cũng nêu một số hành vi bị cấm, trong đó có hành vi:\n\nNhư vậy, pháp luật Việt Nam hiện nay đã quy định rõ ràng về việc nghiêm cấm kết hôn cận huyết.\n\nCác chế tài xử lý vi phạm pháp luật kết hôn cận huyết hiện nay như thế nào? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "ket_hon_trai_phap_luat",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -704,7 +652,7 @@
   {
     "question": "Kết hôn cận huyết có bị xử phạt vi phạm hành chính không?",
     "ground_truth": "Căn cứ theo Điều 59 Nghị định 82/2020/NĐ-CP quy định hành vi vi phạm quy định về kết hôn cận huyết như sau:\n\nTại Điều 4 Nghị định 82/2020/NĐ-CP quy định về mức phạt tiền như sau:\n\nNhư vậy, kết hôn cận huyết bị xử phạt vi phạm hành chính cụ thể như sau:\n\n- Phạt tiền từ 10.000.000 đồng đến 20.000.000 đồng: Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ hoặc giữa những người có họ trong phạm vi ba đời\n\nNgoài ra, trường hợp tuy không cùng huyết thống nhưng có mối quan hệ gần như đã từng là cha mẹ nuôi với con nuôi, cha chồng, con dâu,... nếu kết hôn cũng sẽ vi phạm pháp luật:\n\n- Phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng: Kết hôn hoặc chung sống như vợ chồng giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng;\n\n- Phạt tiền từ 10.000.000 đồng đến 20.000.000 đồng: Kết hôn hoặc chung sống như vợ chồng giữa cha, mẹ nuôi với con nuôi.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "ket_hon_trai_phap_luat",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -717,7 +665,7 @@
   {
     "question": "Kết hôn cận huyết bị pháp luật truy cứu trách nhiệm hình sự như thế nào?",
     "ground_truth": "Căn cứ theo Điều 184 Bộ luật Hình sự 2015 quy định về tội loạn luân như sau:\n\nNhư vậy, kết hôn cận huyết có thể bị truy cứu trách nhiệm hình sự với mức phạt tù từ 01 đến 05 năm tù giam đối với hành vi người nào giao cấu với người mà biết rõ người đó cùng dòng máu về trực hệ, là anh chị em cùng cha mẹ, anh chị em cùng cha khác mẹ hoặc cùng mẹ khác cha.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "ket_hon_trai_phap_luat",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -730,7 +678,7 @@
   {
     "question": "Kết hôn giả là gì? Có phải là hành vi bị nghiêm cấm không?",
     "ground_truth": "Căn cứ khoản 11 Điều 3 Luật Hôn nhân và gia đình 2014 quy định như sau:\n\nTheo quy định trên thì kết hôn giả tạo là việc lợi dụng kết hôn để xuất cảnh, nhập cảnh, cư trú, nhập quốc tịch Việt Nam, quốc tịch nước ngoài; hưởng chế độ ưu đãi của Nhà nước hoặc để đạt được mục đích khác mà không nhằm mục đích xây dựng gia đình.\n\nTheo điểm a khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 thì kết hôn giả tạo một hành vi bị pháp luật nghiêm cấm.\n\nKết hôn giả để nhập quốc tịch nước ngoài bị xử lý thế nào? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "ket_hon_trai_phap_luat",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -743,7 +691,7 @@
   {
     "question": "Kết hôn giả để nhập quốc tịch nước ngoài bị xử lý thế nào?",
     "ground_truth": "Căn cứ khoản 2; khoản 3 Điều 59 Nghị định 82/2020/NĐ-CP quy định mức xử phạt hành vi vi phạm quy định về kết hôn, ly hôn và vi phạm chế độ hôn nhân một vợ, một chồng:\n\nCăn cứ Điều 4 Nghị định 82/2020/NĐ-CP quy định về mức phạt tiền, thẩm quyền phạt tiền đối với cá nhân, tổ chức:\n\nNhư vậy, người nào có hành vi kết hôn giả để nhập quốc tịch nước ngoài thì bị phạt tiền từ 10.000.000 đồng đến 20.000.000 đồng và buộc phải nộp lại số lợi bất hợp pháp có được do thực hiện hành vi kết hôn giả tạo để nhập quốc tịch nước ngoài (nếu có).\n\nLưu ý: Mức phạt trên áp dụng đối với cá nhân. Tổ chức có cùng hành vi vi phạm thì mức phạt tiền gấp 02 lần cá nhân",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "ket_hon_trai_phap_luat",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -756,7 +704,7 @@
   {
     "question": "Điều kiện đăng ký kết hôn là gì?",
     "ground_truth": "Căn cứ Điều 8 Luật Hôn nhân và gia đình 2014 quy định điều kiện kết hôn:\n\nTheo quy định trên, điều kiện đăng ký kết hôn được quy định như sau:\n\n- Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên.\n\n- Việc kết hôn do nam và nữ tự nguyện quyết định.\n\n- Không bị mất năng lực hành vi dân sự.\n\n- Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn sau:\n\n+ Kết hôn giả tạo, ly hôn giả tạo.\n\n+ Tảo hôn, cưỡng ép kết hôn, lừa dối kết hôn, cản trở kết hôn.\n\n+ Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ.\n\n+ Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ.\n\n+ Kết hôn hoặc chung sống như vợ chồng giữa những người có họ trong phạm vi ba đời.\n\n+ Kết hôn hoặc chung sống như vợ chồng giữa cha, mẹ nuôi với con nuôi.\n\n+ Kết hôn hoặc chung sống như vợ chồng giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -769,7 +717,7 @@
   {
     "question": "Cưới mà không đăng ký kết hôn, hôn nhân có được pháp luật công nhận hay không?",
     "ground_truth": "Căn cứ tại khoản 1 Đều 9 Luật Hôn nhân và Gia đình 2014 quy định về đăng ký kết hôn như sau:\n\nTheo đó, việc kết hôn phải được đăng ký và do cơ quan nhà nước có thẩm quyền thực hiện theo quy định Luật Hôn nhân và Gia đình 2014 và pháp luật về hộ tịch. Việc kết hôn không được đăng ký theo quy định tại khoản 1 Đều 9 Luật Hôn nhân và Gia đình 2014 thì không có giá trị pháp lý.\n\nĐiều này có nghĩa, việc nam nữ chỉ tổ chức lễ cưới và chung sống với nhau nhưng không đăng ký kết hôn không được pháp luật Việt Nam công nhận là quan hệ hôn nhân và không làm phát sinh các quyền, nghĩa vụ của vợ chồng. Hành vi này được gọi là sống chung như vợ chồng mà không đăng ký kết hôn.\n\nCưới mà không đăng ký kết hôn, hôn nhân có được pháp luật công nhận hay không? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -782,7 +730,7 @@
   {
     "question": "Trình tự đăng ký kết hôn tại UBND cấp huyện được thực hiện như thế nào?",
     "ground_truth": "Căn cứ Điều 31 Nghị định 123/2015/NĐ-CP quy định trình tự đăng ký kết hôn tại UBND cấp huyện như sau:\n\nTrình tự đăng ký kết hôn được thực hiện theo quy định tại các khoản 2, 3 và 4 Điều 38 Luật Hộ tịch 2014 và quy định sau đây:\n\nBước 1: Kể từ ngày nhận đủ hồ sơ hợp lệ, trong thời hạn 10 ngày làm việc, Phòng Tư pháp tiến hành nghiên cứu, thẩm tra hồ sơ và xác minh nếu thấy cần thiết.\n\nTrưởng phòng Phòng Tư pháp chịu trách nhiệm về kết quả thẩm tra và đề xuất của Phòng Tư pháp trong việc giải quyết hồ sơ đăng ký kết hôn.\n\nBước 2: Nếu hồ sơ hợp lệ, các bên có đủ điều kiện kết hôn theo quy định của Luật Hôn nhân và gia đình 2014 , không thuộc trường hợp từ chối kết hôn đăng ký kết hôn theo quy định tại Điều 33 Nghị định 123/2015/NĐ-CP thì Phòng Tư pháp báo cáo Chủ tịch Ủy ban nhân dân cấp huyện ký 02 bản chính Giấy chứng nhận kết hôn.\n\nBước 3: Căn cứ tình hình cụ thể, khi cần thiết, Bộ Tư pháp báo cáo Thủ tướng Chính phủ quy định bổ sung thủ tục phỏng vấn khi giải quyết yêu cầu đăng ký kết hôn nhằm bảo đảm quyền, lợi ích hợp pháp của các bên và hiệu quả quản lý Nhà nước.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -795,7 +743,7 @@
   {
     "question": "Ở Việt Nam, một người được kết hôn tối đa bao nhiêu lần?",
     "ground_truth": "Kết hôn là việc nam và nữ xác lập quan hệ vợ chồng với nhau theo quy định Luật Hôn nhân và gia đình 2014 về điều kiện kết hôn và đăng ký kết hôn.\n\nTại Điều 8 Luật Hôn nhân và gia đình 2014 quy định về điều kiện kết hôn như sau:\n\nTheo đó, có thể thấy hiện nay pháp luật Việt Nam không giới hạn số lần kết hôn của cá nhân, tuy nhiện việc kết hôn không thuộc một trong các trường hợp cấm kết hôn cụ thể như sau:\n\n- Kết hôn giả tạo, ly hôn giả tạo;\n\n- Tảo hôn, cưỡng ép kết hôn, lừa dối kết hôn, cản trở kết hôn;\n\n- Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ;\n\n- Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng;\n\nNhư vậy, theo quy định của pháp luật Việt Nam, công dân có quyền kết hôn nhiều lần, tuy nhiên cần tuân thủ đầy đủ các điều kiện được quy định. Điều kiện tiên quyết để kết hôn là phải trong tình trạng độc thân, nghĩa là không đang trong mối quan hệ hôn nhân hợp pháp với bất kỳ ai khác.\n\nỞ Việt Nam, một người được kết hôn tối đa bao nhiêu lần? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -808,7 +756,7 @@
   {
     "question": "Pháp luật hiện hành có cấm em chồng và anh vợ kết hôn với nhau không?",
     "ground_truth": "Tại khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 quy định về các hành vi bị cấm như sau:\n\nTheo quy định thì luật cấm kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời.\n\nTại khoản 17, khoản 18 Điều 3 Luật Hôn nhân và gia đình 2014 quy định như sau:\n\nEm chồng và anh vợ không thuộc trường hợp những người có cùng dòng máu về trực hệ hoặc giữa những người có họ trong phạm vi ba đời.\n\nNhư vậy, pháp luật không cấm em chồng và anh vợ kết hôn với nhau. Do đó, em chồng và anh vợ có thể kết hôn với nhau nếu đáp ứng các điều kiện kết hôn.\n\nPháp luật hiện hành có cấm em chồng và anh vợ kết hôn với nhau không? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dieu_kien_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -821,7 +769,7 @@
   {
     "question": "Điều kiện kết hôn là gì?",
     "ground_truth": "Theo quy định tại Điều 8 Luật Hôn nhân và gia đình 2014 thì điều kiện kết hôn như sau:\n\n- Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên;\n\n- Việc kết hôn do nam và nữ tự nguyện quyết định;\n\n- Không bị mất năng lực hành vi dân sự;\n\n- Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn theo quy định tại các điểm a, b, c và d khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 .\n\nLưu ý: Nhà nước không thừa nhận hôn nhân giữa những người cùng giới tính.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dieu_kien_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -834,7 +782,7 @@
   {
     "question": "Những trường hợp bị cấm kết hôn dù không có quan hệ huyết thống?",
     "ground_truth": "Tại khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 có quy định về các trường hợp bị cấm kết hôn như sau:\n\nTại Điều 8 Luật Hôn nhân và gia đình 2014 có quy định về điều kiện kết hôn như sau:\n\nNhư vậy, việc kết hôn với người có cùng huyết thống là hành vi bị nghiêm cấm.\n\nTuy nhiên, nam nữ mặc dù không có quan hệ huyết thống vẫn bị cấm kết hôn bao gồm:\n\n- Chưa đủ tuổi kết hôn;\n\n- Nam hoặc nữ hoặc cả nam nữ bị mất năng lực hành vi dân sự\n\n- Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ;\n\n- Giữa cha, mẹ nuôi với con nuôi;\n\n- Giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể\n\n- Giữa cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng;\n\nNgoài ra, pháp luật cũng nghiêm cấm các hành vi kết hôn giả tạo, cưỡng ép kết hôn, yêu sách của cải trong kết hôn,..\n\nBên cạnh đó, hôn nhân giữa những người cùng giới tính dù không cấm nhưng pháp luật hiện hành cũng không thừa nhận.\n\nNhững trường hợp bị cấm kết hôn dù không có quan hệ huyết thống? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dieu_kien_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -847,7 +795,7 @@
   {
     "question": "Kết hôn có bắt buộc phải đăng ký không?",
     "ground_truth": "Tại Điều 9 Luật Hôn nhân và gia đình 2014 có quy định về đăng ký kết hôn như sau:\n\nNhư vậy, kết hôn bắt buộc phải đăng ký, nếu không đăng ký thì việc kết hôn không có giấy trị pháp lý.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dieu_kien_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -860,7 +808,7 @@
   {
     "question": "Kết hôn khi chưa đủ tuổi nhưng thời điểm Tòa án giải quyết cả 2 bên đã đủ tuổi kết hôn thì có được công nhận không?",
     "ground_truth": "Tại Điều 11 Luật Hôn nhân và gia đình 2014 có quy định về xử lý kết hôn trái pháp luật như sau:\n\nNhư vậy, nếu kết hôn khi chưa đủ tuổi nhưng thời điểm Tòa án giải quyết cả 2 bên đã đủ tuổi kết hôn thì vẫn được công nhận hôn nhân đó.\n\nTrong trường hợp này quan hệ hôn nhân đó sẽ được xác lập từ thời điểm các bên đủ điều kiện kết hôn.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dieu_kien_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -873,7 +821,7 @@
   {
     "question": "Việc kết hôn giữa những người nước ngoài thường trú tại Việt Nam phải đáp ứng điều kiện gì?",
     "ground_truth": "Tại Điều 126 Luật Hôn nhân và gia đình 2014 quy định về kết hôn có yếu tố nước ngoài như sau:\n\nTheo quy định thì việc kết hôn giữa những người nước ngoài thường trú tại Việt Nam phải tuân theo các quy định của Luật Hôn nhân và gia đình 2014 về điều kiện kết hôn.\n\nTại Điều 8 Luật Hôn nhân và gia đình 2014 quy định về điều kiện kết hôn như sau:\n\nNhư vậy, việc kết hôn giữa những người nước ngoài thường trú tại Việt Nam phải đáp ứng các điều kiện sau đây:\n\n- Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên;\n\n- Việc kết hôn do nam và nữ tự nguyện quyết định;\n\n- Không bị mất năng lực hành vi dân sự;\n\n- Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn theo quy định tại các điểm a, b, c và d khoản 2 Điều 5 của Luật Hôn nhân và gia đình 2014 cụ thể là:\n\n+ Kết hôn giả tạo, ly hôn giả tạo;\n\n+ Tảo hôn, cưỡng ép kết hôn, lừa dối kết hôn, cản trở kết hôn;\n\n+ Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ;\n\n+ Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng;\n\nLưu ý: Nhà nước Việt Nam không thừa nhận hôn nhân giữa những người cùng giới tính.\n\nViệc kết hôn giữa những người nước ngoài thường trú tại Việt Nam phải đáp ứng điều kiện gì? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -886,7 +834,7 @@
   {
     "question": "Người nước ngoài thường trú tại Việt Nam đăng ký kết hôn ở đâu?",
     "ground_truth": "Tại Điều 37 Luật Hộ tịch 2014 quy định về thẩm quyền đăng ký kết hôn như sau:\n\nNhư vậy, người nước ngoài thường trú tại Việt Nam thực hiện đăng ký kết hôn tại Ủy ban nhân dân cấp huyện nơi cư trú của một trong hai bên thực hiện đăng ký kết hôn.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -899,7 +847,7 @@
   {
     "question": "Trường hợp người nước ngoài thường trú tại Việt Nam ly hôn thì cơ quan tại Việt Nam có thẩm quyền giải quyết không?",
     "ground_truth": "Tại khoản 1 Điều 127 Luật Hôn nhân và gia đình 2014 quy định như sau:\n\nNhư vậy, trường hợp người nước ngoài thường trú tại Việt Nam ly hôn thì cơ quan có thẩm quyền tại Việt Nam có thẩm quyền giải quyết.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "quan_he_hon_nhan_co_yeu_to_nuoc_ngoai",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -912,7 +860,7 @@
   {
     "question": "Kết hôn chưa đủ 18 tuổi gọi là gì?",
     "ground_truth": "Căn cứ tại khoản 8 Điều 3 Luật Hôn nhân và Gia đình 2014 quy định định nghĩa kết hôn chưa đủ 18 tuổi như sau:\n\nNhư vậy, kết hôn khi chưa đủ tuổi được gọi là tảo hôn vì việc lấy vợ, lấy chồng khi một bên hoặc cả hai bên chưa đủ tuổi kết hôn. Vi phạm pháp luật về điều kiện kết hôn nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên.\n\nVợ chồng sẽ bị xử phạt như thế nào khi kết hôn chưa đủ 18 tuổi? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "ket_hon_trai_phap_luat",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -925,7 +873,7 @@
   {
     "question": "Độ tuổi kết hôn theo pháp luật quy định như thế nào?",
     "ground_truth": "Căn cứ tại Điều 8 Luật Hôn nhân và Gia đình 2014 quy định về điều kiện kết hôn như sau:\n\nBên cạnh đó, tại các điểm a, b, c và d khoản 2 Điều 5 của Luật Hôn nhân và Gia đình 2014 quy định về các hành vi bị cấm trong quan hệ hôn nhân và gia đình như sau:\n\nNhư vậy, độ tuổi kết hôn theo pháp luật quy định như sau:\n\n- Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên;\n\n- Việc kết hôn do nam và nữ tự nguyện quyết định;\n\n- Không bị mất năng lực hành vi dân sự;\n\n- Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn theo quy định:\n\n+ Kết hôn giả tạo, ly hôn giả tạo;\n\n+ Tảo hôn, cưỡng ép kết hôn, lừa dối kết hôn, cản trở kết hôn;\n\n+ Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ;\n\n+ Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng;\n\n- Nhà nước không thừa nhận hôn nhân giữa những người cùng giới tính.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dieu_kien_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -938,20 +886,7 @@
   {
     "question": "Vợ chồng sẽ bị xử phạt như thế nào khi kết hôn chưa đủ 18 tuổi?",
     "ground_truth": "Căn cứ tại Điều 58 Nghị định 82/2020/NĐ-CP quy định hành vi tảo hôn, tổ chức tảo hôn như sau:\n\nCăn cứ tại Điều 183 Bộ luật Hình sự 2015 quy định tội tổ chức tảo hôn như sau:\n\nNhư vậy, vợ chồng khi kết hôn chưa đủ 18 tuổi bị xử phạt cụ thể như sau:\n\n- Xử phạt vi phạm hành chính:\n\n+ Hành vi tổ chức lấy vợ, lấy chồng cho người chưa đủ tuổi kết hôn: Phạt tiền từ 1.000.000 đồng đến 3.000.000 đồng;\n\n+ Hành vi duy trì quan hệ vợ chồng trái pháp luật với người chưa đủ tuổi kết hôn mặc dù đã có bản án, quyết định đã có hiệu lực pháp luật của Toà án: Phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng.\n\n- Truy cứu trách nhiệm hình sự:\n\nNgười nào tổ chức việc lấy vợ, lấy chồng cho những người chưa đến tuổi kết hôn, đã bị xử phạt vi phạm hành chính về hành vi này mà còn vi phạm: Phạt tiền từ 10.000.000 đồng đến 30.000.000 đồng hoặc phạt cải tạo không giam giữ đến 02 năm.",
-    "chu_de_phap_ly": "",
-    "loai_cau_hoi": "",
-    "van_ban_phap_luat_lien_quan": "",
-    "tinh_trang_hieu_luc": "",
-    "can_cu_phap_ly_chinh": "",
-    "can_cu_phap_ly_bo_tro": "",
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": "",
-    "can_cu_khong_nen_ap_dung": "",
-    "quan_he_chong_cheo_mau_thuan": ""
-  },
-  {
-    "question": "Người cùng dòng máu về trực hệ là gì?",
-    "ground_truth": "Căn cứ theo khoản 17 Điều 3 Luật Hôn nhân và gia đình 2014 quy đinh về những người cùng dòng máu về trực hệ như sau:\n\nNhư vậy, n gười cùng dòng máu về trực hệ là những người có quan hệ huyết thống, trong đó, người này sinh ra người kia kế tiếp nhau. Cụ thể như sau:\n\n- Ông bà sinh ra cha mẹ thì ông bà và cha mẹ người thân trực hệ.\n\n- Cha mẹ sinh ra con thì cha mẹ và con là người thân trực hệ và ông bà cũng có cùng dòng máu trực hệ với con.\n\nNgười cùng dòng máu về trực hệ là gì? Những người cùng dòng máu về trực hệ có được kết hôn với nhau không? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "ket_hon_trai_phap_luat",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -964,7 +899,7 @@
   {
     "question": "Những người cùng dòng máu về trực hệ có được kết hôn với nhau không?",
     "ground_truth": "Căn cứ vào điểm d khoản 2 Điều 5 Luật Hôn nhân và gia đình 2014 quy định về bảo vệ chế độ hôn nhân và gia đình như sau:\n\nNhư vậy, pháp luật cấm thực hiện hành vi kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng.\n\nDo đó, hành vi kết hôn giữa những người cùng dòng máu trực hệ là vi phạm pháp luật và sẽ bị xử phạt vi phạm hành chính theo quy định tại khoản 2 Điều 59 Nghị định 82/2020/NĐ-CP .",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dieu_kien_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -977,7 +912,7 @@
   {
     "question": "Kết hôn giữa những người cùng dòng máu về trực hệ bị xử phạt như thế nào?",
     "ground_truth": "Căn cứ theo khoản 2 Điều 59 Nghị định 82/2020/NĐ-CP quy đinh về kết hôn giữa những người cùng dòng máu về trực hệ bị xử phạt như sau:\n\nNhư vậy, hành vi kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ hoặc giữa những người có họ trong phạm vi ba đời thì có thể bị xử phạt từ 10.000.000 đồng đến 20.000.000 đồng.\n\nLưu ý: Mức phạt tiền kể trên áp dụng đối với hành vi vi phạm hành chính do cá nhân thực hiện.",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "ket_hon_trai_phap_luat",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -990,7 +925,7 @@
   {
     "question": "Hai vợ chồng ở khác tỉnh có đăng ký kết hôn được không?",
     "ground_truth": "Căn cứ tại khoản 1 Điều 17 Luật Hộ tịch 2014 quy định Thẩm quyền đăng ký kết hôn như sau:\n\nNhư vậy, hai vợ chồng ở khác tỉnh có thể đăng ký kết hôn tại Ủy ban nhân dân cấp xã nơi cư trú của một trong hai bên nam, nữ thực hiện đăng ký kết hôn .",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -1003,7 +938,7 @@
   {
     "question": "Điều kiện để kết hôn đúng pháp luật là gì?",
     "ground_truth": "Căn cứ tại Điều 8 Luật Hôn nhân và gia đình 2014 quy định điều kiện kết hôn như sau:\n\nNhư vậy, kết hôn đúng pháp luật là việc nam nữ kết hôn với nhau khi đã đáp ứng đầy đủ điều kiện kết hôn. Theo đó điều kiện kết hôn đúng pháp luật như sau:\n\n- Đảm bảo điều kiện về độ tuổi. Độ tuổi được phép kết hôn là: Nam từ đủ 20 tuổi và nữ từ đủ 18 tuổi.\n\n- Việc kết hôn phải đều do hai bên tự nguyện.\n\n- Hai bên không bị mất năng lực hành vi dân sự.\n\n- Việc kết hôn không thuộc các trường hợp cấm của Luật Hôn nhân và gia đình 2014 , cụ thể:\n\n+ Kết hôn giả tạo.\n\n+ Tảo hôn, cưỡng ép việc kết hôn hoặc lừa dối, cản trở kết hôn.\n\n+ Người đang có vợ/chồng mà kết hôn hay chung sống như vợ chồng với người khác.\n\n+ Những người có mối quan hệ sau đây kết hôn với nhau: Cùng dòng máu trực hệ, cha mẹ nuôi với con nuôi, có họ trong phạm vi ba đời, mẹ vợ với con rể hoặc cha chồng với con dâu, mẹ kế với con riêng của chồng hoặc cha dượng với con riêng của vợ.\n\nHai vợ chồng ở khác tỉnh có đăng ký kết hôn ở đâu? Thủ tục đăng ký kết hôn đúng pháp luật như thế nào? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dieu_kien_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
@@ -1016,7 +951,7 @@
   {
     "question": "Hướng dẫn cách ghi Mẫu tờ khai ghi chú kết hôn theo Thông tư 04 mới nhất hiện nay?",
     "ground_truth": "Mẫu tờ khai ghi chú kết hôn được quy định tại Phụ lục 5 ban hành kèm theo Thông tư 04/2024/TT-BTP , mẫu tờ khai ghi chú kết hôn có dạng như sau:\n\nTải Mẫu tờ khai ghi chú kết hôn theo Thông tư 04 mới nhất hiện nay\n\nTại đây\n\nHướng dẫn cách ghi Mẫu tờ khai ghi chú kết hôn theo Thông tư 04 mới nhất hiện nay như sau:\n\n(1) Ghi rõ tên cơ quan thực hiện ghi chú kết hôn.\n\n(2) Chỉ ghi trong trường hợp người có yêu cầu đăng ký hộ tịch chưa có/không cung cấp số định danh cá nhân/căn cước công dân/thẻ căn cước/chứng minh nhân dân.\n\nTrường hợp phải cung cấp thông tin “Nơi cư trú” thì ghi theo nơi đăng ký thường trú; nếu không có nơi đăng ký thường trú thì ghi theo nơi đăng ký tạm trú; trường hợp không có nơi đăng ký thường trú và nơi đăng ký tạm trú thì ghi theo nơi ở hiện tại.\n\n(3) Ghi số định danh cá nhân/căn cước công dân/thẻ căn cước (ví dụ: Căn cước công dân số 025188001010 do Cục Cảnh sát QLHC về TTXH cấp ngày 20/11/2021).\n\nTrường hợp không có số định danh cá nhân/căn cước công dân/thẻ căn cước thì ghi giấy tờ hợp lệ thay thế (hộ chiếu, chứng minh nhân dân,...).\n\n(4) Ghi tên cơ quan, tên quốc gia nước ngoài đã đăng ký kết hôn, tên loại giấy tờ chứng nhận việc kết hôn do cơ quan có thẩm quyền nước ngoài cấp, số (nếu có) và ngày, tháng năm cấp giấy tờ đó.\n\nVí dụ: Đăng ký kết hôn tại Cộng hòa Pháp, Giấy chứng nhận kết hôn số 0A3456 cấp ngày 08/3/2016.\n\n(5) Trường hợp chưa từng kết hôn thì ghi rõ “Chưa từng kết hôn”. Trường hợp đã từng kết hôn thì ghi rõ căn cứ chấm dứt quan hệ hôn nhân. Nếu căn cứ chấm dứt quan hệ hôn nhân là ly hôn thì ghi rõ hình thức văn bản ly hôn, ngày có hiệu lực, tên cơ quan cấp.\n\n(6) Đề nghị đánh dấu X vào ô nếu có yêu cầu cấp bản sao và ghi rõ số lượng.\n\nHướng dẫn cách ghi Mẫu tờ khai ghi chú kết hôn theo Thông tư 04 mới nhất hiện nay? (Hình từ Internet)",
-    "chu_de_phap_ly": "",
+    "chu_de_phap_ly": "dang_ky_ket_hon",
     "loai_cau_hoi": "",
     "van_ban_phap_luat_lien_quan": "",
     "tinh_trang_hieu_luc": "",
