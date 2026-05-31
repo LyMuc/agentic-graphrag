@@ -49,7 +49,7 @@ class PhanLoaiTaiSanParams(BaseModel):
             "chuẩn dưới đây trước khi điền (giữ nguyên dấu tiếng Việt KHÔNG có):\n"
             "  • 'lương', 'tiền lương', 'thu nhập đi làm' → 'thu_nhap_lao_dong'\n"
             "  • 'thu nhập kinh doanh', 'doanh thu' → 'thu_nhap_san_xuat_kinh_doanh'\n"
-            "  • 'tiền trúng số', 'tiền trúng thưởng', 'tiền may rủi' → "
+            "  • 'tiền trúng số', 'tiền thưởng', 'tiền trợ cấp' → "
             "'thu_nhap_hop_phap_khac'\n"
             "  • 'hoa lợi', 'lợi tức', 'tiền cho thuê tài sản riêng', 'cổ tức' "
             "→ 'hoa_loi_loi_tuc'\n"
@@ -91,16 +91,16 @@ WITH
 
 // 1b. Match LoaiTaiSan theo tinh_chat
 UNWIND tinh_chat_list AS tc
-MATCH (lts:LoaiTaiSan)
+MATCH (lts:LoaiTaiSan:CheDoTaiSanCuaVoChong)
 WHERE lts.tinh_chat = tc
   AND (
         $asset_keyword IS NULL
         OR lts.id = $asset_keyword
         OR EXISTS {
-            MATCH (lts)-[:LA_LOAI_CON_CUA*0..3]->(parent:LoaiTaiSan {id: $asset_keyword})
+            MATCH (lts)-[:LA_LOAI_CON_CUA*0..3]->(parent:LoaiTaiSan:CheDoTaiSanCuaVoChong {id: $asset_keyword})
         }
         OR EXISTS {
-            MATCH (child:LoaiTaiSan {id: $asset_keyword})-[:LA_LOAI_CON_CUA*0..3]->(lts)
+            MATCH (child:LoaiTaiSan:CheDoTaiSanCuaVoChong {id: $asset_keyword})-[:LA_LOAI_CON_CUA*0..3]->(lts)
         }
         OR toLower(lts.id) CONTAINS toLower($asset_keyword)
       )

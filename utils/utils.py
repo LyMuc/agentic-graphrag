@@ -107,6 +107,27 @@ def _extract_doc_name(node_id):
     return match.group(1) if match else str(node_id)
 
 
+def _format_lien_ket_huong_dan(pairs: list) -> str:
+    """Ghép các cặp (văn bản hướng dẫn, căn cứ được hướng dẫn) thành một dòng."""
+    seen = set()
+    parts: list[str] = []
+    for pair in pairs or []:
+        if not isinstance(pair, dict):
+            continue
+        id_hd = pair.get('id_huong_dan')
+        id_goc = pair.get('id_duoc_huong_dan')
+        if not id_hd or not id_goc:
+            continue
+        id_hd = str(id_hd).strip()
+        id_goc = str(id_goc).strip()
+        key = (id_hd, id_goc)
+        if key in seen:
+            continue
+        seen.add(key)
+        parts.append(f"{id_hd} hướng dẫn [{id_goc}]")
+    return ", ".join(parts)
+
+
 def _dedupe_maps_by_id(items: list, key: str = "id") -> list:
     """Gộp list map Cypher, giữ một bản ghi đầu tiên cho mỗi id."""
     seen = set()
@@ -309,6 +330,9 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
 
     if context_sach["danh_sach_huong_dan"]:
         final_context_string += "\n--- CĂN CỨ HƯỚNG DẪN ---\n"
+        lien_ket_line = _format_lien_ket_huong_dan(data.get('lien_ket_huong_dan', []))
+        if lien_ket_line:
+            final_context_string += f"{lien_ket_line}\n"
         for idx, item in enumerate(context_sach["danh_sach_huong_dan"]):
             final_context_string += f"{idx+1}. (Cấp bậc {item['cap_bac']}): {item['text']}\n"
 

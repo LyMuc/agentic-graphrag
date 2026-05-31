@@ -203,6 +203,11 @@ async def cha_me_con_sau_ly_hon(query: str):
             ngay_hieu_luc: chi_tiet_mau_thuan.ngay_co_hieu_luc,
             ngay_het_hieu_luc: chi_tiet_mau_thuan.ngay_het_hieu_luc
         }),
+        lien_ket_huong_dan: [pair IN collect(DISTINCT {
+            id_huong_dan: coalesce(chi_tiet_huong_dan.id, huong_dan.id),
+            id_duoc_huong_dan: chi_tiet_ap_dung.id
+        }) WHERE pair.id_huong_dan IS NOT NULL AND pair.id_duoc_huong_dan IS NOT NULL],
+
         quy_dinh_hien_hanh_doi_chieu: collect(DISTINCT hien_hanh.id)
     } AS Context_Tho
     """

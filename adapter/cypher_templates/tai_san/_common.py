@@ -19,6 +19,11 @@ trùng khi chúng đến từ seed Khoản/Điểm riêng lẻ khác.
 """
 from __future__ import annotations
 
+# Label Neo4j gắn trên node semantic thuộc topic chế độ tài sản vợ chồng.
+# Chỉ dùng cho MATCH node ngữ nghĩa (HanhVi, LoaiTaiSan, ...), KHÔNG áp dụng
+# cho legal layer (DieuLuat/DieuKhoanLuat/DieuKhoanDiemLuat).
+TOPIC_LABEL = "CheDoTaiSanCuaVoChong"
+
 # Khối expand + time-filter dùng chung cho 5 template.
 # Đầu vào: biến `seed_ids` (list các id LegalProvision gốc đã match được từ KG mới).
 # Đầu ra: trường `Context_Tho` đúng shape mà `chuan_hoa_Context_cho_LLM` mong đợi.
@@ -203,7 +208,11 @@ WITH dieu_seed_ids,
     n_goc: n_goc,
     chi_tiet_ap_dung: chi_tiet_ap_dung,
     van_ban_sua_doi: van_ban_sua_doi
-  }) AS can_cu_raw
+  }) AS can_cu_raw,
+  collect(DISTINCT {
+    id_huong_dan: coalesce(chi_tiet_huong_dan.id, huong_dan.id),
+    id_duoc_huong_dan: chi_tiet_ap_dung.id
+  }) AS lien_ket_huong_dan_raw
 
 OPTIONAL CALL {
   WITH can_cu_raw
@@ -229,7 +238,9 @@ OPTIONAL CALL {
 }
 WITH hd_van_ban_parts + hd_chi_tiet_parts AS hd_all,
      tc_van_ban_parts + tc_chi_tiet_parts + tc_hd_van_ban_parts + tc_hd_chi_tiet_parts AS tc_all,
-     hien_hanh_ids, coalesce(can_cu_chinh_inner, []) AS can_cu_chinh
+     hien_hanh_ids, coalesce(can_cu_chinh_inner, []) AS can_cu_chinh,
+     [x IN lien_ket_huong_dan_raw
+      WHERE x.id_huong_dan IS NOT NULL AND x.id_duoc_huong_dan IS NOT NULL] AS lien_ket_huong_dan_inner
 
 OPTIONAL CALL {
   WITH hd_all
@@ -238,7 +249,7 @@ OPTIONAL CALL {
   WITH hid, head(collect(hd_item)) AS hd_one
   RETURN collect(hd_one) AS can_cu_huong_dan_inner
 }
-WITH tc_all, hien_hanh_ids, can_cu_chinh, can_cu_huong_dan_inner
+WITH tc_all, hien_hanh_ids, can_cu_chinh, can_cu_huong_dan_inner, lien_ket_huong_dan_inner
 
 OPTIONAL CALL {
   WITH tc_all
@@ -251,6 +262,7 @@ RETURN {
     can_cu_chinh: can_cu_chinh,
     can_cu_huong_dan: coalesce(can_cu_huong_dan_inner, []),
     can_cu_bo_tro: coalesce(can_cu_bo_tro_inner, []),
+    lien_ket_huong_dan: coalesce(lien_ket_huong_dan_inner, []),
     quy_dinh_hien_hanh_doi_chieu: [x IN hien_hanh_ids WHERE x IS NOT NULL]
 } AS Context_Tho
 """

@@ -125,7 +125,7 @@ WITH kc, nhom, wl,
         THEN ['vi_pham_quyen_thanh_vien_gia_dinh'] ELSE [] END
   ) AS allowed_semantic_ids
 
-OPTIONAL MATCH (sn)
+OPTIONAL MATCH (sn:CheDoTaiSanCuaVoChong)
 WHERE sn.id IN allowed_semantic_ids
   AND (sn:ThoaThuan OR sn:HanhVi OR sn:Quyen OR sn:DieuKien OR sn:HauQua
        OR sn:ChePhapDoTaiSan OR sn:NghiaVu OR sn:LoaiTaiSan)
@@ -185,7 +185,7 @@ WITH kc, nhom, wl,
         THEN ['vi_pham_quyen_thanh_vien_gia_dinh'] ELSE [] END
   ) AS allowed_semantic_ids
 
-OPTIONAL MATCH (sn)
+OPTIONAL MATCH (sn:CheDoTaiSanCuaVoChong)
 WHERE sn.id IN allowed_semantic_ids
   AND (sn:ThoaThuan OR sn:HanhVi OR sn:Quyen OR sn:DieuKien OR sn:HauQua
        OR sn:ChePhapDoTaiSan OR sn:NghiaVu OR sn:LoaiTaiSan)

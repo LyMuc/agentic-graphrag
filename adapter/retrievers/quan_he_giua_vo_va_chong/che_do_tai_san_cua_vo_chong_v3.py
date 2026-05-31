@@ -59,7 +59,7 @@ che_do_tai_san_cua_vo_chong_v3_description = {
             "hôn nhân, tài sản riêng và nhà ở duy nhất. Dùng KG ngữ nghĩa mới "
             "(8 template Cypher) để định tuyến chính xác.\n\n"
             "KHÔNG dùng cho câu hỏi 'CHIA TÀI SẢN KHI LY HÔN' (Điều 59 — đó là "
-            "tool `chia_tai_san_sau_ly_hon`)."
+            "tool `chia_tai_san_sau_ly_hon_v3`)."
         ),
         "parameters": {
             "type": "object",

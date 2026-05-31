@@ -143,7 +143,7 @@ WITH kc, nhom, wl,
   ) AS allowed_semantic_ids
 
 // 1b. Semantic seed via CAN_CU_TAI
-OPTIONAL MATCH (sn)
+OPTIONAL MATCH (sn:CheDoTaiSanCuaVoChong)
 WHERE sn.id IN allowed_semantic_ids
   AND (sn:HanhVi OR sn:NghiaVu OR sn:Quyen OR sn:DieuKien OR sn:HauQua
        OR sn:ThoaThuan OR sn:TruongHopNgoaiLe OR sn:LoaiTaiSan)
@@ -219,7 +219,7 @@ WITH kc, nhom, wl,
         ] ELSE [] END
   ) AS allowed_semantic_ids
 
-OPTIONAL MATCH (sn)
+OPTIONAL MATCH (sn:CheDoTaiSanCuaVoChong)
 WHERE sn.id IN allowed_semantic_ids
   AND (sn:HanhVi OR sn:NghiaVu OR sn:Quyen OR sn:DieuKien OR sn:HauQua
        OR sn:ThoaThuan OR sn:TruongHopNgoaiLe OR sn:LoaiTaiSan)

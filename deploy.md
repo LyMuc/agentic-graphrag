@@ -1,5 +1,7 @@
 # Gói triển khai bản đầu — Agentic GraphRAG Chatbot Luật
 
+> **Deploy lên GCP Cloud Run:** xem hướng dẫn chi tiết từng bước tại [deploy-gcp.md](deploy-gcp.md) (Dockerfile + script `scripts/deploy-gcp.ps1` có sẵn trong repo).
+
 Tài liệu mô tả cấu hình triển khai phiên bản đầu tiên của hệ thống chatbot vấn đáp pháp luật Việt Nam. Gói này gồm **ứng dụng Chainlit** (Python), **PostgreSQL** (Docker), **Neo4j** (cloud hoặc local) và **Vercel AI Gateway** (LLM).
 
 ---

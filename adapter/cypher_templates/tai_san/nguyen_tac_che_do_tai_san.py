@@ -60,11 +60,11 @@ _SEED_BLOCK = """
 WITH $khia_canh AS kc
 
 // 1a. Match các Khoản / Điều thuộc Đ29-32 (gắn AP_DUNG_CHO_CHE_DO 'tat_ca')
-MATCH (luat)-[:AP_DUNG_CHO_CHE_DO {che_do: 'tat_ca'}]->(:ChePhapDoTaiSan)
+MATCH (luat)-[:AP_DUNG_CHO_CHE_DO {che_do: 'tat_ca'}]->(:ChePhapDoTaiSan:CheDoTaiSanCuaVoChong)
 WHERE (luat:DieuLuat OR luat:DieuKhoanLuat OR luat:DieuKhoanDiemLuat)
 
 // 1b. Lấy danh sách semantic node ngữ nghĩa kết nối tới luat theo khía cạnh
-OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat)
+OPTIONAL MATCH (sn:CheDoTaiSanCuaVoChong)-[:CAN_CU_TAI]->(luat)
 WHERE sn IS NOT NULL
   AND (
     kc = 'tat_ca'

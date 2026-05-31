@@ -41,21 +41,21 @@ _SEED_BLOCK = """
 WITH $loai_tai_san_dang_ky AS lts_dk
 
 // 1a. Bắt đầu từ HanhVi đăng ký quyền sở hữu
-MATCH (hv:HanhVi {id: 'dang_ky_quyen_so_huu'})
+MATCH (hv:HanhVi:CheDoTaiSanCuaVoChong {id: 'dang_ky_quyen_so_huu'})
 
 // 1b. Match LoaiTaiSan theo loai_tai_san_dang_ky
-OPTIONAL MATCH (hv)-[:TAC_DONG_LEN]->(lts:LoaiTaiSan)
+OPTIONAL MATCH (hv)-[:TAC_DONG_LEN]->(lts:LoaiTaiSan:CheDoTaiSanCuaVoChong)
 WHERE lts_dk = 'tat_ca'
    OR lts.id = lts_dk
    OR EXISTS {
-       MATCH (lts)-[:LA_LOAI_CON_CUA*0..2]->(:LoaiTaiSan {id: lts_dk})
+       MATCH (lts)-[:LA_LOAI_CON_CUA*0..2]->(:LoaiTaiSan:CheDoTaiSanCuaVoChong {id: lts_dk})
    }
 
 // 1c. Lấy ngoại lệ + thỏa thuận liên quan
-OPTIONAL MATCH (hv)-[:CO_NGOAI_LE]->(nl:TruongHopNgoaiLe)
-OPTIONAL MATCH (hv)-[:YEU_CAU_THOA_THUAN]->(tt:ThoaThuan)
-OPTIONAL MATCH (vb:VanBanPhapLy) WHERE vb.id IN ['gcn_quyen_so_huu', 'gcn_quyen_su_dung_dat']
-OPTIONAL MATCH (dk:DieuKien {id: 'tai_san_phai_dang_ky'})
+OPTIONAL MATCH (hv)-[:CO_NGOAI_LE]->(nl:TruongHopNgoaiLe:CheDoTaiSanCuaVoChong)
+OPTIONAL MATCH (hv)-[:YEU_CAU_THOA_THUAN]->(tt:ThoaThuan:CheDoTaiSanCuaVoChong)
+OPTIONAL MATCH (vb:VanBanPhapLy:CheDoTaiSanCuaVoChong) WHERE vb.id IN ['gcn_quyen_so_huu', 'gcn_quyen_su_dung_dat']
+OPTIONAL MATCH (dk:DieuKien:CheDoTaiSanCuaVoChong {id: 'tai_san_phai_dang_ky'})
 
 WITH collect(DISTINCT hv) + collect(DISTINCT lts) + collect(DISTINCT nl)
      + collect(DISTINCT tt) + collect(DISTINCT vb) + collect(DISTINCT dk) AS seed_nodes

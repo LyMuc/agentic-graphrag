@@ -1,0 +1,104 @@
+[
+  {
+    "question": "Tôi và chồng đã ly hôn được hai tháng bởi bản án có hiệu lực của tòa, tuy nhiên chồng tôi mặc dù có đầy đủ khả năng về kinh tế nhưng lại không chịu thực hiện nghĩa vụ cấp dưỡng theo phán quyết của tòa, tôi phải làm như thế nào?",
+    "ground_truth": "Căn cứ Khoản 1, 2 Điều 119 Luật hôn nhân và gia đình 2014 có quy định về việc người được cấp dưỡng, cha, mẹ hoặc người giám hộ của người đó, theo quy định của pháp luật về tố tụng dân sự, có quyền yêu cầu Tòa án buộc người không tự nguyện thực hiện nghĩa vụ cấp dưỡng phải thực hiện nghĩa vụ đó.\n\nCá nhân, cơ quan, tổ chức sau đây, theo quy định của pháp luật về tố tụng dân sự, có quyền yêu cầu Tòa án buộc người không tự nguyện thực hiện nghĩa vụ cấp dưỡng phải thực hiện nghĩa vụ đó:\n\n- Người thân thích;\n\n- Cơ quan quản lý nhà nước về gia đình;\n\n- Cơ quan quản lý nhà nước về trẻ em;\n\n- Hội liên hiệp phụ nữ.\n\nNhư vậy trong trường hợp người cha từ chối nghĩa vụ cấp dưỡng cho con sau khi ly hôn thì các tổ chức, cá nhân trên có quyền yêu cầu tòa án buộc người cha phải phải thực hiện nghĩa vụ cấp dưỡng.\n\nNếu người cha vẫn tiếp tục từ chối nghĩa vụ của mình thì căn cứ Điều 54 Nghị định 167/2013/NĐ-CP quy định về xử phạt hành chính với hành vi vi phạm quy định về chăm sóc nuôi dưỡng cấp dưỡng theo đó:\n\nPhạt cảnh cáo hoặc phạt tiền từ 100.000 đồng đến 300.000 đồng đối với một trong những hành vi sau đây:\n\n- Từ chối hoặc trốn tránh nghĩa vụ cấp dưỡng giữa vợ và chồng sau khi ly hôn; từ chối hoặc trốn tránh nghĩa vụ nuôi dưỡng giữa anh, chị, em với nhau, giữa ông bà nội, ông bà ngoại và cháu theo quy định của pháp luật.\n\n- Từ chối hoặc trốn tránh nghĩa vụ cấp dưỡng, nuôi dưỡng cha, mẹ; nghĩa vụ cấp dưỡng, chăm sóc con sau khi ly hôn theo quy định của pháp luật.\n\nSau khi bị xử phạt hành chính về hành vi trên nếu người cha vẫn tiếp tục không chịu thực hiện nghĩa vụ cấp dưỡng thì căn cứ Khoản 37 Điều 1 Luật sửa đổi bổ sung Bộ luật hình sự 2017 có quy định:\n\nNgười nào có nghĩa vụ cấp dưỡng và có khả năng thực tế để thực hiện việc cấp dưỡng đối với người mà mình có nghĩa vụ cấp dưỡng theo quy định của pháp luật mà từ chối hoặc trốn tránh nghĩa vụ cấp dưỡng, làm cho người được cấp dưỡng lâm vào tình trạng nguy hiểm đến tính mạng, sức khỏe hoặc đã bị xử phạt vi phạm hành chính về một trong các hành vi quy định tại Điều này mà còn vi phạm, nếu không thuộc trường hợp quy định tại Điều 380 của Bộ luật này, thì bị phạt cảnh cáo, phạt cải tạo không giam giữ đến 02 năm hoặc phạt tù từ 03 tháng đến 02 năm\n\nNhư vậy nếu ngoan cố không chịu cấp dưỡng cho con mặc dù có khả năng thực tế thì người cha sẽ bị truy cứu trách nhiệm hình sự về hành vi của mình.\n\nTrên đây là quan điểm tư vấn của chúng tôi về vấn đề mà chị thắc mắc.\n\nTrân trọng!",
+    "chatbot_answer": "",
+    "chu_de_phap_ly": "cap_duong",
+    "loai_cau_hoi": "Tình huống",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014",
+      "Nghi_dinh_167_2013_ND_CP",
+      "Luat_suadoi_BoLuat_HinhSu_2017"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_119_Khoan_1": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_119_Khoan_2": "CON_HIEU_LUC",
+      "Nghi_dinh_167_2013_ND_CP_Dieu_54": "CON_HIEU_LUC",
+      "Luat_suadoi_BoLuat_HinhSu_2017_Dieu_1_Khoan_37": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_119_Khoan_1",
+      "Luat_HNGD_2014_Dieu_119_Khoan_2"
+    ],
+    "can_cu_phap_ly_bo_tro": [
+      "Nghi_dinh_167_2013_ND_CP_Dieu_54"
+    ],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [
+      "Luat_suadoi_BoLuat_HinhSu_2017_Dieu_1_Khoan_37"
+    ],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": [],
+    "legal_citation_accuracy": "",
+    "so_can_cu_con_hieu_luc": "",
+    "tong_so_can_cu_duoc_neu_ra": "",
+    "context": "",
+    "citation_prioritization_accuracy": "",
+    "co_loi_hieu_luc": "",
+    "hallucination_rate": "",
+    "faithfulness": "",
+    "context_recall": "",
+    "answer_correctness": ""
+  },
+  {
+    "question": "Chào anh chị! Tôi có vấn đề rất mong được sự tư vấn từ anh chị. Trong thời kỳ hôn nhân, tôi và vợ tôi có làm hợp đồng công chứng chứng nhận một số khoản thu nhập sẽ là tài sản riêng của tôi. Hiện nay, tôi và vợ ly hôn, nhưng vợ tôi không có việc làm. Vậy cho tôi hỏi tôi có phải lấy tài sản riêng của mình để cấp dưỡng cho vợ hay không? Và mức cấp dưỡng là bao nhiêu? Rất mong nhận được phản hồi từ anh chị. Xin trân trọng cảm ơn!",
+    "ground_truth": "Nghĩa vụ cấp dưỡng giữa vợ và chồng được quy định tại Điều 115 Luật Hôn nhân và Gia đình 2014 như sau:\n\nKhi ly hôn nếu bên khó khăn, túng thiếu có yêu cầu cấp dưỡng mà có lý do chính đáng thì bên kia có nghĩa vụ cấp dưỡng theo khả năng của mình.\n\nTheo quy định nêu trên, nếu sau khi ly hôn, vợ  bạn gặp khó khăn, túng thiếu (việc vợ bạn không có việc làm là căn cứ chứng minh cho sự khó khăn và túng thiếu), đồng thời muốn nhận cấp dưỡng từ bạn, thì bạn có nghĩa vụ cấp dưỡng theo khả năng của mình.\n\nVề mức cấp dưỡng: Điều 116 Luật Hôn nhân và Gia đình 2014 quy định về mức cấp dưỡng cho vợ hoặc chồng sau khi ly hôn như sau:\n\n1. Mức cấp dưỡng do người có nghĩa vụ cấp dưỡng và người được cấp dưỡng hoặc người giám hộ của người đó thỏa thuận căn cứ vào thu nhập, khả năng thực tế của người có nghĩa vụ cấp dưỡng và nhu cầu thiết yếu của người được cấp dưỡng; nếu không thỏa thuận được thì yêu cầu Tòa án giải quyết.\n\n2. Khi có lý do chính đáng, mức cấp dưỡng có thể thay đổi. Việc thay đổi mức cấp dưỡng do các bên thỏa thuận; nếu không thỏa thuận được thì yêu cầu Tòa án giải quyết.\n\nNhư vậy , theo quy định của luật này thì sẽ phụ thuộc sự thỏa thuận giữa bên cấp dưỡng và bên nhận cấp dưỡng. Căn cứ để tính cấp dưỡng phụ thuộc vào thu nhập, khả năng thực tế của bạn và nhu cầu thiết yếu của người nhận cấp dưỡng là vợ bạn. Như vậy, lúc này việc cấp dưỡng sẽ phụ thuộc vào khả năng của bạn, do đó việc bạn có tài sản riêng là căn cứ để xét về khả năng và thu nhập. Nếu khi ly hôn mà vợ bạn yêu cầu được cấp dưỡng và đáp ứng được điều kiện theo quy định thì việc bạn có tài sản riêng cũng là căn cứ để chứng minh khả năng kinh tế của bạn để thực hiện việc cấp dưỡng.\n\nTrên đây là nội dung tư vấn của chúng tôi về thắc mắc của bạn.\n\nTrân trọng!",
+    "chatbot_answer": "",
+    "chu_de_phap_ly": "cap_duong",
+    "loai_cau_hoi": "Tình huống",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_115": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_116": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_115",
+      "Luat_HNGD_2014_Dieu_116"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": [],
+    "legal_citation_accuracy": "",
+    "so_can_cu_con_hieu_luc": "",
+    "tong_so_can_cu_duoc_neu_ra": "",
+    "context": "",
+    "citation_prioritization_accuracy": "",
+    "co_loi_hieu_luc": "",
+    "hallucination_rate": "",
+    "faithfulness": "",
+    "context_recall": "",
+    "answer_correctness": ""
+  },
+  {
+    "question": "Theo thường lệ thì khi ly hôn chồng sẽ là người cấp dưỡng cho vợ. Tuy nhiên đối với trường hợp của em thì lại khác, chồng em thì không có khả năng tài chính. Vậy Ban tư vấn cho em hỏi khi ly hôn vợ có phải cấp dưỡng cho chồng không? Mong sớm nhận được phản hồi từ Ban tư vấn. Chân thành cảm ơn!\nThùy Linh - Đồng Nai",
+    "ground_truth": "Theo quy định tại Điều 115 Luật Hôn nhân và Gia đình 2014 về nghĩa vụ cấp dưỡng giữa vợ và chồng khi ly hôn:\n\nKhi ly hôn nếu bên khó khăn, túng thiếu có yêu cầu cấp dưỡng mà có lý do chính đáng thì bên kia có nghĩa vụ cấp dưỡng theo khả năng của mình.\n\n==> Như vậy, theo quy định của pháp luật thì không phân biệt ai phải cấp dưỡng sau khi ly hôn. Pháp luật chỉ quy định khi ly hôn nếu bên khó khăn, túng thiếu có yêu cầu cấp dưỡng mà có lý do chính đáng thì bên kia có nghĩa vụ cấp dưỡng. Do đó nếu như chồng bạn khi ly hôn mà gặp khó khăn, túng thiếu thì bạn vẫn phải cấp dưỡng cho chông theo khả năng của mình. Mức cấp dưỡng sẽ do 2 bên thỏa thuận, nếu không thỏa thuận được thì yêu cầu Tòa án giải quyết. Việc cấp dưỡng có thể được thực hiện định kỳ hàng tháng, hàng quý, nửa năm, hàng năm hoặc một lần.\n\nMong rằng những tư vấn của chúng tôi sẽ giúp giải đáp được những vướng mắc của bạn.\n\nChúc sức khỏe và thành công!",
+    "chatbot_answer": "",
+    "chu_de_phap_ly": "cap_duong",
+    "loai_cau_hoi": "Tình huống",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_115": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_115"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": [],
+    "legal_citation_accuracy": "",
+    "so_can_cu_con_hieu_luc": "",
+    "tong_so_can_cu_duoc_neu_ra": "",
+    "context": "",
+    "citation_prioritization_accuracy": "",
+    "co_loi_hieu_luc": "",
+    "hallucination_rate": "",
+    "faithfulness": "",
+    "context_recall": "",
+    "answer_correctness": ""
+  }
+]

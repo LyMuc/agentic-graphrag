@@ -1,0 +1,274 @@
+﻿question,ground_truth,chatbot_answer,chu_de_phap_ly,loai_cau_hoi,van_ban_phap_luat_lien_quan,tinh_trang_hieu_luc,can_cu_phap_ly_chinh,can_cu_phap_ly_bo_tro,van_ban_huong_dan_sua_doi_bo_sung_thay_the,can_cu_khong_nen_ap_dung,quan_he_chong_cheo_mau_thuan,legal_citation_accuracy,so_can_cu_con_hieu_luc,tong_so_can_cu_duoc_neu_ra,context,citation_prioritization_accuracy,co_loi_hieu_luc,hallucination_rate,faithfulness,context_recall,answer_correctness
+Trong mọi trường hợp tài sản chung của vợ chồng đều được chia đều khi ly hôn đúng không?,"Theo quy định của pháp luật hiện hành thì khi ly hôn, trường hợp chế độ tài sản của vợ chồng theo luật định thì việc giải quyết tài sản do các bên thỏa thuận; nếu không thỏa thuận được thì theo yêu cầu của vợ, chồng hoặc của hai vợ chồng, Tòa án giải quyết theo quy định của Luật Hôn nhân và gia đình 2014 .
+
+Hoặc, trường hợp chế độ tài sản của vợ chồng theo thỏa thuận thì việc giải quyết tài sản khi ly hôn được áp dụng theo thỏa thuận đó; nếu thỏa thuận không đầy đủ, rõ ràng thì áp dụng quy định của Luật Hôn nhân và Gia đình 2014 để giải quyết.
+
+Theo đó, theo quy định tại Khoản 2 Điều 59 Luật Hôn nhân và gia đình 2014 thì tài sản chung của vợ chồng được chia đôi nhưng có tính đến các yếu tố sau đây:
+
+Căn cứ quy định được trích dẫn trên đây thì về nguyên tắc tài sản chung của vợ chồng được chia đôi. Tuy nhiên, cần phải tính đến các yếu tố khác để chia tài sản chung của vợ chồng.
+
+Đồng nghĩa: Không phải mọi trường hợp thì khi ly hôn, tài sản chung cũng vợ chồng đều được chia đôi cho mỗi bên vợ, chồng một phần bằng nhau. Mà căn cứ vào nhiều yếu tố thực tế khác mà Tòa án có thể quyết định vợ hoặc chồng được chia phần tài sản nhiều hơn .
+
+Tài sản chung của vợ chồng đều được chia đều khi ly hôn đúng không? (Hình từ Internet)",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014_Dieu_59_Khoan_2"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_59_Khoan_2""]",[],[],[],[],,,,,,,,,,
+Quyền sử dụng đất của vợ chồng khi ly hôn sẽ được chia như thế nào?,"Theo quy định tại Điều 62 Luật Hôn nhân và gia đình 2014 quy định về chia quyền sử dụng đất của vợ chồng khi ly hôn như sau:
+
+Theo đó, khi vợ chồng bạn ly hôn thì quyền sử dụng đất của vợ chồng sẽ được chia theo nguyên tắc quy định như trên.
+
+Trân trọng!",,chia_tai_san_sau_ly_hon,Lý thuyết,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014_Dieu_62"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_62""]",[],[],[],[],,,,,,,,,,
+Căn nhà mua trả góp có được chia khi hai vợ chồng ly hôn không?,"Tại Điều 33 Luật Hôn nhân và gia định 2014 quy định tài sản chung của vợ chồng như sau:
+
+Theo Điều 43 Luật Hôn nhân và gia đình 2014 quy định tài sản riêng của vợ, chồng như sau:
+
+Như vậy, căn nhà mua trả góp được coi là tài sản chung của hai vợ chồng thì khi ly hôn sẽ được chia. Còn nếu căn nhà mua trả góp đó là tài sản riêng thì sẽ không chia khi hai vợ chồng ly hôn.
+
+Trường hợp của bạn, bạn đã mua căn nhà trả góp đó trước khi kết hôn thì đấy được coi là tài sản riêng của bạn. Khi bạn và anh M ly hôn thì căn nhà mua trả góp đó sẽ không bị chia.
+
+Khi hai vợ chồng ly hôn thì căn nhà mua trả góp có được chia không? (Hình từ Internet)",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014_Dieu_33"": ""CON_HIEU_LUC"", ""Luat_HNGD_2014_Dieu_43"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_33"", ""Luat_HNGD_2014_Dieu_43""]",[],[],[],[],,,,,,,,,,
+"Xin chào anh chị! Tôi có thắc mắc như sau nhờ anh chị tư vấn. Anh Đức và chị Hoa kết hôn năm 2013. Trong thời gian hôn nhân, anh Đức có mua một căn nhà và giấy tờ căn nhà chỉ đứng tên anh. Năm 2018, anh Đức và chị Hoa ly hôn, anh đã trả cho chị giá trị của nửa căn nhà đó. Hiện giờ anh Đức muốn bán căn nhà đi mà không cần có sự đồng ý của chị Hoa được không? Xin cảm ơn!","Căn cứ theo quy định của Luật Hôn nhân và Gia đình 2014 thì vợ chồng có thể tự thỏa thuận với nhau về việc phân chia tài sản khi ly hôn.
+
+Điều 35 Luật Hôn nhân và Gia đình 2014 quy định về việc định đoạt tài sản chung của vợ chồng như sau:
+
+Điều 35. Chiếm hữu, sử dụng, định đoạt tài sản chung
+
+1. Việc chiếm hữu, sử dụng, định đoạt tài sản chung do vợ chồng thỏa thuận.
+
+2. Việc định đoạt tài sản chung phải có sự thỏa thuận bằng văn bản của vợ chồng trong những trường hợp sau đây:
+
+a) Bất động sản;
+
+b) Động sản mà theo quy định của pháp luật phải đăng ký quyền sở hữu;
+
+c) Tài sản đang là nguồn tạo ra thu nhập chủ yếu của gia đình”.
+
+Căn cứ vào điều này thì việc định đoạt tải sản chung của vợ chồng là bất động sản phải có sự thỏa thuận bằng văn bản của vợ chồng.
+
+Đối với trường hợp của anh Đức và chị Hoa, 2 anh chị kết hôn năm 2013. Trong thời kì hôn nhân anh Đức mua nhà có đứng tên riêng anh. Nếu không có bất kỳ sự thỏa thuận nào bằng văn bản thì ngôi nhà này sẽ là tài sản chung của vợ chồng. Năm 2018, anh Đức chị Hoa ly hôn và anh Đức đã trả cho chị Hoa giá trị một nửa căn nhà theo thỏa thuận. Tuy nhiên, nếu thỏa thuận này chỉ bằng miệng, không có văn bản thỏa thuận nào được công chứng, chứng thực thì bây giờ nếu anh Đức muốn bán căn nhà, phải có chữ ký hoặc giấy ủy quyền của chị Hoa.
+
+Trên đây là ý kiến tư vấn của chúng tôi về thắc mắc của bạn.
+
+Trân trọng!",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014_Dieu_35"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_35""]",[],[],[],[],,,,,,,,,,
+"Trong thời gian kết hôn, bố mẹ chồng có cho vợ chồng tôi một căn nhà. Căn nhà cũng đã sang tên cho chồng tôi. Hiện vợ chồng tôi đang chuẩn bị làm thủ tục ly hôn do anh có hành vi ngoại tình, vậy tôi có được hưởng tài sản là căn nhà đã được bố mẹ chồng cho trong thời kỳ hôn nhân?","Điều 33 Luật Hôn nhân Gia đình 2014 quy định:
+
+1. Tài sản chung của vợ chồng gồm tài sản do vợ, chồng tạo ra, thu nhập do lao động, hoạt động sản xuất, kinh doanh, hoa lợi, lợi tức phát sinh từ tài sản riêng và thu nhập hợp pháp khác trong thời kỳ hôn nhân, trừ trường hợp được quy định tại khoản 1 Điều 40 của Luật này; tài sản mà vợ chồng được thừa kế chung hoặc được tặng cho chung và tài sản khác mà vợ chồng thỏa thuận là tài sản chung.
+
+Quyền sử dụng đất mà vợ, chồng có được sau khi kết hôn là tài sản chung của vợ chồng, trừ trường hợp vợ hoặc chồng được thừa kế riêng, được tặng cho riêng hoặc có được thông qua giao dịch bằng tài sản riêng.
+
+2. Tài sản chung của vợ chồng thuộc sở hữu chung hợp nhất, được dùng để bảo đảm nhu cầu của gia đình, thực hiện nghĩa vụ chung của vợ chồng.
+
+3. Trong trường hợp không có căn cứ để chứng minh tài sản mà vợ, chồng đang có tranh chấp là tài sản riêng của mỗi bên thì tài sản đó được coi là tài sản chung.
+
+Quy định này có thể hiểu, nếu bố mẹ chồng chỉ ghi nhận việc cho nhà là chỉ cho con trai thì con dâu sẽ không được hưởng. Nếu việc tặng cho không ghi nhận việc này hoặc không có căn cứ cụ thể về việc tặng cho riêng thì tài sản sẽ được coi là tài sản chung của hai vợ chồng do đây là tài sản hình thành trong quá trình hôn nhân.
+
+Do đó, khi ly hôn nếu đã xác định được đây là tài sản riêng của chồng thì căn nhà này vẫn thuộc về chồng bạn, bạn không được quyền chia tài sản. Trường hợp chồng bạn không chứng minh được là tài sản riêng thì xác định là tài sản chung của hai vợ chồng, khi đó, căn nhà sẽ được chia theo nguyên tắc chia đôi.
+
+Trân trọng!",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014_Dieu_33"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_33""]",[],[],[],[],,,,,,,,,,
+"Liên quan đến quy định pháp luật về hôn nhân, xin hỏi: Hiểu thế nào là lỗi của mỗi bên trong vi phạm quyền, nghĩa vụ của vợ chồng về việc chia tài sản khi ly hôn?","Căn cứ Điểm d Khoản 4 Điều 7 Thông tư liên tịch 01/2016/TTLT-TANDTC-VKSNDTC-BTP có quy định:
+
+Trường hợp áp dụng chế độ tài sản của vợ chồng theo luật định để chia tài sản của vợ chồng khi ly hôn thì tài sản chung của vợ chồng về nguyên tắc được chia đôi nhưng có tính đến các yếu tố sau đây để xác định tỷ lệ tài sản mà vợ chồng được chia: “Lỗi của mỗi bên trong v i phạm quyền, nghĩa vụ của vợ chồng” là lỗi của vợ hoặc chồng vi phạm quyền, nghĩa vụ về nhân thân, tài sản của vợ chồng dẫn đến ly hôn.
+
+Ví dụ: Trường hợp người chồng có hành vi bạo lực gia đình, không chung thủy hoặc phá tán tài sản thì khi giải quyết ly hôn Tòa án phải xem xét yếu tố lỗi của người chồng khi chia tài sản chung của vợ chồng để đảm bảo quyền, lợi ích hợp pháp của vợ và con chưa thành niên.
+
+Trân trọng!",,chia_tai_san_sau_ly_hon,Lý thuyết,"[""TT_01_2016_TTLT_TANDTC_VKSNDTC_BTP""]","{""TT_01_2016_TTLT_TANDTC_VKSNDTC_BTP_Dieu_7_Khoan_4_Diem_d"": ""CON_HIEU_LUC""}","[""TT_01_2016_TTLT_TANDTC_VKSNDTC_BTP_Dieu_7_Khoan_4_Diem_d""]",[],[],[],[],,,,,,,,,,
+Trong thời gian ly thân muốn chia tài sản chung thì có được không?,"Căn cứ Khoản 13 Điều 3 Luật Hôn nhân và gia đình 2014 giải thích về thời kỳ hôn nhân như sau:
+
+Thời kỳ hôn nhân là khoảng thời gian tồn tại quan hệ vợ chồng, được tính từ ngày đăng ký kết hôn đến ngày chấm dứt hôn nhân.
+
+Bên cạnh đó, tại Điều 38 Luật Hôn nhân và gia đình 2014 quy định về việc chia tài sản chung trong thời kỳ hôn nhân như sau:
+
+- Trong thời kỳ hôn nhân, vợ chồng có quyền thỏa thuận chia một phần hoặc toàn bộ tài sản chung, trừ trường hợp quy định tại Điều 42 của Luật này; nếu không thỏa thuận được thì có quyền yêu cầu Tòa án giải quyết.
+
+- Thỏa thuận về việc chia tài sản chung phải lập thành văn bản. Văn bản này được công chứng theo yêu cầu của vợ chồng hoặc theo quy định của pháp luật.
+
+- Trong trường hợp vợ, chồng có yêu cầu thì Tòa án giải quyết việc chia tài sản chung của vợ chồng theo quy định tại Điều 59 của Luật này. Như vậy, trong thời gian ly thân vẫn được xem là trong thời kỳ hôn nhân nên bạn muốn chia tài sản thì có thể nộp đơn đề nghị chia tài sản trong thời kỳ hôn nhân. Trân trọng!",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014_Dieu_3_Khoan_13"": ""CON_HIEU_LUC"", ""Luat_HNGD_2014_Dieu_38"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_3_Khoan_13"", ""Luat_HNGD_2014_Dieu_38""]",[],[],[],[],,,,,,,,,,
+"Tôi và vợ tôi ly hôn trong thời kỳ hôn nhân tôi là người lao động duy nhất và hầu như toàn bộ tài sản đều do tôi làm ra vợ tôi chỉ ở nhà chăm con, làm nội trợ vậy có phải chia đôi tài sản khi ly hôn hay không ạ?","Căn cứ theo Khoản 1 Điều 33 Luật Hôn nhân và gia đình 2014 thì "" tài sản chung của vợ chồng gồm tài sản do vợ, chồng tạo ra, thu nhập do lao động, hoạt động sản xuất, kinh doanh, hoa lợi, lợi tức phát sinh từ tài sản riêng và thu nhập hợp pháp khác trong thời kỳ hôn nhân,....Quyền sử dụng đất mà vợ, chồng có được sau khi kết hôn là tài sản chung của vợ chồng,...""
+
+Do đó có nghĩa rằng trừ các trường hợp đặc biệt thì tài sản hình thành trong thời kỳ hôn nhân là tài sản chung của vợ chồng.
+
+Ngoài ra tại Khoản 1 Điều 29 Luật Hôn nhần và gia đình 2014 quy định "" Vợ, chồng bình đẳng với nhau về quyền, nghĩa vụ trong việc tạo lập, chiếm hữu, sử dụng, định đoạt tài sản chung; không phân biệt giữa lao động trong gia đình và lao động có thu nhập."" do đó sẽ không có sự phân biệt giữa bạn là người lao động tạo ra của cải và vợ bạn là người lao động trong gia đình trong việc tạo lập tài sản chung.
+
+Ngoài ra tại Khoản 2 Điều 59 Luật Hôn nhân và gia đình 2014 quy định về nguyên tắc giải quyết tài sản khi ly hôn thì về nguyên tắc là chia đôi nhưng sẽ có tính đến các yếu tố về:
+
+- Hoàn cảnh của gia đình và của vợ, chồng;
+
+- Công sức đóng góp của vợ, chồng vào việc tạo lập, duy trì và phát triển khối tài sản chung. Lao động của vợ, chồng trong gia đình được coi như lao động có thu nhập;
+
+- Bảo vệ lợi ích chính đáng của mỗi bên trong sản xuất, kinh doanh và nghề nghiệp để các bên có điều kiện tiếp tục lao động tạo thu nhập;
+
+- Lỗi của mỗi bên trong vi phạm quyền, nghĩa vụ của vợ chồng.
+
+Do đó khi ly hôn tài sản của vợ chồng sẽ được chia đôi nhưng sẽ phụ thuộc vào các yếu tố đã nêu trên để xem xét đánh giá mà theo đó tỷ lệ chia tài sản có thể sẽ thay đổi. Ngoài ra cần lưu ý luật cũng quy định lao động trong gia đình hay nội trợ cũng được xem như lao động có thu nhập do đó đây sẽ không phải là yếu tố để không chia hay chia phần tài sản cho vợ của bạn ít hơn khi giải quyết vụ án ly hôn.
+
+Trên đây là nội dung Ban biên tập gửi đến bạn.
+
+Trân trọng!",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014_Dieu_33_Khoan_1"": ""CON_HIEU_LUC"", ""Luat_HNGD_2014_Dieu_29_Khoan_1"": ""CON_HIEU_LUC"", ""Luat_HNGD_2014_Dieu_59_Khoan_2"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_33_Khoan_1"", ""Luat_HNGD_2014_Dieu_29_Khoan_1"", ""Luat_HNGD_2014_Dieu_59_Khoan_2""]",[],[],[],[],,,,,,,,,,
+Tài sản được cho vào ngày cưới sẽ chia như thế nào khi ly hôn?,"Căn cứ Điều 59 Luật Hôn nhân và gia đình 2014 quy định về nguyên tắc giải quyết tài sản của vợ chồng khi ly hôn như sau:
+
+Theo đó, tài sản riêng của vợ chồng thuộc quyền sở hữu của người đó, tài sản chung của vợ chồng sẽ được chia dựa trên sự thỏa thuận gữa vợ chồng, trường hợp không thỏa thuận được tài sản sẽ được chia đôi tùy theo sự đóng góp, chia bằng hiện vật hoặc giá trị hiện vật.
+
+Việc chia tài sản chung của vợ chồng không phụ thuộc vào việc đối phương đã nói xấu gia đình người kia như thế nào mà phụ thuộc chủ yếu vào thỏa thuận đôi bên và mức độ đóng góp của mỗi người trong hôn nhân.
+
+Trong trường hợp tài sản được cho vào ngày cưới được cho riêng vợ hoặc chồng thì tài sản đó là tài sản riêng và sẽ thuộc về người được cho mà không tiến hành chia.
+
+Chia tài sản được vào ngày cưới như thế nào khi ly hôn? (Hình từ Internet)",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014_Dieu_59"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_59""]",[],[],[],[],,,,,,,,,,
+"Tôi là người thành phố, vợ tôi là người ở tỉnh lẻ lên thành phố học tập và lập nghiệp. Hai năm trước, mẹ tôi có kêu tôi (chỉ mình tôi) đến nhà và cho riêng tôi một số tiền để mua một chiếc xe ô tô (không có liên quan gì đến vợ cả). Nay vợ chồng tôi phát sinh mâu thuẫn và phải đưa nhau ra tòa li dị. Xin hỏi chiếc xe mà mẹ tôi cho tiền tôi mua có phải chia cho vợ không?","Theo quy định tại Luật Hôn nhân và gia đình 2014 thì tài sản chung của vợ chồng gồm tài sản do vợ, chồng tạo ra, thu nhập do lao động, hoạt động sản xuất, kinh doanh, hoa lợi, lợi tức phát sinh từ tài sản riêng và thu nhập hợp pháp khác trong thời kỳ hôn nhân (trừ một số trường hợp nhất định); tài sản mà vợ chồng được thừa kế chung hoặc được tặng cho chung và tài sản khác mà vợ chồng thỏa thuận là tài sản chung.
+
+Quyền sử dụng đất mà vợ, chồng có được sau khi kết hôn là tài sản chung của vợ chồng, trừ trường hợp vợ hoặc chồng được thừa kế riêng, được tặng cho riêng hoặc có được thông qua giao dịch bằng tài sản riêng.
+
+Trong trường hợp không có căn cứ để chứng minh tài sản mà vợ, chồng đang có tranh chấp là tài sản riêng của mỗi bên thì tài sản đó được coi là tài sản chung.
+
+Như vậy: Căn cứ quy định được trích dẫn trên đây thì trường hợp tài sản mà vợ chồng được tặng cho chung thì tài sản đó sẽ được xác định là tài sản chung của vợ chồng trong thời kỳ hôn nhân.
+
+Mặt khác, theo quy định tại Điều 43 Luật Hôn nhân và gia đình 2014 thì tài sản riêng của vợ, chồng gồm tài sản mà mỗi người có trước khi kết hôn; tài sản được thừa kế riêng, được tặng cho riêng trong thời kỳ hôn nhân; tài sản được chia riêng cho vợ, chồng theo quy định của pháp luật; tài sản phục vụ nhu cầu thiết yếu của vợ, chồng và tài sản khác mà theo quy định của pháp luật thuộc sở hữu riêng của vợ, chồng.
+
+Tài sản được hình thành từ tài sản riêng của vợ, chồng cũng là tài sản riêng của vợ, chồng. Hoa lợi, lợi tức phát sinh từ tài sản riêng trong thời kỳ hôn nhân được thực hiện theo quy định của pháp luật.
+
+Như vậy: Căn cứ quy định được trích dẫn trên đây thì trường hợp tài sản mà vợ, chồng được tặng cho riêng trong thời kỳ hôn nhân thì tài sản đó sẽ được xác định là tài sản riêng của vợ chồng trong thời kỳ hôn nhân.
+
+Mà theo như thông tin bạn cung cấp cho chúng tôi thì hai năm trước, mẹ bạn có kêu tôi (chỉ mình bạn) đến nhà và cho riêng bạn một số tiền để mua một chiếc xe ô tô (không có liên quan gì đến vợ bạn cả).
+
+Do đó: Nếu bạn có căn cứ để chứng minh số tiền mà bạn dùng mua ô tô là được mẹ của bạn cho riêng một mình bạn (không có liên quan gì đến vợ bạn) trong thời kỳ hôn nhân thì chiếc xe ô tô này sẽ được xác định là tài sản riêng của bạn trong thời kỳ hôn nhân.
+
+Đồng nghĩa, nó không được xác định là tài sản chung của vợ chồng bạn trong thời kỳ hôn nhân. Nên trường hợp vợ chồng bạn phát sinh mâu thuẫn và phải đưa nhau ra tòa ty hôn thì chiếc xe này sẽ không được tính là tài sản chung để chia cho vợ bạn khi ly hôn.
+
+Trên đây là quan điểm tư vấn của chúng tôi đối với vấn đề mà bạn đang thắc mắc.
+
+Trân trọng!",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014_Dieu_43"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_43""]",[],[],[],[],,,,,,,,,,
+"Thưa luật sư, tôi và vợ hiện tại đang ly thân, trong thời gian này tôi có mua ô tô. Vậy, xe đó là tài sản riêng của tôi đúng không?","Căn cứ Khoản 1 Điều 43 Luật Hôn nhân và gia đình 2014 quy định như sau:
+
+Tài sản riêng của vợ, chồng gồm tài sản mà mỗi người có trước khi kết hôn; tài sản được thừa kế riêng, được tặng cho riêng trong thời kỳ hôn nhân; tài sản được chia riêng cho vợ, chồng theo quy định tại các điều 38, 39 và 40 của Luật này; tài sản phục vụ nhu cầu thiết yếu của vợ, chồng và tài sản khác mà theo quy định của pháp luật thuộc sở hữu riêng của vợ, chồng.
+
+Như vậy, trường hợp bạn muốn được xác định xe ô tô là tài sản riêng của bạn thì bạn phải chứng minh được xe này có được do bạn thừa kế riêng, tặng cho riêng hoặc thông qua giao dịch bằng tài sản riêng của bạn.
+
+Ngoài ra, trường hợp bạn muốn xác định là tài sản riêng thì bạn có thể cùng vợ bạn làm giấy cam kết xe này tài sản riêng của bạn. Mặc dù ly thân nhưng hôn nhân và quyền lợi mỗi bên không thay đổi. Nếu không chứng minh được thì đó là tài sản chung.
+
+Trân trọng!",,chia_tai_san_sau_ly_hon,Lý thuyết,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014_Dieu_43_Khoan_1"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_43_Khoan_1""]",[],[],[],[],,,,,,,,,,
+Chồng có được ở lại nhà riêng của vợ sau ly hôn hay không?,"Căn cứ Điều 63 Luật Hôn nhân và gia đình 2014 quy định về quyền lưu cư của vợ hoặc chồng khi ly hôn như sau:
+
+Theo quy định trên, chồng bạn khó khăn về chỗ ở sẽ được quyền ở nhà riêng của bạn sau khi ly hôn trong thời hạn 06 tháng nếu bạn và chồng không có thỏa thuận khác.
+
+Sau ly hôn chồng có được ở lại nhà riêng của vợ hay không? (Hình từ Internet)",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014_Dieu_63"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_63""]",[],[],[],[],,,,,,,,,,
+"Xin cho hỏi: Tôi lấy chồng cách đây 05 năm,. sinh được 1 bé trai 02 tuổi, tôi chỉ ở nhà nội trợ, còn mọi chi phí trong gia đình đều do chồng tôi đi làm mà có. Nhưng giờ đây chúng tôi sống không hạnh phúc và định ly hôn. Vậy tôi có được chia tài sản không?","Theo quy định tại Luật hôn nhân và gia đình 2014 thì tài sản chung của vợ chồng gồm tài sản do vợ, chồng tạo ra, thu nhập do lao động, hoạt động sản xuất, kinh doanh, hoa lợi, lợi tức phát sinh từ tài sản riêng và thu nhập hợp pháp khác trong thời kỳ hôn nhân, trừ trường hợp vợ chồng có thỏa thuận chia tài sản chung trong thời kỳ hôn nhân; tài sản mà vợ chồng được thừa kế chung hoặc được tặng cho chung và tài sản khác mà vợ chồng thỏa thuận là tài sản chung.
+
+Quyền sử dụng đất mà vợ, chồng có được sau khi kết hôn là tài sản chung của vợ chồng, trừ trường hợp vợ hoặc chồng được thừa kế riêng, được tặng cho riêng hoặc có được thông qua giao dịch bằng tài sản riêng.
+
+Tài sản chung của vợ chồng thuộc sở hữu chung hợp nhất, được dùng để bảo đảm nhu cầu của gia đình, thực hiện nghĩa vụ chung của vợ chồng. Trong trường hợp không có căn cứ để chứng minh tài sản mà vợ, chồng đang có tranh chấp là tài sản riêng của mỗi bên thì tài sản đó được coi là tài sản chung.
+
+Như vậy: Căn cứ quy định được trích dẫn trên đây thì thu nhập của vợ, chồng phát sinh trong thời kỳ hôn nhân về nguyên tắc sẽ được xác định là tài sản chung của vợ chồng. Trừ trường hợp vợ chồng có thỏa thuận khác hợp pháp hoặc vợ, chồng có căn cứ để chứng minh đó là tài sản riêng.
+
+Khi ly hôn, nếu chế độ tài sản của vợ chồng theo luật định thì việc giải quyết tài sản do các bên thỏa thuận; nếu không thỏa thuận được thì theo yêu cầu của vợ, chồng hoặc của hai vợ chồng, Tòa án giải quyết theo quy định của pháp luật.
+
+Trong trường hợp chế độ tài sản của vợ chồng theo thỏa thuận thì việc giải quyết tài sản khi ly hôn được áp dụng theo thỏa thuận đó; nếu thỏa thuận không đầy đủ, rõ ràng thì áp dụng quy định của pháp luật.
+
+Theo đó, tài sản chung của vợ chồng về nguyên tắc sẽ được chia đôi nhưng có tính đến các yếu tố sau đây:
+
+- Hoàn cảnh của gia đình và của vợ, chồng;
+
+- Công sức đóng góp của vợ, chồng vào việc tạo lập, duy trì và phát triển khối tài sản chung. Lao động của vợ, chồng trong gia đình được coi như lao động có thu nhập;
+
+- Bảo vệ lợi ích chính đáng của mỗi bên trong sản xuất, kinh doanh và nghề nghiệp để các bên có điều kiện tiếp tục lao động tạo thu nhập;
+
+- Lỗi của mỗi bên trong vi phạm quyền, nghĩa vụ của vợ chồng.
+
+Như vậy: Căn cứ các dẫn chứng trên đây thì có thể xác định lao động của người vợ, chồng trong gia đình được coi như lao động có thu nhập.
+
+Mặt khác, theo quy định tại Thông tư liên tịch 01/2016/TTLT-TANDTC-VKSNDTC-BTP thì người vợ hoặc chồng ở nhà chăm sóc con, gia đình mà không đi làm được tính là lao động có thu nhập tương đương với thu nhập của chồng hoặc vợ đi làm.
+
+Như vậy: Trường hợp người vợ (hoặc chồng) ở nhà nội trợ, chăm sóc gia đình, con cái vẫn được tính là có thu nhập tương đương với thu nhập của người đi làm. Nên vẫn được xác định là đã có công chức đóng góp vào việc tạo lập, duy trì và phát triển khối tài sản chung trong gia đình tương đương với người chồng (hoặc vợ) đi làm.
+
+Do đó: Trường hợp bạn chỉ ở nhà nội trợ thì vẫn được xác định là lao động có thu nhập và có ông chức đóng góp vào việc tạo lập, duy trì và phát triển khối tài sản chung trong gia đình như chồng bạn. Nên nếu hai vợ chồng bạn sống với nhau không hạnh phúc và dẫn đến phải ly hôn, thì bạn vẫn có quyền được chia tài sản chung của hai vợ chồng tạo lập trong thời kỳ hôn nhân theo thỏa thuận của hai vợ chồng hoặc theo phát quyết của Tòa án.
+
+Trên đây là quan điểm tư vấn của chúng tôi đối với vấn đề mà bạn đang thắc mắc.
+
+Trân trọng!",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014"": ""CON_HIEU_LUC"", ""ThongTuLienTich_01_2016_TTLT_TANDTC_VKSNDTC_BTP"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014""]","[""ThongTuLienTich_01_2016_TTLT_TANDTC_VKSNDTC_BTP""]",[],[],[],,,,,,,,,,
+"Sau khi ly hôn, người vợ thứ 2 có được chia tài sản của chồng với vợ cũ không?","Căn cứ theo khoản 1 Điều 44 Luật Hôn nhân và gia đình 2014 quy định về quyền chiếm hữu, sử dụng, định đoạt tài sản riêng của vợ, chồng như sau:
+
+Như vậy, nếu trong trường hợp bố bạn nhập tài sản riêng của mình là phần đất sau khi chua thừa kế vào tài sản chung của bố bạn với người mẹ kế thì miếng đất đó sẽ thuộc sở hữu chung của 02 người. Theo đó, người mẹ kế sẽ có quyền đòi chia tài sản đối với phần đất này sau khi ly hôn.
+
+Còn nếu bố bạn không thực hiện nhập tài sản riêng của mình vào tài sản chung của bố và người mẹ kế thì người mẹ kế không có quyền được đòi chia tài sản là miếng đất đó khi ly hôn với bố bạn.
+
+Trân trọng!",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014_Dieu_44_Khoan_1"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_44_Khoan_1""]",[],[],[],[],,,,,,,,,,
+Khi hai vợ chồng ly hôn căn nhà mua trả góp được chia như thế nào?,"Căn cứ Điều 59 Luật Hôn nhân và gia đình 2014 quy định nguyên tắc giải quyết tài sản của vợ chồng khi ly hôn như sau:
+
+Do đó, khi ly hôn thì căn nhà mua trả góp sẽ được chia trên sự thỏa thuận của hai vợ chồng. Nếu như không thỏa thuận được thì có thể nhờ Tòa án giải quyết theo nguyên tắc chia đôi nhưng phải theo những yếu tố đã được nêu trên.
+
+Trân trọng!",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014_Dieu_59"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_59""]",[],[],[],[],,,,,,,,,,
+"Vợ chồng tôi kết hôn 2017, do mâu thuẫn nên vợ chồng tôi đã sông ly thân từ 2017. Sau khi ly thân chồng tôi có sống chung với 01 người phụ nữ khác và mua 01 căn hộ chung cư. Bây giờ tôi muốn ly hôn vậy cho hỏi căn hộ chung cư đó sẽ chia thế nào?","Theo Khoản 1 Điều 33 Luật Hôn nhân và gia đình 2014 quy định tài sản chung của vợ chồng như sau:
+
+Tài sản chung của vợ chồng gồm tài sản do vợ, chồng tạo ra, thu nhập do lao động, hoạt động sản xuất, kinh doanh, hoa lợi, lợi tức phát sinh từ tài sản riêng và thu nhập hợp pháp khác trong thời kỳ hôn nhân, trừ trường hợp được quy định tại khoản 1 Điều 40 của Luật này; tài sản mà vợ chồng được thừa kế chung hoặc được tặng cho chung và tài sản khác mà vợ chồng thỏa thuận là tài sản chung.
+
+Quyền sử dụng đất mà vợ, chồng có được sau khi kết hôn là tài sản chung của vợ chồng, trừ trường hợp vợ hoặc chồng được thừa kế riêng, được tặng cho riêng hoặc có được thông qua giao dịch bằng tài sản riêng.
+
+Như vậy, vợ chồng bạn đang sống ly thân thì hôn nhân của vợ chồng bạn chưa chấm dứt theo quy định pháp luật thì tài sản hình thành trong hôn nhân là tài sản chung của vợ chồng bạn.
+
+*Trường hợp: Căn hộ chung cư đó mua từ tiền của người sống chung với chồng bạn.
+
+Như vậy, căn hộ chung cư thuộc sở hữu riêng của người đó.
+
+*Trường hợp: Căn hộ chung cư đó có sự đóng góp của chồng bạn.
+
+Thì một phần căn hộ chung cư đó thuộc sở hữu chung của vợ chồng bạn.
+
+Như vậy khi ly hôn thì căn hộ chung cư này được chia hai. Vợ chồng bạn được 01 phần, và người sống chung với chồng bạn 01 phần.
+
+Giá trị phần được hưởng xác định theo tỷ lệ đóng góp.
+
+Ban biên tập phản hồi đến bạn.",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014_Dieu_33_Khoan_1"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_33_Khoan_1""]",[],[],[],[],,,,,,,,,,
+Chia tài sản khi ly hôn như thế nào khi người chồng bỏ nhà đi xa rồi trở về?,"Căn cứ Điều 59 Luật Hôn nhân và gia đình 2014 quy định về nguyên tắc giải quyết tài sản của vợ chồng khi ly hôn như sau:
+
+1. Trong trường hợp chế độ tài sản của vợ chồng theo luật định thì việc giải quyết tài sản do các bên thỏa thuận; nếu không thỏa thuận được thì theo yêu cầu của vợ, chồng hoặc của hai vợ chồng, Tòa án giải quyết theo quy định tại các khoản 2, 3, 4 và 5 Điều này và tại các điều 60, 61, 62, 63 và 64 của Luật này.
+
+Trong trường hợp chế độ tài sản của vợ chồng theo thỏa thuận thì việc giải quyết tài sản khi ly hôn được áp dụng theo thỏa thuận đó; nếu thỏa thuận không đầy đủ, rõ ràng thì áp dụng quy định tương ứng tại các khoản 2, 3, 4 và 5 Điều này và tại các điều 60, 61, 62, 63 và 64 của Luật này để giải quyết.
+
+2. Tài sản chung của vợ chồng được chia đôi nhưng có tính đến các yếu tố sau đây:
+
+a) Hoàn cảnh của gia đình và của vợ, chồng;
+
+b) Công sức đóng góp của vợ, chồng vào việc tạo lập, duy trì và phát triển khối tài sản chung. Lao động của vợ, chồng trong gia đình được coi như lao động có thu nhập;
+
+c) Bảo vệ lợi ích chính đáng của mỗi bên trong sản xuất, kinh doanh và nghề nghiệp để các bên có điều kiện tiếp tục lao động tạo thu nhập;
+
+d) Lỗi của mỗi bên trong vi phạm quyền, nghĩa vụ của vợ chồng.
+
+3. Tài sản chung của vợ chồng được chia bằng hiện vật, nếu không chia được bằng hiện vật thì chia theo giá trị; bên nào nhận phần tài sản bằng hiện vật có giá trị lớn hơn phần mình được hưởng thì phải thanh toán cho bên kia phần chênh lệch.
+
+4. Tài sản riêng của vợ, chồng thuộc quyền sở hữu của người đó, trừ trường hợp tài sản riêng đã nhập vào tài sản chung theo quy định của Luật này.
+
+Trong trường hợp có sự sáp nhập, trộn lẫn giữa tài sản riêng với tài sản chung mà vợ, chồng có yêu cầu về chia tài sản thì được thanh toán phần giá trị tài sản của mình đóng góp vào khối tài sản đó, trừ trường hợp vợ chồng có thỏa thuận khác.
+
+5. Bảo vệ quyền, lợi ích hợp pháp của vợ, con chưa thành niên, con đã thành niên mất năng lực hành vi dân sự hoặc không có khả năng lao động và không có tài sản để tự nuôi mình.
+
+6. Tòa án nhân dân tối cao chủ trì phối hợp với Viện kiểm sát nhân dân tối cao và Bộ Tư pháp hướng dẫn Điều này.
+
+Bạn cần có những căn cứ chứng minh việc chồng bạn bỏ đi nơi khác để lại tất cả nợ nần, chi phí xây nhà và các khoản vay để làm ăn. Từ đó có cơ sở xem xét công sức đóng góp của bạn trong việc tạo lập tài sản. Việc này nhằm tạo ra chứng cứ có lợi cho bạn khi chia tài sản sau ly hôn.",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014""]","{""Luat_HNGD_2014_Dieu_59_Khoan_2"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_59""]",[],[],[],[],,,,,,,,,,
+"Tôi và chồng đã ly hôn, sau khi ly hôn được 4 tháng thì tôi có sinh ra một đứa con trai là con chung giữa tôi và anh ấy, vừa qua chồng cũ tôi bị tai nạn giao thông qua đời không để lại di chúc, tôi muốn hỏi con tôi có được hưởng thừa kế từ người cha của nó không?","Trong trường hợp này căn cứ Khoản 1 Điều 88 Luật hôn nhân và gia đình 2014 có quy định:
+
+- Con sinh ra trong thời kỳ hôn nhân hoặc do người vợ có thai trong thời kỳ hôn nhân là con chung của vợ chồng.
+
+Con được sinh ra trong thời hạn 300 ngày kể từ thời điểm chấm dứt hôn nhân được coi là con do người vợ có thai trong thời kỳ hôn nhân.
+
+Con sinh ra trước ngày đăng ký kết hôn và được cha mẹ thừa nhận là con chung của vợ chồng
+
+Theo đó trong trường hợp này con của bạn được xác định là con chung giữa hai vợ chồng do bạn đã mang thai trong thời kỳ hôn nhân, căn cứ quy định tại Điểm a Khoản 1 Điều 651 Bộ luật dân sự 2015 có quy định:
+
+Những người thừa kế theo pháp luật được quy định theo thứ tự sau đây:
+
+- Hàng thừa kế thứ nhất gồm: vợ, chồng, cha đẻ, mẹ đẻ, cha nuôi, mẹ uôi, con đẻ, con nuôi của người chết
+
+Như vậy cn của bạn được hưởng thừa kế theo pháp luật và sẽ được hưởng được một suất thừa kế tương ứng với phần di sản mà người cha đã mất để lại.
+
+Ban biên tập xin được thông tin đến bạn.
+
+Trân trọng!",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014"", ""BoLuat_DanSu_2015""]","{""Luat_HNGD_2014_Dieu_88_Khoan_1"": ""CON_HIEU_LUC"", ""BoLuat_DanSu_2015_Dieu_651_Khoan_1_Diem_a"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_88_Khoan_1""]","[""BoLuat_DanSu_2015_Dieu_651_Khoan_1_Diem_a""]",[],[],[],,,,,,,,,,
+"Chào anh chị! Hàng tháng, tôi có nhận tiền trợ cấp thương binh và gửi vào tài khoản tiết kiệm riêng đứng tên tôi. Hiện giờ, số tiền này khá lớn. Mới đây, tôi và vợ ly hôn. Vợ tôi đòi chia đôi khoản tiền này vì cho rằng đây là tài sản có trong thời kỳ hôn nhân. Vợ tôi nói như vậy có đúng không?","Theo Khoản 1 Điều 33 Luật Hôn nhân và Gia đình 2014 thì tài sản chung của vợ chồng gồm có:
+
+- Tài sản do vợ, chồng tạo ra, thu nhập do lao động, hoạt động sản xuất, kinh doanh, hoa lợi, lợi tức phát sinh từ tài sản riêng và thu nhập hợp pháp khác trong thời kỳ hôn nhân, trừ trường hợp được quy định tại khoản 1 Điều 40 của Luật này; tài sản mà vợ chồng được thừa kế chung hoặc được tặng cho chung và tài sản khác mà vợ chồng thỏa thuận là tài sản chung.
+
+- Quyền sử dụng đất mà vợ, chồng có được sau khi kết hôn là tài sản chung của vợ chồng, trừ trường hợp vợ hoặc chồng được thừa kế riêng, được tặng cho riêng hoặc có được thông qua giao dịch bằng tài sản riêng.
+
+Khoản 3 Điều 11 Nghị định 126/2014/NĐ-CP hướng dẫn thi hành Luật Hôn nhân và gia đình (hướng dẫn Điều 43 Luật Hôn nhân và Gia đình 2014) quy định tài sản riêng khác củ vợ, chồng theo quy định của pháp luật còn là khoản trợ cấp, ưu đãi mà vợ, chồng được nhận theo quy định của pháp luật về ưu đãi người có công với cách mạng; quyền tài sản khác gắn liền với nhân thân của vợ, chồng.
+
+Như vậy, theo các căn cứ trên, khoản tiền tiết kiệm riêng từ tiền trợ cấp thương binh là tài sản riêng của bạn và không phải chia khi ly hôn.
+
+Trên đây là nội dung tư vấn của chúng tôi về thắc mắc của bạn.
+
+Trân trọng!",,chia_tai_san_sau_ly_hon,Tình huống,"[""Luat_HNGD_2014"", ""Nghi_dinh_126_2014_ND_CP""]","{""Luat_HNGD_2014_Dieu_33_Khoan_1"": ""CON_HIEU_LUC"", ""Nghi_dinh_126_2014_ND_CP_Dieu_11_Khoan_3"": ""CON_HIEU_LUC""}","[""Luat_HNGD_2014_Dieu_33_Khoan_1""]","[""Nghi_dinh_126_2014_ND_CP_Dieu_11_Khoan_3""]",[],[],[],,,,,,,,,,

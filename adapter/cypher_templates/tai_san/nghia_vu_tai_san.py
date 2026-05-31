@@ -120,13 +120,13 @@ WITH lnv_param, thk, wl,
 UNWIND loai_list AS lnv
 
 // 1b. Match NghiaVu theo loai_nghia_vu + tinh_huong_keyword (mềm)
-OPTIONAL MATCH (nv:NghiaVu)
+OPTIONAL MATCH (nv:NghiaVu:CheDoTaiSanCuaVoChong)
 WHERE nv.loai_nghia_vu = lnv
   AND (
     thk IS NULL
     OR toLower(nv.id) CONTAINS toLower(thk)
     OR EXISTS {
-        MATCH (nv)-[:PHAT_SINH_TU]->(target)
+        MATCH (nv)-[:PHAT_SINH_TU]->(target:CheDoTaiSanCuaVoChong)
         WHERE toLower(target.id) CONTAINS toLower(thk)
     }
   )
@@ -134,8 +134,8 @@ WHERE nv.loai_nghia_vu = lnv
 WITH wl, collect(DISTINCT nv) AS nv_list
 
 UNWIND nv_list AS nv
-OPTIONAL MATCH (nv)-[:PHAT_SINH_TU]->(hv:HanhVi)
-OPTIONAL MATCH (nv)-[:THANH_TOAN_BANG]->(lts:LoaiTaiSan)
+OPTIONAL MATCH (nv)-[:PHAT_SINH_TU]->(hv:HanhVi:CheDoTaiSanCuaVoChong)
+OPTIONAL MATCH (nv)-[:THANH_TOAN_BANG]->(lts:LoaiTaiSan:CheDoTaiSanCuaVoChong)
 
 WITH wl, collect(DISTINCT nv) + collect(DISTINCT hv) + collect(DISTINCT lts) AS seed_nodes
 
@@ -174,13 +174,13 @@ WITH lnv_param, thk, wl,
 
 UNWIND loai_list AS lnv
 
-OPTIONAL MATCH (nv:NghiaVu)
+OPTIONAL MATCH (nv:NghiaVu:CheDoTaiSanCuaVoChong)
 WHERE nv.loai_nghia_vu = lnv
   AND (
     thk IS NULL
     OR toLower(nv.id) CONTAINS toLower(thk)
     OR EXISTS {
-        MATCH (nv)-[:PHAT_SINH_TU]->(target)
+        MATCH (nv)-[:PHAT_SINH_TU]->(target:CheDoTaiSanCuaVoChong)
         WHERE toLower(target.id) CONTAINS toLower(thk)
     }
   )
@@ -188,8 +188,8 @@ WHERE nv.loai_nghia_vu = lnv
 WITH wl, collect(DISTINCT nv) AS nv_list
 
 UNWIND nv_list AS nv
-OPTIONAL MATCH (nv)-[:PHAT_SINH_TU]->(hv:HanhVi)
-OPTIONAL MATCH (nv)-[:THANH_TOAN_BANG]->(lts:LoaiTaiSan)
+OPTIONAL MATCH (nv)-[:PHAT_SINH_TU]->(hv:HanhVi:CheDoTaiSanCuaVoChong)
+OPTIONAL MATCH (nv)-[:THANH_TOAN_BANG]->(lts:LoaiTaiSan:CheDoTaiSanCuaVoChong)
 
 WITH wl, collect(DISTINCT nv) + collect(DISTINCT hv) + collect(DISTINCT lts) AS seed_nodes
 

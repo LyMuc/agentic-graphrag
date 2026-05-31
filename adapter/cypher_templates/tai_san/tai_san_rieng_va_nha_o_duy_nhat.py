@@ -101,7 +101,7 @@ WITH kc,
    ] ELSE [] END
   ) AS allowed_semantic_ids
 
-OPTIONAL MATCH (sn)
+OPTIONAL MATCH (sn:CheDoTaiSanCuaVoChong)
 WHERE sn.id IN allowed_semantic_ids
   AND (sn:HanhVi OR sn:Quyen OR sn:NghiaVu OR sn:LoaiTaiSan
        OR sn:ThoaThuan OR sn:DieuKien OR sn:HauQua OR sn:TruongHopNgoaiLe)

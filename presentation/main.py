@@ -23,6 +23,10 @@ from adapter.retrievers.ket_hon.dieu_kien_ket_hon import dieu_kien_ket_hon, dieu
 from adapter.retrievers.ket_hon.ket_hon_trai_phap_luat import ket_hon_trai_phap_luat, ket_hon_trai_phap_luat_description
 from adapter.retrievers.ly_hon.cha_me_con_sau_ly_hon import cha_me_con_sau_ly_hon, cha_me_con_sau_ly_hon_description
 from adapter.retrievers.ly_hon.chia_tai_san_sau_ly_hon import chia_tai_san_sau_ly_hon, chia_tai_san_sau_ly_hon_description
+from adapter.retrievers.ly_hon.chia_tai_san_sau_ly_hon_v3 import (
+    chia_tai_san_sau_ly_hon_v3,
+    chia_tai_san_sau_ly_hon_v3_description,
+)
 from adapter.retrievers.ly_hon.quy_dinh_chung_ly_hon import quy_dinh_chung_ly_hon, quy_dinh_chung_ly_hon_description
 from adapter.retrievers.quan_he_giua_vo_va_chong.che_do_tai_san_cua_vo_chong import (
     che_do_tai_san_cua_vo_chong,
@@ -52,7 +56,20 @@ from adapter.retrievers.quan_he_giua_vo_va_chong.che_do_tai_san_cua_vo_chong_v3 
     che_do_tai_san_cua_vo_chong_v3,
     che_do_tai_san_cua_vo_chong_v3_description,
 )
+from adapter.retrievers.han_che_quyen_cha_me_con_chua_thanh_nien import (
+    han_che_quyen_cha_me_con_chua_thanh_nien,
+    han_che_quyen_cha_me_con_chua_thanh_nien_description,
+)
+from adapter.retrievers.quan_he_giua_cac_thanh_vien_khac_trong_gia_dinh import (
+    quan_he_giua_cac_thanh_vien_khac_trong_gia_dinh,
+    quan_he_giua_cac_thanh_vien_khac_trong_gia_dinh_description,
+)
+from adapter.retrievers.quyen_nghia_vu_cha_me_con import (
+    quyen_nghia_vu_cha_me_con,
+    quyen_nghia_vu_cha_me_con_description,
+)
 from adapter.retrievers.tai_san_rieng_cua_con import tai_san_rieng_cua_con, tai_san_rieng_cua_con_description
+from adapter.retrievers.xac_dinh_cha_me_con import xac_dinh_cha_me_con, xac_dinh_cha_me_con_description
 from adapter.retrievers.vi_pham.xu_phat_vi_pham import xu_phat_vi_pham, xu_phat_vi_pham_description
 from utils.general import text2cypher, text2cypher_description, answer_given, answer_given_description
 from chainlit.types import ThreadDict
@@ -95,13 +112,33 @@ tools = {
         "description": tai_san_rieng_cua_con_description,
         "function": tai_san_rieng_cua_con
     },
+    "quyen_nghia_vu_cha_me_con": {
+        "description": quyen_nghia_vu_cha_me_con_description,
+        "function": quyen_nghia_vu_cha_me_con
+    },
+    "han_che_quyen_cha_me_con_chua_thanh_nien": {
+        "description": han_che_quyen_cha_me_con_chua_thanh_nien_description,
+        "function": han_che_quyen_cha_me_con_chua_thanh_nien
+    },
+    "xac_dinh_cha_me_con": {
+        "description": xac_dinh_cha_me_con_description,
+        "function": xac_dinh_cha_me_con
+    },
+    "quan_he_giua_cac_thanh_vien_khac_trong_gia_dinh": {
+        "description": quan_he_giua_cac_thanh_vien_khac_trong_gia_dinh_description,
+        "function": quan_he_giua_cac_thanh_vien_khac_trong_gia_dinh
+    },
     "quy_dinh_chung_ly_hon": {
         "description": quy_dinh_chung_ly_hon_description,
         "function": quy_dinh_chung_ly_hon
     },
-    "chia_tai_san_sau_ly_hon": {
-        "description": chia_tai_san_sau_ly_hon_description,
-        "function": chia_tai_san_sau_ly_hon
+    # "chia_tai_san_sau_ly_hon": {
+    #     "description": chia_tai_san_sau_ly_hon_description,
+    #     "function": chia_tai_san_sau_ly_hon
+    # },
+    "chia_tai_san_sau_ly_hon_v3": {
+        "description": chia_tai_san_sau_ly_hon_v3_description,
+        "function": chia_tai_san_sau_ly_hon_v3
     },
     "cha_me_con_sau_ly_hon": {
         "description": cha_me_con_sau_ly_hon_description,

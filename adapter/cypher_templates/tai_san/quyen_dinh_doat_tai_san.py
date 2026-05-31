@@ -85,7 +85,7 @@ WITH
 // 1a. Match HanhVi định đoạt theo loại giao dịch
 UNWIND tinh_chat_list AS tc
 
-OPTIONAL MATCH (hv:HanhVi)
+OPTIONAL MATCH (hv:HanhVi:CheDoTaiSanCuaVoChong)
 WHERE
   // Lọc HanhVi theo loại giao dịch
   (
@@ -114,17 +114,17 @@ WHERE
     $asset_keyword IS NULL
     OR tc = 'rieng'
     OR EXISTS {
-      MATCH (hv)-[:TAC_DONG_LEN]->(target:LoaiTaiSan)
+      MATCH (hv)-[:TAC_DONG_LEN]->(target:LoaiTaiSan:CheDoTaiSanCuaVoChong)
       WHERE target.id = $asset_keyword
         OR EXISTS {
-          MATCH (target)-[:LA_LOAI_CON_CUA*0..3]->(parent:LoaiTaiSan {id: $asset_keyword})
+          MATCH (target)-[:LA_LOAI_CON_CUA*0..3]->(parent:LoaiTaiSan:CheDoTaiSanCuaVoChong {id: $asset_keyword})
         }
         OR EXISTS {
-          MATCH (child:LoaiTaiSan {id: $asset_keyword})-[:LA_LOAI_CON_CUA*0..3]->(target)
+          MATCH (child:LoaiTaiSan:CheDoTaiSanCuaVoChong {id: $asset_keyword})-[:LA_LOAI_CON_CUA*0..3]->(target)
         }
     }
     OR NOT EXISTS {
-      MATCH (hv)-[:TAC_DONG_LEN]->(:LoaiTaiSan)
+      MATCH (hv)-[:TAC_DONG_LEN]->(:LoaiTaiSan:CheDoTaiSanCuaVoChong)
     }
   )
 
@@ -135,9 +135,9 @@ WITH collect(DISTINCT hv) AS hv_list, tc
 UNWIND hv_list AS hv
 WITH DISTINCT hv
 
-OPTIONAL MATCH (hv)-[:YEU_CAU_THOA_THUAN]->(tt:ThoaThuan)
-OPTIONAL MATCH (hv)-[:DAN_TOI]->(hq:HauQua)
-OPTIONAL MATCH (hv)-[:CO_NGOAI_LE]->(nl:TruongHopNgoaiLe)
+OPTIONAL MATCH (hv)-[:YEU_CAU_THOA_THUAN]->(tt:ThoaThuan:CheDoTaiSanCuaVoChong)
+OPTIONAL MATCH (hv)-[:DAN_TOI]->(hq:HauQua:CheDoTaiSanCuaVoChong)
+OPTIONAL MATCH (hv)-[:CO_NGOAI_LE]->(nl:TruongHopNgoaiLe:CheDoTaiSanCuaVoChong)
 
 WITH collect(DISTINCT hv) + collect(DISTINCT tt) + collect(DISTINCT hq) + collect(DISTINCT nl) AS seed_nodes
 

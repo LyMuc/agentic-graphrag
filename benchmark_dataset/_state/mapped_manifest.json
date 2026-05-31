@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-05-17T18:04:19+07:00",
+  "updated_at": "2026-05-30T16:29:57+07:00",
   "topics": {
     "hon_nhan_cham_dut_do_vo_chong_chet": {
       "mapped_question_ids": [
@@ -31,7 +31,10 @@
         "6b775edb4aed",
         "d7239899cf19",
         "8b0d072675ad",
-        "7277fe006c7a"
+        "7277fe006c7a",
+        "e3415d40bd21",
+        "af71ffa1dde7",
+        "380fb5b204d3"
       ],
       "versions": [
         {
@@ -49,6 +52,19 @@
             "8b0d072675ad",
             "7277fe006c7a"
           ]
+        },
+        {
+          "version": 2,
+          "date": "3005",
+          "files": [
+            "test_versions/cap_duong/test_v2_3005_cap_duong.json",
+            "test_versions/cap_duong/test_v2_3005_cap_duong.csv"
+          ],
+          "added_question_ids": [
+            "e3415d40bd21",
+            "af71ffa1dde7",
+            "380fb5b204d3"
+          ]
         }
       ]
     },
@@ -60,7 +76,12 @@
         "623aa944e2aa",
         "5a6413a21a13",
         "3e8964a8d930",
-        "1c552d7f353a"
+        "1c552d7f353a",
+        "79e22e73148b",
+        "3bb893788ef6",
+        "81aa78606fa6",
+        "b8b50589c8e8",
+        "a4eeb04e86f1"
       ],
       "versions": [
         {
@@ -78,6 +99,21 @@
             "5a6413a21a13",
             "3e8964a8d930",
             "1c552d7f353a"
+          ]
+        },
+        {
+          "version": 2,
+          "date": "3005",
+          "files": [
+            "test_versions/cha_me_con_sau_ly_hon/test_v2_3005_cha_me_con_sau_ly_hon.json",
+            "test_versions/cha_me_con_sau_ly_hon/test_v2_3005_cha_me_con_sau_ly_hon.csv"
+          ],
+          "added_question_ids": [
+            "79e22e73148b",
+            "3bb893788ef6",
+            "81aa78606fa6",
+            "b8b50589c8e8",
+            "a4eeb04e86f1"
           ]
         }
       ]
@@ -113,7 +149,27 @@
         "2022e9c79825",
         "fca73e2559b3",
         "32ae1dd54d59",
-        "00a70be8d185"
+        "00a70be8d185",
+        "20f3c2e202ef",
+        "ab06842619ee",
+        "3d5e311e38a1",
+        "e904d8b16f6d",
+        "20c8519f8fd5",
+        "3d495575460b",
+        "020526a0185a",
+        "82dbf9371c18",
+        "39ae5d12c8f9",
+        "fc5cf4a7f3da",
+        "d13507351cf0",
+        "326097fe4c5a",
+        "2cdfdc1d3099",
+        "4b3300ea63ec",
+        "0a521091fc77",
+        "49805e7487e9",
+        "d38373063f40",
+        "2e42686a5669",
+        "67847d8fec9d",
+        "dfceadeb8b40"
       ],
       "versions": [
         {
@@ -155,6 +211,36 @@
             "32ae1dd54d59",
             "00a70be8d185"
           ]
+        },
+        {
+          "version": 2,
+          "date": "3005",
+          "files": [
+            "test_versions/che_do_tai_san_cua_vo_chong/test_v2_3005_che_do_tai_san_cua_vo_chong.json",
+            "test_versions/che_do_tai_san_cua_vo_chong/test_v2_3005_che_do_tai_san_cua_vo_chong.csv"
+          ],
+          "added_question_ids": [
+            "20f3c2e202ef",
+            "ab06842619ee",
+            "3d5e311e38a1",
+            "e904d8b16f6d",
+            "20c8519f8fd5",
+            "3d495575460b",
+            "020526a0185a",
+            "82dbf9371c18",
+            "39ae5d12c8f9",
+            "fc5cf4a7f3da",
+            "d13507351cf0",
+            "326097fe4c5a",
+            "2cdfdc1d3099",
+            "4b3300ea63ec",
+            "0a521091fc77",
+            "49805e7487e9",
+            "d38373063f40",
+            "2e42686a5669",
+            "67847d8fec9d",
+            "dfceadeb8b40"
+          ]
         }
       ]
     },
@@ -175,7 +261,26 @@
         "7cc0c7a86a05",
         "bfcaa9f096df",
         "3c4dc86ed962",
-        "4df0fb1b6f34"
+        "4df0fb1b6f34",
+        "cb3ec7abcc01",
+        "07446b2d653e",
+        "83656195cafc",
+        "b5f0b945dfbc",
+        "5880caf06641",
+        "c3e6226147e0",
+        "12560fe10608",
+        "c3c8fa3f483c",
+        "b7b7f86d0270",
+        "e03d1c15965d",
+        "8d9171ddaf03",
+        "8c1c7f47a200",
+        "0314388441cb",
+        "c8091a103c82",
+        "d452a1394549",
+        "65beb077c685",
+        "4ff0921fd0de",
+        "b77198b3f7fd",
+        "de9ab9113965"
       ],
       "versions": [
         {
@@ -203,16 +308,73 @@
             "3c4dc86ed962",
             "4df0fb1b6f34"
           ]
+        },
+        {
+          "version": 2,
+          "date": "3005",
+          "files": [
+            "test_versions/chia_tai_san_sau_ly_hon/test_v2_3005_chia_tai_san_sau_ly_hon.json",
+            "test_versions/chia_tai_san_sau_ly_hon/test_v2_3005_chia_tai_san_sau_ly_hon.csv"
+          ],
+          "added_question_ids": [
+            "cb3ec7abcc01",
+            "07446b2d653e",
+            "83656195cafc",
+            "b5f0b945dfbc",
+            "5880caf06641",
+            "c3e6226147e0",
+            "12560fe10608",
+            "c3c8fa3f483c",
+            "b7b7f86d0270",
+            "e03d1c15965d",
+            "8d9171ddaf03",
+            "8c1c7f47a200",
+            "0314388441cb",
+            "c8091a103c82",
+            "d452a1394549",
+            "65beb077c685",
+            "4ff0921fd0de",
+            "b77198b3f7fd",
+            "de9ab9113965"
+          ]
         }
       ]
     },
     "chung_song_nhu_vo_chong": {
-      "mapped_question_ids": [],
-      "versions": []
+      "mapped_question_ids": [
+        "72a75860dd93"
+      ],
+      "versions": [
+        {
+          "version": 1,
+          "date": "3005",
+          "files": [
+            "test_versions/chung_song_nhu_vo_chong/test_v1_3005_chung_song_nhu_vo_chong.json",
+            "test_versions/chung_song_nhu_vo_chong/test_v1_3005_chung_song_nhu_vo_chong.csv"
+          ],
+          "added_question_ids": [
+            "72a75860dd93"
+          ]
+        }
+      ]
     },
     "dang_ky_ket_hon": {
-      "mapped_question_ids": [],
-      "versions": []
+      "mapped_question_ids": [
+        "ddd04ac13a71"
+      ],
+      "versions": [
+        {
+          "version": 1,
+          "date": "3005",
+          "files": [
+            "test_versions/dang_ky_ket_hon/test_v1_3005_dang_ky_ket_hon.json",
+            "test_versions/dang_ky_ket_hon/test_v1_3005_dang_ky_ket_hon.csv"
+          ],
+          "added_question_ids": [
+            "ddd04ac13a71"
+          ]
+        }
+      ]
     },
     "dieu_kien_ket_hon": {
       "mapped_question_ids": [],
@@ -227,18 +389,64 @@
       "versions": []
     },
     "quy_dinh_chung_khai_niem_phap_ly": {
-      "mapped_question_ids": [],
-      "versions": []
+      "mapped_question_ids": [
+        "8b748e53155a"
+      ],
+      "versions": [
+        {
+          "version": 1,
+          "date": "3005",
+          "files": [
+            "test_versions/quy_dinh_chung_khai_niem_phap_ly/test_v1_3005_quy_dinh_chung_khai_niem_phap_ly.json",
+            "test_versions/quy_dinh_chung_khai_niem_phap_ly/test_v1_3005_quy_dinh_chung_khai_niem_phap_ly.csv"
+          ],
+          "added_question_ids": [
+            "8b748e53155a"
+          ]
+        }
+      ]
     },
     "quy_dinh_chung_ly_hon": {
-      "mapped_question_ids": [],
-      "versions": []
+      "mapped_question_ids": [
+        "fb82ef6865d0"
+      ],
+      "versions": [
+        {
+          "version": 1,
+          "date": "3005",
+          "files": [
+            "test_versions/quy_dinh_chung_ly_hon/test_v1_3005_quy_dinh_chung_ly_hon.json",
+            "test_versions/quy_dinh_chung_ly_hon/test_v1_3005_quy_dinh_chung_ly_hon.csv"
+          ],
+          "added_question_ids": [
+            "fb82ef6865d0"
+          ]
+        }
+      ]
     },
     "quyen_nghia_vu_vo_chong": {
+      "mapped_question_ids": [
+        "0eabf9b9d3a7"
+      ],
+      "versions": [
+        {
+          "version": 1,
+          "date": "3005",
+          "files": [
+            "test_versions/quyen_nghia_vu_vo_chong/test_v1_3005_quyen_nghia_vu_vo_chong.json",
+            "test_versions/quyen_nghia_vu_vo_chong/test_v1_3005_quyen_nghia_vu_vo_chong.csv"
+          ],
+          "added_question_ids": [
+            "0eabf9b9d3a7"
+          ]
+        }
+      ]
+    },
+    "xu_phat_vi_pham": {
       "mapped_question_ids": [],
       "versions": []
     },
-    "xu_phat_vi_pham": {
+    "xac_dinh_cha_me_con": {
       "mapped_question_ids": [],
       "versions": []
     }

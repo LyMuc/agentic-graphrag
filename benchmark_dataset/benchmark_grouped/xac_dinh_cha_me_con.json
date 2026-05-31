@@ -1,0 +1,15 @@
+[
+  {
+    "question": "Có thai trước khi kết hôn có được xem là con chung của vợ chồng?",
+    "ground_truth": "Tại Điều 88 Luật Hôn nhân và gia đình 2014 có quy định về xác định cha, mẹ như sau:\n\n1. Con sinh ra trong thời kỳ hôn nhân hoặc do người vợ có thai trong thời kỳ hôn nhân là con chung của vợ chồng.\n\nCon được sinh ra trong thời hạn 300 ngày kể từ thời điểm chấm dứt hôn nhân được coi là con do người vợ có thai trong thời kỳ hôn nhân.\n\nCon sinh ra trước ngày đăng ký kết hôn và được cha mẹ thừa nhận là con chung của vợ chồng.\n\n2. Trong trường hợp cha, mẹ không thừa nhận con thì phải có chứng cứ và phải được Tòa án xác định.\n\nCăn cứ theo quy định hiện hành, trong trường hợp vợ bạn có thai trước khi kết hôn và sinh ra trong thời kỳ hôn nhân thì pháp luật sẽ thừa nhận đây là con chung của hai bạn. Mặc khác, trong trường hợp c on sinh ra trước ngày đăng ký kết hôn và được hai vợ chồng bạn thừa nhận là con chung của vợ chồng thì pháp luật cũng sẽ thừa nhận đây là con chung của hai bạn.",
+    "chu_de_phap_ly": "xac_dinh_cha_me_con",
+    "loai_cau_hoi": "",
+    "van_ban_phap_luat_lien_quan": [],
+    "tinh_trang_hieu_luc": {},
+    "can_cu_phap_ly_chinh": [],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
+  }
+]
