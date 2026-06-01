@@ -2,6 +2,7 @@ from adapter.text2cypher import Text2Cypher
 from adapter.config import driver, build_llm, RETRIEVER_LLM
 # Cấu hình Gemini (tạm comment): from adapter.config import driver, ainvoke_structured_retriever
 from utils.utils import TrichXuatLuat, chuan_hoa_ket_qua_retriever, lay_target_date_tu_extraction
+from adapter.retrievers._context_tho_common import enhance_domain_retriever_cypher
 
 from datetime import date
 today = date.today()
@@ -65,15 +66,16 @@ async def xu_phat_vi_pham(query: str):
     // 1. MỞ RỘNG THÀNH CÁC KHOẢN/ĐIỂM GỐC (Chưa lọc thời gian vội)
     OPTIONAL MATCH (n_goc)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_goc)
 
-    // 2. LẤY TOÀN BỘ GIA PHẢ THEO DÒNG THỜI GIAN (QÚA KHỨ + TƯƠNG LAI)
-    // Lưu ý mũi tên -[...]-(...) không có hướng, Neo4j sẽ chạy cả tiến và lùi theo dây THAY_THE_BOI
-    OPTIONAL MATCH (chi_tiet_goc)-[:THAY_THE_BOI*0..]-(chi_tiet_gia_toc)
+    // 2. LẤY GIA PHẢ THAY THẾ CÓ HƯỚNG (tránh kéo anh em qua hub THAY_THE_BOI)
+    OPTIONAL MATCH (chi_tiet_goc)-[:THAY_THE_BOI*0..]->(chi_tiet_moi)
+    OPTIONAL MATCH (chi_tiet_goc)<-[:THAY_THE_BOI*0..]-(chi_tiet_cu)
 
     // 2b. MỞ RỘNG CHI TIẾT (KHOẢN/ĐIỂM) CỦA VĂN BẢN THAY THẾ
-    OPTIONAL MATCH (chi_tiet_gia_toc)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_thay_the)
+    OPTIONAL MATCH (chi_tiet_moi)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_thay_the_moi)
+    OPTIONAL MATCH (chi_tiet_cu)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_thay_the_cu)
 
     // Gom tất cả các phiên bản (Bản gốc + Bản quá khứ + Bản tương lai) vào 1 rổ
-    WITH n_goc, collect(chi_tiet_goc) + collect(chi_tiet_gia_toc) + collect(chi_tiet_thay_the) AS tat_ca_phien_ban
+    WITH n_goc, collect(chi_tiet_goc) + collect(chi_tiet_moi) + collect(chi_tiet_cu) + collect(chi_tiet_thay_the_moi) + collect(chi_tiet_thay_the_cu) AS tat_ca_phien_ban
     UNWIND tat_ca_phien_ban AS node_xet_duyet
 
     // 3. TÌM CHÍNH XÁC PHIÊN BẢN CÓ HIỆU LỰC TẠI $target_date
@@ -152,5 +154,5 @@ async def xu_phat_vi_pham(query: str):
         """
 
     print(f"Cypher Query với IDs: {target_ids} và Thời điểm: {target_date}")
-    records, _, _ = driver.execute_query(cypher, danh_sach_id=target_ids, target_date=target_date)
+    records, _, _ = driver.execute_query(enhance_domain_retriever_cypher(cypher), danh_sach_id=target_ids, target_date=target_date)
     return chuan_hoa_ket_qua_retriever(records, target_date, is_user_provide_date)

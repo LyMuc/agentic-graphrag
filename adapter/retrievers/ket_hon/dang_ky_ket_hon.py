@@ -1,6 +1,7 @@
 from adapter.config import driver, build_llm, RETRIEVER_LLM
 # Cấu hình Gemini (tạm comment): from adapter.config import driver, ainvoke_structured_retriever
 from utils.utils import TrichXuatLuat, chuan_hoa_ket_qua_retriever, lay_target_date_tu_extraction
+from adapter.retrievers._context_tho_common import enhance_domain_retriever_cypher
 from datetime import date
 
 today = date.today()
@@ -38,8 +39,6 @@ async def dang_ky_ket_hon(query: str):
     - 'Luat_HNGD_2014_Dieu_13': Xử lý việc đăng ký kết hôn không đúng thẩm quyền.
     - 'Luat_HoTich_2014_Dieu_17': Thẩm quyền đăng ký kết hôn và nội dung Giấy chứng nhận kết hôn (Áp dụng cho người Việt Nam kết hôn với nhau)
     - 'Luat_HoTich_2014_Dieu_18': Thủ tục đăng ký kết hôn (Áp dụng cho người Việt Nam kết hôn với nhau)
-    - 'Luat_HoTich_2014_Dieu_37': Thẩm quyền đăng ký kết hôn (Áp dụng cho hôn nhân có yếu tố nước ngoài)
-    - 'Luat_HoTich_2014_Dieu_38': Thủ tục đăng ký kết hôn (Áp dụng cho hôn nhân có yếu tố nước ngoài)
     Trích xuất mốc thời gian sự kiện (nếu có) định dạng 'YYYY-MM-DD'. Nếu người dùng chỉ nêu năm (vd: 2023), trả về 'YYYY' hoặc 'YYYY-01-01'. Nếu không có, trả về null.
     """
     # Cấu hình Gemini (tạm comment):
@@ -65,16 +64,20 @@ async def dang_ky_ket_hon(query: str):
     OPTIONAL MATCH (n_goc)-[:KET_HON_KHONG_CO_YEU_TO_NUOC_NGOAI|KET_HON_CO_YEU_TO_NUOC_NGOAI]->(luat_lien_quan)
     OPTIONAL MATCH (luat_lien_quan)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_lien_quan)
 
-    // 2. LẤY TOÀN BỘ GIA PHẢ THEO DÒNG THỜI GIAN (QÚA KHỨ + TƯƠNG LAI)
-    OPTIONAL MATCH (chi_tiet_goc)-[:THAY_THE_BOI*0..]-(chi_tiet_gia_toc)
-    OPTIONAL MATCH (chi_tiet_lien_quan)-[:THAY_THE_BOI*0..]-(chi_tiet_lien_quan_gia_toc)
+    // 2. LẤY GIA PHẢ THAY THẾ CÓ HƯỚNG (tránh kéo anh em qua hub THAY_THE_BOI)
+    OPTIONAL MATCH (chi_tiet_goc)-[:THAY_THE_BOI*0..]->(chi_tiet_moi)
+    OPTIONAL MATCH (chi_tiet_goc)<-[:THAY_THE_BOI*0..]-(chi_tiet_cu)
+    OPTIONAL MATCH (chi_tiet_lien_quan)-[:THAY_THE_BOI*0..]->(chi_tiet_lien_quan_moi)
+    OPTIONAL MATCH (chi_tiet_lien_quan)<-[:THAY_THE_BOI*0..]-(chi_tiet_lien_quan_cu)
 
     // 2b. MỞ RỘNG CHI TIẾT (KHOẢN/ĐIỂM) CỦA VĂN BẢN THAY THẾ
-    OPTIONAL MATCH (chi_tiet_gia_toc)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_thay_the)
-    OPTIONAL MATCH (chi_tiet_lien_quan_gia_toc)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_lien_quan_thay_the)
+    OPTIONAL MATCH (chi_tiet_moi)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_thay_the_moi)
+    OPTIONAL MATCH (chi_tiet_cu)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_thay_the_cu)
+    OPTIONAL MATCH (chi_tiet_lien_quan_moi)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_lien_quan_thay_the_moi)
+    OPTIONAL MATCH (chi_tiet_lien_quan_cu)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_lien_quan_thay_the_cu)
 
     // Gom tất cả các phiên bản (Bản gốc + Bản quá khứ + Bản tương lai) vào 1 rổ
-    WITH n_goc, collect(chi_tiet_goc) + collect(chi_tiet_gia_toc) + collect(chi_tiet_thay_the) + collect(chi_tiet_lien_quan) + collect(chi_tiet_lien_quan_gia_toc) + collect(chi_tiet_lien_quan_thay_the) AS tat_ca_phien_ban
+    WITH n_goc, collect(chi_tiet_goc) + collect(chi_tiet_moi) + collect(chi_tiet_cu) + collect(chi_tiet_thay_the_moi) + collect(chi_tiet_thay_the_cu) + collect(chi_tiet_lien_quan) + collect(chi_tiet_lien_quan_moi) + collect(chi_tiet_lien_quan_cu) + collect(chi_tiet_lien_quan_thay_the_moi) + collect(chi_tiet_lien_quan_thay_the_cu) AS tat_ca_phien_ban
     UNWIND tat_ca_phien_ban AS node_xet_duyet
     WITH DISTINCT n_goc, node_xet_duyet
     WHERE node_xet_duyet IS NOT NULL
@@ -172,6 +175,6 @@ async def dang_ky_ket_hon(query: str):
     } AS Context_Tho
     """
     
-    records, _, _ = driver.execute_query(cypher, danh_sach_id=target_ids, target_date=target_date)
+    records, _, _ = driver.execute_query(enhance_domain_retriever_cypher(cypher), danh_sach_id=target_ids, target_date=target_date)
     
     return chuan_hoa_ket_qua_retriever(records, target_date, is_user_provide_date)

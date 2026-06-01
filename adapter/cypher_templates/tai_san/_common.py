@@ -19,6 +19,8 @@ trùng khi chúng đến từ seed Khoản/Điểm riêng lẻ khác.
 """
 from __future__ import annotations
 
+from adapter.retrievers._context_tho_common import FUTURE_EFFECTIVE_MATCH_CYPHER_V3
+
 # Label Neo4j gắn trên node semantic thuộc topic chế độ tài sản vợ chồng.
 # Chỉ dùng cho MATCH node ngữ nghĩa (HanhVi, LoaiTaiSan, ...), KHÔNG áp dụng
 # cho legal layer (DieuLuat/DieuKhoanLuat/DieuKhoanDiemLuat).
@@ -65,21 +67,32 @@ WITH n_goc, dieu_seed_ids,
       + collect(DISTINCT dieu_ong)
     WHERE x IS NOT NULL] AS chi_tiet_anc
 
-// 2a. Descendants: THAY_THE_BOI + mở rộng xuống (có hướng, tránh kéo anh em qua THAY_THE)
+// 2a. Descendants: THAY_THE_BOI có hướng + mở rộng xuống (tránh kéo anh em qua hub)
 UNWIND chi_tiet_desc AS chi_tiet_goc
-OPTIONAL MATCH (chi_tiet_goc)-[:THAY_THE_BOI*0..]-(chi_tiet_gia_toc)
-OPTIONAL MATCH (chi_tiet_gia_toc)-[:CO_KHOAN]->(thay_khoan)
-  WHERE 'DieuLuat' IN labels(chi_tiet_gia_toc)
-OPTIONAL MATCH (thay_khoan)-[:CO_DIEM]->(thay_diem)
-  WHERE 'DieuLuat' IN labels(chi_tiet_gia_toc)
-OPTIONAL MATCH (chi_tiet_gia_toc)-[:CO_DIEM]->(thay_diem_k)
-  WHERE 'DieuKhoanLuat' IN labels(chi_tiet_gia_toc)
+OPTIONAL MATCH (chi_tiet_goc)-[:THAY_THE_BOI*0..]->(chi_tiet_moi)
+OPTIONAL MATCH (chi_tiet_goc)<-[:THAY_THE_BOI*0..]-(chi_tiet_cu)
+OPTIONAL MATCH (chi_tiet_moi)-[:CO_KHOAN]->(thay_khoan_moi)
+  WHERE chi_tiet_moi IS NOT NULL AND 'DieuLuat' IN labels(chi_tiet_moi)
+OPTIONAL MATCH (thay_khoan_moi)-[:CO_DIEM]->(thay_diem_moi)
+  WHERE chi_tiet_moi IS NOT NULL AND 'DieuLuat' IN labels(chi_tiet_moi)
+OPTIONAL MATCH (chi_tiet_moi)-[:CO_DIEM]->(thay_diem_k_moi)
+  WHERE chi_tiet_moi IS NOT NULL AND 'DieuKhoanLuat' IN labels(chi_tiet_moi)
+OPTIONAL MATCH (chi_tiet_cu)-[:CO_KHOAN]->(thay_khoan_cu)
+  WHERE chi_tiet_cu IS NOT NULL AND 'DieuLuat' IN labels(chi_tiet_cu)
+OPTIONAL MATCH (thay_khoan_cu)-[:CO_DIEM]->(thay_diem_cu)
+  WHERE chi_tiet_cu IS NOT NULL AND 'DieuLuat' IN labels(chi_tiet_cu)
+OPTIONAL MATCH (chi_tiet_cu)-[:CO_DIEM]->(thay_diem_k_cu)
+  WHERE chi_tiet_cu IS NOT NULL AND 'DieuKhoanLuat' IN labels(chi_tiet_cu)
 WITH n_goc, dieu_seed_ids, chi_tiet_anc,
      collect(DISTINCT chi_tiet_goc)
-       + collect(DISTINCT chi_tiet_gia_toc)
-       + collect(DISTINCT thay_khoan)
-       + collect(DISTINCT thay_diem)
-       + collect(DISTINCT thay_diem_k) AS expanded_desc
+       + collect(DISTINCT chi_tiet_moi)
+       + collect(DISTINCT chi_tiet_cu)
+       + collect(DISTINCT thay_khoan_moi)
+       + collect(DISTINCT thay_diem_moi)
+       + collect(DISTINCT thay_diem_k_moi)
+       + collect(DISTINCT thay_khoan_cu)
+       + collect(DISTINCT thay_diem_cu)
+       + collect(DISTINCT thay_diem_k_cu) AS expanded_desc
 
 // 2b. Ancestors (heading): chỉ THAY_THE_BOI, KHÔNG kéo Khoản/Điểm anh em
 WITH n_goc, dieu_seed_ids, expanded_desc, chi_tiet_anc, size(chi_tiet_anc) AS n_anc
@@ -87,10 +100,12 @@ UNWIND range(0, CASE WHEN n_anc > 0 THEN n_anc - 1 ELSE 0 END) AS anc_idx
 WITH n_goc, dieu_seed_ids, expanded_desc, n_anc,
      CASE WHEN n_anc > 0 THEN chi_tiet_anc[anc_idx] ELSE null END AS heading_node
 WHERE n_anc = 0 OR heading_node IS NOT NULL
-OPTIONAL MATCH (heading_node)-[:THAY_THE_BOI*0..]-(heading_gia_toc)
+OPTIONAL MATCH (heading_node)-[:THAY_THE_BOI*0..]->(heading_moi)
+  WHERE heading_node IS NOT NULL
+OPTIONAL MATCH (heading_node)<-[:THAY_THE_BOI*0..]-(heading_cu)
   WHERE heading_node IS NOT NULL
 WITH n_goc, dieu_seed_ids, expanded_desc,
-     [x IN collect(DISTINCT heading_node) + collect(DISTINCT heading_gia_toc) WHERE x IS NOT NULL] AS expanded_anc
+     [x IN collect(DISTINCT heading_node) + collect(DISTINCT heading_moi) + collect(DISTINCT heading_cu) WHERE x IS NOT NULL] AS expanded_anc
 
 WITH n_goc, dieu_seed_ids,
      [x IN expanded_desc + expanded_anc WHERE x IS NOT NULL] AS tat_ca_phien_ban
@@ -121,7 +136,8 @@ OPTIONAL MATCH (huong_dan)-[:CO_KHOAN|CO_DIEM*1..2]->(chi_tiet_huong_dan)
 
 // 6. LUẬT HIỆN HÀNH ĐỐI CHIẾU (văn bản thay thế — không gồm path dài 0)
 OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(hien_hanh)
-  WHERE hien_hanh.ngay_het_hieu_luc IS NULL
+  WHERE hien_hanh.ngay_co_hieu_luc <= $target_date
+    AND hien_hanh.ngay_het_hieu_luc IS NULL
     AND hien_hanh.id <> chi_tiet_ap_dung.id
 
 // 7. THAM CHIẾU CHÉO TỪ LUẬT GỐC
@@ -143,11 +159,12 @@ OPTIONAL MATCH (luat_tham_chieu_tu_hd)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_tc_tu
   WHERE chi_tiet_tc_tu_hd.ngay_co_hieu_luc <= $target_date
     AND (chi_tiet_tc_tu_hd.ngay_het_hieu_luc IS NULL
          OR chi_tiet_tc_tu_hd.ngay_het_hieu_luc > $target_date)
-
+""" + FUTURE_EFFECTIVE_MATCH_CYPHER_V3 + """
 // 9. Dedup căn cứ chính + gom hướng dẫn/bổ trợ (một bucket)
 WITH n_goc, dieu_seed_ids, chi_tiet_ap_dung, van_ban_sua_doi,
      huong_dan, chi_tiet_huong_dan, luat_tham_chieu, chi_tiet_tham_chieu,
-     luat_tham_chieu_tu_hd, chi_tiet_tc_tu_hd, hien_hanh
+     luat_tham_chieu_tu_hd, chi_tiet_tc_tu_hd, hien_hanh,
+     sua_doi_sap, hd_sap, chi_tiet_hd_sap, sua_hd_sap, thay_the_sap, chi_tiet_thay_the_sap, bai_bo_sap
 WHERE NOT any(did IN dieu_seed_ids
   WHERE chi_tiet_ap_dung.id <> did
     AND chi_tiet_ap_dung.id STARTS WITH did + '_'
@@ -212,7 +229,63 @@ WITH dieu_seed_ids,
   collect(DISTINCT {
     id_huong_dan: coalesce(chi_tiet_huong_dan.id, huong_dan.id),
     id_duoc_huong_dan: chi_tiet_ap_dung.id
-  }) AS lien_ket_huong_dan_raw
+  }) AS lien_ket_huong_dan_raw,
+  [item IN (
+    collect(DISTINCT {
+      id: sua_doi_sap.id, noidung: sua_doi_sap.noidung, cap_bac: sua_doi_sap.cap_bac_phap_ly,
+      ngay_ban_hanh: sua_doi_sap.ngay_ban_hanh, ngay_hieu_luc: sua_doi_sap.ngay_co_hieu_luc,
+      ngay_het_hieu_luc: sua_doi_sap.ngay_het_hieu_luc, loai_tac_dong: 'SUA_DOI_BOI',
+      id_duoc_tac_dong: chi_tiet_ap_dung.id
+    })
+    + collect(DISTINCT {
+      id: coalesce(chi_tiet_hd_sap.id, hd_sap.id), noidung: coalesce(chi_tiet_hd_sap.noidung, hd_sap.noidung),
+      cap_bac: coalesce(chi_tiet_hd_sap.cap_bac_phap_ly, hd_sap.cap_bac_phap_ly),
+      ngay_ban_hanh: coalesce(chi_tiet_hd_sap.ngay_ban_hanh, hd_sap.ngay_ban_hanh),
+      ngay_hieu_luc: coalesce(chi_tiet_hd_sap.ngay_co_hieu_luc, hd_sap.ngay_co_hieu_luc),
+      ngay_het_hieu_luc: coalesce(chi_tiet_hd_sap.ngay_het_hieu_luc, hd_sap.ngay_het_hieu_luc),
+      loai_tac_dong: 'HUONG_DAN_BOI', id_duoc_tac_dong: chi_tiet_ap_dung.id
+    })
+    + collect(DISTINCT {
+      id: sua_hd_sap.id, noidung: sua_hd_sap.noidung, cap_bac: sua_hd_sap.cap_bac_phap_ly,
+      ngay_ban_hanh: sua_hd_sap.ngay_ban_hanh, ngay_hieu_luc: sua_hd_sap.ngay_co_hieu_luc,
+      ngay_het_hieu_luc: sua_hd_sap.ngay_het_hieu_luc, loai_tac_dong: 'SUA_DOI_HUONG_DAN',
+      id_duoc_tac_dong: coalesce(chi_tiet_huong_dan.id, huong_dan.id, chi_tiet_ap_dung.id)
+    })
+    + collect(DISTINCT {
+      id: thay_the_sap.id, noidung: thay_the_sap.noidung, cap_bac: thay_the_sap.cap_bac_phap_ly,
+      ngay_ban_hanh: thay_the_sap.ngay_ban_hanh, ngay_hieu_luc: thay_the_sap.ngay_co_hieu_luc,
+      ngay_het_hieu_luc: thay_the_sap.ngay_het_hieu_luc, loai_tac_dong: 'THAY_THE',
+      id_duoc_tac_dong: chi_tiet_ap_dung.id
+    })
+    + collect(DISTINCT CASE WHEN chi_tiet_thay_the_sap IS NOT NULL THEN {
+      id: chi_tiet_thay_the_sap.id, noidung: chi_tiet_thay_the_sap.noidung,
+      cap_bac: chi_tiet_thay_the_sap.cap_bac_phap_ly, ngay_ban_hanh: chi_tiet_thay_the_sap.ngay_ban_hanh,
+      ngay_hieu_luc: chi_tiet_thay_the_sap.ngay_co_hieu_luc, ngay_het_hieu_luc: chi_tiet_thay_the_sap.ngay_het_hieu_luc,
+      loai_tac_dong: 'THAY_THE', id_duoc_tac_dong: chi_tiet_ap_dung.id
+    } END)
+    + collect(DISTINCT {
+      id: bai_bo_sap.id, noidung: bai_bo_sap.noidung, cap_bac: bai_bo_sap.cap_bac_phap_ly,
+      ngay_ban_hanh: bai_bo_sap.ngay_ban_hanh, ngay_hieu_luc: bai_bo_sap.ngay_co_hieu_luc,
+      ngay_het_hieu_luc: bai_bo_sap.ngay_het_hieu_luc, loai_tac_dong: 'BAI_BO',
+      id_duoc_tac_dong: chi_tiet_ap_dung.id
+    })
+    + collect(DISTINCT CASE WHEN chi_tiet_ap_dung.ngay_het_hieu_luc > $target_date THEN {
+      id: chi_tiet_ap_dung.id, noidung: chi_tiet_ap_dung.noidung, cap_bac: chi_tiet_ap_dung.cap_bac_phap_ly,
+      ngay_ban_hanh: chi_tiet_ap_dung.ngay_ban_hanh, ngay_hieu_luc: chi_tiet_ap_dung.ngay_co_hieu_luc,
+      ngay_het_hieu_luc: chi_tiet_ap_dung.ngay_het_hieu_luc, loai_tac_dong: 'HET_HIEU_LUC',
+      id_duoc_tac_dong: chi_tiet_ap_dung.id
+    } END)
+  ) WHERE item.id IS NOT NULL] AS can_cu_sap_hieu_luc_raw,
+  [pair IN (
+    collect(DISTINCT {id_van_ban: sua_doi_sap.id, id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'SUA_DOI_BOI'})
+    + collect(DISTINCT {id_van_ban: coalesce(chi_tiet_hd_sap.id, hd_sap.id), id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'HUONG_DAN_BOI'})
+    + collect(DISTINCT {id_van_ban: sua_hd_sap.id, id_duoc_tac_dong: coalesce(chi_tiet_huong_dan.id, huong_dan.id), loai_tac_dong: 'SUA_DOI_HUONG_DAN'})
+    + collect(DISTINCT {id_van_ban: thay_the_sap.id, id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'THAY_THE'})
+    + collect(DISTINCT {id_van_ban: bai_bo_sap.id, id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'BAI_BO'})
+    + collect(DISTINCT CASE WHEN chi_tiet_ap_dung.ngay_het_hieu_luc > $target_date THEN {
+      id_van_ban: chi_tiet_ap_dung.id, id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'HET_HIEU_LUC'
+    } END)
+  ) WHERE pair.id_van_ban IS NOT NULL AND pair.id_duoc_tac_dong IS NOT NULL] AS lien_ket_sap_hieu_luc_raw
 
 OPTIONAL CALL {
   WITH can_cu_raw
@@ -240,7 +313,8 @@ WITH hd_van_ban_parts + hd_chi_tiet_parts AS hd_all,
      tc_van_ban_parts + tc_chi_tiet_parts + tc_hd_van_ban_parts + tc_hd_chi_tiet_parts AS tc_all,
      hien_hanh_ids, coalesce(can_cu_chinh_inner, []) AS can_cu_chinh,
      [x IN lien_ket_huong_dan_raw
-      WHERE x.id_huong_dan IS NOT NULL AND x.id_duoc_huong_dan IS NOT NULL] AS lien_ket_huong_dan_inner
+      WHERE x.id_huong_dan IS NOT NULL AND x.id_duoc_huong_dan IS NOT NULL] AS lien_ket_huong_dan_inner,
+     can_cu_sap_hieu_luc_raw, lien_ket_sap_hieu_luc_raw
 
 OPTIONAL CALL {
   WITH hd_all
@@ -249,7 +323,8 @@ OPTIONAL CALL {
   WITH hid, head(collect(hd_item)) AS hd_one
   RETURN collect(hd_one) AS can_cu_huong_dan_inner
 }
-WITH tc_all, hien_hanh_ids, can_cu_chinh, can_cu_huong_dan_inner, lien_ket_huong_dan_inner
+WITH tc_all, hien_hanh_ids, can_cu_chinh, can_cu_huong_dan_inner, lien_ket_huong_dan_inner,
+     can_cu_sap_hieu_luc_raw, lien_ket_sap_hieu_luc_raw
 
 OPTIONAL CALL {
   WITH tc_all
@@ -263,7 +338,9 @@ RETURN {
     can_cu_huong_dan: coalesce(can_cu_huong_dan_inner, []),
     can_cu_bo_tro: coalesce(can_cu_bo_tro_inner, []),
     lien_ket_huong_dan: coalesce(lien_ket_huong_dan_inner, []),
-    quy_dinh_hien_hanh_doi_chieu: [x IN hien_hanh_ids WHERE x IS NOT NULL]
+    quy_dinh_hien_hanh_doi_chieu: [x IN hien_hanh_ids WHERE x IS NOT NULL],
+    can_cu_sap_hieu_luc: can_cu_sap_hieu_luc_raw,
+    lien_ket_sap_hieu_luc: lien_ket_sap_hieu_luc_raw
 } AS Context_Tho
 """
 

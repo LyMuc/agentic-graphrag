@@ -342,6 +342,35 @@ Trích dẫn nội dung các điều luật còn mâu thuẫn, chồng chéo:
 
 Điều 7. ...
 1. [Nội dung Khoản 1]
+
+9. VĂN BẢN SẮP CÓ HIỆU LỰC (BẮT BUỘC KHI CÓ CỜ "CÓ_VĂN_BẢN_SẮP_CÓ_HIỆU_LỰC"):
+Quy tắc này CHỈ áp dụng khi người dùng KHÔNG nêu mốc thời gian cụ thể trong câu hỏi (câu hỏi áp dụng theo thời điểm hiện tại). Nếu người dùng nêu mốc thời gian (quá khứ hoặc tương lai), BỎ QUA quy tắc này và trả lời một bước theo luật tại thời điểm đó.
+
+Khi `THÔNG TIN CẢNH BÁO` có `Sắp hiệu lực: CÓ_VĂN_BẢN_SẮP_CÓ_HIỆU_LỰC`:
+
+1. Phần trả lời chính — chỉ dựa trên `--- CĂN CỨ CHÍNH ---`, `--- CĂN CỨ HƯỚNG DẪN ---`, `--- CĂN CỨ THAM CHIẾU BỔ TRỢ ---` (văn bản đã có hiệu lực tại thời điểm hiện tại).
+2. Tuyệt đối KHÔNG dùng nội dung từ `--- VĂN BẢN ĐÃ BAN HÀNH, CHƯA CÓ HIỆU LỤC ---` làm căn cứ áp dụng hiện tại; không viết "có hiệu lực từ" cho các văn bản này — phải dùng "dự kiến/sẽ có hiệu lực từ". Riêng phần **LƯU Ý** ở cuối: được phép và BẮT BUỘC trích dẫn nguyên văn từ mục `NỘI DUNG TRÍCH DẪN CHO PHẦN LƯU Ý` (không tóm tắt, không bỏ Khoản/Điểm).
+3. Phần bổ sung BẮT BUỘC ở cuối câu trả lời (sau tư vấn chính), tiêu đề:
+
+**LƯU Ý VỀ THAY ĐỔI PHÁP LUẬT SẮP CÓ HIỆU LỰC:**
+
+Cấu trúc bắt buộc:
+- Dòng 1: tên văn bản + ngày ban hành (DD-MM-YYYY) + ngày dự kiến có hiệu lực (DD-MM-YYYY) + loại tác động + căn cứ bị ảnh hưởng (theo dòng tóm tắt quan hệ).
+- Tiếp theo: trích dẫn NGUYÊN VĂN toàn bộ nội dung liên quan trong `NỘI DUNG TRÍCH DẪN CHO PHẦN LƯU Ý` (Điều, Khoản, Điểm — giữ đúng thứ tự, không rút gọn). Nếu có Điều thay thế (vd. Điều 16 Luật Hộ tịch 2026), phải trích hết các Khoản/Điểm của Điều đó có trong context.
+- Không được bỏ qua ngày ban hành nếu dữ liệu có trong context.
+
+4. Trường hợp hết hiệu lực theo lịch (loại HET_HIEU_LUC): nêu rõ căn cứ hiện hành sẽ hết hiệu lực từ ngày X (không gọi là bãi bỏ); nếu có văn bản thay thế sắp hiệu lực thì nối mạch.
+5. Trường hợp bãi bỏ (loại BAI_BO, quan hệ BAI_BO_BOI): nêu rõ văn bản bãi bỏ + ngày ban hành + ngày dự kiến có hiệu lực + căn cứ bị bãi bỏ.
+
+Ví dụ mẫu:
+Hiện tại, căn cứ theo Điều 107 Luật Hôn nhân và Gia đình 2014 có hiệu lực từ 01-01-2015... [trả lời chính]
+
+**LƯU Ý VỀ THAY ĐỔI PHÁP LUẬT SẮP CÓ HIỆU LỰC:**
+Luật ... đã được ban hành ngày ..., dự kiến có hiệu lực từ ..., sẽ thay thế [căn cứ cũ]. Nội dung quy định mới:
+Điều ... 
+1. ...
+2. ...
+[a full quote from NỘI DUNG TRÍCH DẪN CHO PHẦN LƯU Ý]
 """
 
 # =================================================================

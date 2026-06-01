@@ -107,19 +107,63 @@ def _extract_doc_name(node_id):
     return match.group(1) if match else str(node_id)
 
 
-def _format_lien_ket_huong_dan(pairs: list) -> str:
-    """Ghép các cặp (văn bản hướng dẫn, căn cứ được hướng dẫn) thành một dòng."""
+_DIEU_ID_RE = re.compile(r"^(.+?_Dieu_\d+[a-zA-Z]?)")
+
+
+def _dieu_level_id(node_id):
+    """Roll-up ID Khoản/Điểm về cấp Điều (vd. ..._Dieu_30_Khoan_1 -> ..._Dieu_30)."""
+    if not node_id:
+        return None
+    s = str(node_id).strip()
+    match = _DIEU_ID_RE.match(s)
+    return match.group(1) if match else s
+
+
+_LOAI_TAC_DONG_LABEL = {
+    "SUA_DOI_BOI": "sửa đổi, bổ sung",
+    "HUONG_DAN_BOI": "hướng dẫn",
+    "SUA_DOI_HUONG_DAN": "sửa đổi, bổ sung (văn bản hướng dẫn)",
+    "THAY_THE": "thay thế",
+    "BAI_BO": "bãi bỏ",
+    "HET_HIEU_LUC": "hết hiệu lực theo lịch",
+}
+
+
+def _format_lien_ket_sap_hieu_luc(pairs: list) -> str:
+    """Ghép các cặp (văn bản sắp HL, căn cứ bị tác động) thành một dòng — gộp cấp Điều."""
     seen = set()
     parts: list[str] = []
     for pair in pairs or []:
         if not isinstance(pair, dict):
             continue
-        id_hd = pair.get('id_huong_dan')
-        id_goc = pair.get('id_duoc_huong_dan')
+        id_vb = _dieu_level_id(pair.get("id_van_ban"))
+        id_goc = _dieu_level_id(pair.get("id_duoc_tac_dong"))
+        loai = pair.get("loai_tac_dong")
+        if not id_vb or not id_goc:
+            continue
+        key = (id_vb, id_goc, loai)
+        if key in seen:
+            continue
+        seen.add(key)
+        if str(loai) == "HET_HIEU_LUC":
+            parts.append(f"{id_goc} hết hiệu lực theo lịch")
+            continue
+        label = _LOAI_TAC_DONG_LABEL.get(str(loai), str(loai or "tác động"))
+        parts.append(f"{id_vb} {label} [{id_goc}]")
+    return ", ".join(parts)
+
+
+def _format_lien_ket_huong_dan(pairs: list) -> str:
+    """Ghép các cặp (văn bản hướng dẫn, căn cứ được hướng dẫn) thành một dòng — gộp cấp Điều."""
+    seen = set()
+    parts: list[str] = []
+    for pair in pairs or []:
+        if not isinstance(pair, dict):
+            continue
+        id_hd = _dieu_level_id(pair.get("id_huong_dan"))
+        id_goc = _dieu_level_id(pair.get("id_duoc_huong_dan"))
         if not id_hd or not id_goc:
             continue
-        id_hd = str(id_hd).strip()
-        id_goc = str(id_goc).strip()
         key = (id_hd, id_goc)
         if key in seen:
             continue
@@ -128,38 +172,62 @@ def _format_lien_ket_huong_dan(pairs: list) -> str:
     return ", ".join(parts)
 
 
-def _dedupe_maps_by_id(items: list, key: str = "id") -> list:
-    """Gộp list map Cypher, giữ một bản ghi đầu tiên cho mỗi id."""
-    seen = set()
-    out: list = []
-    for item in items or []:
-        if not isinstance(item, dict):
-            continue
-        item_id = item.get(key)
-        if not item_id or item_id in seen:
-            continue
-        seen.add(item_id)
-        out.append(item)
-    return out
+def _provision_key(item: dict) -> tuple[str, str]:
+    """Khóa dedupe xuyên mục: (node_id, id_sua_doi hoặc rỗng)."""
+    node_id = str(item.get("id_thuc_te_ap_dung") or item.get("id") or "")
+    sua_doi = str(item.get("id_sua_doi") or "")
+    return (node_id, sua_doi)
+
+
+def _is_duplicate_provision(seen: set, item: dict) -> bool:
+    key = _provision_key(item)
+    if not key[0]:
+        return True
+    return key in seen
+
+
+def _register_provision(seen: set, item: dict) -> bool:
+    """Đăng ký provision; trả True nếu khóa mới (nên append), False nếu trùng."""
+    key = _provision_key(item)
+    if not key[0]:
+        return False
+    if key in seen:
+        return False
+    seen.add(key)
+    return True
+
+
+def _seen_node_ids(seen_provisions: set) -> set[str]:
+    return {key[0] for key in seen_provisions if key[0]}
+
+
+_LOAI_TAC_DONG_VAN_BAN_MOI = frozenset({
+    "SUA_DOI_BOI", "HUONG_DAN_BOI", "SUA_DOI_HUONG_DAN", "THAY_THE", "BAI_BO",
+})
+
+
+def _filter_sap_hieu_luc_noi_dung(items: list) -> list:
+    """Chỉ giữ nội dung văn bản mới sắp HL; bỏ HET_HIEU_LUC (chỉ có trên dòng liên kết)."""
+    return [
+        item for item in (items or [])
+        if isinstance(item, dict)
+        and item.get("id")
+        and str(item.get("loai_tac_dong") or "") in _LOAI_TAC_DONG_VAN_BAN_MOI
+    ]
 
 
 def _filter_van_ban_thay_the_thuc(
     quy_dinh_hien_hanh: list,
-    can_cu_chinh: list,
+    seen_provisions: set,
     flag_lich_su: str,
 ) -> list:
-    """Chỉ giữ ID thay thế thật — loại ID trùng căn cứ chính khi không có cảnh báo lịch sử."""
+    """Chỉ giữ ID thay thế thật — loại ID đã có trong registry khi không có cảnh báo lịch sử."""
     raw = [str(i) for i in quy_dinh_hien_hanh if i]
     if not raw:
         return []
     if flag_lich_su:
         return raw
-    can_cu_ids = {
-        str(item.get("id_thuc_te_ap_dung"))
-        for item in can_cu_chinh
-        if item.get("id_thuc_te_ap_dung")
-    }
-    return [i for i in raw if i not in can_cu_ids]
+    return [i for i in raw if i not in _seen_node_ids(seen_provisions)]
 
 
 def _collect_hieu_luc(items, doc_hieu_luc_map):
@@ -204,18 +272,27 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
         "FLAG_CANH_BAO_THU_TU_UU_TIEN": "",
         "FLAG_CANH_BAO_SUA_DOI": "",
         "FLAG_MAU_THUAN": "",
+        "FLAG_VAN_BAN_SAP_HIEU_LUC": "",
+        "danh_sach_sap_hieu_luc": [],
     }
 
     tat_ca_cap_bac = set()
     luat_da_het_hieu_luc = False
     doc_hieu_luc_map = {}
+    seen_provisions: set[tuple[str, str]] = set()
 
     # 1. Xử lý Căn cứ chính & Check Sửa đổi
+    can_cu_chinh_kept: list = []
     for item in data.get('can_cu_chinh', []):
-        if not item.get('id_thuc_te_ap_dung'): continue
+        if not item.get('id_thuc_te_ap_dung'):
+            continue
+        if not _register_provision(seen_provisions, item):
+            continue
 
+        can_cu_chinh_kept.append(item)
         tat_ca_cap_bac.add(item.get('cap_bac'))
-        if item.get('het_hieu_luc'): luat_da_het_hieu_luc = True
+        if item.get('het_hieu_luc'):
+            luat_da_het_hieu_luc = True
 
         id_dang_dung = item['id_thuc_te_ap_dung']
 
@@ -227,11 +304,17 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
 
         context_sach["danh_sach_can_cu"].append({"cap_bac": item.get('cap_bac'), "text": noidung_hien_thi})
 
-    _collect_hieu_luc(data.get('can_cu_chinh', []), doc_hieu_luc_map)
+    _collect_hieu_luc(can_cu_chinh_kept, doc_hieu_luc_map)
 
-    # 2. Xử lý Hướng dẫn (dedup safety-net theo id)
-    for hd in _dedupe_maps_by_id(data.get('can_cu_huong_dan', [])):
-        if not hd.get('id'): continue
+    # 2. Xử lý Hướng dẫn — giữ đủ Khoản/Điểm; dòng liên kết vẫn gộp cấp Điều
+    can_cu_huong_dan_kept: list = []
+    for hd in data.get('can_cu_huong_dan', []):
+        if not hd.get('id'):
+            continue
+        if not _register_provision(seen_provisions, hd):
+            continue
+
+        can_cu_huong_dan_kept.append(hd)
         tat_ca_cap_bac.add(hd.get('cap_bac'))
         if hd.get('id_sua_doi'):
             noidung_hd_hien_thi = f"[{hd['id']}] (được sửa đổi, bổ sung bởi [{hd['id_sua_doi']}]): {hd['noidung_sua_doi']}"
@@ -241,17 +324,23 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
 
         context_sach["danh_sach_huong_dan"].append({"cap_bac": hd['cap_bac'], "text": noidung_hd_hien_thi})
 
-    _collect_hieu_luc(data.get('can_cu_huong_dan', []), doc_hieu_luc_map)
+    _collect_hieu_luc(can_cu_huong_dan_kept, doc_hieu_luc_map)
 
     # 3. XỬ LÝ CĂN CỨ BỔ TRỢ (THAM CHIẾU)
-    can_cu_bo_tro = _dedupe_maps_by_id(
-        data.get('can_cu_bo_tro', []) if 'can_cu_bo_tro' in data else []
-    )
-    for bt in can_cu_bo_tro:
-        if not bt.get('id'): continue
-        context_sach["danh_sach_bo_tro"].append({"cap_bac": bt.get('cap_bac'), "text": f"[{bt.get('id')}]: {bt.get('noidung')}"})
+    can_cu_bo_tro_kept: list = []
+    for bt in data.get('can_cu_bo_tro', []) if 'can_cu_bo_tro' in data else []:
+        if not bt.get('id'):
+            continue
+        if not _register_provision(seen_provisions, bt):
+            continue
 
-    _collect_hieu_luc(can_cu_bo_tro, doc_hieu_luc_map)
+        can_cu_bo_tro_kept.append(bt)
+        context_sach["danh_sach_bo_tro"].append({
+            "cap_bac": bt.get('cap_bac'),
+            "text": f"[{bt.get('id')}]: {bt.get('noidung')}",
+        })
+
+    _collect_hieu_luc(can_cu_bo_tro_kept, doc_hieu_luc_map)
 
     # 3b. XỬ LÝ MÂU THUẪN (MAU_THUAN_VOI)
     seen_mau_thuan = set()
@@ -290,23 +379,39 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
     quy_dinh_hien_hanh = data.get('quy_dinh_hien_hanh_doi_chieu', []) if 'quy_dinh_hien_hanh_doi_chieu' in data else []
     context_sach["danh_sach_van_ban_thay_the"] = _filter_van_ban_thay_the_thuc(
         quy_dinh_hien_hanh,
-        data.get('can_cu_chinh', []),
+        seen_provisions,
         context_sach["FLAG_CANH_BAO_LICH_SU"],
     )
     if is_user_provide_date and luat_da_het_hieu_luc and context_sach["danh_sach_van_ban_thay_the"]:
         luat_moi = ", ".join(context_sach["danh_sach_van_ban_thay_the"])
         context_sach["FLAG_CANH_BAO_LICH_SU"] = f"ÁP DỤNG LUẬT CŨ TẠI THỜI ĐIỂM {target_date}. LUẬT HIỆN HÀNH BÂY GIỜ LÀ: {luat_moi}"
 
+    # 5. VĂN BẢN SẮP CÓ HIỆU LỰC (chỉ khi không nêu mốc thời gian)
+    can_cu_sap_raw = data.get("can_cu_sap_hieu_luc", []) if "can_cu_sap_hieu_luc" in data else []
+    if not is_user_provide_date and can_cu_sap_raw:
+        context_sach["FLAG_VAN_BAN_SAP_HIEU_LUC"] = "CÓ_VĂN_BẢN_SẮP_CÓ_HIỆU_LỰC"
+        for sap in _filter_sap_hieu_luc_noi_dung(can_cu_sap_raw):
+            if not _register_provision(seen_provisions, sap):
+                continue
+            context_sach["danh_sach_sap_hieu_luc"].append({
+                "cap_bac": sap.get("cap_bac"),
+                "text": f"[{sap['id']}]: {sap.get('noidung') or ''}",
+            })
+
     # Sắp xếp danh sách căn cứ từ Cấp 1 -> Cấp 3
     context_sach["danh_sach_can_cu"] = sorted(context_sach["danh_sach_can_cu"], key=lambda x: x['cap_bac'])
-    context_sach["danh_sach_huong_dan"] = sorted(context_sach["danh_sach_huong_dan"], key=lambda x: x['cap_bac'])
+    context_sach["danh_sach_huong_dan"] = sorted(
+        context_sach["danh_sach_huong_dan"],
+        key=lambda x: (x.get("cap_bac") or 0, str(x.get("text", ""))),
+    )
 
     # Format lại thành string đưa vào Prompt
     final_context_string = f"--- THÔNG TIN CẢNH BÁO ---\n"
     final_context_string += f"Lịch sử: {context_sach['FLAG_CANH_BAO_LICH_SU']}\n"
     final_context_string += f"Ưu tiên: {context_sach['FLAG_CANH_BAO_THU_TU_UU_TIEN']}\n"
     final_context_string += f"Sửa đổi: {context_sach['FLAG_CANH_BAO_SUA_DOI']}\n"
-    final_context_string += f"Mâu thuẫn: {context_sach['FLAG_MAU_THUAN']}\n\n"
+    final_context_string += f"Mâu thuẫn: {context_sach['FLAG_MAU_THUAN']}\n"
+    final_context_string += f"Sắp hiệu lực: {context_sach['FLAG_VAN_BAN_SAP_HIEU_LUC']}\n\n"
 
     # THÔNG TIN HIỆU LỰC VĂN BẢN
     final_context_string += "--- THÔNG TIN HIỆU LỰC VĂN BẢN ---\n"
@@ -335,6 +440,26 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
             final_context_string += f"{lien_ket_line}\n"
         for idx, item in enumerate(context_sach["danh_sach_huong_dan"]):
             final_context_string += f"{idx+1}. (Cấp bậc {item['cap_bac']}): {item['text']}\n"
+
+    if context_sach["FLAG_VAN_BAN_SAP_HIEU_LUC"]:
+        final_context_string += (
+            "\n--- VĂN BẢN ĐÃ BAN HÀNH, CHƯA CÓ HIỆU LỰC "
+            "(CHỈ ĐỂ CẢNH BÁO, KHÔNG DÙNG LÀM CĂN CỨ TRẢ LỜI CHÍNH) ---\n"
+        )
+        lien_ket_sap_line = _format_lien_ket_sap_hieu_luc(data.get("lien_ket_sap_hieu_luc", []))
+        if lien_ket_sap_line:
+            final_context_string += f"{lien_ket_sap_line}\n"
+        if context_sach["danh_sach_sap_hieu_luc"]:
+            final_context_string += (
+                "\nNỘI DUNG TRÍCH DẪN CHO PHẦN LƯU Ý "
+                "(trích nguyên văn vào mục LƯU Ý cuối câu trả lời, không dùng làm luật hiện hành):\n"
+            )
+            sap_sorted = sorted(
+                context_sach["danh_sach_sap_hieu_luc"],
+                key=lambda x: str(x.get("text", "")),
+            )
+            for idx, item in enumerate(sap_sorted, 1):
+                final_context_string += f"{idx}. {item['text']}\n"
 
     if context_sach["danh_sach_van_ban_thay_the"]:
         final_context_string += "\n--- VĂN BẢN THAY THẾ ---\n"
@@ -385,12 +510,18 @@ def extract_raw_ids_from_context(context_tho):
         for item in context_tho.get("can_cu_mau_thuan", [])
         if item
     ]
+    can_cu_sap_hieu_luc = [
+        item.get("id")
+        for item in context_tho.get("can_cu_sap_hieu_luc", [])
+        if item
+    ]
 
     return {
         "can_cu_chinh": _unique_non_empty(can_cu_chinh),
         "can_cu_huong_dan": _unique_non_empty(can_cu_huong_dan),
         "can_cu_bo_tro": _unique_non_empty(can_cu_bo_tro),
         "can_cu_mau_thuan": _unique_non_empty(can_cu_mau_thuan),
+        "can_cu_sap_hieu_luc": _unique_non_empty(can_cu_sap_hieu_luc),
     }
 
 
@@ -401,6 +532,7 @@ def chuan_hoa_ket_qua_retriever(records, target_date, is_user_provide_date):
         "can_cu_huong_dan": [],
         "can_cu_bo_tro": [],
         "can_cu_mau_thuan": [],
+        "can_cu_sap_hieu_luc": [],
     }
     contexts = []
 
