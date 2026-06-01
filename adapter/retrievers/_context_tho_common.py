@@ -170,15 +170,149 @@ RETURN_SAP_HIEU_LUC_FIELDS = """,
             } END)
         ) WHERE pair.id_van_ban IS NOT NULL AND pair.id_duoc_tac_dong IS NOT NULL]"""
 
+# --- Tham chiếu bổ trợ: heading Điều/Khoản cha khi THAM_CHIEU_DEN trỏ tới Khoản/Điểm ---
+_TC_HL = (
+    "{node}.ngay_co_hieu_luc <= $target_date "
+    "AND ({node}.ngay_het_hieu_luc IS NULL OR {node}.ngay_het_hieu_luc > $target_date)"
+)
+
+
+def _ancestor_match_for_seed(seed: str, prefix: str, indent: str = "    ") -> str:
+    """OPTIONAL MATCH đi ngược CO_KHOAN/CO_DIEM từ node tham chiếu."""
+    i = indent
+    dieu, khoan, ong = f"dieu_cha_{prefix}", f"khoan_cha_{prefix}", f"dieu_ong_{prefix}"
+    hl = _TC_HL
+    return f"""
+{i}// Heading cha — {seed}
+{i}OPTIONAL MATCH ({dieu})-[:CO_KHOAN]->({seed})
+{i}  WHERE {seed} IS NOT NULL
+{i}    AND {hl.format(node=dieu)}
+{i}OPTIONAL MATCH ({khoan})-[:CO_DIEM]->({seed})
+{i}  WHERE {seed} IS NOT NULL
+{i}    AND {hl.format(node=khoan)}
+{i}OPTIONAL MATCH ({ong})-[:CO_KHOAN]->({khoan})
+{i}  WHERE {khoan} IS NOT NULL
+{i}    AND {hl.format(node=ong)}"""
+
+
+def _bo_tro_collect_domain(node: str) -> str:
+    return f""" + collect(DISTINCT {{
+            id: {node}.id,
+            noidung: {node}.noidung,
+            cap_bac: {node}.cap_bac_phap_ly,
+            ngay_hieu_luc: {node}.ngay_co_hieu_luc,
+            ngay_het_hieu_luc: {node}.ngay_het_hieu_luc
+        }})"""
+
+
+def _ancestor_collects_for_prefix(prefix: str) -> str:
+    dieu, khoan, ong = f"dieu_cha_{prefix}", f"khoan_cha_{prefix}", f"dieu_ong_{prefix}"
+    return (
+        _bo_tro_collect_domain(dieu)
+        + _bo_tro_collect_domain(khoan)
+        + _bo_tro_collect_domain(ong)
+    )
+
+
+THAM_CHIEU_ANCESTOR_MATCH_DOMAIN = (
+    "\n    // 7b. Heading cha cho tham chiếu (đi ngược CO_KHOAN/CO_DIEM)"
+    + _ancestor_match_for_seed("luat_tham_chieu", "ltc")
+    + _ancestor_match_for_seed("chi_tiet_tham_chieu", "ctt")
+)
+
+THAM_CHIEU_ANCESTOR_MATCH_HD_DOMAIN = (
+    "\n    // 8b. Heading cha cho tham chiếu từ hướng dẫn"
+    + _ancestor_match_for_seed("luat_tham_chieu_tu_hd", "ltc_hd")
+    + _ancestor_match_for_seed("chi_tiet_tc_tu_hd", "ctt_hd")
+)
+
+THAM_CHIEU_ANCESTOR_COLLECT_DOMAIN = (
+    _ancestor_collects_for_prefix("ltc")
+    + _ancestor_collects_for_prefix("ctt")
+)
+
+THAM_CHIEU_ANCESTOR_COLLECT_HD_DOMAIN = (
+    _ancestor_collects_for_prefix("ltc_hd")
+    + _ancestor_collects_for_prefix("ctt_hd")
+)
+
+_MARKER_BO_TRO_BEFORE_LIEN_KET = """            ngay_het_hieu_luc: chi_tiet_tham_chieu.ngay_het_hieu_luc
+        }),
+        lien_ket_huong_dan:"""
+
+_MARKER_BO_TRO_HD_BEFORE_LIEN_KET = """            ngay_het_hieu_luc: chi_tiet_tc_tu_hd.ngay_het_hieu_luc
+        }),
+        lien_ket_huong_dan:"""
+
+
+def _bo_tro_collect_v3(node: str) -> str:
+    return f"""  collect(DISTINCT {{
+    id: {node}.id,
+    noidung: {node}.noidung,
+    cap_bac: {node}.cap_bac_phap_ly,
+    ngay_hieu_luc: {node}.ngay_co_hieu_luc,
+    ngay_het_hieu_luc: {node}.ngay_het_hieu_luc
+  }})"""
+
+
+def tham_chieu_ancestor_collect_parts_v3() -> str:
+    """Các collect DISTINCT cho WITH V3 (gom vào tc_all)."""
+    parts = []
+    for prefix in ("ltc", "ctt", "ltc_hd", "ctt_hd"):
+        for role in ("dieu_cha", "khoan_cha", "dieu_ong"):
+            var = f"{role}_{prefix}" if role != "dieu_ong" else f"dieu_ong_{prefix}"
+            parts.append(_bo_tro_collect_v3(var))
+    return "\n    + ".join(parts) if parts else ""
+
+
+THAM_CHIEU_ANCESTOR_MATCH_V3 = (
+    "\n// 7b-8b. Heading cha cho tham chiếu (đi ngược CO_KHOAN/CO_DIEM)"
+    + _ancestor_match_for_seed("luat_tham_chieu", "ltc", indent="")
+    + _ancestor_match_for_seed("chi_tiet_tham_chieu", "ctt", indent="")
+    + _ancestor_match_for_seed("luat_tham_chieu_tu_hd", "ltc_hd", indent="")
+    + _ancestor_match_for_seed("chi_tiet_tc_tu_hd", "ctt_hd", indent="")
+)
+
 
 def enhance_domain_retriever_cypher(cypher: str) -> str:
-    """Inject văn bản sắp hiệu lực vào Cypher domain retriever chuẩn."""
+    """Inject văn bản sắp hiệu lực + heading cha tham chiếu vào Cypher domain retriever."""
     if "can_cu_sap_hieu_luc" in cypher:
         return cypher
 
     out = cypher.replace(_HIEN_HANH_OLD_SIMPLE, _HIEN_HANH_NEW_SIMPLE)
     if "    RETURN {" not in out:
         raise ValueError("Cypher domain retriever thiếu marker '    RETURN {'")
+
+    if "// 7b. Heading cha cho tham chiếu" not in out:
+        ancestor_match = THAM_CHIEU_ANCESTOR_MATCH_DOMAIN
+        if "luat_tham_chieu_tu_hd" in out:
+            ancestor_match += THAM_CHIEU_ANCESTOR_MATCH_HD_DOMAIN
+        out = out.replace("    RETURN {", ancestor_match + "\n    RETURN {", 1)
+
+        if "luat_tham_chieu_tu_hd" in out and _MARKER_BO_TRO_HD_BEFORE_LIEN_KET in out:
+            out = out.replace(
+                _MARKER_BO_TRO_HD_BEFORE_LIEN_KET,
+                _MARKER_BO_TRO_HD_BEFORE_LIEN_KET.replace(
+                    "        }),\n        lien_ket_huong_dan:",
+                    "        })"
+                    + THAM_CHIEU_ANCESTOR_COLLECT_DOMAIN
+                    + THAM_CHIEU_ANCESTOR_COLLECT_HD_DOMAIN
+                    + ",\n        lien_ket_huong_dan:",
+                ),
+                1,
+            )
+        elif _MARKER_BO_TRO_BEFORE_LIEN_KET in out:
+            out = out.replace(
+                _MARKER_BO_TRO_BEFORE_LIEN_KET,
+                _MARKER_BO_TRO_BEFORE_LIEN_KET.replace(
+                    "        }),\n        lien_ket_huong_dan:",
+                    "        })"
+                    + THAM_CHIEU_ANCESTOR_COLLECT_DOMAIN
+                    + ",\n        lien_ket_huong_dan:",
+                ),
+                1,
+            )
+
     out = out.replace("    RETURN {", FUTURE_EFFECTIVE_MATCH_CYPHER + "\n    RETURN {", 1)
     marker = "    } AS Context_Tho"
     if marker not in out:

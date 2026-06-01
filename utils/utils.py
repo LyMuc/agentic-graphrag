@@ -186,6 +186,80 @@ def _is_duplicate_provision(seen: set, item: dict) -> bool:
     return key in seen
 
 
+def _to_dieu_id(node_id) -> str | None:
+    """Roll-up ID về cấp Điều; trả None nếu không phải node Điều/Khoản/Điểm."""
+    if not node_id:
+        return None
+    rolled = _dieu_level_id(str(node_id).strip())
+    if rolled and _DIEU_ID_RE.match(rolled):
+        return rolled
+    return None
+
+
+def _collect_dieu_ids_from_context(data: dict) -> set[str]:
+    """Gom ID Điều (dedupe) từ mọi mục trong Context_Tho."""
+    raw_ids: list[str] = []
+    for item in data.get("can_cu_chinh", []) or []:
+        if not isinstance(item, dict):
+            continue
+        raw_ids.append(item.get("id_thuc_te_ap_dung"))
+        raw_ids.append(item.get("id_sua_doi"))
+    for item in data.get("can_cu_huong_dan", []) or []:
+        if not isinstance(item, dict):
+            continue
+        raw_ids.append(item.get("id"))
+        raw_ids.append(item.get("id_sua_doi"))
+    for item in data.get("can_cu_bo_tro", []) or []:
+        if isinstance(item, dict):
+            raw_ids.append(item.get("id"))
+    for item in data.get("can_cu_mau_thuan", []) or []:
+        if isinstance(item, dict):
+            raw_ids.append(item.get("id_nguon"))
+            raw_ids.append(item.get("id_dich"))
+    for item in data.get("can_cu_sap_hieu_luc", []) or []:
+        if isinstance(item, dict):
+            raw_ids.append(item.get("id"))
+
+    dieu_ids: set[str] = set()
+    for node_id in raw_ids:
+        dieu_id = _to_dieu_id(node_id)
+        if dieu_id:
+            dieu_ids.add(dieu_id)
+    return dieu_ids
+
+
+def _fetch_tvpl_links(dieu_ids: set[str]) -> dict[str, str]:
+    """Tra link TVPL trên node DieuLuat theo batch."""
+    if not dieu_ids:
+        return {}
+    try:
+        from adapter.config import driver  # lazy import tránh vòng phụ thuộc lúc import utils
+    except ImportError:
+        return {}
+    cypher = """
+    MATCH (n:DieuLuat)
+    WHERE n.id IN $ids AND n.link IS NOT NULL
+    RETURN n.id AS id, n.link AS link
+    """
+    try:
+        records, _, _ = driver.execute_query(cypher, ids=list(dieu_ids))
+        return {r["id"]: r["link"] for r in records if r.get("id") and r.get("link")}
+    except Exception:
+        return {}
+
+
+def _format_bang_link_trich_dan(link_map: dict[str, str]) -> str:
+    if not link_map:
+        return ""
+    lines = [
+        "--- BẢNG LINK TRÍCH DẪN (TVPL) ---",
+        "Chỉ liệt kê cấp Điều. Khi trích dẫn Khoản/Điểm, dùng link của Điều cha tương ứng.",
+    ]
+    for dieu_id in sorted(link_map):
+        lines.append(f"- [{dieu_id}] → {link_map[dieu_id]}")
+    return "\n".join(lines) + "\n"
+
+
 def _register_provision(seen: set, item: dict) -> bool:
     """Đăng ký provision; trả True nếu khóa mới (nên append), False nếu trùng."""
     key = _provision_key(item)
@@ -476,6 +550,10 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
                 f"   Nội dung điều khoản mâu thuẫn (Cấp bậc {item['cap_bac']}): "
                 f"[{item['id_dich']}]: {item['noidung_dich']}\n"
             )
+
+    bang_link = _format_bang_link_trich_dan(_fetch_tvpl_links(_collect_dieu_ids_from_context(data)))
+    if bang_link:
+        final_context_string += f"\n{bang_link}"
 
     return final_context_string
 

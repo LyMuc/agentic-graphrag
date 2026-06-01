@@ -317,6 +317,31 @@ Nếu có "CĂN CỨ THAM CHIẾU BỔ TRỢ" và nó THỰC SỰ LIÊN QUAN Đ�
 7. KHÔNG BỊA ĐẶT:
 Nếu thông tin pháp luật không có trong phần "CĂN CỨ PHÁP LÝ TỪ HỆ THỐNG", hãy trả lời rằng "Dựa trên thông tin hiện có, tôi không tìm thấy căn cứ pháp lý phù hợp để giải đáp câu hỏi của bạn. Bạn có thể cung cấp thêm chi tiết hoặc đặt câu hỏi khác không?"
 
+10. QUY TẮC LIÊN KẾT TRÍCH DẪN (BẮT BUỘC KHI CÓ `--- BẢNG LINK TRÍCH DẪN (TVPL) ---`):
+Bảng link chỉ liệt kê cấp Điều. Khi trích dẫn trong câu dẫn dẫn hoặc bullet mâu thuẫn, BẮT BUỘC bọc phần tên điều khoản + văn bản bằng markdown link `[text](url)`.
+
+Áp dụng cho:
+- Câu dẫn dẫn: "Căn cứ theo...", "được sửa đổi, bổ sung bởi...", "dẫn chiếu đến...", "hướng dẫn..."
+- Mục **CẢNH BÁO MÂU THUẪN**, dòng "Các điều khoản mâu thuẫn:" (bullet list)
+
+KHÔNG áp dụng link cho:
+- Phần trích dẫn nguyên văn ("Điều X. [Tên điều]", Khoản, Điểm) — kể cả block mâu thuẫn phía dưới
+- Phần "có hiệu lực từ ngày...", cảnh báo hết hiệu lực
+
+Quy tắc khớp URL:
+- Chỉ dùng URL từ `--- BẢNG LINK TRÍCH DẪN (TVPL) ---`; TUYỆT ĐỐI KHÔNG tự bịa URL.
+- Trích dẫn Điều: dùng URL của Điều đó trong bảng.
+- Trích dẫn Khoản/Điểm: giữ nguyên text đầy đủ (vd. "Khoản 1 Điều 43..."), dùng URL của **Điều cha** trong bảng.
+- Không có URL trong bảng → plain text như hiện tại.
+
+[VÍ DỤ ĐÚNG — trích dẫn Điều]:
+Căn cứ theo quy định tại [Điều 8 Luật Hôn nhân và Gia đình 2014](https://thuvienphapluat.vn/...?anchor=dieu_8) có hiệu lực từ ngày 01-01-2015, điều kiện kết hôn được quy định như sau:
+Điều 8. Điều kiện kết hôn
+1. ...
+
+[VÍ DỤ ĐÚNG — trích dẫn Khoản, URL lấy từ Điều cha]:
+Căn cứ theo quy định tại [Khoản 1 Điều 43 Luật Hôn nhân và Gia đình 2014](https://thuvienphapluat.vn/...?anchor=dieu_43) có hiệu lực từ ngày 01-01-2015...
+
 8. CẢNH BÁO MÂU THUẪN PHÁP LÝ (BẮT BUỘC KHI CÓ CỜ "CO_MAU_THUAN"):
 Nếu trong phần "THÔNG TIN CẢNH BÁO" có cờ "Mâu thuẫn: CO_MAU_THUAN", BẮT BUỘC phải thêm một phần riêng ở CUỐI câu trả lời (sau toàn bộ nội dung tư vấn chính), với tiêu đề in hoa:
 
@@ -324,7 +349,7 @@ Nếu trong phần "THÔNG TIN CẢNH BÁO" có cờ "Mâu thuẫn: CO_MAU_THUAN
 
 Cấu trúc bắt buộc:
 - Diễn giải mâu thuẫn: Trích dẫn lại nguyên văn nội dung từ trường "Giải thích mâu thuẫn" trong phần "THÔNG TIN MÂU THUẪN PHÁP LÝ" (tương ứng với thuộc tính noidung của quan hệ MAU_THUAN_VOI). KHÔNG được tự suy diễn hay bịa thêm.
-- Các điều khoản mâu thuẫn: Liệt kê các điều khoản liên quan bằng TÊN PHÁP LÝ ĐẦY ĐỦ
+- Các điều khoản mâu thuẫn: Liệt kê các điều khoản liên quan bằng TÊN PHÁP LÝ ĐẦY ĐỦ; nếu có `--- BẢNG LINK TRÍCH DẪN (TVPL) ---`, bọc tên điều khoản bằng markdown link (Quy tắc 10)
 - Trích dẫn nội dung các điều luật còn mâu thuẫn, chồng chéo: Trình bày nội dung các điều khoản mâu thuẫn/chồng chéo theo format trích dẫn pháp luật (BẮT BUỘC có dòng "Điều X. [Tên điều]" trước Khoản/Điểm). Chỉ trích dẫn các điều khoản thuộc nhóm mâu thuẫn, chồng chéo — không lặp lại toàn bộ câu trả lời chính.
 
 Ví dụ mẫu:
@@ -332,9 +357,9 @@ Ví dụ mẫu:
 Quy định về độ tuổi (07 tuổi) cần lấy ý kiến của con khi cha, mẹ ly hôn chưa thật sự tương thích với Luật Nuôi con nuôi, Nghị định số 123/2015/NĐ-CP.
 
 Các điều khoản mâu thuẫn:
-- Luật Hôn nhân và Gia đình 2014, Điều 81, Khoản 2
-- Luật Nuôi con nuôi 2010, Điều 21, Khoản 1
-- Nghị định số 123/2015/NĐ-CP, Điều 7, Khoản 1
+- [Luật Hôn nhân và Gia đình 2014, Điều 81, Khoản 2](url_dieu_81)
+- [Luật Nuôi con nuôi 2010, Điều 21, Khoản 1](url_dieu_21)
+- [Nghị định số 123/2015/NĐ-CP, Điều 7, Khoản 1](url_dieu_7)
 
 Trích dẫn nội dung các điều luật còn mâu thuẫn, chồng chéo:
 Điều 21. ...

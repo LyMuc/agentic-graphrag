@@ -1,14 +1,22 @@
 """Smoke test dedupe xuyên mục trong chuan_hoa_Context_cho_LLM."""
 import sys
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from utils.utils import chuan_hoa_Context_cho_LLM
+from utils.utils import (
+    _collect_dieu_ids_from_context,
+    _format_bang_link_trich_dan,
+    chuan_hoa_Context_cho_LLM,
+)
 
 
 DIEU_X = "Luat_Test_2014_Dieu_38"
+KHOAN_X = "Luat_Test_2014_Dieu_38_Khoan_1"
+DIEM_X = "Luat_Test_2014_Dieu_38_Khoan_1_Diem_a"
+DIEU_Y = "Luat_Test_2014_Dieu_43"
 ND_SUA = "NghiDinh_Test_Dieu_2"
 DIEU_SAP = "Luat_Test_2026_Dieu_16"
 LUAT_MOI = "Luat_Test_2026"
@@ -157,6 +165,80 @@ def test_van_ban_thay_the_filtered_by_registry() -> None:
     print("  [OK] van_ban_thay_the: registry lọc đúng trong section thay thế")
 
 
+def test_collect_dieu_ids_rollup() -> None:
+    """Khoản/Điểm roll-up về cùng ID Điều, dedupe."""
+    data = {
+        "can_cu_chinh": [
+            {"id_thuc_te_ap_dung": KHOAN_X},
+            {"id_thuc_te_ap_dung": DIEM_X},
+            {"id_thuc_te_ap_dung": DIEU_Y},
+        ],
+        "can_cu_mau_thuan": [{"id_nguon": DIEU_X, "id_dich": "Luat_Other_2010_Dieu_21_Khoan_1"}],
+    }
+    dieu_ids = _collect_dieu_ids_from_context(data)
+    assert dieu_ids == {
+        DIEU_X,
+        DIEU_Y,
+        "Luat_Other_2010_Dieu_21",
+    }, f"Unexpected dieu ids: {dieu_ids}"
+    assert KHOAN_X not in dieu_ids
+    assert DIEM_X not in dieu_ids
+    print("  [OK] collect_dieu_ids: roll-up + dedupe đúng")
+
+
+def test_bang_link_section_dieu_only() -> None:
+    """BẢNG LINK chỉ liệt kê cấp Điều, không có Khoản/Điểm."""
+    fake_links = {
+        DIEU_X: "https://example.test/?anchor=dieu_38",
+        DIEU_Y: "https://example.test/?anchor=dieu_43",
+    }
+    with patch("utils.utils._fetch_tvpl_links", return_value=fake_links):
+        record = {
+            "Context_Tho": {
+                "can_cu_chinh": [
+                    {
+                        "id_thuc_te_ap_dung": KHOAN_X,
+                        "noidung": "Khoản 1",
+                        "cap_bac": 1,
+                    },
+                    {
+                        "id_thuc_te_ap_dung": DIEU_Y,
+                        "noidung": "Điều 43",
+                        "cap_bac": 1,
+                    },
+                ],
+            }
+        }
+        text = chuan_hoa_Context_cho_LLM(record, "2026-06-01", False)
+
+    assert "--- BẢNG LINK TRÍCH DẪN (TVPL) ---" in text
+    assert f"[{DIEU_X}] → {fake_links[DIEU_X]}" in text
+    assert f"[{DIEU_Y}] → {fake_links[DIEU_Y]}" in text
+    assert KHOAN_X not in text.split("--- BẢNG LINK TRÍCH DẪN (TVPL) ---")[1]
+    assert "_Khoan_" not in text.split("--- BẢNG LINK TRÍCH DẪN (TVPL) ---")[1]
+    assert "_Diem_" not in text.split("--- BẢNG LINK TRÍCH DẪN (TVPL) ---")[1]
+    print("  [OK] bang_link: chỉ cấp Điều trong section link")
+
+
+def test_bang_link_empty_when_no_links() -> None:
+    """Không có link Neo4j → không append section BẢNG LINK."""
+    with patch("utils.utils._fetch_tvpl_links", return_value={}):
+        text = chuan_hoa_Context_cho_LLM(
+            {"Context_Tho": {"can_cu_chinh": [{"id_thuc_te_ap_dung": DIEU_X, "noidung": "x", "cap_bac": 1}]}},
+            "2026-06-01",
+            False,
+        )
+    assert "--- BẢNG LINK TRÍCH DẪN (TVPL) ---" not in text
+    print("  [OK] bang_link: ẩn section khi không có URL")
+
+
+def test_format_bang_link_trich_dan() -> None:
+    out = _format_bang_link_trich_dan({"B_Dieu_2": "https://b", "A_Dieu_1": "https://a"})
+    assert out.index("A_Dieu_1") < out.index("B_Dieu_2")
+    assert "https://a" in out
+    print("  [OK] format_bang_link: sắp xếp theo ID")
+
+
 def main() -> None:
     tests = [
         test_cross_section_same_original,
@@ -164,6 +246,10 @@ def main() -> None:
         test_amended_cross_section_dedupe,
         test_sap_hieu_luc_content_deduped_link_kept,
         test_van_ban_thay_the_filtered_by_registry,
+        test_collect_dieu_ids_rollup,
+        test_bang_link_section_dieu_only,
+        test_bang_link_empty_when_no_links,
+        test_format_bang_link_trich_dan,
     ]
     print("Running cross-section context dedupe smoke tests...\n")
     for fn in tests:
