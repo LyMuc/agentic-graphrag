@@ -12,7 +12,11 @@ from adapter.cypher_templates import CypherTemplate
 from adapter.cypher_templates.chia_tai_san_sau_ly_hon._common import (
     EXPAND_AND_TIMEFILTER_CYPHER,
     assemble_semantic_viz_all_seeds,
+    should_keep_whitelist,
 )
+
+_ROUTER_FIELDS = ("tinh_chat_qsd_dat", "hanh_vi_context")
+_DIEU_62_WHITELIST = ["Luat_HNGD_2014_Dieu_62"]
 
 _ALL_D62_IDS = [
     "chia_quyen_su_dung_dat_khi_ly_hon",
@@ -92,9 +96,11 @@ def _params_builder(params: ChiaQuyenSuDungDatParams) -> dict[str, Any]:
     if params.nhu_cau_su_dung == "mot_ben":
         ids.append("giai_quyet_quyen_loi_ben_khong_co_qsd_dat")
 
+    use_wl = should_keep_whitelist(params, _ROUTER_FIELDS)
     return {
         "allowed_semantic_ids": list(dict.fromkeys(ids)),
-        "whitelist_dieu_ids": ["Luat_HNGD_2014_Dieu_62"],
+        "whitelist_dieu_ids": _DIEU_62_WHITELIST if use_wl else [],
+        # EXPERIMENT(no-whitelist): "whitelist_dieu_ids": _DIEU_62_WHITELIST,
         **params.model_dump(),
     }
 

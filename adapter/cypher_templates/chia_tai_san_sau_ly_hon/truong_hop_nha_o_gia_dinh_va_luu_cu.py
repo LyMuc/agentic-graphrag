@@ -12,7 +12,10 @@ from adapter.cypher_templates import CypherTemplate
 from adapter.cypher_templates.chia_tai_san_sau_ly_hon._common import (
     EXPAND_AND_TIMEFILTER_CYPHER,
     assemble_semantic_viz_all_seeds,
+    should_keep_whitelist,
 )
+
+_ROUTER_FIELDS = ("loai_truong_hop",)
 
 _D61_IDS = [
     "chia_tai_san_song_chung_voi_gia_dinh",
@@ -66,12 +69,14 @@ WHERE n_goc IS NOT NULL
 
 
 def _params_builder(params: TruongHopNhaOGiaDinhVaLuuCuParams) -> dict[str, Any]:
+    use_wl = should_keep_whitelist(params, _ROUTER_FIELDS)
     ids: list[str] = []
     wl: list[str] = []
 
     if params.loai_truong_hop in ("song_chung_voi_gia_dinh", "tat_ca"):
         ids.extend(_D61_IDS)
-        wl.append("Luat_HNGD_2014_Dieu_61")
+        if use_wl:
+            wl.append("Luat_HNGD_2014_Dieu_61")
         if params.xac_dinh_duoc_phan_tai_san == "khong":
             ids.append("tai_san_vo_chong_trong_khoi_gia_dinh_khong_xac_dinh_duoc")
         elif params.xac_dinh_duoc_phan_tai_san == "co":
@@ -79,13 +84,15 @@ def _params_builder(params: TruongHopNhaOGiaDinhVaLuuCuParams) -> dict[str, Any]
 
     if params.loai_truong_hop in ("luu_cu_nha_rieng", "tat_ca"):
         ids.extend(_D63_IDS)
-        wl.append("Luat_HNGD_2014_Dieu_63")
+        if use_wl:
+            wl.append("Luat_HNGD_2014_Dieu_63")
         if params.kho_khan_cho_o == "co":
             ids.append("kho_khan_ve_cho_o")
 
     return {
         "allowed_semantic_ids": list(dict.fromkeys(ids)),
         "whitelist_dieu_ids": list(dict.fromkeys(wl)),
+        # EXPERIMENT(no-whitelist): wl Dieu_61/63 khi loai_truong_hop cụ thể
         **params.model_dump(),
     }
 

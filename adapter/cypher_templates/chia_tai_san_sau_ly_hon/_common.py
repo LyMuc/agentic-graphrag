@@ -455,6 +455,16 @@ def assemble_semantic_viz_from_trace_prefix(trace_prefix: str) -> str:
     return body + "\n" + _SEMANTIC_VIZ_TAIL
 
 
+# Giá trị router = phạm vi rộng / không rõ → giữ seed whitelist (full Điều).
+BROAD_SCOPE_VALUES = frozenset({"tong_quat", "tat_ca", "khong_ro", "chua_ro"})
+
+
+def should_keep_whitelist(params, router_fields: tuple[str, ...]) -> bool:
+    """True nếu ít nhất một field router ∈ BROAD_SCOPE_VALUES (bỏ qua field phụ)."""
+    data = params.model_dump()
+    return any(data.get(name) in BROAD_SCOPE_VALUES for name in router_fields)
+
+
 def whitelist_dieu_clause(param_name: str = "whitelist_dieu_ids") -> str:
     """Tạo snippet UNION nối thêm các DieuLuat ID cố định (cho coverage chắc)."""
     return f"""
@@ -473,6 +483,8 @@ __all__ = [
     "assemble_semantic_viz_all_seeds",
     "assemble_semantic_viz_sn_luat",
     "assemble_semantic_viz_from_trace_prefix",
+    "BROAD_SCOPE_VALUES",
+    "should_keep_whitelist",
     "whitelist_dieu_clause",
     "TOPIC",
     "TOPIC_LABEL",
