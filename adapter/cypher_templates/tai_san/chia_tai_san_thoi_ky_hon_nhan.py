@@ -21,6 +21,7 @@ from pydantic import BaseModel, Field
 from adapter.cypher_templates import CypherTemplate
 from adapter.cypher_templates.tai_san._common import (
     EXPAND_AND_TIMEFILTER_CYPHER,
+    assemble_semantic_viz_from_trace_prefix,
 )
 
 
@@ -271,5 +272,6 @@ chia_tai_san_thoi_ky_hon_nhan = CypherTemplate(
     params_schema=ChiaTaiSanParams,
     cypher=_SEED_BLOCK.rstrip() + "\n\n" + EXPAND_AND_TIMEFILTER_CYPHER,
     trace_cypher=_TRACE_CYPHER,
+    viz_cypher=assemble_semantic_viz_from_trace_prefix(_TRACE_CYPHER),
     params_builder=_params_builder,
 )

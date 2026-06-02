@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Graph Visualize — KG Luật</title>
+  <link rel="stylesheet" href="/static/viz.css" />
+  <script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+</head>
+<body>
+  <div id="status" class="loading">Đang tải đồ thị...</div>
+  <div class="layout" style="display:none">
+    <div id="warning-banner" class="warning-banner">
+      Đồ thị lớn (&gt;200 node). Dùng tab Table/Raw nếu giao diện graph chậm.
+    </div>
+    <header class="toolbar">
+      <h1>KG Visualize</h1>
+      <div class="search-box">
+        <input id="search-input" type="search" placeholder="Tìm node theo id..." />
+      </div>
+      <div class="tabs">
+        <button class="tab active" data-tab="graph">Graph</button>
+        <button class="tab" data-tab="table">Table</button>
+        <button class="tab" data-tab="raw">RAW</button>
+      </div>
+    </header>
+    <div class="main">
+      <div class="content">
+        <div id="panel-graph" class="panel active">
+          <div id="graph-network"></div>
+          <div class="graph-controls">
+            <button id="btn-zoom-in" title="Zoom in">+</button>
+            <button id="btn-zoom-out" title="Zoom out">−</button>
+            <button id="btn-fit" title="Fit to screen">⛶</button>
+          </div>
+        </div>
+        <div id="panel-table" class="panel">
+          <div class="table-wrap">
+            <h3>Nodes</h3>
+            <table id="nodes-table">
+              <thead><tr><th>ID</th><th>Label</th><th>Group</th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <h3>Relationships</h3>
+            <table id="edges-table">
+              <thead><tr><th>From</th><th>Type</th><th>To</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="panel-raw" class="panel">
+          <div class="raw-wrap"><pre id="raw-json"></pre></div>
+        </div>
+      </div>
+      <aside class="sidebar">
+        <h2>Metadata</h2>
+        <div id="sidebar-meta"></div>
+        <div class="legend" id="legend"></div>
+      </aside>
+    </div>
+  </div>
+  <script>window.__VIZ_ID__ = "{{VIZ_ID}}";</script>
+  <script src="/static/viz.js"></script>
+</body>
+</html>

@@ -24,6 +24,7 @@ from adapter.retrievers._context_tho_common import (
     FUTURE_EFFECTIVE_MATCH_CYPHER_V3,
     THAM_CHIEU_ANCESTOR_MATCH_V3,
     tham_chieu_ancestor_collect_parts_v3,
+    tham_chieu_ancestor_with_vars_v3,
 )
 
 TOPIC = "chia_tai_san_sau_ly_hon"
@@ -168,7 +169,8 @@ OPTIONAL MATCH (luat_tham_chieu_tu_hd)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_tc_tu
 WITH n_goc, dieu_seed_ids, chi_tiet_ap_dung, van_ban_sua_doi,
      huong_dan, chi_tiet_huong_dan, luat_tham_chieu, chi_tiet_tham_chieu,
      luat_tham_chieu_tu_hd, chi_tiet_tc_tu_hd, hien_hanh,
-     sua_doi_sap, hd_sap, chi_tiet_hd_sap, sua_hd_sap, thay_the_sap, chi_tiet_thay_the_sap, bai_bo_sap
+     sua_doi_sap, hd_sap, chi_tiet_hd_sap, sua_hd_sap, thay_the_sap, chi_tiet_thay_the_sap, bai_bo_sap,
+     """ + tham_chieu_ancestor_with_vars_v3() + """
 WHERE NOT any(did IN dieu_seed_ids
   WHERE chi_tiet_ap_dung.id <> did
     AND chi_tiet_ap_dung.id STARTS WITH did + '_'
@@ -232,7 +234,7 @@ WITH dieu_seed_ids,
     van_ban_sua_doi: van_ban_sua_doi
   }) AS can_cu_raw,
   collect(DISTINCT {
-    id_huong_dan: coalesce(chi_tiet_huong_dan.id, huong_dan.id),
+    id_huong_dan: huong_dan.id,
     id_duoc_huong_dan: chi_tiet_ap_dung.id
   }) AS lien_ket_huong_dan_raw,
   [item IN (
@@ -387,6 +389,72 @@ def assemble_simple_trace(seed_block: str) -> str:
     return body + "\n" + _SIMPLE_TRACE_TAIL
 
 
+_SEMANTIC_VIZ_TAIL = """
+WITH collect(DISTINCT sn) AS seed_nodes
+UNWIND [x IN seed_nodes WHERE x IS NOT NULL] AS n
+OPTIONAL MATCH (n)-[r]-(m)
+WHERE (m IN seed_nodes AND m IS NOT NULL) OR type(r) = 'CAN_CU_TAI'
+WITH n, r, m
+WHERE r IS NOT NULL
+  AND startNode(r).id IS NOT NULL
+  AND endNode(r).id IS NOT NULL
+WITH
+  [x IN collect(DISTINCT {id: n.id, labels: labels(n)})
+        + collect(DISTINCT CASE WHEN m IS NOT NULL THEN {id: m.id, labels: labels(m)} END)
+   WHERE x IS NOT NULL AND x.id IS NOT NULL | x] AS viz_nodes,
+  [e IN collect(DISTINCT {src: startNode(r).id, dst: endNode(r).id, type: type(r)})
+   WHERE e.src IS NOT NULL AND e.dst IS NOT NULL | e] AS viz_edges
+RETURN {nodes: viz_nodes, edges: viz_edges} AS viz_graph
+"""
+
+
+def assemble_semantic_viz(seed_block: str) -> str:
+    """Build viz cypher từ seed block kết thúc ``WITH DISTINCT luat AS n_goc``."""
+    marker = "WITH DISTINCT luat AS n_goc"
+    if marker not in seed_block:
+        raise ValueError(
+            f"Seed block không kết thúc bằng '{marker}', không thể build viz cypher."
+        )
+    body = seed_block.rsplit(marker, 1)[0].rstrip()
+    return body + "\n" + _SEMANTIC_VIZ_TAIL
+
+
+def assemble_semantic_viz_all_seeds(seed_block: str) -> str:
+    """Build viz cypher từ seed block có ``WITH collect(DISTINCT luat_semantic)``."""
+    marker = "WITH collect(DISTINCT luat_semantic)"
+    if marker not in seed_block:
+        raise ValueError(
+            f"Seed block không chứa '{marker}', không thể build viz cypher."
+        )
+    body = seed_block.rsplit(marker, 1)[0].rstrip()
+    return body + "\n" + _SEMANTIC_VIZ_TAIL
+
+
+def assemble_semantic_viz_sn_luat(seed_block: str) -> str:
+    """Build viz cypher từ seed block kết thúc ``WITH DISTINCT sn, luat AS n_goc``."""
+    marker = "WITH DISTINCT sn, luat AS n_goc"
+    if marker not in seed_block:
+        raise ValueError(
+            f"Seed block không kết thúc bằng '{marker}', không thể build viz cypher."
+        )
+    body = seed_block.rsplit(marker, 1)[0].rstrip()
+    return body + "\nWITH DISTINCT sn, luat WHERE sn IS NOT NULL\n" + _SEMANTIC_VIZ_TAIL
+
+
+def assemble_semantic_viz_from_trace_prefix(trace_prefix: str) -> str:
+    """Build viz cypher từ phần đầu của trace (trước ``WITH wl, collect``)."""
+    markers = [
+        "WITH wl, collect(DISTINCT {",
+        "OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat)\nWHERE luat IS NOT NULL\n\nWITH wl, collect",
+    ]
+    body = trace_prefix.rstrip()
+    for marker in markers:
+        if marker in trace_prefix:
+            body = trace_prefix.rsplit(marker, 1)[0].rstrip()
+            break
+    return body + "\n" + _SEMANTIC_VIZ_TAIL
+
+
 def whitelist_dieu_clause(param_name: str = "whitelist_dieu_ids") -> str:
     """Tạo snippet UNION nối thêm các DieuLuat ID cố định (cho coverage chắc)."""
     return f"""
@@ -401,6 +469,10 @@ __all__ = [
     "EXPAND_AND_TIMEFILTER_CYPHER",
     "assemble_cypher",
     "assemble_simple_trace",
+    "assemble_semantic_viz",
+    "assemble_semantic_viz_all_seeds",
+    "assemble_semantic_viz_sn_luat",
+    "assemble_semantic_viz_from_trace_prefix",
     "whitelist_dieu_clause",
     "TOPIC",
     "TOPIC_LABEL",

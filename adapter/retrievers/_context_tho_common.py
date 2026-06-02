@@ -265,6 +265,20 @@ def tham_chieu_ancestor_collect_parts_v3() -> str:
     return "\n    + ".join(parts) if parts else ""
 
 
+def tham_chieu_ancestor_var_names_v3() -> list[str]:
+    """Tên biến heading cha từ THAM_CHIEU_ANCESTOR_MATCH_V3 — cần giữ trong WITH."""
+    names: list[str] = []
+    for prefix in ("ltc", "ctt", "ltc_hd", "ctt_hd"):
+        for role in ("dieu_cha", "khoan_cha", "dieu_ong"):
+            names.append(f"{role}_{prefix}" if role != "dieu_ong" else f"dieu_ong_{prefix}")
+    return names
+
+
+def tham_chieu_ancestor_with_vars_v3() -> str:
+    """Snippet cột bổ sung cho WITH sau ancestor match (V3 templates)."""
+    return ", ".join(tham_chieu_ancestor_var_names_v3())
+
+
 THAM_CHIEU_ANCESTOR_MATCH_V3 = (
     "\n// 7b-8b. Heading cha cho tham chiếu (đi ngược CO_KHOAN/CO_DIEM)"
     + _ancestor_match_for_seed("luat_tham_chieu", "ltc", indent="")

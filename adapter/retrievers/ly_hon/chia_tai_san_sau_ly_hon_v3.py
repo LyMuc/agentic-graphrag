@@ -22,6 +22,7 @@ from adapter.cypher_templates.chia_tai_san_sau_ly_hon import (
     CHIA_TAI_SAN_SAU_LY_HON_REGISTRY,
 )
 from adapter.cypher_templates.chia_tai_san_sau_ly_hon.term_mapping import resolve_term
+from adapter.graph_viz import build_graph_payload, merge_graph_payloads, save_graph_viz
 from utils.utils import chuan_hoa_Context_cho_LLM
 
 
@@ -287,6 +288,29 @@ def _format_retrieval_debug(
     )
 
 
+def _build_viz_payload_sync(
+    template: CypherTemplate,
+    record: dict[str, Any],
+    runtime_params: dict[str, Any],
+    target_date: str,
+    query: str,
+) -> dict[str, Any] | None:
+    context_tho = record.get("Context_Tho")
+    if not context_tho:
+        return None
+    try:
+        return build_graph_payload(
+            context_tho=context_tho,
+            template=template,
+            runtime_params=runtime_params,
+            target_date=target_date,
+            query=query,
+        )
+    except Exception as exc:
+        print(f"[Template:{template.name}] Viz error: {exc}")
+        return None
+
+
 async def chia_tai_san_sau_ly_hon_v3(query: str) -> dict[str, Any]:
     """3 bước: classify → extract → execute → normalize."""
     print(f"[Agent chia_tai_san_sau_ly_hon_v3] Đang xử lý: '{query}'...")
@@ -347,4 +371,41 @@ async def chia_tai_san_sau_ly_hon_v3(query: str) -> dict[str, Any]:
                 f"Raw: {json.dumps(record, ensure_ascii=False, default=str)[:500]}..."
             )
 
-    return {"contexts": contexts, "debug": "\n\n".join(debug_parts)}
+    graph_viz_id = None
+    graph_viz_node_count = 0
+    viz_inputs: list[tuple[CypherTemplate, dict[str, Any], dict[str, Any], str]] = []
+    for template, (params, _), record in zip(templates, extracted, records):
+        if record is None or "Context_Tho" not in record:
+            continue
+        runtime_params = template.build_params(params)
+        runtime_params["target_date"] = target_date
+        viz_inputs.append((template, record, runtime_params, target_date))
+
+    if viz_inputs:
+        viz_payloads = await asyncio.gather(
+            *(
+                asyncio.to_thread(
+                    _build_viz_payload_sync,
+                    template,
+                    record,
+                    runtime_params,
+                    td,
+                    query,
+                )
+                for template, record, runtime_params, td in viz_inputs
+            )
+        )
+        valid_payloads = [p for p in viz_payloads if p]
+        if valid_payloads:
+            merged = merge_graph_payloads(valid_payloads, query=query)
+            graph_viz_id = save_graph_viz(merged)
+            graph_viz_node_count = merged.get("meta", {}).get("node_count", 0)
+
+    result: dict[str, Any] = {
+        "contexts": contexts,
+        "debug": "\n\n".join(debug_parts),
+    }
+    if graph_viz_id:
+        result["graph_viz_id"] = graph_viz_id
+        result["graph_viz_node_count"] = graph_viz_node_count
+    return result

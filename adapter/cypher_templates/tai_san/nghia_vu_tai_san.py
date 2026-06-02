@@ -24,7 +24,10 @@ from typing import Any, Literal, Optional
 from pydantic import BaseModel, Field
 
 from adapter.cypher_templates import CypherTemplate
-from adapter.cypher_templates.tai_san._common import EXPAND_AND_TIMEFILTER_CYPHER
+from adapter.cypher_templates.tai_san._common import (
+    EXPAND_AND_TIMEFILTER_CYPHER,
+    assemble_semantic_viz_from_trace_prefix,
+)
 
 
 class NghiaVuTaiSanParams(BaseModel):
@@ -248,5 +251,6 @@ nghia_vu_tai_san = CypherTemplate(
     params_schema=NghiaVuTaiSanParams,
     cypher=_SEED_BLOCK.rstrip() + "\n\n" + EXPAND_AND_TIMEFILTER_CYPHER,
     trace_cypher=_TRACE_CYPHER,
+    viz_cypher=assemble_semantic_viz_from_trace_prefix(_TRACE_CYPHER),
     params_builder=_params_builder,
 )

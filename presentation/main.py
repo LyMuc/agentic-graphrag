@@ -8,6 +8,7 @@ from chainlit import data as cl_data
 from adapter.config import chat_stream
 from application.query_updater import query_update
 from application.router import route_question
+from adapter.graph_viz import collect_viz_links
 
 from adapter.retrievers.cap_duong import cap_duong, cap_duong_description
 from adapter.retrievers.hon_nhan_cham_dut_do_vo_chong_chet import (
@@ -460,6 +461,19 @@ async def on_chat_resume(thread: ThreadDict):
                  
     cl.user_session.set("session_history", session_history)
 
+
+def _viz_footer(tool_response: list) -> str:
+    base = os.environ.get("VIZ_BASE_URL", "http://localhost:8501").rstrip("/")
+    links = collect_viz_links(tool_response)
+    if not links:
+        return ""
+    parts = [
+        f"[Link visualize đồ thị tri thức]({base}/viz/{viz_id})"
+        for viz_id, _ in links
+    ]
+    return "\n\n" + "\n".join(parts)
+
+
 @cl.on_message
 async def main(message: cl.Message):
     input_text = message.content
@@ -509,10 +523,11 @@ async def main(message: cl.Message):
         and not any(isinstance(res, dict) and "contexts" in res for res in tool_response)
     ):
         direct_answer = tool_response[0]
-        msg = cl.Message(content=direct_answer)
+        viz_extra = _viz_footer(tool_response)
+        msg = cl.Message(content=direct_answer + viz_extra)
         await msg.send()
         session_history.append({"role": "user", "content": input_text})
-        session_history.append({"role": "assistant", "content": direct_answer})
+        session_history.append({"role": "assistant", "content": direct_answer + viz_extra})
         cl.user_session.set("session_history", session_history)
         return
 
@@ -550,6 +565,12 @@ async def main(message: cl.Message):
                 llm_response = fallback
                 await msg.stream_token(fallback)
         ans_step.output = llm_response
+
+    viz_extra = _viz_footer(tool_response)
+    if viz_extra:
+        llm_response += viz_extra
+        await msg.stream_token(viz_extra)
+
     await msg.update()
 
     session_history.append({"role": "user", "content": input_text})

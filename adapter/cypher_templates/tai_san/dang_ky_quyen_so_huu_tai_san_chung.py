@@ -15,7 +15,7 @@ from typing import Literal, Optional
 from pydantic import BaseModel, Field
 
 from adapter.cypher_templates import CypherTemplate
-from adapter.cypher_templates.tai_san._common import assemble_cypher, assemble_simple_trace
+from adapter.cypher_templates.tai_san._common import assemble_cypher, assemble_simple_trace, assemble_semantic_viz
 
 
 class DangKyQuyenSoHuuParams(BaseModel):
@@ -82,4 +82,5 @@ dang_ky_quyen_so_huu_tai_san_chung = CypherTemplate(
     params_schema=DangKyQuyenSoHuuParams,
     cypher=assemble_cypher(_SEED_BLOCK),
     trace_cypher=assemble_simple_trace(_SEED_BLOCK),
+    viz_cypher=assemble_semantic_viz(_SEED_BLOCK),
 )

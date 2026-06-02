@@ -29,6 +29,12 @@ class CypherTemplate:
 
     Cùng dùng tham số như ``cypher`` (param không dùng đến sẽ được Neo4j bỏ qua).
     """
+    viz_cypher: Optional[str] = None
+    """Optional Cypher trả subgraph ngữ nghĩa cho trang visualize.
+
+    Kết quả: 1 row với column ``viz_graph`` (``{nodes, edges}``) hoặc
+    ``seed_trace`` (list triple) — ``adapter.graph_viz`` parse cả hai.
+    """
     post_process: Optional[Callable[[list[dict[str, Any]], dict[str, Any]], list[Any]]] = None
     params_builder: Optional[Callable[[BaseModel], dict[str, Any]]] = None
     """Optional hook để mở rộng dict param trước khi pass vào driver.execute_query.

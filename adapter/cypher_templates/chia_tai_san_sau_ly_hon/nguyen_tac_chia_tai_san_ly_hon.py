@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 from adapter.cypher_templates import CypherTemplate
 from adapter.cypher_templates.chia_tai_san_sau_ly_hon._common import (
     EXPAND_AND_TIMEFILTER_CYPHER,
+    assemble_semantic_viz_all_seeds,
 )
 
 _KHIA_CANH_IDS: dict[str, list[str]] = {
@@ -125,5 +126,6 @@ nguyen_tac_chia_tai_san_ly_hon = CypherTemplate(
     ),
     params_schema=NguyenTacChiaTaiSanLyHonParams,
     cypher=_SEED_BLOCK.rstrip() + "\n\n" + EXPAND_AND_TIMEFILTER_CYPHER,
+    viz_cypher=assemble_semantic_viz_all_seeds(_SEED_BLOCK),
     params_builder=_params_builder,
 )

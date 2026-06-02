@@ -13,6 +13,7 @@ Trọng tâm hiện tại: **Luật Hôn nhân và Gia đình** và các văn b�
 - **Text2Cypher dự phòng**: Retriever tổng quát khi không khớp domain cụ thể.
 - **Tổng hợp đáp án có kiểm soát**: Prompt phản hồi quy định cách trích dẫn Điều/Khoản/Điểm, thứ bậc văn bản, hiệu lực, văn bản sửa đổi và cảnh báo đa cấp pháp lý.
 - **Giao diện Chainlit**: Streaming câu trả lời, hiển thị từng bước (Router, Retriever, tổng hợp).
+- **Visualize đồ thị (V3)**: Sau mỗi câu trả lời từ retriever V3, link mở trang web riêng (Neo4j Browser-style) hiển thị node/quan hệ từ `Context_Tho` + lớp ngữ nghĩa.
 - **Lưu hội thoại**: PostgreSQL qua Chainlit Data Layer (thread, step, resume chat).
 - **Đánh giá benchmark**: Bộ câu hỏi chuẩn, script điền đáp án chatbot và tính metric trích dẫn pháp lý.
 
@@ -147,6 +148,8 @@ Trong `adapter/config.py` có sẵn khối cấu hình **Gemini API trực tiế
 
 ### 5. Khởi chạy ứng dụng
 
+**Terminal 1 — Chatbot Chainlit:**
+
 ```bash
 chainlit run presentation/main.py -w
 ```
@@ -154,6 +157,16 @@ chainlit run presentation/main.py -w
 - `-w`: auto-reload khi sửa code
 - UI: **http://localhost:8000**
 - Lần chạy đầu, Chainlit tạo schema PostgreSQL tự động nếu `DATABASE_URL` hợp lệ
+
+**Terminal 2 — Viz server (tùy chọn, cho link “Xem đồ thị tri thức”):**
+
+```bash
+uvicorn presentation.viz_server:app --host 0.0.0.0 --port 8501
+```
+
+- UI visualize: **http://localhost:8501/viz/{viz_id}**
+- Trong `.env`: `VIZ_BASE_URL=http://localhost:8501`
+- Snapshot JSON lưu tại `data/viz_snapshots/` (TTL 7 ngày)
 
 **OAuth (tùy chọn):** Điền client ID/secret trong `.env`, bật `auth` trong `.chainlit/config.toml` (hiện `enabled = false` cho password; OAuth providers đã khai báo Google/GitHub).
 

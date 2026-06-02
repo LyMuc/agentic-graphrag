@@ -20,7 +20,11 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from adapter.cypher_templates import CypherTemplate
-from adapter.cypher_templates.tai_san._common import assemble_cypher, assemble_simple_trace
+from adapter.cypher_templates.tai_san._common import (
+    assemble_cypher,
+    assemble_simple_trace,
+    assemble_semantic_viz_sn_luat,
+)
 
 
 class NguyenTacCheDoTaiSanParams(BaseModel):
@@ -173,4 +177,5 @@ nguyen_tac_che_do_tai_san = CypherTemplate(
     params_schema=NguyenTacCheDoTaiSanParams,
     cypher=_assemble_main(_SEED_BLOCK),
     trace_cypher=_build_trace(_SEED_BLOCK),
+    viz_cypher=assemble_semantic_viz_sn_luat(_SEED_BLOCK),
 )
