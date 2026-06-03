@@ -1,6 +1,7 @@
 """Template 5 — TRƯỜNG HỢP NHÀ Ở GIA ĐÌNH VÀ LƯU CƯ (Đ61, Đ63).
 
 Coverage feat_llm stt: 12,18.
+Seed kiểu semantic graph: AP_DUNG_KHI + DAN_TOI trên Đ61/Đ63.
 """
 from __future__ import annotations
 
@@ -10,24 +11,14 @@ from pydantic import BaseModel, Field
 
 from adapter.cypher_templates import CypherTemplate
 from adapter.cypher_templates.chia_tai_san_sau_ly_hon._common import (
-    EXPAND_AND_TIMEFILTER_CYPHER,
-    assemble_semantic_viz_all_seeds,
+    TOPIC,
+    TOPIC_LABEL,
+    assemble_graph_seed_cypher,
+    assemble_semantic_viz_from_trace_prefix,
     should_keep_whitelist,
 )
 
 _ROUTER_FIELDS = ("loai_truong_hop",)
-
-_D61_IDS = [
-    "chia_tai_san_song_chung_voi_gia_dinh",
-    "tai_san_vo_chong_trong_khoi_gia_dinh_khong_xac_dinh_duoc",
-    "tai_san_vo_chong_trong_khoi_gia_dinh_xac_dinh_duoc_theo_phan",
-]
-_D63_IDS = [
-    "luu_cu_sau_ly_hon",
-    "nha_o_rieng_da_dua_vao_su_dung_chung",
-    "kho_khan_ve_cho_o",
-    "thoi_han_luu_cu_06_thang",
-]
 
 
 class TruongHopNhaOGiaDinhVaLuuCuParams(BaseModel):
@@ -48,51 +39,64 @@ class TruongHopNhaOGiaDinhVaLuuCuParams(BaseModel):
     thoa_thuan_khac: Literal["co", "khong", "khong_ro"] = Field(default="khong_ro")
 
 
-_SEED_BLOCK = """
-WITH $allowed_semantic_ids AS allowed, $whitelist_dieu_ids AS wl
+_SEED_BODY = f"""
+// ============================================================
+// PHẦN 1 — SEED semantic graph (sống chung gia đình / lưu cư)
+// ============================================================
+WITH $loai_truong_hop AS lth,
+     $xac_dinh_duoc_phan_tai_san AS xdp,
+     $kho_khan_cho_o AS kko,
+     $whitelist_dieu_ids AS wl
 
-OPTIONAL MATCH (sn:ChiaTaiSanSauLyHon)
-WHERE sn.id IN allowed AND sn.topic = 'chia_tai_san_sau_ly_hon'
-  AND (sn:HanhVi OR sn:DieuKien OR sn:HauQua OR sn:LoaiTaiSan)
+OPTIONAL MATCH (hv61:HanhVi:{TOPIC_LABEL} {{id: 'chia_tai_san_song_chung_voi_gia_dinh', topic: '{TOPIC}'}})
+WHERE lth IN ['song_chung_voi_gia_dinh', 'tat_ca']
 
-OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat_semantic)
-WHERE luat_semantic IS NOT NULL
+OPTIONAL MATCH (hv61)-[:AP_DUNG_KHI]->(dk61:DieuKien:{TOPIC_LABEL})
+WHERE lth IN ['song_chung_voi_gia_dinh', 'tat_ca']
+  AND (
+    xdp = 'khong_ro'
+    OR dk61.id = CASE xdp
+         WHEN 'khong' THEN 'tai_san_vo_chong_trong_khoi_gia_dinh_khong_xac_dinh_duoc'
+         ELSE 'tai_san_vo_chong_trong_khoi_gia_dinh_xac_dinh_duoc_theo_phan'
+       END
+  )
 
-OPTIONAL MATCH (luat_whitelist:DieuLuat)
-WHERE luat_whitelist.id IN wl
+OPTIONAL MATCH (luu:HauQua:{TOPIC_LABEL} {{id: 'luu_cu_sau_ly_hon', topic: '{TOPIC}'}})
+WHERE lth IN ['luu_cu_nha_rieng', 'tat_ca']
 
-WITH collect(DISTINCT luat_semantic) + collect(DISTINCT luat_whitelist) AS all_seeds
-UNWIND all_seeds AS n_goc
-WITH DISTINCT n_goc
-WHERE n_goc IS NOT NULL
+OPTIONAL MATCH (luu)-[:AP_DUNG_KHI]->(lts:LoaiTaiSan:{TOPIC_LABEL})
+WHERE lth IN ['luu_cu_nha_rieng', 'tat_ca']
+
+OPTIONAL MATCH (luu)-[:AP_DUNG_KHI]->(dk63:DieuKien:{TOPIC_LABEL} {{id: 'kho_khan_ve_cho_o'}})
+WHERE lth IN ['luu_cu_nha_rieng', 'tat_ca']
+  AND kko IN ['co', 'khong_ro']
+
+OPTIONAL MATCH (luu)-[:DAN_TOI]->(th:HauQua:{TOPIC_LABEL} {{id: 'thoi_han_luu_cu_06_thang'}})
+WHERE lth IN ['luu_cu_nha_rieng', 'tat_ca']
+
+WITH wl, xdp,
+  CASE
+    WHEN xdp IN ['khong', 'co'] THEN
+      [x IN collect(DISTINCT dk61) WHERE x IS NOT NULL]
+    ELSE
+      [x IN collect(DISTINCT hv61) + collect(DISTINCT dk61) WHERE x IS NOT NULL]
+  END
+    + [x IN collect(DISTINCT luu) + collect(DISTINCT lts)
+         + collect(DISTINCT dk63) + collect(DISTINCT th)
+       WHERE x IS NOT NULL] AS seed_nodes
 """
 
 
 def _params_builder(params: TruongHopNhaOGiaDinhVaLuuCuParams) -> dict[str, Any]:
     use_wl = should_keep_whitelist(params, _ROUTER_FIELDS)
-    ids: list[str] = []
     wl: list[str] = []
-
-    if params.loai_truong_hop in ("song_chung_voi_gia_dinh", "tat_ca"):
-        ids.extend(_D61_IDS)
-        if use_wl:
+    if use_wl:
+        if params.loai_truong_hop in ("song_chung_voi_gia_dinh", "tat_ca"):
             wl.append("Luat_HNGD_2014_Dieu_61")
-        if params.xac_dinh_duoc_phan_tai_san == "khong":
-            ids.append("tai_san_vo_chong_trong_khoi_gia_dinh_khong_xac_dinh_duoc")
-        elif params.xac_dinh_duoc_phan_tai_san == "co":
-            ids.append("tai_san_vo_chong_trong_khoi_gia_dinh_xac_dinh_duoc_theo_phan")
-
-    if params.loai_truong_hop in ("luu_cu_nha_rieng", "tat_ca"):
-        ids.extend(_D63_IDS)
-        if use_wl:
+        if params.loai_truong_hop in ("luu_cu_nha_rieng", "tat_ca"):
             wl.append("Luat_HNGD_2014_Dieu_63")
-        if params.kho_khan_cho_o == "co":
-            ids.append("kho_khan_ve_cho_o")
-
     return {
-        "allowed_semantic_ids": list(dict.fromkeys(ids)),
         "whitelist_dieu_ids": list(dict.fromkeys(wl)),
-        # EXPERIMENT(no-whitelist): wl Dieu_61/63 khi loai_truong_hop cụ thể
         **params.model_dump(),
     }
 
@@ -106,7 +110,7 @@ truong_hop_nha_o_gia_dinh_va_luu_cu = CypherTemplate(
         "riêng', 'khó khăn chỗ ở', 'nhà riêng của vợ/chồng'."
     ),
     params_schema=TruongHopNhaOGiaDinhVaLuuCuParams,
-    cypher=_SEED_BLOCK.rstrip() + "\n\n" + EXPAND_AND_TIMEFILTER_CYPHER,
-    viz_cypher=assemble_semantic_viz_all_seeds(_SEED_BLOCK),
+    cypher=assemble_graph_seed_cypher(_SEED_BODY),
+    viz_cypher=assemble_semantic_viz_from_trace_prefix(_SEED_BODY),
     params_builder=_params_builder,
 )

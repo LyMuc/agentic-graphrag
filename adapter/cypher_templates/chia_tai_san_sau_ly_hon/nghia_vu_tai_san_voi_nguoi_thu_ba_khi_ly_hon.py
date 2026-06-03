@@ -1,6 +1,7 @@
 """Template 3 — NGHĨA VỤ TÀI SẢN VỚI NGƯỜI THỨ BA KHI LY HÔN (Đ60).
 
 Coverage feat_llm stt: 10,11,26,27.
+Seed kiểu semantic graph: DAN_TOI + AP_DUNG_KHI (tranh chấp).
 """
 from __future__ import annotations
 
@@ -10,19 +11,15 @@ from pydantic import BaseModel, Field
 
 from adapter.cypher_templates import CypherTemplate
 from adapter.cypher_templates.chia_tai_san_sau_ly_hon._common import (
-    EXPAND_AND_TIMEFILTER_CYPHER,
-    assemble_semantic_viz_all_seeds,
+    TOPIC,
+    TOPIC_LABEL,
+    assemble_graph_seed_cypher,
+    assemble_semantic_viz_from_trace_prefix,
     should_keep_whitelist,
 )
 
 _ROUTER_FIELDS = ("loai_nghia_vu",)
 _DIEU_60_WHITELIST = ["Luat_HNGD_2014_Dieu_60"]
-
-_BASE_IDS = [
-    "giai_quyet_quyen_nghia_vu_nguoi_thu_ba_khi_ly_hon",
-    "quyen_nghia_vu_voi_nguoi_thu_ba_van_hieu_luc",
-]
-_TRANH_CHAP_IDS = ["co_tranh_chap_quyen_nghia_vu_tai_san"]
 
 
 class NghiaVuTaiSanVoiNguoiThuBaParams(BaseModel):
@@ -52,35 +49,44 @@ class NghiaVuTaiSanVoiNguoiThuBaParams(BaseModel):
     ] = Field(default="khong_ro")
 
 
-_SEED_BLOCK = """
-WITH $allowed_semantic_ids AS allowed, $whitelist_dieu_ids AS wl
+_SEED_BODY = f"""
+// ============================================================
+// PHẦN 1 — SEED semantic graph (nghĩa vụ người thứ ba — Đ60)
+// ============================================================
+WITH $loai_nghia_vu AS lnv, $whitelist_dieu_ids AS wl
 
-OPTIONAL MATCH (sn:ChiaTaiSanSauLyHon)
-WHERE sn.id IN allowed AND sn.topic = 'chia_tai_san_sau_ly_hon'
-  AND (sn:HanhVi OR sn:DieuKien OR sn:HauQua)
+MATCH (anchor:HanhVi:{TOPIC_LABEL} {{
+  id: 'giai_quyet_quyen_nghia_vu_nguoi_thu_ba_khi_ly_hon',
+  topic: '{TOPIC}'
+}})
 
-OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat_semantic)
-WHERE luat_semantic IS NOT NULL
+OPTIONAL MATCH (anchor)-[:DAN_TOI]->(hq:HauQua:{TOPIC_LABEL} {{
+  id: 'quyen_nghia_vu_voi_nguoi_thu_ba_van_hieu_luc'
+}})
 
-OPTIONAL MATCH (luat_whitelist:DieuLuat)
-WHERE luat_whitelist.id IN wl
+OPTIONAL MATCH (dk:DieuKien:{TOPIC_LABEL} {{id: 'co_tranh_chap_quyen_nghia_vu_tai_san'}})
+      -[:AP_DUNG_KHI]->(anchor)
+WHERE lnv IN ['tranh_chap', 'vay_ca_nhan', 'khong_ro']
 
-WITH collect(DISTINCT luat_semantic) + collect(DISTINCT luat_whitelist) AS all_seeds
-UNWIND all_seeds AS n_goc
-WITH DISTINCT n_goc
-WHERE n_goc IS NOT NULL
+WITH wl, lnv,
+  CASE
+    WHEN lnv = 'tranh_chap' THEN
+      [x IN collect(DISTINCT hq) + collect(DISTINCT dk) WHERE x IS NOT NULL]
+    WHEN lnv = 'vay_ca_nhan' THEN
+      [x IN collect(DISTINCT hq) + collect(DISTINCT dk) WHERE x IS NOT NULL]
+    WHEN lnv IN ['no_chung', 'vay_kinh_doanh', 'quyen_nghia_vu_nguoi_thu_ba'] THEN
+      [x IN collect(DISTINCT hq) WHERE x IS NOT NULL]
+    ELSE
+      [x IN collect(DISTINCT anchor) + collect(DISTINCT hq) + collect(DISTINCT dk)
+       WHERE x IS NOT NULL]
+  END AS seed_nodes
 """
 
 
 def _params_builder(params: NghiaVuTaiSanVoiNguoiThuBaParams) -> dict[str, Any]:
-    ids = list(_BASE_IDS)
-    if params.loai_nghia_vu in ("tranh_chap", "vay_ca_nhan", "khong_ro"):
-        ids.extend(_TRANH_CHAP_IDS)
     use_wl = should_keep_whitelist(params, _ROUTER_FIELDS)
     return {
-        "allowed_semantic_ids": list(dict.fromkeys(ids)),
         "whitelist_dieu_ids": _DIEU_60_WHITELIST if use_wl else [],
-        # EXPERIMENT(no-whitelist): "whitelist_dieu_ids": _DIEU_60_WHITELIST,
         **params.model_dump(),
     }
 
@@ -94,7 +100,7 @@ nghia_vu_tai_san_voi_nguoi_thu_ba_khi_ly_hon = CypherTemplate(
         "'người thứ ba', 'nghĩa vụ tài sản'."
     ),
     params_schema=NghiaVuTaiSanVoiNguoiThuBaParams,
-    cypher=_SEED_BLOCK.rstrip() + "\n\n" + EXPAND_AND_TIMEFILTER_CYPHER,
-    viz_cypher=assemble_semantic_viz_all_seeds(_SEED_BLOCK),
+    cypher=assemble_graph_seed_cypher(_SEED_BODY),
+    viz_cypher=assemble_semantic_viz_from_trace_prefix(_SEED_BODY),
     params_builder=_params_builder,
 )

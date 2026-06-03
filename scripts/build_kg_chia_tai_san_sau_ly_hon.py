@@ -9,7 +9,7 @@ Cách chạy:
     python scripts/build_kg_chia_tai_san_sau_ly_hon.py --reset   # XOÁ topic trước khi build
     python scripts/build_kg_chia_tai_san_sau_ly_hon.py --dry-run # chỉ in summary, không ghi DB
 
-Schema đầy đủ: docs/kg_chia_tai_san_sau_ly_hon_schema.md
+Schema đầy đủ: docs/cypher_semantic_graph_chia_tai_san_sau_ly_hon.md
 """
 from __future__ import annotations
 
@@ -89,6 +89,12 @@ NODES: dict[str, list[dict[str, Any]]] = {
         {"id": "dat_cay_lau_nam_dat_lam_nghiep_dat_o", "ten": "Đất cây lâu năm, đất lâm nghiệp, đất ở", "tinh_chat": "chung", "loai_tai_san": "dat_khac", "topic": TOPIC},
         {"id": "loai_dat_khac", "ten": "Loại đất khác", "tinh_chat": "chung", "loai_tai_san": "dat_khac", "topic": TOPIC},
         {"id": "nha_o_rieng_da_dua_vao_su_dung_chung", "ten": "Nhà riêng đã đưa vào sử dụng chung", "tinh_chat": "rieng", "loai_tai_san": "nha_o", "topic": TOPIC},
+        {"id": "bat_dong_san_chung", "ten": "Bất động sản là tài sản chung", "tinh_chat": "chung", "loai_tai_san": "bat_dong_san", "topic": TOPIC},
+        {"id": "bat_dong_san_rieng", "ten": "Bất động sản là tài sản riêng", "tinh_chat": "rieng", "loai_tai_san": "bat_dong_san", "topic": TOPIC},
+        {"id": "dong_san_phai_dang_ky_chung", "ten": "Động sản phải đăng ký là tài sản chung", "tinh_chat": "chung", "loai_tai_san": "dong_san_phai_dang_ky", "topic": TOPIC},
+        {"id": "dong_san_phai_dang_ky_rieng", "ten": "Động sản phải đăng ký là tài sản riêng", "tinh_chat": "rieng", "loai_tai_san": "dong_san_phai_dang_ky", "topic": TOPIC},
+        {"id": "tai_khoan_tiet_kiem_tro_cap_chung", "ten": "Tài khoản tiết kiệm/trợ cấp là tài sản chung", "tinh_chat": "chung", "loai_tai_san": "tai_khoan_tiet_kiem_tro_cap", "topic": TOPIC},
+        {"id": "tai_san_duoc_tang_cho", "ten": "Tài sản được tặng cho", "tinh_chat": "rieng", "loai_tai_san": "tai_san_tang_cho", "topic": TOPIC},
     ],
 }
 
@@ -122,6 +128,15 @@ EDGES: list[tuple] = [
     ("HauQua", "luu_cu_sau_ly_hon", "AP_DUNG_KHI", "DieuKien", "kho_khan_ve_cho_o", {}),
     ("HauQua", "luu_cu_sau_ly_hon", "DAN_TOI", "HauQua", "thoi_han_luu_cu_06_thang", {}),
     ("HanhVi", "chia_tai_san_chung_dua_vao_kinh_doanh", "DAN_TOI", "HauQua", "nhan_tai_san_kinh_doanh_va_thanh_toan_gia_tri", {}),
+    ("HanhVi", "giai_quyet_tai_san_khi_ly_hon", "DAN_TOI", "HauQua", "bao_ve_vo_con_yeu_the", {}),
+    ("HanhVi", "chia_tai_san_chung_khi_ly_hon", "DAN_TOI", "HanhVi", "xac_dinh_tai_san_rieng_khi_ly_hon", {}),
+    ("HanhVi", "chia_tai_san_chung_khi_ly_hon", "TAC_DONG_LEN", "LoaiTaiSan", "bat_dong_san_chung", {}),
+    ("HanhVi", "chia_tai_san_chung_khi_ly_hon", "TAC_DONG_LEN", "LoaiTaiSan", "dong_san_phai_dang_ky_chung", {}),
+    ("HanhVi", "chia_tai_san_chung_khi_ly_hon", "TAC_DONG_LEN", "LoaiTaiSan", "tai_khoan_tiet_kiem_tro_cap_chung", {}),
+    ("HanhVi", "xac_dinh_tai_san_rieng_khi_ly_hon", "TAC_DONG_LEN", "LoaiTaiSan", "bat_dong_san_rieng", {}),
+    ("HanhVi", "xac_dinh_tai_san_rieng_khi_ly_hon", "TAC_DONG_LEN", "LoaiTaiSan", "dong_san_phai_dang_ky_rieng", {}),
+    ("HanhVi", "xac_dinh_tai_san_rieng_khi_ly_hon", "TAC_DONG_LEN", "LoaiTaiSan", "tai_san_duoc_tang_cho", {}),
+    ("HanhVi", "xac_dinh_tai_san_rieng_khi_ly_hon", "TAC_DONG_LEN", "LoaiTaiSan", "qsd_dat_la_tai_san_rieng", {}),
 ]
 
 

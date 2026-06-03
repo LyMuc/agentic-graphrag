@@ -34,6 +34,24 @@ TOPIC = "chia_tai_san_sau_ly_hon"
 # cho legal layer (DieuLuat/DieuKhoanLuat/DieuKhoanDiemLuat).
 TOPIC_LABEL = "ChiaTaiSanSauLyHon"
 
+# Đuôi chuẩn: gom seed_nodes semantic → CAN_CU_TAI (+ whitelist) → n_goc legal.
+SEMANTIC_TO_LEGAL_TAIL = """
+WITH wl, seed_nodes
+UNWIND seed_nodes AS sn
+WITH wl, sn WHERE sn IS NOT NULL
+
+OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat_semantic)
+WHERE luat_semantic IS NOT NULL
+
+OPTIONAL MATCH (luat_whitelist:DieuLuat)
+WHERE luat_whitelist.id IN wl
+
+WITH collect(DISTINCT luat_semantic) + collect(DISTINCT luat_whitelist) AS all_seeds
+UNWIND all_seeds AS n_goc
+WITH DISTINCT n_goc
+WHERE n_goc IS NOT NULL
+"""
+
 EXPAND_AND_TIMEFILTER_CYPHER = """
 // ============================================================
 // PHẦN 2 — VÉT CẤU TRÚC + TIME-AWARE
@@ -362,6 +380,17 @@ def assemble_cypher(seed_block: str) -> str:
     return seed_block.rstrip() + "\n\n" + EXPAND_AND_TIMEFILTER_CYPHER
 
 
+def assemble_graph_seed_cypher(seed_body: str) -> str:
+    """Ghép seed graph (kết thúc ``WITH wl, ... AS seed_nodes``) → legal → EXPAND."""
+    return (
+        seed_body.rstrip()
+        + "\n\n"
+        + SEMANTIC_TO_LEGAL_TAIL.strip()
+        + "\n\n"
+        + EXPAND_AND_TIMEFILTER_CYPHER
+    )
+
+
 _SIMPLE_TRACE_TAIL = """
 WITH sn, luat
 RETURN collect(DISTINCT {
@@ -442,8 +471,10 @@ def assemble_semantic_viz_sn_luat(seed_block: str) -> str:
 
 
 def assemble_semantic_viz_from_trace_prefix(trace_prefix: str) -> str:
-    """Build viz cypher từ phần đầu của trace (trước ``WITH wl, collect``)."""
+    """Build viz cypher từ phần đầu của trace (trước chuyển sang legal layer)."""
     markers = [
+        "\n\n" + SEMANTIC_TO_LEGAL_TAIL.strip().split("\n")[0],  # "WITH wl, seed_nodes"
+        "WITH wl, seed_nodes",
         "WITH wl, collect(DISTINCT {",
         "OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat)\nWHERE luat IS NOT NULL\n\nWITH wl, collect",
     ]
@@ -452,7 +483,10 @@ def assemble_semantic_viz_from_trace_prefix(trace_prefix: str) -> str:
         if marker in trace_prefix:
             body = trace_prefix.rsplit(marker, 1)[0].rstrip()
             break
-    return body + "\n" + _SEMANTIC_VIZ_TAIL
+    return body + "\n" + _SEMANTIC_VIZ_TAIL.replace(
+        "WITH collect(DISTINCT sn) AS seed_nodes",
+        "WITH wl, seed_nodes\nUNWIND [x IN seed_nodes WHERE x IS NOT NULL] AS sn\nWITH collect(DISTINCT sn) AS seed_nodes",
+    )
 
 
 # Giá trị router = phạm vi rộng / không rõ → giữ seed whitelist (full Điều).
@@ -460,9 +494,15 @@ BROAD_SCOPE_VALUES = frozenset({"tong_quat", "tat_ca", "khong_ro", "chua_ro"})
 
 
 def should_keep_whitelist(params, router_fields: tuple[str, ...]) -> bool:
-    """True nếu ít nhất một field router ∈ BROAD_SCOPE_VALUES (bỏ qua field phụ)."""
+    """True nếu field router **chính** (phần tử đầu) ∈ BROAD_SCOPE_VALUES.
+
+    Các field phụ (vd hanh_vi_context, nguon_goc) mặc định khong_ro không kích
+    whitelist — tránh seed full Điều khi router chính đã cụ thể.
+    """
+    if not router_fields:
+        return False
     data = params.model_dump()
-    return any(data.get(name) in BROAD_SCOPE_VALUES for name in router_fields)
+    return data.get(router_fields[0]) in BROAD_SCOPE_VALUES
 
 
 def whitelist_dieu_clause(param_name: str = "whitelist_dieu_ids") -> str:
@@ -477,7 +517,9 @@ WITH DISTINCT n_goc
 
 __all__ = [
     "EXPAND_AND_TIMEFILTER_CYPHER",
+    "SEMANTIC_TO_LEGAL_TAIL",
     "assemble_cypher",
+    "assemble_graph_seed_cypher",
     "assemble_simple_trace",
     "assemble_semantic_viz",
     "assemble_semantic_viz_all_seeds",
