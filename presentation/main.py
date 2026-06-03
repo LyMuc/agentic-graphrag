@@ -468,8 +468,8 @@ def _viz_footer(tool_response: list) -> str:
     if not links:
         return ""
     parts = [
-        f"[Link visualize đồ thị tri thức]({base}/viz/{viz_id})"
-        for viz_id, _ in links
+        f"[Link visualize đồ thị tri thức — {retriever_name}]({base}/viz/{viz_id})"
+        for viz_id, retriever_name, _ in links
     ]
     return "\n\n" + "\n".join(parts)
 

@@ -10,13 +10,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# --- Vercel AI Gateway + OpenAI-compatible API ---
-AI_GATEWAY_API_KEY = os.environ.get("VERCEL_AI_GATEWAY_API_KEY")
-AI_GATEWAY_BASE_URL = os.environ.get("AI_GATEWAY_BASE_URL", "https://ai-gateway.vercel.sh/v1")
+# --- OpenAI API trực tiếp ---
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
-RESPONSE_LLM = os.environ.get("RESPONSE_LLM", "openai/gpt-4.1")
-ROUTER_LLM = os.environ.get("ROUTER_LLM", "openai/gpt-4o")
-RETRIEVER_LLM = os.environ.get("RETRIEVER_LLM", "openai/o3")
+# --- Vercel AI Gateway + OpenAI-compatible API (comment để dùng lại) ---
+# AI_GATEWAY_API_KEY = os.environ.get("VERCEL_AI_GATEWAY_API_KEY")
+# AI_GATEWAY_BASE_URL = os.environ.get("AI_GATEWAY_BASE_URL", "https://ai-gateway.vercel.sh/v1")
+
+RESPONSE_LLM = os.environ.get("RESPONSE_LLM", "gpt-4.1")
+ROUTER_LLM = os.environ.get("ROUTER_LLM", "gpt-4o")
+RETRIEVER_LLM = os.environ.get("RETRIEVER_LLM", "o3")
 LLM_REQUEST_TIMEOUT = float(os.environ.get("LLM_REQUEST_TIMEOUT", "180"))
 LLM_STREAM_RETRIES = int(os.environ.get("LLM_STREAM_RETRIES", "2"))
 
@@ -35,19 +38,40 @@ driver = GraphDatabase.driver(NEO4J_URI,
     notifications_min_severity="OFF", 
 )
 
+def _normalize_openai_model(model: str) -> str:
+    """Bỏ prefix openai/ khi gọi API OpenAI trực tiếp (Vercel Gateway dùng openai/...)."""
+    if model.startswith("openai/"):
+        return model[len("openai/") :]
+    return model
+
+
 def build_llm(model: str, temperature: float = 0, max_tokens: int = 2048, **kwargs) -> ChatOpenAI:
-    if not AI_GATEWAY_API_KEY:
-        raise ValueError("Missing VERCEL_AI_GATEWAY_API_KEY in environment.")
+    if not OPENAI_API_KEY:
+        raise ValueError("Missing OPENAI_API_KEY in environment.")
     return ChatOpenAI(
-        api_key=AI_GATEWAY_API_KEY,
-        base_url=AI_GATEWAY_BASE_URL,
-        model=model,
+        api_key=OPENAI_API_KEY,
+        model=_normalize_openai_model(model),
         temperature=temperature,
         max_tokens=max_tokens,
         timeout=LLM_REQUEST_TIMEOUT,
         max_retries=2,
         **kwargs,
     )
+
+
+# def build_llm(model: str, temperature: float = 0, max_tokens: int = 2048, **kwargs) -> ChatOpenAI:
+#     if not AI_GATEWAY_API_KEY:
+#         raise ValueError("Missing VERCEL_AI_GATEWAY_API_KEY in environment.")
+#     return ChatOpenAI(
+#         api_key=AI_GATEWAY_API_KEY,
+#         base_url=AI_GATEWAY_BASE_URL,
+#         model=model,
+#         temperature=temperature,
+#         max_tokens=max_tokens,
+#         timeout=LLM_REQUEST_TIMEOUT,
+#         max_retries=2,
+#         **kwargs,
+#     )
 
 def build_router_llm(**kwargs) -> ChatOpenAI:
     return build_llm(model=ROUTER_LLM, temperature=0, max_tokens=2048, **kwargs)
@@ -95,7 +119,7 @@ async def _stream_llm_tokens(llm: ChatOpenAI, messages, **config) -> AsyncIterat
 def build_structured_retriever_llm(schema):
     return build_retriever_llm().with_structured_output(schema)
 
-# KHỞI TẠO LLM CHUNG (qua Vercel AI Gateway - OpenAI compatible)
+# KHỞI TẠO LLM CHUNG (OpenAI API trực tiếp)
 async def chat(messages, **config):
     llm = build_llm(model=RESPONSE_LLM, temperature=0, max_tokens=2048)
     res = await llm.ainvoke(messages, **config)

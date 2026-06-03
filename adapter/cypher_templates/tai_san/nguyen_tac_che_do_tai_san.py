@@ -15,16 +15,26 @@ Lưu ý: Đ29-32 áp dụng cho cả chế độ tài sản theo luật định 
 """
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
 from adapter.cypher_templates import CypherTemplate
 from adapter.cypher_templates.tai_san._common import (
-    assemble_cypher,
-    assemble_simple_trace,
-    assemble_semantic_viz_sn_luat,
+    TOPIC_LABEL,
+    assemble_graph_seed_cypher,
+    assemble_semantic_viz_from_trace_prefix,
+    should_keep_whitelist,
 )
+
+_ROUTER_FIELDS = ("khia_canh",)
+
+_DIEU_WHITELIST = [
+    "Luat_HNGD_2014_Dieu_29",
+    "Luat_HNGD_2014_Dieu_30",
+    "Luat_HNGD_2014_Dieu_31",
+    "Luat_HNGD_2014_Dieu_32",
+]
 
 
 class NguyenTacCheDoTaiSanParams(BaseModel):
@@ -54,104 +64,93 @@ class NguyenTacCheDoTaiSanParams(BaseModel):
     )
 
 
-_SEED_BLOCK = """
+_SEED_BODY = f"""
 // ============================================================
-// PHẦN 1 — SEED nguyên tắc chế độ tài sản (Đ29-32)
+// PHẦN 1 — SEED semantic graph (nguyên tắc Đ29-32)
 // ============================================================
-// Dựa vào AP_DUNG_CHO_CHE_DO {che_do:'tat_ca'} để xác định Đ29-32,
-// rồi lọc theo khía cạnh thông qua semantic node ngữ nghĩa liên kết.
+WITH $khia_canh AS kc, $whitelist_dieu_ids AS wl
 
-WITH $khia_canh AS kc
+OPTIONAL MATCH (quyen_bd:Quyen:{TOPIC_LABEL} {{id: 'quyen_binh_dang_tai_san_chung'}})
+WHERE kc IN ['binh_dang', 'tat_ca']
+OPTIONAL MATCH (hv_bd:HanhVi:{TOPIC_LABEL} {{id: 'tao_lap_chiem_huu_su_dung_dinh_doat_tai_san_chung'}})
+WHERE kc IN ['binh_dang', 'tat_ca']
+OPTIONAL MATCH (hv_bd)-[:DAN_TOI]->(hq_bd:HauQua:{TOPIC_LABEL})
+WHERE kc IN ['binh_dang', 'tat_ca']
 
-// 1a. Match các Khoản / Điều thuộc Đ29-32 (gắn AP_DUNG_CHO_CHE_DO 'tat_ca')
-MATCH (luat)-[:AP_DUNG_CHO_CHE_DO {che_do: 'tat_ca'}]->(:ChePhapDoTaiSan:CheDoTaiSanCuaVoChong)
-WHERE (luat:DieuLuat OR luat:DieuKhoanLuat OR luat:DieuKhoanDiemLuat)
+OPTIONAL MATCH (hv_nc:HanhVi:{TOPIC_LABEL} {{id: 'dap_ung_nhu_cau_thiet_yeu_gia_dinh'}})
+WHERE kc IN ['nhu_cau_thiet_yeu_gia_dinh', 'tat_ca']
+OPTIONAL MATCH (hv_nc)-[:AP_DUNG_KHI]->(dk_nc:DieuKien:{TOPIC_LABEL})
+WHERE kc IN ['nhu_cau_thiet_yeu_gia_dinh', 'tat_ca']
+OPTIONAL MATCH (nv_nc:NghiaVu:{TOPIC_LABEL})
+WHERE kc IN ['nhu_cau_thiet_yeu_gia_dinh', 'tat_ca']
+  AND nv_nc.id IN [
+    'nghia_vu_dap_ung_nhu_cau_thiet_yeu_gia_dinh',
+    'nghia_vu_dong_gop_tai_san_rieng_khi_thieu_chung'
+  ]
 
-// 1b. Lấy danh sách semantic node ngữ nghĩa kết nối tới luat theo khía cạnh
-OPTIONAL MATCH (sn:CheDoTaiSanCuaVoChong)-[:CAN_CU_TAI]->(luat)
-WHERE sn IS NOT NULL
-  AND (
-    kc = 'tat_ca'
-    // bình đẳng — Đ29 K1
-    OR (kc = 'binh_dang' AND sn.id IN [
-        'quyen_binh_dang_tai_san_chung',
-        'tao_lap_chiem_huu_su_dung_dinh_doat_tai_san_chung'
-    ])
-    // nhu cầu thiết yếu — Đ29 K2, Đ30
-    OR (kc = 'nhu_cau_thiet_yeu_gia_dinh' AND sn.id IN [
-        'nghia_vu_dap_ung_nhu_cau_thiet_yeu_gia_dinh',
-        'dap_ung_nhu_cau_thiet_yeu_gia_dinh',
-        'nghia_vu_dong_gop_tai_san_rieng_khi_thieu_chung',
-        'khong_du_tai_san_chung',
-        'boi_thuong_thiet_hai_xam_pham'
-    ])
-    // nhà ở duy nhất — Đ31
-    OR (kc = 'giao_dich_nha_o_duy_nhat' AND sn.id IN [
-        'giao_dich_nha_o_duy_nhat',
-        'nha_o_duy_nhat',
-        'thoa_thuan_dinh_doat_nha_o_duy_nhat',
-        'ngoai_le_nha_so_huu_rieng_duoc_tu_giao_dich',
-        'nghia_vu_bao_dam_cho_o_cho_vo_chong',
-        'tai_san_la_nha_o_duy_nhat',
-        'nha_thuoc_so_huu_rieng',
-        'bao_dam_cho_o'
-    ])
-    // người thứ ba ngay tình — Đ32
-    OR (kc = 'giao_dich_nguoi_thu_ba_ngay_tinh' AND sn.id IN [
-        'giao_dich_nguoi_thu_ba_ngay_tinh',
-        'tai_khoan_ngan_hang_chung_khoan',
-        'dong_san_khong_phai_dang_ky',
-        'giao_dich_ngay_tinh',
-        'nguoi_thu_ba_ngay_tinh',
-        'bao_ve_nguoi_thu_ba'
-    ])
-  )
+OPTIONAL MATCH (lts_nha:LoaiTaiSan:{TOPIC_LABEL} {{id: 'nha_o_duy_nhat'}})
+WHERE kc IN ['giao_dich_nha_o_duy_nhat', 'tat_ca']
+OPTIONAL MATCH (lts_nha)-[:LIEN_QUAN]->(hv_nha:HanhVi:{TOPIC_LABEL} {{id: 'giao_dich_nha_o_duy_nhat'}})
+WHERE kc IN ['giao_dich_nha_o_duy_nhat', 'tat_ca']
+OPTIONAL MATCH (hv_nha)-[:AP_DUNG_KHI]->(dk_nha:DieuKien:{TOPIC_LABEL})
+WHERE kc IN ['giao_dich_nha_o_duy_nhat', 'tat_ca']
+OPTIONAL MATCH (hv_nha)-[:DAN_TOI]->(hq_nha:HauQua:{TOPIC_LABEL})
+WHERE kc IN ['giao_dich_nha_o_duy_nhat', 'tat_ca']
+OPTIONAL MATCH (hv_nha)-[:CO_NGOAI_LE]->(nl_nha:TruongHopNgoaiLe:{TOPIC_LABEL})
+WHERE kc IN ['giao_dich_nha_o_duy_nhat', 'tat_ca']
+OPTIONAL MATCH (hv_nha)-[:YEU_CAU_THOA_THUAN]->(tt_nha:ThoaThuan:{TOPIC_LABEL})
+WHERE kc IN ['giao_dich_nha_o_duy_nhat', 'tat_ca']
 
-// 1c. Whitelist Khoản/Điều: chỉ khi router broad scope (tat_ca, …)
-WITH luat, sn, kc,
-  CASE
-    WHEN kc IN ['tat_ca', 'tong_quat', 'khong_ro', 'chua_ro'] THEN true
-    ELSE false
-  END AS luat_khop_khia_canh
+OPTIONAL MATCH (hv_nt3:HanhVi:{TOPIC_LABEL} {{id: 'giao_dich_nguoi_thu_ba_ngay_tinh'}})
+WHERE kc IN ['giao_dich_nguoi_thu_ba_ngay_tinh', 'tat_ca']
+OPTIONAL MATCH (hv_nt3)-[:TAC_DONG_LEN]->(lts_nt3:LoaiTaiSan:{TOPIC_LABEL})
+WHERE kc IN ['giao_dich_nguoi_thu_ba_ngay_tinh', 'tat_ca']
+OPTIONAL MATCH (hv_nt3)-[:AP_DUNG_KHI]->(dk_nt3:DieuKien:{TOPIC_LABEL})
+WHERE kc IN ['giao_dich_nguoi_thu_ba_ngay_tinh', 'tat_ca']
+OPTIONAL MATCH (hv_nt3)-[:DAN_TOI]->(hq_nt3:HauQua:{TOPIC_LABEL})
+WHERE kc IN ['giao_dich_nguoi_thu_ba_ngay_tinh', 'tat_ca']
 
-WITH luat, sn, luat_khop_khia_canh
-WHERE sn IS NOT NULL OR luat_khop_khia_canh
-
-// 1d. Với row không có sn (chỉ whitelist luat), vẫn cần marker sn cho trace
-WITH coalesce(sn, luat) AS sn, luat
-WITH DISTINCT sn, luat AS n_goc
+WITH wl, kc,
+  [x IN collect(DISTINCT quyen_bd) + collect(DISTINCT hv_bd) + collect(DISTINCT hq_bd)
+       + collect(DISTINCT hv_nc) + collect(DISTINCT dk_nc) + collect(DISTINCT nv_nc)
+       + collect(DISTINCT lts_nha) + collect(DISTINCT hv_nha) + collect(DISTINCT dk_nha)
+       + collect(DISTINCT hq_nha) + collect(DISTINCT nl_nha) + collect(DISTINCT tt_nha)
+       + collect(DISTINCT hv_nt3) + collect(DISTINCT lts_nt3) + collect(DISTINCT dk_nt3)
+       + collect(DISTINCT hq_nt3)
+   WHERE x IS NOT NULL] AS seed_nodes,
+  CASE kc
+    WHEN 'binh_dang' THEN
+      [x IN collect(DISTINCT quyen_bd) + collect(DISTINCT hv_bd) + collect(DISTINCT hq_bd)
+       WHERE x IS NOT NULL]
+    WHEN 'nhu_cau_thiet_yeu_gia_dinh' THEN
+      [x IN collect(DISTINCT hv_nc) + collect(DISTINCT dk_nc) + collect(DISTINCT nv_nc)
+       WHERE x IS NOT NULL]
+    WHEN 'giao_dich_nha_o_duy_nhat' THEN
+      [x IN collect(DISTINCT lts_nha) + collect(DISTINCT hv_nha) + collect(DISTINCT dk_nha)
+           + collect(DISTINCT hq_nha) + collect(DISTINCT nl_nha) + collect(DISTINCT tt_nha)
+       WHERE x IS NOT NULL]
+    WHEN 'giao_dich_nguoi_thu_ba_ngay_tinh' THEN
+      [x IN collect(DISTINCT hv_nt3) + collect(DISTINCT lts_nt3) + collect(DISTINCT dk_nt3)
+           + collect(DISTINCT hq_nt3)
+       WHERE x IS NOT NULL]
+    ELSE
+      [x IN collect(DISTINCT quyen_bd) + collect(DISTINCT hv_bd) + collect(DISTINCT hq_bd)
+           + collect(DISTINCT hv_nc) + collect(DISTINCT dk_nc) + collect(DISTINCT nv_nc)
+           + collect(DISTINCT lts_nha) + collect(DISTINCT hv_nha) + collect(DISTINCT dk_nha)
+           + collect(DISTINCT hq_nha) + collect(DISTINCT nl_nha) + collect(DISTINCT tt_nha)
+           + collect(DISTINCT hv_nt3) + collect(DISTINCT lts_nt3) + collect(DISTINCT dk_nt3)
+           + collect(DISTINCT hq_nt3)
+       WHERE x IS NOT NULL]
+  END AS leaf_seed_nodes
 """
 
 
-# Riêng template này, Cypher SEED phức tạp hơn — match semantic + whitelist.
-# Cuối SEED giữ `sn` để trace, marker đặc biệt: `WITH DISTINCT sn, luat AS n_goc`.
-
-_CUSTOM_TRACE_TAIL = """
-RETURN collect(DISTINCT {
-    src_label: CASE WHEN sn = luat THEN 'WHITELIST' ELSE head(labels(sn)) END,
-    src_id: CASE WHEN sn = luat THEN 'khia_canh:' + $khia_canh ELSE sn.id END,
-    rel: CASE WHEN sn = luat THEN 'WHITELIST' ELSE 'CAN_CU_TAI' END,
-    dst_label: head(labels(luat)),
-    dst_id: luat.id
-}) AS seed_trace
-"""
-
-
-def _build_trace(seed_block: str) -> str:
-    """Strip marker cuối + giữ sn, luat trong scope rồi RETURN trace."""
-    marker = "WITH DISTINCT sn, luat AS n_goc"
-    body = seed_block.rsplit(marker, 1)[0].rstrip()
-    # Thay marker bằng WITH sn, luat (giữ cả 2 biến cho trace tail)
-    return body + "\nWITH DISTINCT sn, luat\n" + _CUSTOM_TRACE_TAIL
-
-
-def _assemble_main(seed_block: str) -> str:
-    """Chuyển marker đặc biệt → marker chuẩn rồi assemble với EXPAND."""
-    standardized = seed_block.replace(
-        "WITH DISTINCT sn, luat AS n_goc",
-        "WITH DISTINCT luat AS n_goc",
-    )
-    return assemble_cypher(standardized)
+def _params_builder(params: NguyenTacCheDoTaiSanParams) -> dict[str, Any]:
+    use_wl = should_keep_whitelist(params, _ROUTER_FIELDS)
+    return {
+        "khia_canh": params.khia_canh,
+        "whitelist_dieu_ids": _DIEU_WHITELIST if use_wl else [],
+    }
 
 
 nguyen_tac_che_do_tai_san = CypherTemplate(
@@ -167,7 +166,7 @@ nguyen_tac_che_do_tai_san = CypherTemplate(
         "khía cạnh trên."
     ),
     params_schema=NguyenTacCheDoTaiSanParams,
-    cypher=_assemble_main(_SEED_BLOCK),
-    trace_cypher=_build_trace(_SEED_BLOCK),
-    viz_cypher=assemble_semantic_viz_sn_luat(_SEED_BLOCK),
+    cypher=assemble_graph_seed_cypher(_SEED_BODY),
+    viz_cypher=assemble_semantic_viz_from_trace_prefix(_SEED_BODY),
+    params_builder=_params_builder,
 )

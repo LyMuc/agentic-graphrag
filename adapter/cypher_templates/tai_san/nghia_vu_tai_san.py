@@ -25,7 +25,8 @@ from pydantic import BaseModel, Field
 
 from adapter.cypher_templates import CypherTemplate
 from adapter.cypher_templates.tai_san._common import (
-    EXPAND_AND_TIMEFILTER_CYPHER,
+    TOPIC_LABEL,
+    assemble_graph_seed_cypher,
     assemble_semantic_viz_from_trace_prefix,
     should_keep_whitelist,
 )
@@ -90,75 +91,17 @@ class NghiaVuTaiSanParams(BaseModel):
     )
 
 
-# Whitelist full Điều chỉ khi loai_nghia_vu ∈ broad scope (tat_ca, …).
 _DIEU_WHITELIST = [
-    "Luat_HNGD_2014_Dieu_27",  # liên đới
-    "Luat_HNGD_2014_Dieu_30",  # nhu cầu thiết yếu gia đình
-    "Luat_HNGD_2014_Dieu_37",  # nghĩa vụ chung
-    "Luat_HNGD_2014_Dieu_45",  # nghĩa vụ riêng
+    "Luat_HNGD_2014_Dieu_27",
+    "Luat_HNGD_2014_Dieu_30",
+    "Luat_HNGD_2014_Dieu_37",
+    "Luat_HNGD_2014_Dieu_45",
 ]
 
-
-_SEED_BLOCK = """
+_SEED_BODY = f"""
 // ============================================================
-// PHẦN 1 — SEED NghiaVu từ KG NGỮ NGHĨA + whitelist Đ27/30/37/45 (cho tat_ca)
+// PHẦN 1 — SEED semantic graph (NghiaVu Đ27/30/37/45)
 // ============================================================
-WITH $loai_nghia_vu AS lnv_param,
-     $tinh_huong_keyword AS thk,
-     $whitelist_dieu_ids AS wl
-
-// 1a. Suy ra danh sách loai_nghia_vu cần match
-WITH lnv_param, thk, wl,
-  CASE lnv_param
-    WHEN 'chung' THEN ['chung']
-    WHEN 'rieng' THEN ['rieng']
-    WHEN 'lien_doi' THEN ['lien_doi']
-    ELSE ['chung', 'rieng', 'lien_doi']
-  END AS loai_list
-
-UNWIND loai_list AS lnv
-
-// 1b. Match NghiaVu theo loai_nghia_vu + tinh_huong_keyword (mềm)
-OPTIONAL MATCH (nv:NghiaVu:CheDoTaiSanCuaVoChong)
-WHERE nv.loai_nghia_vu = lnv
-  AND (
-    thk IS NULL
-    OR toLower(nv.id) CONTAINS toLower(thk)
-    OR EXISTS {
-        MATCH (nv)-[:PHAT_SINH_TU]->(target:CheDoTaiSanCuaVoChong)
-        WHERE toLower(target.id) CONTAINS toLower(thk)
-    }
-  )
-
-WITH wl, collect(DISTINCT nv) AS nv_list
-
-UNWIND nv_list AS nv
-OPTIONAL MATCH (nv)-[:PHAT_SINH_TU]->(hv:HanhVi:CheDoTaiSanCuaVoChong)
-OPTIONAL MATCH (nv)-[:THANH_TOAN_BANG]->(lts:LoaiTaiSan:CheDoTaiSanCuaVoChong)
-
-WITH wl, collect(DISTINCT nv) + collect(DISTINCT hv) + collect(DISTINCT lts) AS seed_nodes
-
-UNWIND seed_nodes AS sn
-WITH wl, sn
-WHERE sn IS NOT NULL
-
-// 1c. Đi tới legal layer qua CAN_CU_TAI
-OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat_semantic)
-WHERE luat_semantic IS NOT NULL
-
-// 1d. Whitelist DieuLuat (chỉ khi broad scope — Đ27/30/37/45)
-OPTIONAL MATCH (luat_whitelist:DieuLuat)
-WHERE luat_whitelist.id IN wl
-
-WITH collect(DISTINCT luat_semantic) + collect(DISTINCT luat_whitelist) AS all_seeds
-UNWIND all_seeds AS n_goc
-WITH DISTINCT n_goc
-WHERE n_goc IS NOT NULL
-"""
-
-
-# Trace cypher — chạy riêng phần SEED và RETURN list triple (giống chia/thoa_thuan)
-_TRACE_CYPHER = """
 WITH $loai_nghia_vu AS lnv_param,
      $tinh_huong_keyword AS thk,
      $whitelist_dieu_ids AS wl
@@ -173,51 +116,28 @@ WITH lnv_param, thk, wl,
 
 UNWIND loai_list AS lnv
 
-OPTIONAL MATCH (nv:NghiaVu:CheDoTaiSanCuaVoChong)
+OPTIONAL MATCH (nv:NghiaVu:{TOPIC_LABEL})
 WHERE nv.loai_nghia_vu = lnv
   AND (
     thk IS NULL
     OR toLower(nv.id) CONTAINS toLower(thk)
-    OR EXISTS {
+    OR EXISTS {{
         MATCH (nv)-[:PHAT_SINH_TU]->(target:CheDoTaiSanCuaVoChong)
         WHERE toLower(target.id) CONTAINS toLower(thk)
-    }
+    }}
   )
 
-WITH wl, collect(DISTINCT nv) AS nv_list
+OPTIONAL MATCH (nv)-[:PHAT_SINH_TU]->(hv:HanhVi:{TOPIC_LABEL})
+OPTIONAL MATCH (nv)-[:THANH_TOAN_BANG]->(lts:LoaiTaiSan:{TOPIC_LABEL})
 
-UNWIND nv_list AS nv
-OPTIONAL MATCH (nv)-[:PHAT_SINH_TU]->(hv:HanhVi:CheDoTaiSanCuaVoChong)
-OPTIONAL MATCH (nv)-[:THANH_TOAN_BANG]->(lts:LoaiTaiSan:CheDoTaiSanCuaVoChong)
+WITH wl, lnv_param, thk,
+  collect(DISTINCT nv) AS nv_list,
+  collect(DISTINCT hv) AS hv_list,
+  collect(DISTINCT lts) AS lts_list
 
-WITH wl, collect(DISTINCT nv) + collect(DISTINCT hv) + collect(DISTINCT lts) AS seed_nodes
-
-UNWIND seed_nodes AS sn
-WITH wl, sn
-WHERE sn IS NOT NULL
-
-OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat)
-WHERE luat IS NOT NULL
-
-WITH wl, collect(DISTINCT {
-    src_label: head(labels(sn)),
-    src_id: sn.id,
-    rel: 'CAN_CU_TAI',
-    dst_label: head(labels(luat)),
-    dst_id: luat.id
-}) AS semantic_triples
-
-UNWIND wl AS wid
-WITH semantic_triples, collect({
-    src_label: 'WHITELIST',
-    src_id: 'loai_nghia_vu',
-    rel: 'WHITELIST',
-    dst_label: 'DieuLuat',
-    dst_id: wid
-}) AS wl_triples
-
-WITH semantic_triples + wl_triples AS seed_trace
-RETURN seed_trace
+WITH wl, lnv_param, thk,
+  [x IN nv_list + hv_list + lts_list WHERE x IS NOT NULL] AS seed_nodes,
+  [x IN nv_list WHERE x IS NOT NULL] AS leaf_seed_nodes
 """
 
 
@@ -246,8 +166,7 @@ nghia_vu_tai_san = CypherTemplate(
         "Đ37 + Đ45 — đủ căn cứ cho LLM phân tích."
     ),
     params_schema=NghiaVuTaiSanParams,
-    cypher=_SEED_BLOCK.rstrip() + "\n\n" + EXPAND_AND_TIMEFILTER_CYPHER,
-    trace_cypher=_TRACE_CYPHER,
-    viz_cypher=assemble_semantic_viz_from_trace_prefix(_TRACE_CYPHER),
+    cypher=assemble_graph_seed_cypher(_SEED_BODY),
+    viz_cypher=assemble_semantic_viz_from_trace_prefix(_SEED_BODY),
     params_builder=_params_builder,
 )

@@ -8,20 +8,9 @@ Cách hoạt động (KG mới):
 1. Match `LoaiTaiSan` theo `tinh_chat` (chung/riêng/cả hai).
 2. Nếu user nêu loại tài sản cụ thể (`asset_keyword`), match đúng `id` hoặc
    match con-cháu qua `LA_LOAI_CON_CUA`.
-3. Tất cả `LoaiTaiSan` match được đều `CAN_CU_TAI` về `DieuLuat/DieuKhoanLuat/
-   DieuKhoanDiemLuat` (Đ33, Đ43, Đ40 cho hoa lợi sau chia) → đưa vào EXPAND chung.
+3. Leaf nodes `CAN_CU_TAI` về legal layer → EXPAND chung.
 
 Coverage: Q3, Q7, Q8, Q14, Q17 (một phần), Q18.
-
-Ví dụ:
-- "Tài sản chung trong thời kì hôn nhân bao gồm những tài sản nào?"
-  -> loai_tai_san='chung', asset_keyword=None  (seed: Đ33 và các Khoản)
-- "Quyền sử dụng đất sau kết hôn là tài sản chung hay riêng?"
-  -> loai_tai_san='tat_ca', asset_keyword=None
-- "Trợ cấp thương binh gửi tiết kiệm, vợ ly hôn đòi chia đôi — chung hay riêng?"
-  -> loai_tai_san='tat_ca', asset_keyword=None
-- "Tiền trúng số có phải tài sản chung?" (chỉ hỏi một phía, không đối chiếu riêng)
-  -> loai_tai_san='chung', asset_keyword='thu_nhap_hop_phap_khac'
 """
 from __future__ import annotations
 
@@ -30,7 +19,11 @@ from typing import Literal, Optional
 from pydantic import BaseModel, Field
 
 from adapter.cypher_templates import CypherTemplate
-from adapter.cypher_templates.tai_san._common import assemble_cypher, assemble_simple_trace, assemble_semantic_viz
+from adapter.cypher_templates.tai_san._common import (
+    TOPIC_LABEL,
+    assemble_graph_seed_cypher,
+    assemble_semantic_viz_from_trace_prefix,
+)
 
 
 class PhanLoaiTaiSanParams(BaseModel):
@@ -52,76 +45,45 @@ class PhanLoaiTaiSanParams(BaseModel):
             "null (dù câu có nêu trợ cấp, tiết kiệm, đất, trúng số...). Khi "
             "đó loai_tai_san phải là 'tat_ca'.\n"
             "Chỉ điền asset_keyword khi câu KHÔNG đối chiếu hai nhánh.\n\n"
-            "ID THUẬT NGỮ PHÁP LÝ chuẩn trong KG (snake_case) — KHÔNG dùng từ "
-            "thông tục/đời thường. BẮT BUỘC map từ ngữ trong câu hỏi sang ID "
-            "chuẩn dưới đây trước khi điền (giữ nguyên dấu tiếng Việt KHÔNG có):\n"
-            "  • 'lương', 'tiền lương', 'thu nhập đi làm' → 'thu_nhap_lao_dong'\n"
-            "  • 'thu nhập kinh doanh', 'doanh thu' → 'thu_nhap_san_xuat_kinh_doanh'\n"
-            "  • 'tiền trúng số', 'tiền thưởng', 'tiền trợ cấp' → "
-            "'thu_nhap_hop_phap_khac'\n"
-            "  • 'hoa lợi', 'lợi tức', 'tiền cho thuê tài sản riêng', 'cổ tức' "
-            "→ 'hoa_loi_loi_tuc'\n"
-            "  • 'đất', 'thửa đất', 'sổ đỏ', 'quyền sử dụng đất' (sau kết hôn) "
-            "→ 'quyen_su_dung_dat'\n"
-            "  • 'nhà', 'căn hộ', 'chung cư', 'bất động sản' → 'bat_dong_san'\n"
-            "  • 'nhà ở duy nhất', 'nơi ở duy nhất' → 'nha_o_duy_nhat'\n"
-            "  • 'ô tô', 'xe máy', 'động sản phải đăng ký' → 'dong_san_phai_dang_ky'\n"
-            "  • 'sổ tiết kiệm', 'tài khoản ngân hàng' → 'tai_khoan_ngan_hang_chung_khoan'\n"
-            "  • 'thừa kế chung', 'di sản hai vợ chồng cùng nhận' → "
-            "'tai_san_thua_ke_chung'\n"
-            "  • 'thừa kế riêng' → 'tai_san_thua_ke_rieng'\n"
-            "  • 'tặng cho chung' → 'tai_san_tang_cho_chung'\n"
-            "  • 'tặng cho riêng' → 'tai_san_tang_cho_rieng'\n"
-            "  • 'tài sản trước hôn nhân', 'tài sản trước khi cưới' → "
-            "'tai_san_truoc_ket_hon'\n"
-            "  • 'tài sản phục vụ nhu cầu cá nhân', 'đồ dùng cá nhân' → "
-            "'tai_san_phuc_vu_nhu_cau_thiet_yeu_ca_nhan'\n"
-            "  • 'tài sản đang tranh chấp' → 'tai_san_dang_tranh_chap'\n"
-            "  • Câu hỏi tổng quát hoặc không xác định → null.\n"
-            "VÍ DỤ: 'Tiền trúng số có phải tài sản chung?' → 'thu_nhap_hop_phap_khac', "
-            "loai_tai_san='chung'; "
-            "'Đất sau kết hôn là chung hay riêng?' → null, loai_tai_san='tat_ca'; "
-            "'Trợ cấp thương binh, vợ đòi chia đôi khi ly hôn' → null, loai_tai_san='tat_ca'; "
-            "'Tài sản chung gồm những gì?' → null, loai_tai_san='chung'."
+            "ID THUẬT NGỮ PHÁP LÝ chuẩn trong KG (snake_case) — map từ ngữ "
+            "trong câu hỏi sang ID chuẩn trước khi điền."
         ),
     )
 
 
-_SEED_BLOCK = """
+_SEED_BODY = f"""
 // ============================================================
-// PHẦN 1 — SEED LoaiTaiSan từ KG NGỮ NGHĨA
+// PHẦN 1 — SEED semantic graph (LoaiTaiSan phân loại)
 // ============================================================
-// 1a. Lấy danh sách tinh_chat cần match
-WITH
-  CASE $loai_tai_san
+WITH $loai_tai_san AS lts_param, $asset_keyword AS akw, [] AS wl
+
+WITH lts_param, akw, wl,
+  CASE lts_param
     WHEN 'chung' THEN ['chung']
     WHEN 'rieng' THEN ['rieng']
     ELSE ['chung', 'rieng']
   END AS tinh_chat_list
 
-// 1b. Match LoaiTaiSan theo tinh_chat
 UNWIND tinh_chat_list AS tc
-MATCH (lts:LoaiTaiSan:CheDoTaiSanCuaVoChong)
+MATCH (lts:LoaiTaiSan:{TOPIC_LABEL})
 WHERE lts.tinh_chat = tc
   AND (
-        $asset_keyword IS NULL
-        OR lts.id = $asset_keyword
-        OR EXISTS {
-            MATCH (lts)-[:LA_LOAI_CON_CUA*0..3]->(parent:LoaiTaiSan:CheDoTaiSanCuaVoChong {id: $asset_keyword})
-        }
-        OR EXISTS {
-            MATCH (child:LoaiTaiSan:CheDoTaiSanCuaVoChong {id: $asset_keyword})-[:LA_LOAI_CON_CUA*0..3]->(lts)
-        }
-        OR toLower(lts.id) CONTAINS toLower($asset_keyword)
+        akw IS NULL
+        OR lts.id = akw
+        OR EXISTS {{
+            MATCH (lts)-[:LA_LOAI_CON_CUA*0..3]->(parent:LoaiTaiSan:{TOPIC_LABEL} {{id: akw}})
+        }}
+        OR EXISTS {{
+            MATCH (child:LoaiTaiSan:{TOPIC_LABEL} {{id: akw}})-[:LA_LOAI_CON_CUA*0..3]->(lts)
+        }}
+        OR toLower(lts.id) CONTAINS toLower(akw)
       )
 
-WITH collect(DISTINCT lts) AS seed_nodes
-UNWIND seed_nodes AS sn
-WITH sn WHERE sn IS NOT NULL
+WITH wl, collect(DISTINCT lts) AS lts_list
 
-// 1c. Đi tới Điều/Khoản/Điểm gốc qua CAN_CU_TAI
-MATCH (sn)-[:CAN_CU_TAI]->(luat)
-WITH DISTINCT luat AS n_goc
+WITH wl,
+  lts_list AS seed_nodes,
+  lts_list AS leaf_seed_nodes
 """
 
 
@@ -136,7 +98,6 @@ phan_loai_tai_san = CypherTemplate(
         "đoạt, nghĩa vụ, hay chia tài sản."
     ),
     params_schema=PhanLoaiTaiSanParams,
-    cypher=assemble_cypher(_SEED_BLOCK),
-    trace_cypher=assemble_simple_trace(_SEED_BLOCK),
-    viz_cypher=assemble_semantic_viz(_SEED_BLOCK),
+    cypher=assemble_graph_seed_cypher(_SEED_BODY),
+    viz_cypher=assemble_semantic_viz_from_trace_prefix(_SEED_BODY),
 )

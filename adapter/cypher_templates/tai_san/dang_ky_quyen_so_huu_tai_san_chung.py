@@ -10,12 +10,16 @@ Coverage: Q23 ("Bán đất có cần cả 2 vợ chồng ký?").
 """
 from __future__ import annotations
 
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
 from adapter.cypher_templates import CypherTemplate
-from adapter.cypher_templates.tai_san._common import assemble_cypher, assemble_simple_trace, assemble_semantic_viz
+from adapter.cypher_templates.tai_san._common import (
+    TOPIC_LABEL,
+    assemble_graph_seed_cypher,
+    assemble_semantic_viz_from_trace_prefix,
+)
 
 
 class DangKyQuyenSoHuuParams(BaseModel):
@@ -33,38 +37,32 @@ class DangKyQuyenSoHuuParams(BaseModel):
     )
 
 
-_SEED_BLOCK = """
+_SEED_BODY = f"""
 // ============================================================
-// PHẦN 1 — SEED đăng ký quyền sở hữu/sử dụng tài sản chung (Đ34)
+// PHẦN 1 — SEED semantic graph (đăng ký quyền sở hữu Đ34)
 // ============================================================
+WITH $loai_tai_san_dang_ky AS lts_dk, [] AS wl
 
-WITH $loai_tai_san_dang_ky AS lts_dk
+MATCH (hv:HanhVi:{TOPIC_LABEL} {{id: 'dang_ky_quyen_so_huu'}})
 
-// 1a. Bắt đầu từ HanhVi đăng ký quyền sở hữu
-MATCH (hv:HanhVi:CheDoTaiSanCuaVoChong {id: 'dang_ky_quyen_so_huu'})
-
-// 1b. Match LoaiTaiSan theo loai_tai_san_dang_ky
-OPTIONAL MATCH (hv)-[:TAC_DONG_LEN]->(lts:LoaiTaiSan:CheDoTaiSanCuaVoChong)
+OPTIONAL MATCH (hv)-[:TAC_DONG_LEN]->(lts:LoaiTaiSan:{TOPIC_LABEL})
 WHERE lts_dk = 'tat_ca'
    OR lts.id = lts_dk
-   OR EXISTS {
-       MATCH (lts)-[:LA_LOAI_CON_CUA*0..2]->(:LoaiTaiSan:CheDoTaiSanCuaVoChong {id: lts_dk})
-   }
+   OR EXISTS {{
+       MATCH (lts)-[:LA_LOAI_CON_CUA*0..2]->(:LoaiTaiSan:{TOPIC_LABEL} {{id: lts_dk}})
+   }}
 
-// 1c. Lấy ngoại lệ + thỏa thuận liên quan
-OPTIONAL MATCH (hv)-[:CO_NGOAI_LE]->(nl:TruongHopNgoaiLe:CheDoTaiSanCuaVoChong)
-OPTIONAL MATCH (hv)-[:YEU_CAU_THOA_THUAN]->(tt:ThoaThuan:CheDoTaiSanCuaVoChong)
-OPTIONAL MATCH (vb:VanBanPhapLy:CheDoTaiSanCuaVoChong) WHERE vb.id IN ['gcn_quyen_so_huu', 'gcn_quyen_su_dung_dat']
-OPTIONAL MATCH (dk:DieuKien:CheDoTaiSanCuaVoChong {id: 'tai_san_phai_dang_ky'})
+OPTIONAL MATCH (hv)-[:CO_NGOAI_LE]->(nl:TruongHopNgoaiLe:{TOPIC_LABEL})
+OPTIONAL MATCH (hv)-[:YEU_CAU_THOA_THUAN]->(tt:ThoaThuan:{TOPIC_LABEL})
+OPTIONAL MATCH (vb:VanBanPhapLy:{TOPIC_LABEL})
+WHERE vb.id IN ['gcn_quyen_so_huu', 'gcn_quyen_su_dung_dat']
+OPTIONAL MATCH (dk:DieuKien:{TOPIC_LABEL} {{id: 'tai_san_phai_dang_ky'}})
 
-WITH collect(DISTINCT hv) + collect(DISTINCT lts) + collect(DISTINCT nl)
-     + collect(DISTINCT tt) + collect(DISTINCT vb) + collect(DISTINCT dk) AS seed_nodes
-
-UNWIND seed_nodes AS sn
-WITH sn WHERE sn IS NOT NULL
-
-MATCH (sn)-[:CAN_CU_TAI]->(luat)
-WITH DISTINCT luat AS n_goc
+WITH wl,
+  collect(DISTINCT hv) + collect(DISTINCT lts) + collect(DISTINCT nl)
+     + collect(DISTINCT tt) + collect(DISTINCT vb) + collect(DISTINCT dk) AS seed_nodes,
+  collect(DISTINCT hv) + collect(DISTINCT lts) + collect(DISTINCT nl)
+     + collect(DISTINCT tt) + collect(DISTINCT dk) AS leaf_seed_nodes
 """
 
 
@@ -80,7 +78,6 @@ dang_ky_quyen_so_huu_tai_san_chung = CypherTemplate(
         "(đó là 'quyen_dinh_doat_tai_san')."
     ),
     params_schema=DangKyQuyenSoHuuParams,
-    cypher=assemble_cypher(_SEED_BLOCK),
-    trace_cypher=assemble_simple_trace(_SEED_BLOCK),
-    viz_cypher=assemble_semantic_viz(_SEED_BLOCK),
+    cypher=assemble_graph_seed_cypher(_SEED_BODY),
+    viz_cypher=assemble_semantic_viz_from_trace_prefix(_SEED_BODY),
 )

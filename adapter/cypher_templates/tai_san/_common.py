@@ -352,6 +352,25 @@ RETURN {
 } AS Context_Tho
 """
 
+# Đuôi chuẩn: gom leaf_seed_nodes semantic → CAN_CU_TAI (+ whitelist) → n_goc legal.
+# seed_nodes (full) dùng cho viz_cypher; leaf_seed_nodes cho retrieval.
+SEMANTIC_TO_LEGAL_TAIL = """
+WITH wl, leaf_seed_nodes
+UNWIND leaf_seed_nodes AS sn
+WITH wl, sn WHERE sn IS NOT NULL
+
+OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat_semantic)
+WHERE luat_semantic IS NOT NULL
+
+OPTIONAL MATCH (luat_whitelist:DieuLuat)
+WHERE luat_whitelist.id IN wl
+
+WITH collect(DISTINCT luat_semantic) + collect(DISTINCT luat_whitelist) AS all_seeds
+UNWIND all_seeds AS n_goc
+WITH DISTINCT n_goc
+WHERE n_goc IS NOT NULL
+"""
+
 
 def assemble_cypher(seed_block: str) -> str:
     """Ghép phần SEED (do từng template tự định nghĩa) với phần EXPAND chung.
@@ -360,6 +379,17 @@ def assemble_cypher(seed_block: str) -> str:
     để khối EXPAND lấy đầu vào n_goc.
     """
     return seed_block.rstrip() + "\n\n" + EXPAND_AND_TIMEFILTER_CYPHER
+
+
+def assemble_graph_seed_cypher(seed_body: str) -> str:
+    """Ghép seed graph (kết thúc ``seed_nodes`` + ``leaf_seed_nodes``) → legal → EXPAND."""
+    return (
+        seed_body.rstrip()
+        + "\n\n"
+        + SEMANTIC_TO_LEGAL_TAIL.strip()
+        + "\n\n"
+        + EXPAND_AND_TIMEFILTER_CYPHER
+    )
 
 
 # =============================================================================
@@ -449,17 +479,28 @@ def assemble_semantic_viz_sn_luat(seed_block: str) -> str:
 
 
 def assemble_semantic_viz_from_trace_prefix(trace_prefix: str) -> str:
-    """Build viz cypher từ phần đầu của trace (trước ``WITH wl, collect``)."""
-    markers = [
-        "WITH wl, collect(DISTINCT {",
-        "OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat)\nWHERE luat IS NOT NULL\n\nWITH wl, collect",
-    ]
+    """Build viz cypher từ phần đầu của trace (trước chuyển sang legal layer)."""
     body = trace_prefix.rstrip()
-    for marker in markers:
-        if marker in trace_prefix:
-            body = trace_prefix.rsplit(marker, 1)[0].rstrip()
-            break
-    return body + "\n" + _SEMANTIC_VIZ_TAIL
+    if "AS leaf_seed_nodes" in trace_prefix and "AS seed_nodes" in trace_prefix:
+        idx = trace_prefix.rfind("AS seed_nodes")
+        if idx != -1:
+            body = trace_prefix[: idx + len("AS seed_nodes")].rstrip()
+    else:
+        markers = [
+            "\n\n" + SEMANTIC_TO_LEGAL_TAIL.strip().split("\n")[0],
+            "WITH wl, leaf_seed_nodes",
+            "WITH wl, seed_nodes",
+            "WITH wl, collect(DISTINCT {",
+            "OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat)\nWHERE luat IS NOT NULL\n\nWITH wl, collect",
+        ]
+        for marker in markers:
+            if marker in trace_prefix:
+                body = trace_prefix.rsplit(marker, 1)[0].rstrip()
+                break
+    return body + "\n" + _SEMANTIC_VIZ_TAIL.replace(
+        "WITH collect(DISTINCT sn) AS seed_nodes",
+        "WITH wl, seed_nodes\nUNWIND [x IN seed_nodes WHERE x IS NOT NULL] AS sn\nWITH collect(DISTINCT sn) AS seed_nodes",
+    )
 
 
 # =============================================================================

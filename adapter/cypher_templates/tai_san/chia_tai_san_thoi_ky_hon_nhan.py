@@ -20,7 +20,8 @@ from pydantic import BaseModel, Field
 
 from adapter.cypher_templates import CypherTemplate
 from adapter.cypher_templates.tai_san._common import (
-    EXPAND_AND_TIMEFILTER_CYPHER,
+    TOPIC_LABEL,
+    assemble_graph_seed_cypher,
     assemble_semantic_viz_from_trace_prefix,
     should_keep_whitelist,
 )
@@ -68,7 +69,6 @@ class ChiaTaiSanParams(BaseModel):
     )
 
 
-# Whitelist full Đ38-42 chỉ khi khia_canh ∈ broad scope (tat_ca, …).
 _DIEU_WHITELIST = [
     "Luat_HNGD_2014_Dieu_38",
     "Luat_HNGD_2014_Dieu_39",
@@ -77,173 +77,122 @@ _DIEU_WHITELIST = [
     "Luat_HNGD_2014_Dieu_42",
 ]
 
-
-# Cypher SEED — combine semantic match (via allowed IDs list) + DieuLuat whitelist
-_SEED_BLOCK = """
+_SEED_BODY = f"""
 // ============================================================
-// PHẦN 1 — SEED chia tài sản chung trong hôn nhân (Đ38-42)
+// PHẦN 1 — SEED semantic graph (chia tài sản chung Đ38-42)
 // ============================================================
 WITH $khia_canh AS kc, $nhom_can_cu_vo_hieu AS nhom, $whitelist_dieu_ids AS wl
 
-// 1a. Build danh sách semantic IDs cần match theo khía cạnh
-WITH kc, nhom, wl,
-  (CASE WHEN kc IN ['thoa_thuan_chia', 'tat_ca'] THEN [
-      'chia_tai_san_chung_trong_hon_nhan',
-      'thoa_thuan_chia_tai_san_chung',
-      'quyen_yeu_cau_toa_an_chia',
-      'khoi_kien_tai_toa_an',
-      'khong_thoa_thuan_duoc_chia'
-   ] ELSE [] END
-   +
-   CASE WHEN kc IN ['thoi_diem_hieu_luc', 'tat_ca'] THEN [
-      'hieu_luc_chia_tai_san_thoi_diem_thoa_thuan',
-      'hieu_luc_chia_tai_san_ngay_lap_van_ban',
-      'hieu_luc_chia_tai_san_thoi_diem_tuan_thu_hinh_thuc',
-      'hieu_luc_chia_tai_san_ngay_ban_an_co_hieu_luc',
-      'quyen_nghia_vu_voi_nguoi_thu_ba_truoc_chia_van_co_hieu_luc',
-      'khong_xac_dinh_thoi_diem_van_ban',
-      'tai_san_yeu_cau_hinh_thuc_giao_dich',
-      'chia_boi_toa_an'
-   ] ELSE [] END
-   +
-   CASE WHEN kc IN ['hau_qua', 'tat_ca'] THEN [
-      'chuyen_thanh_tai_san_rieng_phan_chia',
-      'hoa_loi_loi_tuc_sau_chia_thanh_tai_san_rieng',
-      'phan_con_lai_van_la_tai_san_chung',
-      'tai_san_chia_rieng_trong_hon_nhan',
-      'ngoai_le_hoa_loi_sau_chia_thanh_tai_san_chung_neu_thoa_thuan'
-   ] ELSE [] END
-   +
-   CASE WHEN kc IN ['cham_dut', 'tat_ca'] THEN [
-      'cham_dut_hieu_luc_chia',
-      'quyen_cham_dut_hieu_luc_chia',
-      'thoa_thuan_cham_dut_chia',
-      'khoi_phuc_xac_dinh_theo_d33_d43',
-      'phan_da_chia_van_la_tai_san_rieng'
-   ] ELSE [] END
-   +
-   CASE WHEN kc IN ['vo_hieu', 'tat_ca'] THEN ['vo_hieu_chia_tai_san_chung'] ELSE [] END
-   +
-   CASE WHEN kc IN ['vo_hieu', 'tat_ca']
-             AND (nhom IS NULL OR nhom IN ['anh_huong_loi_ich_gia_dinh', 'tat_ca'])
-        THEN ['anh_huong_loi_ich_gia_dinh'] ELSE [] END
-   +
-   CASE WHEN kc IN ['vo_hieu', 'tat_ca']
-             AND (nhom IS NULL OR nhom IN ['tron_nghia_vu', 'tat_ca'])
-        THEN [
-            'tron_nghia_vu_nuoi_duong_cap_duong',
-            'tron_nghia_vu_boi_thuong',
-            'tron_nghia_vu_pha_san',
-            'tron_nghia_vu_tra_no',
-            'tron_nghia_vu_thue_tai_chinh_nha_nuoc',
-            'tron_nghia_vu_khac'
-        ] ELSE [] END
-  ) AS allowed_semantic_ids
+MATCH (anchor:HanhVi:{TOPIC_LABEL} {{id: 'chia_tai_san_chung_trong_hon_nhan'}})
 
-// 1b. Semantic seed via CAN_CU_TAI
-OPTIONAL MATCH (sn:CheDoTaiSanCuaVoChong)
-WHERE sn.id IN allowed_semantic_ids
-  AND (sn:HanhVi OR sn:NghiaVu OR sn:Quyen OR sn:DieuKien OR sn:HauQua
-       OR sn:ThoaThuan OR sn:TruongHopNgoaiLe OR sn:LoaiTaiSan)
+OPTIONAL MATCH (anchor)-[:YEU_CAU_THOA_THUAN]->(tt_chia:ThoaThuan:{TOPIC_LABEL})
+WHERE kc IN ['thoa_thuan_chia', 'tat_ca']
 
-OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat_semantic)
-WHERE luat_semantic IS NOT NULL
+OPTIONAL MATCH (anchor)-[:LIEN_QUAN]->(quyen_toa:Quyen:{TOPIC_LABEL})
+WHERE kc IN ['thoa_thuan_chia', 'tat_ca']
+  AND quyen_toa.id = 'quyen_yeu_cau_toa_an_chia'
 
-// 1c. Whitelist seed
-OPTIONAL MATCH (luat_whitelist:DieuLuat)
-WHERE luat_whitelist.id IN wl
+OPTIONAL MATCH (hv_kien:HanhVi:{TOPIC_LABEL} {{id: 'khoi_kien_tai_toa_an'}})
+WHERE kc IN ['thoa_thuan_chia', 'tat_ca']
+OPTIONAL MATCH (hv_kien)-[:AP_DUNG_KHI]->(dk_khong_tt:DieuKien:{TOPIC_LABEL})
+WHERE kc IN ['thoa_thuan_chia', 'tat_ca']
 
-WITH collect(DISTINCT luat_semantic) + collect(DISTINCT luat_whitelist) AS all_seeds
-UNWIND all_seeds AS n_goc
-WITH DISTINCT n_goc
-WHERE n_goc IS NOT NULL
-"""
+OPTIONAL MATCH (anchor)-[:DAN_TOI]->(hq_hl_truc:HauQua:{TOPIC_LABEL})
+WHERE kc IN ['thoi_diem_hieu_luc', 'tat_ca']
+  AND hq_hl_truc.id STARTS WITH 'hieu_luc_chia'
 
-# Trace cypher — chỉ chạy seed (semantic + whitelist), không expand
-_TRACE_CYPHER = """
-WITH $khia_canh AS kc, $nhom_can_cu_vo_hieu AS nhom, $whitelist_dieu_ids AS wl
+OPTIONAL MATCH (dk_hl:DieuKien:{TOPIC_LABEL})-[:DAN_TOI]->(hq_hl:HauQua:{TOPIC_LABEL})
+WHERE kc IN ['thoi_diem_hieu_luc', 'tat_ca']
+  AND hq_hl.id STARTS WITH 'hieu_luc_chia'
 
-WITH kc, nhom, wl,
-  (CASE WHEN kc IN ['thoa_thuan_chia', 'tat_ca'] THEN [
-      'chia_tai_san_chung_trong_hon_nhan',
-      'thoa_thuan_chia_tai_san_chung',
-      'quyen_yeu_cau_toa_an_chia',
-      'khoi_kien_tai_toa_an',
-      'khong_thoa_thuan_duoc_chia'
-   ] ELSE [] END
-   +
-   CASE WHEN kc IN ['thoi_diem_hieu_luc', 'tat_ca'] THEN [
-      'hieu_luc_chia_tai_san_thoi_diem_thoa_thuan',
-      'hieu_luc_chia_tai_san_ngay_lap_van_ban',
-      'hieu_luc_chia_tai_san_thoi_diem_tuan_thu_hinh_thuc',
-      'hieu_luc_chia_tai_san_ngay_ban_an_co_hieu_luc',
-      'quyen_nghia_vu_voi_nguoi_thu_ba_truoc_chia_van_co_hieu_luc',
-      'khong_xac_dinh_thoi_diem_van_ban',
-      'tai_san_yeu_cau_hinh_thuc_giao_dich',
-      'chia_boi_toa_an'
-   ] ELSE [] END
-   +
-   CASE WHEN kc IN ['hau_qua', 'tat_ca'] THEN [
-      'chuyen_thanh_tai_san_rieng_phan_chia',
-      'hoa_loi_loi_tuc_sau_chia_thanh_tai_san_rieng',
-      'phan_con_lai_van_la_tai_san_chung',
-      'tai_san_chia_rieng_trong_hon_nhan',
-      'ngoai_le_hoa_loi_sau_chia_thanh_tai_san_chung_neu_thoa_thuan'
-   ] ELSE [] END
-   +
-   CASE WHEN kc IN ['cham_dut', 'tat_ca'] THEN [
-      'cham_dut_hieu_luc_chia',
-      'quyen_cham_dut_hieu_luc_chia',
-      'thoa_thuan_cham_dut_chia',
-      'khoi_phuc_xac_dinh_theo_d33_d43',
-      'phan_da_chia_van_la_tai_san_rieng'
-   ] ELSE [] END
-   +
-   CASE WHEN kc IN ['vo_hieu', 'tat_ca'] THEN ['vo_hieu_chia_tai_san_chung'] ELSE [] END
-   +
-   CASE WHEN kc IN ['vo_hieu', 'tat_ca']
-             AND (nhom IS NULL OR nhom IN ['anh_huong_loi_ich_gia_dinh', 'tat_ca'])
-        THEN ['anh_huong_loi_ich_gia_dinh'] ELSE [] END
-   +
-   CASE WHEN kc IN ['vo_hieu', 'tat_ca']
-             AND (nhom IS NULL OR nhom IN ['tron_nghia_vu', 'tat_ca'])
-        THEN [
-            'tron_nghia_vu_nuoi_duong_cap_duong',
-            'tron_nghia_vu_boi_thuong',
-            'tron_nghia_vu_pha_san',
-            'tron_nghia_vu_tra_no',
-            'tron_nghia_vu_thue_tai_chinh_nha_nuoc',
-            'tron_nghia_vu_khac'
-        ] ELSE [] END
-  ) AS allowed_semantic_ids
+OPTIONAL MATCH (hq_t3:HauQua:{TOPIC_LABEL} {{id: 'quyen_nghia_vu_voi_nguoi_thu_ba_truoc_chia_van_co_hieu_luc'}})
+WHERE kc IN ['thoi_diem_hieu_luc', 'tat_ca']
 
-OPTIONAL MATCH (sn:CheDoTaiSanCuaVoChong)
-WHERE sn.id IN allowed_semantic_ids
-  AND (sn:HanhVi OR sn:NghiaVu OR sn:Quyen OR sn:DieuKien OR sn:HauQua
-       OR sn:ThoaThuan OR sn:TruongHopNgoaiLe OR sn:LoaiTaiSan)
+OPTIONAL MATCH (anchor)-[:DAN_TOI]->(hq_hq:HauQua:{TOPIC_LABEL})
+WHERE kc IN ['hau_qua', 'tat_ca']
+  AND hq_hq.id IN [
+    'chuyen_thanh_tai_san_rieng_phan_chia',
+    'hoa_loi_loi_tuc_sau_chia_thanh_tai_san_rieng',
+    'phan_con_lai_van_la_tai_san_chung'
+  ]
 
-OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat)
-WHERE luat IS NOT NULL
+OPTIONAL MATCH (lts_chia:LoaiTaiSan:{TOPIC_LABEL} {{id: 'tai_san_chia_rieng_trong_hon_nhan'}})
+WHERE kc IN ['hau_qua', 'tat_ca']
 
-WITH wl, collect(DISTINCT {
-    src_label: head(labels(sn)),
-    src_id: sn.id,
-    rel: 'CAN_CU_TAI',
-    dst_label: head(labels(luat)),
-    dst_id: luat.id
-}) AS semantic_triples
+OPTIONAL MATCH (anchor)-[:CO_NGOAI_LE]->(nl_hq:TruongHopNgoaiLe:{TOPIC_LABEL})
+WHERE kc IN ['hau_qua', 'tat_ca']
 
-UNWIND wl AS wid
-WITH semantic_triples, collect({
-    src_label: 'WHITELIST',
-    src_id: 'khia_canh',
-    rel: 'WHITELIST',
-    dst_label: 'DieuLuat',
-    dst_id: wid
-}) AS wl_triples
+OPTIONAL MATCH (anchor)-[:LIEN_QUAN]->(hv_cd:HanhVi:{TOPIC_LABEL})
+WHERE kc IN ['cham_dut', 'tat_ca']
+  AND hv_cd.id = 'cham_dut_hieu_luc_chia'
 
-WITH semantic_triples + wl_triples AS seed_trace
-RETURN seed_trace
+OPTIONAL MATCH (hv_cd)-[:DAN_TOI]->(hq_cd:HauQua:{TOPIC_LABEL})
+WHERE kc IN ['cham_dut', 'tat_ca']
+
+OPTIONAL MATCH (hv_cd)-[:YEU_CAU_THOA_THUAN]->(tt_cd:ThoaThuan:{TOPIC_LABEL})
+WHERE kc IN ['cham_dut', 'tat_ca']
+
+OPTIONAL MATCH (quyen_cd:Quyen:{TOPIC_LABEL} {{id: 'quyen_cham_dut_hieu_luc_chia'}})
+WHERE kc IN ['cham_dut', 'tat_ca']
+
+OPTIONAL MATCH (anchor)-[:LIEN_QUAN]->(hq_vh:HauQua:{TOPIC_LABEL})
+WHERE kc IN ['vo_hieu', 'tat_ca']
+  AND hq_vh.id = 'vo_hieu_chia_tai_san_chung'
+
+OPTIONAL MATCH (dk_vh:DieuKien:{TOPIC_LABEL})-[:DAN_TOI]->(hq_vh2:HauQua:{TOPIC_LABEL} {{id: 'vo_hieu_chia_tai_san_chung'}})
+WHERE kc IN ['vo_hieu', 'tat_ca']
+  AND (
+    nhom IS NULL OR nhom = 'tat_ca'
+    OR (nhom = 'anh_huong_loi_ich_gia_dinh' AND dk_vh.id = 'anh_huong_loi_ich_gia_dinh')
+    OR (nhom = 'tron_nghia_vu' AND dk_vh.id STARTS WITH 'tron_nghia_vu')
+  )
+
+WITH wl, kc, nhom,
+  [x IN collect(DISTINCT anchor) + collect(DISTINCT tt_chia) + collect(DISTINCT quyen_toa)
+       + collect(DISTINCT hv_kien) + collect(DISTINCT dk_khong_tt)
+       + collect(DISTINCT hq_hl_truc) + collect(DISTINCT dk_hl) + collect(DISTINCT hq_hl)
+       + collect(DISTINCT hq_t3)
+       + collect(DISTINCT hq_hq) + collect(DISTINCT lts_chia) + collect(DISTINCT nl_hq)
+       + collect(DISTINCT hv_cd) + collect(DISTINCT hq_cd) + collect(DISTINCT tt_cd)
+       + collect(DISTINCT quyen_cd)
+       + collect(DISTINCT hq_vh) + collect(DISTINCT dk_vh)
+   WHERE x IS NOT NULL] AS seed_nodes,
+  CASE kc
+    WHEN 'thoa_thuan_chia' THEN
+      [x IN collect(DISTINCT tt_chia) + collect(DISTINCT quyen_toa)
+           + collect(DISTINCT hv_kien) + collect(DISTINCT dk_khong_tt)
+       WHERE x IS NOT NULL]
+    WHEN 'thoi_diem_hieu_luc' THEN
+      [x IN collect(DISTINCT hq_hl_truc) + collect(DISTINCT hq_hl)
+           + collect(DISTINCT dk_hl) + collect(DISTINCT hq_t3)
+       WHERE x IS NOT NULL]
+    WHEN 'hau_qua' THEN
+      [x IN collect(DISTINCT hq_hq) + collect(DISTINCT lts_chia) + collect(DISTINCT nl_hq)
+       WHERE x IS NOT NULL]
+    WHEN 'cham_dut' THEN
+      [x IN collect(DISTINCT hv_cd) + collect(DISTINCT hq_cd) + collect(DISTINCT tt_cd)
+           + collect(DISTINCT quyen_cd)
+       WHERE x IS NOT NULL]
+    WHEN 'vo_hieu' THEN
+      CASE
+        WHEN nhom = 'anh_huong_loi_ich_gia_dinh' THEN
+          [x IN collect(DISTINCT dk_vh) WHERE x IS NOT NULL AND x.id = 'anh_huong_loi_ich_gia_dinh']
+        WHEN nhom = 'tron_nghia_vu' THEN
+          [x IN collect(DISTINCT dk_vh) WHERE x IS NOT NULL AND x.id STARTS WITH 'tron_nghia_vu']
+        ELSE
+          [x IN collect(DISTINCT hq_vh) + collect(DISTINCT dk_vh) WHERE x IS NOT NULL]
+      END
+    ELSE
+      [x IN collect(DISTINCT anchor) + collect(DISTINCT tt_chia) + collect(DISTINCT quyen_toa)
+           + collect(DISTINCT hv_kien) + collect(DISTINCT dk_khong_tt)
+           + collect(DISTINCT hq_hl_truc) + collect(DISTINCT dk_hl) + collect(DISTINCT hq_hl)
+           + collect(DISTINCT hq_t3)
+           + collect(DISTINCT hq_hq) + collect(DISTINCT lts_chia) + collect(DISTINCT nl_hq)
+           + collect(DISTINCT hv_cd) + collect(DISTINCT hq_cd) + collect(DISTINCT tt_cd)
+           + collect(DISTINCT quyen_cd)
+           + collect(DISTINCT hq_vh) + collect(DISTINCT dk_vh)
+       WHERE x IS NOT NULL]
+  END AS leaf_seed_nodes
 """
 
 
@@ -268,8 +217,7 @@ chia_tai_san_thoi_ky_hon_nhan = CypherTemplate(
         "'ly thân tài sản', 'phân chia trong hôn nhân' (KHÔNG phải ly hôn)."
     ),
     params_schema=ChiaTaiSanParams,
-    cypher=_SEED_BLOCK.rstrip() + "\n\n" + EXPAND_AND_TIMEFILTER_CYPHER,
-    trace_cypher=_TRACE_CYPHER,
-    viz_cypher=assemble_semantic_viz_from_trace_prefix(_TRACE_CYPHER),
+    cypher=assemble_graph_seed_cypher(_SEED_BODY),
+    viz_cypher=assemble_semantic_viz_from_trace_prefix(_SEED_BODY),
     params_builder=_params_builder,
 )

@@ -1,4 +1,4 @@
-"""Quick LLM intent smoke test (requires VERCEL_AI_GATEWAY_API_KEY)."""
+"""Quick LLM intent smoke test (requires OPENAI_API_KEY)."""
 from __future__ import annotations
 
 import asyncio

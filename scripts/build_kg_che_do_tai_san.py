@@ -596,7 +596,13 @@ EDGES: list[tuple] = [
     # Cụm chia tài sản chung trong hôn nhân (Đ38-42)
     ("HanhVi", "chia_tai_san_chung_trong_hon_nhan", "LIEN_QUAN", "HanhVi", "cham_dut_hieu_luc_chia", {}),
     ("HanhVi", "chia_tai_san_chung_trong_hon_nhan", "LIEN_QUAN", "HauQua", "vo_hieu_chia_tai_san_chung", {}),
+    ("HanhVi", "chia_tai_san_chung_trong_hon_nhan", "LIEN_QUAN", "Quyen", "quyen_yeu_cau_toa_an_chia", {}),
+    ("HanhVi", "chia_tai_san_chung_trong_hon_nhan", "LIEN_QUAN", "HanhVi", "khoi_kien_tai_toa_an", {}),
     # Cụm thỏa thuận chế độ tài sản (Đ47-50)
+    ("ThoaThuan", "thoa_thuan_che_do_tai_san", "LIEN_QUAN", "HanhVi", "xac_lap_thoa_thuan_che_do", {}),
+    ("ThoaThuan", "thoa_thuan_che_do_tai_san", "LIEN_QUAN", "Quyen", "quyen_sua_doi_thoa_thuan", {}),
+    ("ThoaThuan", "thoa_thuan_che_do_tai_san", "LIEN_QUAN", "DieuKien", "lap_truoc_ket_hon", {}),
+    ("ThoaThuan", "thoa_thuan_che_do_tai_san", "LIEN_QUAN", "DieuKien", "co_cong_chung_hoac_chung_thuc", {}),
     ("ThoaThuan", "thoa_thuan_che_do_tai_san", "LIEN_QUAN", "HanhVi", "sua_doi_bo_sung_thoa_thuan", {}),
     ("ThoaThuan", "thoa_thuan_che_do_tai_san", "LIEN_QUAN", "HauQua", "vo_hieu_thoa_thuan", {}),
     ("ThoaThuan", "thoa_thuan_che_do_tai_san", "LIEN_QUAN", "LoaiTaiSan", "tai_san_chung", {}),
@@ -608,6 +614,9 @@ EDGES: list[tuple] = [
     ("LoaiTaiSan", "nha_o_duy_nhat", "LIEN_QUAN", "HanhVi", "giao_dich_nha_o_duy_nhat", {}),
     ("LoaiTaiSan", "tai_san_rieng", "LIEN_QUAN", "HanhVi", "dinh_doat_tai_san_rieng", {}),
     ("LoaiTaiSan", "tai_san_rieng", "LIEN_QUAN", "HanhVi", "nhap_tai_san_rieng_vao_chung", {}),
+    ("LoaiTaiSan", "tai_san_rieng", "LIEN_QUAN", "HanhVi", "chiem_huu_su_dung_tai_san_rieng", {}),
+    ("LoaiTaiSan", "tai_san_rieng", "LIEN_QUAN", "HanhVi", "ban_chuyen_nhuong_tai_san_rieng", {}),
+    ("Quyen", "quyen_quan_ly_thay", "LIEN_QUAN", "DieuKien", "khong_tu_quan_ly_va_khong_uy_quyen", {}),
 ]
 
 

@@ -18,7 +18,11 @@ from typing import Literal, Optional
 from pydantic import BaseModel, Field
 
 from adapter.cypher_templates import CypherTemplate
-from adapter.cypher_templates.tai_san._common import assemble_cypher, assemble_simple_trace, assemble_semantic_viz
+from adapter.cypher_templates.tai_san._common import (
+    TOPIC_LABEL,
+    assemble_graph_seed_cypher,
+    assemble_semantic_viz_from_trace_prefix,
+)
 
 
 class QuyenDinhDoatTaiSanParams(BaseModel):
@@ -69,23 +73,25 @@ class QuyenDinhDoatTaiSanParams(BaseModel):
     )
 
 
-_SEED_BLOCK = """
+_SEED_BODY = f"""
 // ============================================================
-// PHẦN 1 — SEED HanhVi định đoạt từ KG NGỮ NGHĨA
+// PHẦN 1 — SEED semantic graph (HanhVi định đoạt)
 // ============================================================
+WITH $loai_tai_san_dinh_doat AS lts_dd,
+     $loai_giao_dich AS lgd,
+     $asset_keyword AS akw,
+     [] AS wl
 
-WITH
-  CASE $loai_tai_san_dinh_doat
+WITH lts_dd, lgd, akw, wl,
+  CASE lts_dd
     WHEN 'chung' THEN ['chung']
     WHEN 'rieng' THEN ['rieng']
     ELSE ['chung', 'rieng']
-  END AS tinh_chat_list,
-  $loai_giao_dich AS lgd
+  END AS tinh_chat_list
 
-// 1a. Match HanhVi định đoạt theo loại giao dịch
 UNWIND tinh_chat_list AS tc
 
-OPTIONAL MATCH (hv:HanhVi:CheDoTaiSanCuaVoChong)
+OPTIONAL MATCH (hv:HanhVi:{TOPIC_LABEL})
 WHERE
   // Lọc HanhVi theo loại giao dịch
   (
@@ -111,41 +117,35 @@ WHERE
   // không có edge tới asset_keyword thì vẫn giữ (HanhVi tổng quát như
   // `dinh_doat_tai_san_chung`).
   AND (
-    $asset_keyword IS NULL
+    akw IS NULL
     OR tc = 'rieng'
-    OR EXISTS {
-      MATCH (hv)-[:TAC_DONG_LEN]->(target:LoaiTaiSan:CheDoTaiSanCuaVoChong)
-      WHERE target.id = $asset_keyword
-        OR EXISTS {
-          MATCH (target)-[:LA_LOAI_CON_CUA*0..3]->(parent:LoaiTaiSan:CheDoTaiSanCuaVoChong {id: $asset_keyword})
-        }
-        OR EXISTS {
-          MATCH (child:LoaiTaiSan:CheDoTaiSanCuaVoChong {id: $asset_keyword})-[:LA_LOAI_CON_CUA*0..3]->(target)
-        }
-    }
-    OR NOT EXISTS {
-      MATCH (hv)-[:TAC_DONG_LEN]->(:LoaiTaiSan:CheDoTaiSanCuaVoChong)
-    }
+    OR EXISTS {{
+      MATCH (hv)-[:TAC_DONG_LEN]->(target:LoaiTaiSan:{TOPIC_LABEL})
+      WHERE target.id = akw
+        OR EXISTS {{
+          MATCH (target)-[:LA_LOAI_CON_CUA*0..3]->(parent:LoaiTaiSan:{TOPIC_LABEL} {{id: akw}})
+        }}
+        OR EXISTS {{
+          MATCH (child:LoaiTaiSan:{TOPIC_LABEL} {{id: akw}})-[:LA_LOAI_CON_CUA*0..3]->(target)
+        }}
+    }}
+    OR NOT EXISTS {{
+      MATCH (hv)-[:TAC_DONG_LEN]->(:LoaiTaiSan:{TOPIC_LABEL})
+    }}
   )
 
-// 1b. Mở rộng: cùng lấy các node ngữ nghĩa liên quan (ThoaThuan, HauQua,
-//     TruongHopNgoaiLe) để phục vụ trace + đảm bảo cover CAN_CU_TAI đầy đủ.
-WITH collect(DISTINCT hv) AS hv_list, tc
+WITH wl, collect(DISTINCT hv) AS hv_list
 
 UNWIND hv_list AS hv
-WITH DISTINCT hv
+WITH DISTINCT hv, wl
 
-OPTIONAL MATCH (hv)-[:YEU_CAU_THOA_THUAN]->(tt:ThoaThuan:CheDoTaiSanCuaVoChong)
-OPTIONAL MATCH (hv)-[:DAN_TOI]->(hq:HauQua:CheDoTaiSanCuaVoChong)
-OPTIONAL MATCH (hv)-[:CO_NGOAI_LE]->(nl:TruongHopNgoaiLe:CheDoTaiSanCuaVoChong)
+OPTIONAL MATCH (hv)-[:YEU_CAU_THOA_THUAN]->(tt:ThoaThuan:{TOPIC_LABEL})
+OPTIONAL MATCH (hv)-[:DAN_TOI]->(hq:HauQua:{TOPIC_LABEL})
+OPTIONAL MATCH (hv)-[:CO_NGOAI_LE]->(nl:TruongHopNgoaiLe:{TOPIC_LABEL})
 
-WITH collect(DISTINCT hv) + collect(DISTINCT tt) + collect(DISTINCT hq) + collect(DISTINCT nl) AS seed_nodes
-
-UNWIND seed_nodes AS sn
-WITH sn WHERE sn IS NOT NULL
-
-MATCH (sn)-[:CAN_CU_TAI]->(luat)
-WITH DISTINCT luat AS n_goc
+WITH wl,
+  collect(DISTINCT hv) + collect(DISTINCT tt) + collect(DISTINCT hq) + collect(DISTINCT nl) AS seed_nodes,
+  collect(DISTINCT hv) AS leaf_seed_nodes
 """
 
 
@@ -162,7 +162,6 @@ quyen_dinh_doat_tai_san = CypherTemplate(
         "đó là 'phan_loai_tai_san'."
     ),
     params_schema=QuyenDinhDoatTaiSanParams,
-    cypher=assemble_cypher(_SEED_BLOCK),
-    trace_cypher=assemble_simple_trace(_SEED_BLOCK),
-    viz_cypher=assemble_semantic_viz(_SEED_BLOCK),
+    cypher=assemble_graph_seed_cypher(_SEED_BODY),
+    viz_cypher=assemble_semantic_viz_from_trace_prefix(_SEED_BODY),
 )
