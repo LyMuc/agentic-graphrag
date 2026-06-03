@@ -465,12 +465,27 @@ def assemble_semantic_viz_from_trace_prefix(trace_prefix: str) -> str:
 # =============================================================================
 # WHITELIST helper — trả về Cypher snippet inject thêm DieuLuat IDs cố định
 # =============================================================================
+# Giá trị router = phạm vi rộng / không rõ → giữ seed whitelist (full Điều).
+BROAD_SCOPE_VALUES = frozenset({"tong_quat", "tat_ca", "khong_ro", "chua_ro"})
+
+
+def should_keep_whitelist(params, router_fields: tuple[str, ...]) -> bool:
+    """True nếu field router **chính** (phần tử đầu) ∈ BROAD_SCOPE_VALUES.
+
+    Các field phụ (vd nhom_can_cu_vo_hieu) mặc định tat_ca không kích whitelist
+    khi router chính đã cụ thể.
+    """
+    if not router_fields:
+        return False
+    data = params.model_dump()
+    return data.get(router_fields[0]) in BROAD_SCOPE_VALUES
+
+
 def whitelist_dieu_clause(param_name: str = "whitelist_dieu_ids") -> str:
     """Tạo snippet UNION nối thêm các DieuLuat ID cố định (cho coverage chắc).
 
-    Dùng cho template phân nhánh `khia_canh` cần đảm bảo cover trọn Điều luật
-    (vd Đ38-42 cho chia_tai_san_thoi_ky_hon_nhan) ngay cả khi semantic match
-    thiếu vì KG chưa đầy đủ.
+    Dùng khi `should_keep_whitelist` bật — đảm bảo cover trọn Điều luật (vd
+    Đ38-42) ngay cả khi semantic match thiếu vì KG chưa đầy đủ.
 
     Yêu cầu seed block trước đó đã `WITH ... AS n_goc` (single row per provision).
     """

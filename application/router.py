@@ -51,6 +51,8 @@ async def _execute_tool_call(tools: dict[str, any], tool_call: dict[str, any], u
 
         step.input = f'Tool Input: {function_args}'
         res = await function_to_call(**function_args)
+        if isinstance(res, dict):
+            res["retriever_name"] = tool_name
         if isinstance(res, dict) and "contexts" in res:
             debug = (res.get("debug") or "").strip()
             if debug:

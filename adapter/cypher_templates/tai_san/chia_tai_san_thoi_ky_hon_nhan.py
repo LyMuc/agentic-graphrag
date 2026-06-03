@@ -22,7 +22,10 @@ from adapter.cypher_templates import CypherTemplate
 from adapter.cypher_templates.tai_san._common import (
     EXPAND_AND_TIMEFILTER_CYPHER,
     assemble_semantic_viz_from_trace_prefix,
+    should_keep_whitelist,
 )
+
+_ROUTER_FIELDS = ("khia_canh",)
 
 
 class ChiaTaiSanParams(BaseModel):
@@ -65,20 +68,14 @@ class ChiaTaiSanParams(BaseModel):
     )
 
 
-_KHIA_CANH_TO_DIEU = {
-    "thoa_thuan_chia": ["Luat_HNGD_2014_Dieu_38"],
-    "thoi_diem_hieu_luc": ["Luat_HNGD_2014_Dieu_39"],
-    "hau_qua": ["Luat_HNGD_2014_Dieu_40"],
-    "cham_dut": ["Luat_HNGD_2014_Dieu_41"],
-    "vo_hieu": ["Luat_HNGD_2014_Dieu_42"],
-    "tat_ca": [
-        "Luat_HNGD_2014_Dieu_38",
-        "Luat_HNGD_2014_Dieu_39",
-        "Luat_HNGD_2014_Dieu_40",
-        "Luat_HNGD_2014_Dieu_41",
-        "Luat_HNGD_2014_Dieu_42",
-    ],
-}
+# Whitelist full Đ38-42 chỉ khi khia_canh ∈ broad scope (tat_ca, …).
+_DIEU_WHITELIST = [
+    "Luat_HNGD_2014_Dieu_38",
+    "Luat_HNGD_2014_Dieu_39",
+    "Luat_HNGD_2014_Dieu_40",
+    "Luat_HNGD_2014_Dieu_41",
+    "Luat_HNGD_2014_Dieu_42",
+]
 
 
 # Cypher SEED — combine semantic match (via allowed IDs list) + DieuLuat whitelist
@@ -251,8 +248,9 @@ RETURN seed_trace
 
 
 def _params_builder(params: ChiaTaiSanParams) -> dict[str, Any]:
+    use_wl = should_keep_whitelist(params, _ROUTER_FIELDS)
     base = params.model_dump()
-    base["whitelist_dieu_ids"] = _KHIA_CANH_TO_DIEU.get(params.khia_canh, [])
+    base["whitelist_dieu_ids"] = _DIEU_WHITELIST if use_wl else []
     return base
 
 

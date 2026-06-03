@@ -480,15 +480,21 @@ def resolve_viz_snapshot(viz_id: str) -> dict[str, Any] | None:
         return None
 
 
-def collect_viz_links(tool_response: list[Any]) -> list[tuple[str, int]]:
-    """Trích (viz_id, node_count) từ tool_response."""
-    links: list[tuple[str, int]] = []
+def collect_viz_links(tool_response: list[Any]) -> list[tuple[str, str, int]]:
+    """Trích (viz_id, retriever_name, node_count) từ tool_response."""
+    links: list[tuple[str, str, int]] = []
     for res in tool_response:
         if not isinstance(res, dict):
             continue
         viz_id = res.get("graph_viz_id")
         if viz_id:
-            links.append((viz_id, int(res.get("graph_viz_node_count") or 0)))
+            links.append(
+                (
+                    viz_id,
+                    str(res.get("retriever_name") or "unknown"),
+                    int(res.get("graph_viz_node_count") or 0),
+                )
+            )
     return links
 
 

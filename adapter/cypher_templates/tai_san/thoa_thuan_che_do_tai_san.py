@@ -21,7 +21,10 @@ from adapter.cypher_templates import CypherTemplate
 from adapter.cypher_templates.tai_san._common import (
     EXPAND_AND_TIMEFILTER_CYPHER,
     assemble_semantic_viz_from_trace_prefix,
+    should_keep_whitelist,
 )
+
+_ROUTER_FIELDS = ("khia_canh",)
 
 
 class ThoaThuanCheDoParams(BaseModel):
@@ -67,18 +70,13 @@ class ThoaThuanCheDoParams(BaseModel):
     )
 
 
-_KHIA_CANH_TO_DIEU = {
-    "xac_lap": ["Luat_HNGD_2014_Dieu_47"],
-    "noi_dung": ["Luat_HNGD_2014_Dieu_48"],
-    "sua_doi": ["Luat_HNGD_2014_Dieu_49"],
-    "vo_hieu": ["Luat_HNGD_2014_Dieu_50"],
-    "tat_ca": [
-        "Luat_HNGD_2014_Dieu_47",
-        "Luat_HNGD_2014_Dieu_48",
-        "Luat_HNGD_2014_Dieu_49",
-        "Luat_HNGD_2014_Dieu_50",
-    ],
-}
+# Whitelist full Đ47-50 chỉ khi khia_canh ∈ broad scope (tat_ca, …).
+_DIEU_WHITELIST = [
+    "Luat_HNGD_2014_Dieu_47",
+    "Luat_HNGD_2014_Dieu_48",
+    "Luat_HNGD_2014_Dieu_49",
+    "Luat_HNGD_2014_Dieu_50",
+]
 
 
 _SEED_BLOCK = """
@@ -217,8 +215,9 @@ RETURN seed_trace
 
 
 def _params_builder(params: ThoaThuanCheDoParams) -> dict[str, Any]:
+    use_wl = should_keep_whitelist(params, _ROUTER_FIELDS)
     base = params.model_dump()
-    base["whitelist_dieu_ids"] = _KHIA_CANH_TO_DIEU.get(params.khia_canh, [])
+    base["whitelist_dieu_ids"] = _DIEU_WHITELIST if use_wl else []
     return base
 
 

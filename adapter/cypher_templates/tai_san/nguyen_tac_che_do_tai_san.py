@@ -107,18 +107,10 @@ WHERE sn IS NOT NULL
     ])
   )
 
-// 1c. Whitelist Khoản/Điều: nếu khía cạnh khớp luật cụ thể, vẫn lấy luật đó
-//     ngay cả khi không match semantic node nào (đảm bảo coverage 100% cho
-//     câu hỏi tổng quát).
+// 1c. Whitelist Khoản/Điều: chỉ khi router broad scope (tat_ca, …)
 WITH luat, sn, kc,
   CASE
-    WHEN kc = 'tat_ca' THEN true
-    WHEN kc = 'binh_dang' AND luat.id STARTS WITH 'Luat_HNGD_2014_Dieu_29_Khoan_1' THEN true
-    WHEN kc = 'nhu_cau_thiet_yeu_gia_dinh' AND
-         (luat.id STARTS WITH 'Luat_HNGD_2014_Dieu_29_Khoan_2'
-          OR luat.id STARTS WITH 'Luat_HNGD_2014_Dieu_30') THEN true
-    WHEN kc = 'giao_dich_nha_o_duy_nhat' AND luat.id STARTS WITH 'Luat_HNGD_2014_Dieu_31' THEN true
-    WHEN kc = 'giao_dich_nguoi_thu_ba_ngay_tinh' AND luat.id STARTS WITH 'Luat_HNGD_2014_Dieu_32' THEN true
+    WHEN kc IN ['tat_ca', 'tong_quat', 'khong_ro', 'chua_ro'] THEN true
     ELSE false
   END AS luat_khop_khia_canh
 

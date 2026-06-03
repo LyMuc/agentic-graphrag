@@ -27,7 +27,10 @@ from adapter.cypher_templates import CypherTemplate
 from adapter.cypher_templates.tai_san._common import (
     EXPAND_AND_TIMEFILTER_CYPHER,
     assemble_semantic_viz_from_trace_prefix,
+    should_keep_whitelist,
 )
+
+_ROUTER_FIELDS = ("loai_nghia_vu",)
 
 
 class NghiaVuTaiSanParams(BaseModel):
@@ -87,20 +90,13 @@ class NghiaVuTaiSanParams(BaseModel):
     )
 
 
-# Mapping loai_nghia_vu → whitelist Điều luật chốt cứng (đảm bảo cover).
-# Nhánh `tat_ca` whitelist 4 Điều cốt lõi vì các câu hỏi tổng quát và
-# cross-cutting đều cần đủ cả 4 chiều để LLM trả lời đầy đủ.
-_LOAI_TO_WHITELIST_DIEU: dict[str, list[str]] = {
-    "chung": [],
-    "rieng": [],
-    "lien_doi": [],
-    "tat_ca": [
-        "Luat_HNGD_2014_Dieu_27",  # liên đới
-        "Luat_HNGD_2014_Dieu_30",  # nhu cầu thiết yếu gia đình
-        "Luat_HNGD_2014_Dieu_37",  # nghĩa vụ chung
-        "Luat_HNGD_2014_Dieu_45",  # nghĩa vụ riêng
-    ],
-}
+# Whitelist full Điều chỉ khi loai_nghia_vu ∈ broad scope (tat_ca, …).
+_DIEU_WHITELIST = [
+    "Luat_HNGD_2014_Dieu_27",  # liên đới
+    "Luat_HNGD_2014_Dieu_30",  # nhu cầu thiết yếu gia đình
+    "Luat_HNGD_2014_Dieu_37",  # nghĩa vụ chung
+    "Luat_HNGD_2014_Dieu_45",  # nghĩa vụ riêng
+]
 
 
 _SEED_BLOCK = """
@@ -150,7 +146,7 @@ WHERE sn IS NOT NULL
 OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat_semantic)
 WHERE luat_semantic IS NOT NULL
 
-// 1d. Whitelist DieuLuat (đảm bảo cover Đ27/30/37/45 cho nhánh tat_ca)
+// 1d. Whitelist DieuLuat (chỉ khi broad scope — Đ27/30/37/45)
 OPTIONAL MATCH (luat_whitelist:DieuLuat)
 WHERE luat_whitelist.id IN wl
 
@@ -226,8 +222,9 @@ RETURN seed_trace
 
 
 def _params_builder(params: NghiaVuTaiSanParams) -> dict[str, Any]:
+    use_wl = should_keep_whitelist(params, _ROUTER_FIELDS)
     base = params.model_dump()
-    base["whitelist_dieu_ids"] = _LOAI_TO_WHITELIST_DIEU.get(params.loai_nghia_vu, [])
+    base["whitelist_dieu_ids"] = _DIEU_WHITELIST if use_wl else []
     return base
 
 
