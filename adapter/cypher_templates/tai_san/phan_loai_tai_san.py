@@ -17,8 +17,10 @@ Ví dụ:
 - "Tài sản chung trong thời kì hôn nhân bao gồm những tài sản nào?"
   -> loai_tai_san='chung', asset_keyword=None  (seed: Đ33 và các Khoản)
 - "Quyền sử dụng đất sau kết hôn là tài sản chung hay riêng?"
-  -> loai_tai_san='tat_ca', asset_keyword='quyen_su_dung_dat'
-- "Tiền trúng số có phải tài sản chung?"
+  -> loai_tai_san='tat_ca', asset_keyword=None
+- "Trợ cấp thương binh gửi tiết kiệm, vợ ly hôn đòi chia đôi — chung hay riêng?"
+  -> loai_tai_san='tat_ca', asset_keyword=None
+- "Tiền trúng số có phải tài sản chung?" (chỉ hỏi một phía, không đối chiếu riêng)
   -> loai_tai_san='chung', asset_keyword='thu_nhap_hop_phap_khac'
 """
 from __future__ import annotations
@@ -35,15 +37,21 @@ class PhanLoaiTaiSanParams(BaseModel):
     loai_tai_san: Literal["chung", "rieng", "tat_ca"] = Field(
         description=(
             "Loại tài sản người dùng đang quan tâm.\n"
-            "  • 'chung' nếu chỉ hỏi về tài sản chung.\n"
+            "  • 'chung' nếu chỉ hỏi về tài sản chung (vd liệt kê, một phía).\n"
             "  • 'rieng' nếu chỉ hỏi về tài sản riêng.\n"
-            "  • 'tat_ca' khi câu hỏi yêu cầu phân biệt cả hai (vd 'X là tài "
-            "sản chung hay riêng?', hoặc 'tài sản chung/riêng gồm những gì?')."
+            "  • 'tat_ca' BẮT BUỘC khi câu hỏi đối chiếu/tranh chấp phân loại "
+            "(vd 'X là tài sản chung hay riêng?', vợ/chồng đòi chia, 'có phải "
+            "tài sản chung không' khi hai bên bất đồng, tài sản trong thời kỳ "
+            "hôn nhân mà tranh chấp chung/riêng)."
         )
     )
     asset_keyword: Optional[str] = Field(
         default=None,
         description=(
+            "QUY TẮC ƯU TIÊN — Câu đối chiếu/tranh chấp chung vs riêng: đặt "
+            "null (dù câu có nêu trợ cấp, tiết kiệm, đất, trúng số...). Khi "
+            "đó loai_tai_san phải là 'tat_ca'.\n"
+            "Chỉ điền asset_keyword khi câu KHÔNG đối chiếu hai nhánh.\n\n"
             "ID THUẬT NGỮ PHÁP LÝ chuẩn trong KG (snake_case) — KHÔNG dùng từ "
             "thông tục/đời thường. BẮT BUỘC map từ ngữ trong câu hỏi sang ID "
             "chuẩn dưới đây trước khi điền (giữ nguyên dấu tiếng Việt KHÔNG có):\n"
@@ -70,9 +78,11 @@ class PhanLoaiTaiSanParams(BaseModel):
             "'tai_san_phuc_vu_nhu_cau_thiet_yeu_ca_nhan'\n"
             "  • 'tài sản đang tranh chấp' → 'tai_san_dang_tranh_chap'\n"
             "  • Câu hỏi tổng quát hoặc không xác định → null.\n"
-            "VÍ DỤ: 'Tiền trúng số có phải tài sản chung?' → 'thu_nhap_hop_phap_khac'; "
-            "'Quyền sử dụng đất sau kết hôn là tài sản gì?' → 'quyen_su_dung_dat'; "
-            "'Tài sản chung gồm những gì?' → null."
+            "VÍ DỤ: 'Tiền trúng số có phải tài sản chung?' → 'thu_nhap_hop_phap_khac', "
+            "loai_tai_san='chung'; "
+            "'Đất sau kết hôn là chung hay riêng?' → null, loai_tai_san='tat_ca'; "
+            "'Trợ cấp thương binh, vợ đòi chia đôi khi ly hôn' → null, loai_tai_san='tat_ca'; "
+            "'Tài sản chung gồm những gì?' → null, loai_tai_san='chung'."
         ),
     )
 

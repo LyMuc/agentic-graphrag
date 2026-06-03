@@ -5,8 +5,10 @@ import json
 from typing import Any
 
 from adapter.config import driver
-from adapter.cypher_templates import CypherTemplate
-from adapter.viz_store import save_snapshot
+from adapter.cypher_templates import CypherTemplate, TemplateRegistry
+from adapter.cypher_templates.chia_tai_san_sau_ly_hon import CHIA_TAI_SAN_SAU_LY_HON_REGISTRY
+from adapter.cypher_templates.tai_san import TAI_SAN_REGISTRY
+from adapter.viz_store import load_snapshot, save_snapshot, update_snapshot
 from utils.utils import _dieu_level_id
 
 _LEGAL_LABELS = frozenset({
@@ -45,6 +47,11 @@ RETURN
   collect(DISTINCT CASE WHEN m IS NOT NULL THEN {id: m.id, labels: labels(m)} END) AS nodes,
   collect(DISTINCT {src: startNode(r).id, dst: endNode(r).id, type: type(r)}) AS edges
 """
+
+_VIZ_REGISTRIES: dict[str, TemplateRegistry] = {
+    "chia_tai_san_sau_ly_hon": CHIA_TAI_SAN_SAU_LY_HON_REGISTRY,
+    "tai_san": TAI_SAN_REGISTRY,
+}
 
 
 def _primary_label(labels: list[str] | None) -> str:
@@ -399,6 +406,78 @@ def merge_graph_payloads(payloads: list[dict[str, Any]], query: str = "") -> dic
 def save_graph_viz(payload: dict[str, Any]) -> str:
     """Lưu snapshot, trả viz_id."""
     return save_snapshot(payload)
+
+
+def save_lazy_viz_stub(
+    sources: list[dict[str, Any]],
+    query: str,
+    target_date: str,
+) -> str:
+    """Lưu stub lazy viz — materialize khi user mở /api/viz/{id}."""
+    stub: dict[str, Any] = {
+        "lazy": True,
+        "meta": {"query": query, "target_date": target_date},
+        "sources": sources,
+    }
+    return save_snapshot(stub)
+
+
+def materialize_viz_payload(stub: dict[str, Any]) -> dict[str, Any]:
+    """Chạy viz_cypher + batch edges từ lazy stub."""
+    sources = stub.get("sources") or []
+    meta = stub.get("meta") or {}
+    query = str(meta.get("query") or "")
+    target_date = str(meta.get("target_date") or "")
+
+    payloads: list[dict[str, Any]] = []
+    for src in sources:
+        if not isinstance(src, dict):
+            continue
+        topic = src.get("topic")
+        template_name = src.get("template")
+        context_tho = src.get("context_tho")
+        params = src.get("params")
+        if not topic or not template_name or not context_tho or not params:
+            continue
+        registry = _VIZ_REGISTRIES.get(str(topic))
+        if registry is None:
+            print(f"[graph_viz] Unknown viz topic: {topic}")
+            continue
+        template = registry.get(str(template_name))
+        if template is None:
+            print(f"[graph_viz] Unknown template {template_name} in {topic}")
+            continue
+        payloads.append(
+            build_graph_payload(
+                context_tho=context_tho,
+                template=template,
+                runtime_params=params,
+                target_date=target_date,
+                query=query,
+            )
+        )
+
+    if not payloads:
+        raise ValueError("Lazy stub has no valid sources to materialize")
+    if len(payloads) == 1:
+        return payloads[0]
+    return merge_graph_payloads(payloads, query=query)
+
+
+def resolve_viz_snapshot(viz_id: str) -> dict[str, Any] | None:
+    """Load snapshot; materialize và cache nếu là lazy stub."""
+    raw = load_snapshot(viz_id)
+    if raw is None:
+        return None
+    if not raw.get("lazy"):
+        return raw
+    try:
+        payload = materialize_viz_payload(raw)
+        update_snapshot(viz_id, payload)
+        return payload
+    except Exception as exc:
+        print(f"[graph_viz] materialize error ({viz_id}): {exc}")
+        return None
 
 
 def collect_viz_links(tool_response: list[Any]) -> list[tuple[str, int]]:

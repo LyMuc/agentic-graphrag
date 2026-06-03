@@ -133,14 +133,14 @@ tools = {
         "description": quy_dinh_chung_ly_hon_description,
         "function": quy_dinh_chung_ly_hon
     },
-    # "chia_tai_san_sau_ly_hon": {
-    #     "description": chia_tai_san_sau_ly_hon_description,
-    #     "function": chia_tai_san_sau_ly_hon
-    # },
-    "chia_tai_san_sau_ly_hon_v3": {
-        "description": chia_tai_san_sau_ly_hon_v3_description,
-        "function": chia_tai_san_sau_ly_hon_v3
+    "chia_tai_san_sau_ly_hon": {
+        "description": chia_tai_san_sau_ly_hon_description,
+        "function": chia_tai_san_sau_ly_hon
     },
+    # "chia_tai_san_sau_ly_hon_v3": {
+    #     "description": chia_tai_san_sau_ly_hon_v3_description,
+    #     "function": chia_tai_san_sau_ly_hon_v3
+    # },
     "cha_me_con_sau_ly_hon": {
         "description": cha_me_con_sau_ly_hon_description,
         "function": cha_me_con_sau_ly_hon
@@ -153,18 +153,18 @@ tools = {
         "description": dai_dien_trach_nhiem_vo_chong_description,
         "function": dai_dien_trach_nhiem_vo_chong
     },
-    # "che_do_tai_san_cua_vo_chong": {
-    #     "description": che_do_tai_san_cua_vo_chong_description,
-    #     "function": che_do_tai_san_cua_vo_chong
-    # },
+    "che_do_tai_san_cua_vo_chong": {
+        "description": che_do_tai_san_cua_vo_chong_description,
+        "function": che_do_tai_san_cua_vo_chong
+    },
     # "che_do_tai_san_cua_vo_chong_v2": {
     #     "description": che_do_tai_san_cua_vo_chong_v2_description,
     #     "function": che_do_tai_san_cua_vo_chong_v2
     # },
-    "che_do_tai_san_cua_vo_chong_v3": {
-        "description": che_do_tai_san_cua_vo_chong_v3_description,
-        "function": che_do_tai_san_cua_vo_chong_v3
-    },
+    # "che_do_tai_san_cua_vo_chong_v3": {
+    #     "description": che_do_tai_san_cua_vo_chong_v3_description,
+    #     "function": che_do_tai_san_cua_vo_chong_v3
+    # },
     "xu_phat_vi_pham": {
         "description": xu_phat_vi_pham_description,
         "function": xu_phat_vi_pham

@@ -41,6 +41,15 @@ def save_snapshot(payload: dict[str, Any]) -> str:
     return viz_id
 
 
+def update_snapshot(viz_id: str, payload: dict[str, Any]) -> None:
+    """Ghi đè snapshot (cache sau materialize lazy viz)."""
+    if not viz_id or "/" in viz_id or "\\" in viz_id:
+        raise ValueError("Invalid viz_id")
+    directory = _snapshot_dir()
+    path = directory / f"{viz_id}.json"
+    path.write_text(json.dumps(payload, ensure_ascii=False, default=str), encoding="utf-8")
+
+
 def load_snapshot(viz_id: str) -> dict[str, Any] | None:
     if not viz_id or "/" in viz_id or "\\" in viz_id:
         return None

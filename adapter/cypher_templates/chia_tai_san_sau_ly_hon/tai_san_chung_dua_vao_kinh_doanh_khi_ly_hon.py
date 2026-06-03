@@ -51,7 +51,8 @@ OPTIONAL MATCH (anchor)-[:DAN_TOI]->(hq:HauQua:{TOPIC_LABEL} {{
 }})
 
 WITH wl,
-  collect(DISTINCT anchor) + collect(DISTINCT hq) AS seed_nodes
+  collect(DISTINCT anchor) + collect(DISTINCT hq) AS seed_nodes,
+  collect(DISTINCT anchor) + collect(DISTINCT hq) AS leaf_seed_nodes
 """
 
 

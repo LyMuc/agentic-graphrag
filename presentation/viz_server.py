@@ -7,6 +7,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
+from adapter.graph_viz import resolve_viz_snapshot
 from adapter.viz_store import load_snapshot
 
 VIZ_DIR = Path(__file__).resolve().parent.parent / "viz"
@@ -27,7 +28,7 @@ def _log_local_url() -> None:
 
 @app.get("/api/viz/{viz_id}")
 def get_viz_data(viz_id: str):
-    payload = load_snapshot(viz_id)
+    payload = resolve_viz_snapshot(viz_id)
     if payload is None:
         raise HTTPException(status_code=404, detail="Snapshot không tồn tại hoặc đã hết hạn.")
     return payload

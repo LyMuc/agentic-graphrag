@@ -75,6 +75,10 @@ OPTIONAL MATCH (luu)-[:DAN_TOI]->(th:HauQua:{TOPIC_LABEL} {{id: 'thoi_han_luu_cu
 WHERE lth IN ['luu_cu_nha_rieng', 'tat_ca']
 
 WITH wl, xdp,
+  [x IN collect(DISTINCT hv61) + collect(DISTINCT dk61)
+       + collect(DISTINCT luu) + collect(DISTINCT lts)
+       + collect(DISTINCT dk63) + collect(DISTINCT th)
+   WHERE x IS NOT NULL] AS seed_nodes,
   CASE
     WHEN xdp IN ['khong', 'co'] THEN
       [x IN collect(DISTINCT dk61) WHERE x IS NOT NULL]
@@ -83,7 +87,7 @@ WITH wl, xdp,
   END
     + [x IN collect(DISTINCT luu) + collect(DISTINCT lts)
          + collect(DISTINCT dk63) + collect(DISTINCT th)
-       WHERE x IS NOT NULL] AS seed_nodes
+       WHERE x IS NOT NULL] AS leaf_seed_nodes
 """
 
 

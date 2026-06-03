@@ -87,14 +87,15 @@ WITH wl, tc_param,
   collect(DISTINCT sub) AS sub_list,
   collect(DISTINCT hq) AS hq_list
 
-WITH wl,
+WITH wl, tc_param,
+  [x IN anchors + lts_list + sub_list + hq_list WHERE x IS NOT NULL] AS seed_nodes,
   CASE
     WHEN tc_param IN ['rieng', 'chung']
          AND size([x IN lts_list WHERE x IS NOT NULL]) > 0 THEN
       [x IN lts_list + sub_list + hq_list WHERE x IS NOT NULL]
     ELSE
       [x IN anchors + lts_list + sub_list + hq_list WHERE x IS NOT NULL]
-  END AS seed_nodes
+  END AS leaf_seed_nodes
 """
 
 

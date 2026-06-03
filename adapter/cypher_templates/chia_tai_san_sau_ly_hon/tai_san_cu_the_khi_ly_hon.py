@@ -140,6 +140,8 @@ WITH wl, lts_param, dctt,
   c_giai, c_chia, c_hv, c_hq_tt, c_xac, c_hq_rieng, c_lts_chung, c_lts_rieng
 
 WITH wl,
+  [x IN c_giai + c_chia + c_hv + c_hq_tt + c_xac + c_hq_rieng
+       + c_lts_chung + c_lts_rieng WHERE x IS NOT NULL] AS seed_nodes,
   CASE
     WHEN has_rieng_leaf THEN
       [x IN c_xac + c_hq_rieng + c_lts_rieng WHERE x IS NOT NULL]
@@ -150,7 +152,7 @@ WITH wl,
            + c_lts_chung + c_lts_rieng WHERE x IS NOT NULL]
     ELSE
       [x IN c_chia + c_xac WHERE x IS NOT NULL]
-  END AS seed_nodes
+  END AS leaf_seed_nodes
 """
 
 

@@ -41,7 +41,7 @@ from adapter.cypher_templates.tai_san.term_mapping import (
     COMMON_TO_LEGAL_TERMS,
     resolve_term,
 )
-from adapter.graph_viz import build_graph_payload, merge_graph_payloads, save_graph_viz
+from adapter.graph_viz import save_lazy_viz_stub
 from utils.utils import chuan_hoa_Context_cho_LLM
 
 
@@ -184,7 +184,10 @@ _EXTRACT_SYS_PROMPT_BASE = (
     "MAP sang ID pháp lý chuẩn (snake_case) theo bảng trong description.\n"
     "3. Nếu trường nào không suy luận được rõ ràng, chọn giá trị mặc định an "
     "toàn (vd 'tat_ca' cho enum khia_canh/loai_*, null cho các keyword tự do).\n"
-    "4. KHÔNG bịa giá trị enum ngoài Literal đã liệt kê trong schema."
+    "4. KHÔNG bịa giá trị enum ngoài Literal đã liệt kê trong schema.\n"
+    "5. Schema PhanLoaiTaiSanParams — câu đối chiếu/tranh chấp tài sản chung "
+    "vs riêng: loai_tai_san='tat_ca' VÀ asset_keyword=null (không map 'trợ cấp', "
+    "'tiết kiệm', 'đất'... sang ID loại tài sản trong trường hợp đó)."
 )
 
 
@@ -224,7 +227,10 @@ async def _extract_template_params(
     # 'tinh_huong_keyword' / loại_tai_san_dang_ky → resolve_term tự sửa.
     params = _normalize_with_term_mapping(params)
 
-    # Safety-net 2: override loai_nghia_vu sang 'tat_ca' khi câu hỏi mang
+    # Safety-net 2: phan_loai — đối chiếu chung/riêng → tat_ca + asset_keyword null.
+    params = _override_cross_cutting_phan_loai(params, query)
+
+    # Safety-net 3: override loai_nghia_vu sang 'tat_ca' khi câu hỏi mang
     # tính đối chiếu chung-riêng (vd "tài sản chung trả nợ riêng").
     params = _override_cross_cutting_nghia_vu(params, query)
 
@@ -275,6 +281,83 @@ def _normalize_with_term_mapping(params: BaseModel) -> BaseModel:
     if not changed:
         return params
     return params.__class__(**data)
+
+
+def _query_is_phan_loai_cross_cutting(query: str) -> bool:
+    """True khi câu hỏi cần phân loại đối chiếu tài sản chung vs riêng."""
+    q = query.lower()
+    has_ts_chung = "tài sản chung" in q
+    has_ts_rieng = "tài sản riêng" in q
+
+    distinguishing_phrases = [
+        "chung hay riêng",
+        "riêng hay chung",
+        "chung hay tài sản riêng",
+        "tài sản riêng hay chung",
+    ]
+    if any(p in q for p in distinguishing_phrases):
+        return True
+
+    if any(
+        p in q
+        for p in (
+            "đòi chia",
+            "chia đôi",
+            "tranh chấp",
+            "bất đồng",
+            "coi là tài sản chung",
+        )
+    ):
+        return True
+
+    # "có phải tài sản chung" — chỉ khi có thêm dấu hiệu tranh chấp/đối chiếu
+    # (tránh override câu một phía như "trúng số có phải tài sản chung không?").
+    if any(
+        p in q
+        for p in ("có phải tài sản chung", "là tài sản chung")
+    ) and (
+        has_ts_rieng
+        or "ly hôn" in q
+        or "thời kỳ hôn nhân" in q
+        or ("vợ" in q and "chồng" in q)
+        or "đòi chia" in q
+        or "chia đôi" in q
+    ):
+        return True
+
+    if has_ts_chung and has_ts_rieng:
+        return True
+
+    if "thời kỳ hôn nhân" in q and (
+        has_ts_chung or has_ts_rieng or "chia" in q or "tranh chấp" in q
+    ):
+        return True
+
+    return False
+
+
+def _override_cross_cutting_phan_loai(params: BaseModel, query: str) -> BaseModel:
+    """Override phan_loai_tai_san: đối chiếu chung/riêng → tat_ca + asset_keyword null."""
+    data = params.model_dump()
+    if "loai_tai_san" not in data or "asset_keyword" not in data:
+        return params
+    if not _query_is_phan_loai_cross_cutting(query):
+        return params
+
+    prev_loai = data.get("loai_tai_san")
+    prev_asset = data.get("asset_keyword")
+    data["loai_tai_san"] = "tat_ca"
+    data["asset_keyword"] = None
+    if prev_loai != "tat_ca" or prev_asset is not None:
+        print(
+            f"[cross-cutting phan_loai] loai_tai_san: '{prev_loai}' -> 'tat_ca', "
+            f"asset_keyword: {prev_asset!r} -> None (doi chieu chung/rieng)"
+        )
+    try:
+        return params.__class__(**data)
+    except Exception as exc:
+        print(f"[cross-cutting phan_loai] failed: {exc}")
+        return params
 
 
 def _override_cross_cutting_nghia_vu(params: BaseModel, query: str) -> BaseModel:
@@ -416,29 +499,6 @@ def _format_retrieval_debug(
     )
 
 
-def _build_viz_payload_sync(
-    template: CypherTemplate,
-    record: dict[str, Any],
-    runtime_params: dict[str, Any],
-    target_date: str,
-    query: str,
-) -> dict[str, Any] | None:
-    context_tho = record.get("Context_Tho")
-    if not context_tho:
-        return None
-    try:
-        return build_graph_payload(
-            context_tho=context_tho,
-            template=template,
-            runtime_params=runtime_params,
-            target_date=target_date,
-            query=query,
-        )
-    except Exception as exc:
-        print(f"[Template:{template.name}] Viz error: {exc}")
-        return None
-
-
 # =============================================================================
 # Public entrypoint cho tool router
 # =============================================================================
@@ -517,34 +577,26 @@ async def che_do_tai_san_cua_vo_chong_v3(query: str) -> dict[str, Any]:
             )
 
     graph_viz_id = None
-    graph_viz_node_count = 0
-    viz_inputs: list[tuple[CypherTemplate, dict[str, Any], dict[str, Any], str]] = []
+    lazy_sources: list[dict[str, Any]] = []
     for template, (params, _), record in zip(templates, extracted, records):
         if record is None or "Context_Tho" not in record:
             continue
+        context_tho = record.get("Context_Tho")
+        if not context_tho:
+            continue
         runtime_params = template.build_params(params)
         runtime_params["target_date"] = target_date
-        viz_inputs.append((template, record, runtime_params, target_date))
-
-    if viz_inputs:
-        viz_payloads = await asyncio.gather(
-            *(
-                asyncio.to_thread(
-                    _build_viz_payload_sync,
-                    template,
-                    record,
-                    runtime_params,
-                    td,
-                    query,
-                )
-                for template, record, runtime_params, td in viz_inputs
-            )
+        lazy_sources.append(
+            {
+                "topic": "tai_san",
+                "template": template.name,
+                "params": runtime_params,
+                "context_tho": context_tho,
+            }
         )
-        valid_payloads = [p for p in viz_payloads if p]
-        if valid_payloads:
-            merged = merge_graph_payloads(valid_payloads, query=query)
-            graph_viz_id = save_graph_viz(merged)
-            graph_viz_node_count = merged.get("meta", {}).get("node_count", 0)
+
+    if lazy_sources:
+        graph_viz_id = save_lazy_viz_stub(lazy_sources, query=query, target_date=target_date)
 
     result: dict[str, Any] = {
         "contexts": contexts,
@@ -552,5 +604,4 @@ async def che_do_tai_san_cua_vo_chong_v3(query: str) -> dict[str, Any]:
     }
     if graph_viz_id:
         result["graph_viz_id"] = graph_viz_id
-        result["graph_viz_node_count"] = graph_viz_node_count
     return result

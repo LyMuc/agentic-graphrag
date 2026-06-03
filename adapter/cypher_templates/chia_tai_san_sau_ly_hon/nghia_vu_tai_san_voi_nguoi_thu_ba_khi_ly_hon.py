@@ -69,6 +69,8 @@ OPTIONAL MATCH (dk:DieuKien:{TOPIC_LABEL} {{id: 'co_tranh_chap_quyen_nghia_vu_ta
 WHERE lnv IN ['tranh_chap', 'vay_ca_nhan', 'khong_ro']
 
 WITH wl, lnv,
+  [x IN collect(DISTINCT anchor) + collect(DISTINCT hq) + collect(DISTINCT dk)
+   WHERE x IS NOT NULL] AS seed_nodes,
   CASE
     WHEN lnv = 'tranh_chap' THEN
       [x IN collect(DISTINCT hq) + collect(DISTINCT dk) WHERE x IS NOT NULL]
@@ -79,7 +81,7 @@ WITH wl, lnv,
     ELSE
       [x IN collect(DISTINCT anchor) + collect(DISTINCT hq) + collect(DISTINCT dk)
        WHERE x IS NOT NULL]
-  END AS seed_nodes
+  END AS leaf_seed_nodes
 """
 
 

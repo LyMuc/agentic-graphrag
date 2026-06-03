@@ -93,6 +93,11 @@ OPTIONAL MATCH (anchor)-[:DAN_TOI]->(bv:HauQua:{TOPIC_LABEL} {{id: 'bao_ve_vo_co
 WHERE kc IN ['bao_ve_vo_con', 'tat_ca']
 
 WITH wl, kc,
+  [x IN collect(DISTINCT anchor) + collect(DISTINCT tt) + collect(DISTINCT toa)
+       + collect(DISTINCT chia) + collect(DISTINCT dk) + collect(DISTINCT dk_nt)
+       + collect(DISTINCT dk_loi) + collect(DISTINCT hv) + collect(DISTINCT hq_tt)
+       + collect(DISTINCT xac) + collect(DISTINCT hq_rieng) + collect(DISTINCT bv)
+   WHERE x IS NOT NULL] AS seed_nodes,
   CASE kc
     WHEN 'yeu_to_chia' THEN
       [x IN collect(DISTINCT dk) WHERE x IS NOT NULL]
@@ -116,7 +121,7 @@ WITH wl, kc,
            + collect(DISTINCT dk_loi) + collect(DISTINCT hv) + collect(DISTINCT hq_tt)
            + collect(DISTINCT xac) + collect(DISTINCT hq_rieng) + collect(DISTINCT bv)
        WHERE x IS NOT NULL]
-  END AS seed_nodes
+  END AS leaf_seed_nodes
 """
 
 

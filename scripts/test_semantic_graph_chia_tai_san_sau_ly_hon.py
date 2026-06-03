@@ -11,6 +11,7 @@ from adapter.config import driver
 from adapter.cypher_templates.chia_tai_san_sau_ly_hon import (
     CHIA_TAI_SAN_SAU_LY_HON_REGISTRY,
 )
+from adapter.graph_viz import materialize_viz_payload
 
 
 def _today_str() -> str:
@@ -29,6 +30,51 @@ def _run(template_name: str, params: dict) -> list[str]:
         raise RuntimeError(f"Query returned no rows for {template_name} {params}")
     ctx = row["Context_Tho"]
     return sorted({x["id_thuc_te_ap_dung"] for x in ctx["can_cu_chinh"]})
+
+
+def _run_context(template_name: str, params: dict) -> dict:
+    tpl = CHIA_TAI_SAN_SAU_LY_HON_REGISTRY.get(template_name)
+    merged = {
+        **tpl.params_builder(tpl.params_schema(**params)),
+        "target_date": _today_str(),
+    }
+    with driver.session() as session:
+        row = session.run(tpl.cypher, merged).single()
+    if row is None:
+        raise RuntimeError(f"Query returned no rows for {template_name} {params}")
+    return row["Context_Tho"]
+
+
+def _run_viz_node_ids(template_name: str, params: dict) -> set[str]:
+    tpl = CHIA_TAI_SAN_SAU_LY_HON_REGISTRY.get(template_name)
+    if not tpl.viz_cypher:
+        return set()
+    merged = {
+        **tpl.params_builder(tpl.params_schema(**params)),
+        "target_date": _today_str(),
+    }
+    with driver.session() as session:
+        row = session.run(tpl.viz_cypher, merged).single()
+    if row is None:
+        return set()
+    graph = row.get("viz_graph") or {}
+    return {n["id"] for n in graph.get("nodes") or [] if n.get("id")}
+
+
+def _run_viz_edge_types(template_name: str, params: dict) -> set[str]:
+    tpl = CHIA_TAI_SAN_SAU_LY_HON_REGISTRY.get(template_name)
+    if not tpl.viz_cypher:
+        return set()
+    merged = {
+        **tpl.params_builder(tpl.params_schema(**params)),
+        "target_date": _today_str(),
+    }
+    with driver.session() as session:
+        row = session.run(tpl.viz_cypher, merged).single()
+    if row is None:
+        return set()
+    graph = row.get("viz_graph") or {}
+    return {e.get("type") for e in graph.get("edges") or [] if e.get("type")}
 
 
 def _check(
@@ -114,6 +160,69 @@ def main() -> None:
         must_include={"Luat_HNGD_2014_Dieu_61_Khoan_1"},
         must_exclude={"Luat_HNGD_2014_Dieu_61_Khoan_2"},
     )
+
+    # viz: full seed_nodes — anchor + leaf semantic
+    viz_params = {
+        "loai_truong_hop": "song_chung_voi_gia_dinh",
+        "xac_dinh_duoc_phan_tai_san": "khong",
+    }
+    viz_nodes = _run_viz_node_ids("truong_hop_nha_o_gia_dinh_va_luu_cu", viz_params)
+    ok, total = _check(
+        ok,
+        total,
+        "truong_hop viz anchor+leaf",
+        viz_params,
+        viz_nodes,
+        must_include={
+            "chia_tai_san_song_chung_voi_gia_dinh",
+            "tai_san_vo_chong_trong_khoi_gia_dinh_khong_xac_dinh_duoc",
+        },
+    )
+    viz_edges = _run_viz_edge_types("truong_hop_nha_o_gia_dinh_va_luu_cu", viz_params)
+    if "AP_DUNG_KHI" not in viz_edges:
+        print("FAIL truong_hop viz AP_DUNG_KHI edge")
+        print(f"  edges: {sorted(viz_edges)}")
+    else:
+        ok += 1
+        print("PASS truong_hop viz AP_DUNG_KHI edge")
+    total += 1
+
+    # lazy viz materialize
+    ctx = _run_context("truong_hop_nha_o_gia_dinh_va_luu_cu", viz_params)
+    tpl = CHIA_TAI_SAN_SAU_LY_HON_REGISTRY.get("truong_hop_nha_o_gia_dinh_va_luu_cu")
+    runtime = {
+        **tpl.params_builder(tpl.params_schema(**viz_params)),
+        "target_date": _today_str(),
+    }
+    stub = {
+        "lazy": True,
+        "meta": {"query": "test lazy", "target_date": _today_str()},
+        "sources": [
+            {
+                "topic": "chia_tai_san_sau_ly_hon",
+                "template": tpl.name,
+                "params": runtime,
+                "context_tho": ctx,
+            }
+        ],
+    }
+    try:
+        payload = materialize_viz_payload(stub)
+        lazy_nodes = {n["id"] for n in payload.get("nodes") or [] if n.get("id")}
+        ok, total = _check(
+            ok,
+            total,
+            "lazy materialize truong_hop",
+            viz_params,
+            lazy_nodes,
+            must_include={
+                "chia_tai_san_song_chung_voi_gia_dinh",
+                "Luat_HNGD_2014_Dieu_61_Khoan_1",
+            },
+        )
+    except Exception as exc:
+        total += 1
+        print(f"FAIL lazy materialize: {exc}")
 
     ok, total = _check(
         ok,
