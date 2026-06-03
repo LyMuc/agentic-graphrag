@@ -2,7 +2,7 @@
 
 Pipeline 3 bước:
     1. CLASSIFY  -> LLM chọn 1+ template (registry topic 'chia_tai_san_sau_ly_hon').
-    2. EXTRACT   -> LLM extract param (Pydantic) + thời điểm sự kiện.
+    2. EXTRACT   -> 1 LLM call mỗi template (params + thời điểm sự kiện).
     3. EXECUTE   -> chạy Cypher qua asyncio.to_thread → chuan_hoa_Context_cho_LLM.
 
 Output: dict ``{"contexts": list[str], "debug": str}``.
@@ -18,6 +18,10 @@ from pydantic import BaseModel, Field
 
 from adapter.config import driver, build_llm, RETRIEVER_LLM
 from adapter.cypher_templates import CypherTemplate
+from adapter.cypher_templates.extract_schema import (
+    build_params_with_date_schema,
+    split_params_and_date,
+)
 from adapter.cypher_templates.chia_tai_san_sau_ly_hon import (
     CHIA_TAI_SAN_SAU_LY_HON_REGISTRY,
 )
@@ -140,20 +144,15 @@ async def _classify_templates(query: str) -> List[TemplateChoice]:
     return valid[:2]
 
 
-class _ThoiDiem(BaseModel):
-    thoi_diem_su_kien: str | None = Field(
-        default=None,
-        description="Mốc thời gian 'YYYY-MM-DD' hoặc null.",
-    )
-
-
 _EXTRACT_SYS_PROMPT_BASE = (
     "Bạn là chuyên gia trích xuất tham số cho câu Cypher truy xuất luật pháp "
     "về chia tài sản sau ly hôn. Điền chính xác các trường schema `{schema_name}`.\n\n"
     "QUY TẮC:\n"
     "1. ĐỌC description từng field — có bảng map ngữ thông tục → enum chuẩn.\n"
     "2. Không suy luận được → chọn giá trị mặc định an toàn (khong_ro, tat_ca, chua_ro).\n"
-    "3. KHÔNG bịa enum ngoài Literal."
+    "3. KHÔNG bịa enum ngoài Literal.\n"
+    "4. `thoi_diem_su_kien`: mốc thời gian sự kiện 'YYYY-MM-DD' hoặc null nếu "
+    "câu hỏi không nêu ngày/tháng/năm cụ thể."
 )
 
 _ENUM_FIELDS = {
@@ -217,34 +216,21 @@ def _normalize_with_term_mapping(params: BaseModel, query: str) -> BaseModel:
 async def _extract_template_params(
     query: str, template: CypherTemplate
 ) -> tuple[BaseModel, str | None]:
-    schema_name = template.params_schema.__name__
+    combined_schema = build_params_with_date_schema(template.params_schema)
+    schema_name = combined_schema.__name__
     sys_prompt = _EXTRACT_SYS_PROMPT_BASE.format(schema_name=schema_name)
     llm = build_llm(model=RETRIEVER_LLM, temperature=0)
+    struct_llm = llm.with_structured_output(combined_schema)
 
-    params_struct_llm = llm.with_structured_output(template.params_schema)
-    date_struct_llm = llm.with_structured_output(_ThoiDiem)
-
-    params_task = params_struct_llm.ainvoke(
+    raw = await struct_llm.ainvoke(
         [
             {"role": "system", "content": sys_prompt},
             {"role": "user", "content": f"Câu hỏi: {query}"},
         ]
     )
-    date_task = date_struct_llm.ainvoke(
-        [
-            {
-                "role": "system",
-                "content": (
-                    "Xác định mốc thời gian sự kiện (YYYY-MM-DD) hoặc null."
-                ),
-            },
-            {"role": "user", "content": f"Câu hỏi: {query}"},
-        ]
-    )
-
-    params, date_obj = await asyncio.gather(params_task, date_task)
+    params, thoi_diem = split_params_and_date(raw, template.params_schema)
     params = _normalize_with_term_mapping(params, query)
-    return params, date_obj.thoi_diem_su_kien
+    return params, thoi_diem
 
 
 def _today_str() -> str:

@@ -16,8 +16,7 @@ Khác với v2:
 
 Pipeline 3 bước:
     1. CLASSIFY  -> LLM chọn 1+ template name (registry topic 'tai_san').
-    2. EXTRACT   -> mỗi template song song: LLM extract param (Pydantic schema)
-                   + LLM extract thời điểm sự kiện.
+    2. EXTRACT   -> mỗi template song song: 1 LLM call (params + thời điểm sự kiện).
     3. EXECUTE   -> chạy main cypher qua asyncio.to_thread.
                    Post-process bằng chuan_hoa_Context_cho_LLM.
 
@@ -36,6 +35,10 @@ from pydantic import BaseModel, Field
 
 from adapter.config import driver, build_llm, RETRIEVER_LLM
 from adapter.cypher_templates import CypherTemplate
+from adapter.cypher_templates.extract_schema import (
+    build_params_with_date_schema,
+    split_params_and_date,
+)
 from adapter.cypher_templates.tai_san import TAI_SAN_REGISTRY
 from adapter.cypher_templates.tai_san.term_mapping import (
     COMMON_TO_LEGAL_TERMS,
@@ -160,18 +163,8 @@ async def _classify_templates(query: str) -> List[TemplateChoice]:
 
 
 # =============================================================================
-# Bước 2 — EXTRACT (mỗi template 1 LLM call extract param + 1 LLM call extract date)
+# Bước 2 — EXTRACT (mỗi template 1 LLM call: params + thoi_diem_su_kien)
 # =============================================================================
-class _ThoiDiem(BaseModel):
-    thoi_diem_su_kien: str | None = Field(
-        default=None,
-        description=(
-            "Mốc thời gian sự kiện trong câu hỏi định dạng 'YYYY-MM-DD'. "
-            "Trả null nếu câu hỏi KHÔNG nêu mốc thời gian cụ thể."
-        ),
-    )
-
-
 _EXTRACT_SYS_PROMPT_BASE = (
     "Bạn là chuyên gia trích xuất tham số cho câu Cypher truy xuất luật pháp. "
     "Hãy đọc câu hỏi và điền chính xác các trường vào schema `{schema_name}`.\n\n"
@@ -187,7 +180,9 @@ _EXTRACT_SYS_PROMPT_BASE = (
     "4. KHÔNG bịa giá trị enum ngoài Literal đã liệt kê trong schema.\n"
     "5. Schema PhanLoaiTaiSanParams — câu đối chiếu/tranh chấp tài sản chung "
     "vs riêng: loai_tai_san='tat_ca' VÀ asset_keyword=null (không map 'trợ cấp', "
-    "'tiết kiệm', 'đất'... sang ID loại tài sản trong trường hợp đó)."
+    "'tiết kiệm', 'đất'... sang ID loại tài sản trong trường hợp đó).\n"
+    "6. `thoi_diem_su_kien`: mốc thời gian sự kiện 'YYYY-MM-DD' hoặc null nếu "
+    "câu hỏi không nêu ngày/tháng/năm cụ thể."
 )
 
 
@@ -195,33 +190,19 @@ async def _extract_template_params(
     query: str, template: CypherTemplate
 ) -> tuple[BaseModel, str | None]:
     """Trả về (params_pydantic_instance, target_date_str_or_None)."""
-    schema_name = template.params_schema.__name__
+    combined_schema = build_params_with_date_schema(template.params_schema)
+    schema_name = combined_schema.__name__
     sys_prompt = _EXTRACT_SYS_PROMPT_BASE.format(schema_name=schema_name)
     llm = build_llm(model=RETRIEVER_LLM, temperature=0)
+    struct_llm = llm.with_structured_output(combined_schema)
 
-    params_struct_llm = llm.with_structured_output(template.params_schema)
-    date_struct_llm = llm.with_structured_output(_ThoiDiem)
-
-    params_task = params_struct_llm.ainvoke(
+    raw = await struct_llm.ainvoke(
         [
             {"role": "system", "content": sys_prompt},
             {"role": "user", "content": f"Câu hỏi: {query}"},
         ]
     )
-    date_task = date_struct_llm.ainvoke(
-        [
-            {
-                "role": "system",
-                "content": (
-                    "Đọc câu hỏi và xác định mốc thời gian sự kiện (nếu có). "
-                    "Định dạng 'YYYY-MM-DD'. Trả null nếu không nêu."
-                ),
-            },
-            {"role": "user", "content": f"Câu hỏi: {query}"},
-        ]
-    )
-
-    params, date_obj = await asyncio.gather(params_task, date_task)
+    params, thoi_diem = split_params_and_date(raw, template.params_schema)
 
     # Safety-net: nếu LLM copy ngôn ngữ thông tục cho 'asset_keyword' /
     # 'tinh_huong_keyword' / loại_tai_san_dang_ky → resolve_term tự sửa.
@@ -234,7 +215,7 @@ async def _extract_template_params(
     # tính đối chiếu chung-riêng (vd "tài sản chung trả nợ riêng").
     params = _override_cross_cutting_nghia_vu(params, query)
 
-    return params, date_obj.thoi_diem_su_kien
+    return params, thoi_diem
 
 
 _FIELD_TO_MAPPING: dict[str, str] = {
