@@ -8,14 +8,12 @@
 
   const GROUP_LABELS = {
     can_cu_chinh: "Căn cứ chính",
-    huong_dan: "Hướng dẫn",
-    bo_tro: "Bổ trợ",
+    huong_dan: "Căn cứ hướng dẫn",
+    bo_tro: "Căn cứ bổ trợ",
     sap_hieu_luc: "Sắp hiệu lực",
     hien_hanh_doi_chieu: "Hiện hành đối chiếu",
-    semantic: "Ngữ nghĩa",
-    legal: "Pháp luật",
-    legal_ref: "Tham chiếu pháp luật",
-    mau_thuan: "Mâu thuẫn",
+    semantic: "Node ngữ nghĩa",
+    mau_thuan: "Căn cứ mâu thuẫn",
     default: "Khác",
   };
 

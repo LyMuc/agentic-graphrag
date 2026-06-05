@@ -27,11 +27,11 @@ _GROUP_COLORS = {
     "sap_hieu_luc": "#BD10E0",
     "hien_hanh_doi_chieu": "#50E3C2",
     "semantic": "#9013FE",
-    "legal_ref": "#417505",
-    "legal": "#2B4C7E",
     "mau_thuan": "#D0021B",
     "default": "#9B9B9B",
 }
+
+_DEPRECATED_GROUPS = frozenset({"legal_ref", "legal"})
 
 _BATCH_EDGE_CYPHER = """
 UNWIND $ids AS nid
@@ -63,6 +63,10 @@ def _primary_label(labels: list[str] | None) -> str:
     return labels[0]
 
 
+def _is_legal_labels(labels: list[str] | None) -> bool:
+    return bool(labels and set(labels) & _LEGAL_LABELS)
+
+
 def _infer_group(labels: list[str] | None, explicit: str | None = None) -> str:
     if explicit:
         return explicit
@@ -70,8 +74,13 @@ def _infer_group(labels: list[str] | None, explicit: str | None = None) -> str:
         return "default"
     label_set = set(labels)
     if label_set & _LEGAL_LABELS:
-        return "legal"
-    if "LoaiTaiSan" in label_set or "HanhVi" in label_set or "NghiaVu" in label_set:
+        return "bo_tro"
+    if (
+        "LoaiTaiSan" in label_set
+        or "HanhVi" in label_set
+        or "NghiaVu" in label_set
+        or "Quyen" in label_set
+    ):
         return "semantic"
     return "default"
 
@@ -79,13 +88,16 @@ def _infer_group(labels: list[str] | None, explicit: str | None = None) -> str:
 def _make_node(node_id: str, labels: list[str] | None = None, group: str | None = None) -> dict[str, Any]:
     primary = _primary_label(labels)
     grp = _infer_group(labels, group)
-    return {
+    node: dict[str, Any] = {
         "id": node_id,
         "label": primary,
         "group": grp,
         "caption": node_id,
         "color": _GROUP_COLORS.get(grp, _GROUP_COLORS["default"]),
     }
+    if labels:
+        node["_labels"] = labels
+    return node
 
 
 def _make_edge(src: str, dst: str, rel_type: str, edge_id: str | None = None) -> dict[str, Any]:
@@ -101,6 +113,7 @@ class _GraphBuilder:
     def __init__(self) -> None:
         self._nodes: dict[str, dict[str, Any]] = {}
         self._edges: dict[str, dict[str, Any]] = {}
+        self.pending_legal_edges: list[tuple[str, str, str]] = []
 
     def add_node(self, node_id: str | None, labels: list[str] | None = None, group: str | None = None) -> None:
         if not node_id:
@@ -108,9 +121,18 @@ class _GraphBuilder:
         nid = str(node_id)
         if nid not in self._nodes:
             self._nodes[nid] = _make_node(nid, labels, group)
-        elif group and self._nodes[nid].get("group") == "default":
-            self._nodes[nid]["group"] = group
-            self._nodes[nid]["color"] = _GROUP_COLORS.get(group, _GROUP_COLORS["default"])
+            return
+        existing = self._nodes[nid]
+        if labels:
+            if existing.get("label") == "Node":
+                existing["label"] = _primary_label(labels)
+            existing["_labels"] = labels
+        if group:
+            cur = existing.get("group")
+            if cur in ("default", "legal", "legal_ref", "bo_tro") and group not in _DEPRECATED_GROUPS:
+                if cur in ("default", "legal", "legal_ref") or group != "bo_tro":
+                    existing["group"] = group
+                    existing["color"] = _GROUP_COLORS.get(group, _GROUP_COLORS["default"])
 
     def add_edge(self, src: str | None, dst: str | None, rel_type: str) -> None:
         if not src or not dst or not rel_type:
@@ -121,15 +143,16 @@ class _GraphBuilder:
 
     def merge(self, other: "_GraphBuilder") -> None:
         for nid, node in other._nodes.items():
-            if nid not in self._nodes:
-                self._nodes[nid] = node
+            self.add_node(nid, labels=node.get("_labels"), group=node.get("group"))
         for eid, edge in other._edges.items():
             if eid not in self._edges:
                 self._edges[eid] = edge
+        self.pending_legal_edges.extend(other.pending_legal_edges)
 
     def to_dict(self) -> dict[str, list]:
+        nodes = [{k: v for k, v in n.items() if k != "_labels"} for n in self._nodes.values()]
         return {
-            "nodes": list(self._nodes.values()),
+            "nodes": nodes,
             "edges": list(self._edges.values()),
         }
 
@@ -287,18 +310,37 @@ def _fetch_neo4j_edges(legal_ids: list[str]) -> _GraphBuilder:
     return builder
 
 
+def _apply_pending_legal_edges(builder: _GraphBuilder) -> None:
+    """Chỉ thêm edge semantic→legal khi node đích đã có từ retrieval/context."""
+    for src, dst, rel in builder.pending_legal_edges:
+        if src in builder._nodes and dst in builder._nodes:
+            builder.add_edge(src, dst, rel)
+
+
 def _parse_viz_cypher_result(data: dict[str, Any]) -> _GraphBuilder:
     builder = _GraphBuilder()
     if "viz_graph" in data:
         graph = data["viz_graph"] or {}
+        legal_ids: set[str] = set()
         for raw in graph.get("nodes") or []:
             if raw and raw.get("id"):
                 labels = raw.get("labels")
-                group = "semantic" if labels and not set(labels) & _LEGAL_LABELS else "legal_ref"
-                builder.add_node(raw["id"], labels=labels, group=group)
+                if _is_legal_labels(labels):
+                    legal_ids.add(str(raw["id"]))
+                    continue
+                builder.add_node(raw["id"], labels=labels, group="semantic")
         for raw in graph.get("edges") or []:
-            if raw and raw.get("src") and raw.get("dst"):
-                builder.add_edge(raw["src"], raw["dst"], raw.get("type") or "RELATED")
+            if not raw or not raw.get("src") or not raw.get("dst"):
+                continue
+            src = str(raw["src"])
+            dst = str(raw["dst"])
+            rel = raw.get("type") or "RELATED"
+            if dst in legal_ids:
+                builder.pending_legal_edges.append((src, dst, rel))
+            elif src in legal_ids:
+                continue
+            else:
+                builder.add_edge(src, dst, rel)
         return builder
 
     triples = data.get("seed_trace") or []
@@ -310,13 +352,16 @@ def _parse_viz_cypher_result(data: dict[str, Any]) -> _GraphBuilder:
         rel = t.get("rel") or "RELATED"
         src_label = t.get("src_label")
         dst_label = t.get("dst_label")
-        src_group = "semantic" if src_label and src_label not in ("WHITELIST", "DieuLuat") else "legal_ref"
-        dst_group = "legal" if dst_label == "DieuLuat" else "semantic"
-        if src:
-            builder.add_node(src, labels=[src_label] if src_label else None, group=src_group)
-        if dst:
-            builder.add_node(dst, labels=[dst_label] if dst_label else None, group=dst_group)
-        builder.add_edge(src, dst, rel)
+        src_is_legal = src_label in _LEGAL_LABELS
+        dst_is_legal = dst_label in _LEGAL_LABELS
+        if not src_is_legal and src:
+            builder.add_node(src, labels=[src_label] if src_label else None, group="semantic")
+        if not dst_is_legal and dst and dst_label != "WHITELIST":
+            builder.add_node(dst, labels=[dst_label] if dst_label else None, group="semantic")
+        if dst_is_legal and src and dst:
+            builder.pending_legal_edges.append((str(src), str(dst), rel))
+        elif not src_is_legal:
+            builder.add_edge(src, dst, rel)
     return builder
 
 
@@ -349,6 +394,7 @@ def build_graph_payload(
     merged.merge(ctx_builder)
     merged.merge(neo4j_builder)
     merged.merge(semantic_builder)
+    _apply_pending_legal_edges(merged)
 
     graph = merged.to_dict()
     display_params = {
@@ -383,7 +429,13 @@ def merge_graph_payloads(payloads: list[dict[str, Any]], query: str = "") -> dic
         templates.append(payload.get("meta", {}).get("template", ""))
         temp = _GraphBuilder()
         for node in payload.get("nodes") or []:
-            temp.add_node(node["id"], group=node.get("group"))
+            label = node.get("label")
+            labels = (
+                [label]
+                if label and label != "Node"
+                else None
+            )
+            temp.add_node(node["id"], labels=labels, group=node.get("group"))
         for edge in payload.get("edges") or []:
             temp.add_edge(edge.get("from"), edge.get("to"), edge.get("label", "RELATED"))
         merged.merge(temp)
@@ -464,13 +516,30 @@ def materialize_viz_payload(stub: dict[str, Any]) -> dict[str, Any]:
     return merge_graph_payloads(payloads, query=query)
 
 
+def _normalize_graph_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    """Loại node/edge deprecated (legal_ref, legal) từ snapshot cũ."""
+    nodes = payload.get("nodes") or []
+    edges = payload.get("edges") or []
+    new_nodes = [n for n in nodes if n.get("group") not in _DEPRECATED_GROUPS]
+    valid_ids = {n["id"] for n in new_nodes if n.get("id")}
+    new_edges = [
+        e
+        for e in edges
+        if e.get("from") in valid_ids and e.get("to") in valid_ids
+    ]
+    meta = dict(payload.get("meta") or {})
+    meta["node_count"] = len(new_nodes)
+    meta["edge_count"] = len(new_edges)
+    return {**payload, "meta": meta, "nodes": new_nodes, "edges": new_edges}
+
+
 def resolve_viz_snapshot(viz_id: str) -> dict[str, Any] | None:
     """Load snapshot; materialize và cache nếu là lazy stub."""
     raw = load_snapshot(viz_id)
     if raw is None:
         return None
     if not raw.get("lazy"):
-        return raw
+        return _normalize_graph_payload(raw)
     try:
         payload = materialize_viz_payload(raw)
         update_snapshot(viz_id, payload)
