@@ -56,14 +56,10 @@ che_do_tai_san_cua_vo_chong_v3_description = {
     "function": {
         "name": "che_do_tai_san_cua_vo_chong_v3",
         "description": (
-            "Tra cứu các quy định về CHẾ ĐỘ TÀI SẢN CỦA VỢ CHỒNG (Điều 28-50 "
-            "Luật Hôn nhân & Gia đình 2014). Bao gồm: phân loại tài sản chung/"
-            "riêng, quyền định đoạt, đăng ký quyền sở hữu, nghĩa vụ tài sản, "
+            "Tra cứu các quy định về CHẾ ĐỘ TÀI SẢN CỦA VỢ CHỒNG "
+            "Bao gồm: phân loại tài sản chung/riêng, quyền định đoạt, đăng ký quyền sở hữu, nghĩa vụ tài sản,"
             "chia tài sản chung TRONG hôn nhân, thỏa thuận chế độ tài sản tiền "
-            "hôn nhân, tài sản riêng và nhà ở duy nhất. Dùng KG ngữ nghĩa mới "
-            "(8 template Cypher) để định tuyến chính xác.\n\n"
-            "KHÔNG dùng cho câu hỏi 'CHIA TÀI SẢN KHI LY HÔN' (Điều 59 — đó là "
-            "tool `chia_tai_san_sau_ly_hon_v3`)."
+            "hôn nhân, tài sản riêng và nhà ở duy nhất."
         ),
         "parameters": {
             "type": "object",

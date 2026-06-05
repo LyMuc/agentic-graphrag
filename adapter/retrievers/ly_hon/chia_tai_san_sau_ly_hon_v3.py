@@ -35,13 +35,9 @@ chia_tai_san_sau_ly_hon_v3_description = {
     "function": {
         "name": "chia_tai_san_sau_ly_hon_v3",
         "description": (
-            "Tra cứu các quy định về CHIA TÀI SẢN SAU LY HÔN (Điều 59-64 "
-            "Luật Hôn nhân & Gia đình 2014). Bao gồm: nguyên tắc chia tài sản, "
-            "tài sản cụ thể, nghĩa vụ với người thứ ba, quyền sử dụng đất, "
+            "Tra cứu các quy định về CHIA TÀI SẢN SAU LY HÔN"
+            "Bao gồm: nguyên tắc chia tài sản, tài sản cụ thể, nghĩa vụ với người thứ ba, quyền sử dụng đất,"
             "sống chung gia đình/lưu cư, tài sản chung đưa vào kinh doanh. "
-            "Dùng KG ngữ nghĩa mới (6 template Cypher).\n\n"
-            "KHÔNG dùng cho câu hỏi 'chế độ tài sản trong hôn nhân' (Đ28-50) "
-            "hay 'chia tài sản TRONG thời kỳ hôn nhân' (Đ38-42)."
         ),
         "parameters": {
             "type": "object",
