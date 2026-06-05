@@ -91,8 +91,7 @@
           const color = payload.nodes.find((n) => n.group === g)?.color || "#9B9B9B";
           return `<div class="legend-item"><span class="legend-dot" style="background:${color}"></span>${GROUP_LABELS[g] || g}</div>`;
         })
-        .join("") +
-      '<p class="legend-hint">Kéo node để sắp xếp lại — có thể kéo nhiều lần.</p>';
+        .join("");
   }
 
   function renderTable() {

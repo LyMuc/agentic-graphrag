@@ -317,6 +317,49 @@ def _apply_pending_legal_edges(builder: _GraphBuilder) -> None:
             builder.add_edge(src, dst, rel)
 
 
+def _prune_semantic_subgraph(builder: _GraphBuilder, leaf_seed_ids: list[str]) -> None:
+    """Giữ node semantic trên đường đi ngược từ leaf_seed_nodes hợp lệ."""
+    if not leaf_seed_ids:
+        return
+    semantic_ids = {
+        nid for nid, node in builder._nodes.items() if node.get("group") == "semantic"
+    }
+    allowed = {str(x) for x in leaf_seed_ids} & semantic_ids
+    if not allowed:
+        return
+
+    reverse_adj: dict[str, list[str]] = {nid: [] for nid in semantic_ids}
+    for edge in builder._edges.values():
+        src = edge.get("from")
+        dst = edge.get("to")
+        if src in semantic_ids and dst in semantic_ids and dst is not None and src is not None:
+            reverse_adj[str(dst)].append(str(src))
+
+    keep: set[str] = set()
+    queue = list(allowed)
+    while queue:
+        nid = queue.pop()
+        if nid in keep:
+            continue
+        keep.add(nid)
+        for parent in reverse_adj.get(nid, []):
+            if parent not in keep:
+                queue.append(parent)
+
+    remove = semantic_ids - keep
+    for nid in remove:
+        del builder._nodes[nid]
+    for eid in [
+        eid
+        for eid, edge in builder._edges.items()
+        if edge.get("from") in remove or edge.get("to") in remove
+    ]:
+        del builder._edges[eid]
+    builder.pending_legal_edges = [
+        (src, dst, rel) for src, dst, rel in builder.pending_legal_edges if src in keep
+    ]
+
+
 def _parse_viz_cypher_result(data: dict[str, Any]) -> _GraphBuilder:
     builder = _GraphBuilder()
     if "viz_graph" in data:
@@ -341,6 +384,8 @@ def _parse_viz_cypher_result(data: dict[str, Any]) -> _GraphBuilder:
                 continue
             else:
                 builder.add_edge(src, dst, rel)
+        leaf_seed_ids = graph.get("leaf_seed_ids") or []
+        _prune_semantic_subgraph(builder, leaf_seed_ids)
         return builder
 
     triples = data.get("seed_trace") or []

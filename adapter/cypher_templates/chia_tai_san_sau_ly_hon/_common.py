@@ -437,6 +437,28 @@ WITH
 RETURN {nodes: viz_nodes, edges: viz_edges} AS viz_graph
 """
 
+_SEMANTIC_VIZ_FROM_TRACE_TAIL = """
+WITH wl, seed_nodes, leaf_seed_nodes
+UNWIND [x IN seed_nodes WHERE x IS NOT NULL] AS n
+OPTIONAL MATCH (n)-[r]-(m)
+WHERE (m IN seed_nodes AND m IS NOT NULL) OR type(r) = 'CAN_CU_TAI'
+WITH wl, seed_nodes, leaf_seed_nodes, n, r, m
+WHERE r IS NOT NULL
+  AND startNode(r).id IS NOT NULL
+  AND endNode(r).id IS NOT NULL
+WITH wl, seed_nodes, leaf_seed_nodes,
+  [x IN collect(DISTINCT {id: n.id, labels: labels(n)})
+        + collect(DISTINCT CASE WHEN m IS NOT NULL THEN {id: m.id, labels: labels(m)} END)
+   WHERE x IS NOT NULL AND x.id IS NOT NULL | x] AS viz_nodes,
+  [e IN collect(DISTINCT {src: startNode(r).id, dst: endNode(r).id, type: type(r)})
+   WHERE e.src IS NOT NULL AND e.dst IS NOT NULL | e] AS viz_edges
+RETURN {
+  nodes: viz_nodes,
+  edges: viz_edges,
+  leaf_seed_ids: [x IN leaf_seed_nodes WHERE x IS NOT NULL | x.id]
+} AS viz_graph
+"""
+
 
 def assemble_semantic_viz(seed_block: str) -> str:
     """Build viz cypher từ seed block kết thúc ``WITH DISTINCT luat AS n_goc``."""
@@ -474,23 +496,22 @@ def assemble_semantic_viz_sn_luat(seed_block: str) -> str:
 def assemble_semantic_viz_from_trace_prefix(trace_prefix: str) -> str:
     """Build viz cypher từ phần đầu của trace (trước chuyển sang legal layer)."""
     body = trace_prefix.rstrip()
-    # Dual seed: viz chỉ cần seed_nodes (full), bỏ leaf_seed_nodes CASE.
     if "AS leaf_seed_nodes" in trace_prefix and "AS seed_nodes" in trace_prefix:
-        idx = trace_prefix.rfind("AS seed_nodes")
+        idx = trace_prefix.rfind("AS leaf_seed_nodes")
         if idx != -1:
-            body = trace_prefix[: idx + len("AS seed_nodes")].rstrip()
-    else:
-        markers = [
-            "\n\n" + SEMANTIC_TO_LEGAL_TAIL.strip().split("\n")[0],
-            "WITH wl, leaf_seed_nodes",
-            "WITH wl, seed_nodes",
-            "WITH wl, collect(DISTINCT {",
-            "OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat)\nWHERE luat IS NOT NULL\n\nWITH wl, collect",
-        ]
-        for marker in markers:
-            if marker in trace_prefix:
-                body = trace_prefix.rsplit(marker, 1)[0].rstrip()
-                break
+            body = trace_prefix[: idx + len("AS leaf_seed_nodes")].rstrip()
+        return body + "\n" + _SEMANTIC_VIZ_FROM_TRACE_TAIL
+    markers = [
+        "\n\n" + SEMANTIC_TO_LEGAL_TAIL.strip().split("\n")[0],
+        "WITH wl, leaf_seed_nodes",
+        "WITH wl, seed_nodes",
+        "WITH wl, collect(DISTINCT {",
+        "OPTIONAL MATCH (sn)-[:CAN_CU_TAI]->(luat)\nWHERE luat IS NOT NULL\n\nWITH wl, collect",
+    ]
+    for marker in markers:
+        if marker in trace_prefix:
+            body = trace_prefix.rsplit(marker, 1)[0].rstrip()
+            break
     return body + "\n" + _SEMANTIC_VIZ_TAIL.replace(
         "WITH collect(DISTINCT sn) AS seed_nodes",
         "WITH wl, seed_nodes\nUNWIND [x IN seed_nodes WHERE x IS NOT NULL] AS sn\nWITH collect(DISTINCT sn) AS seed_nodes",
