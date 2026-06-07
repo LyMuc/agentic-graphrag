@@ -8,7 +8,7 @@ sys.path.insert(0, str(ROOT))
 
 from adapter.retrievers._context_tho_common import (  # noqa: E402
     enhance_domain_retriever_cypher,
-    tham_chieu_ancestor_collect_parts_v3,
+    tham_chieu_ancestor_collect_parts,
 )
 from adapter.retrievers.ket_hon import dieu_kien_ket_hon  # noqa: E402
 from adapter.retrievers import quan_he_giua_cac_thanh_vien_khac_trong_gia_dinh as qh  # noqa: E402
@@ -70,11 +70,11 @@ def test_bo_tro_keeps_ancestor_headings() -> None:
     print("  [OK] bo_tro: giu heading Dieu + Khoan + Diem")
 
 
-def test_v3_collect_parts_non_empty() -> None:
-    parts = tham_chieu_ancestor_collect_parts_v3()
+def test_kg_collect_parts_non_empty() -> None:
+    parts = tham_chieu_ancestor_collect_parts()
     assert "dieu_cha_ltc" in parts
     assert "dieu_ong_ctt_hd" in parts
-    print("  [OK] v3 ancestor collect parts")
+    print("  [OK] KG ancestor collect parts")
 
 
 def main() -> None:
@@ -82,7 +82,7 @@ def main() -> None:
     test_enhance_simple_retriever()
     test_enhance_hd_retriever()
     test_bo_tro_keeps_ancestor_headings()
-    test_v3_collect_parts_non_empty()
+    test_kg_collect_parts_non_empty()
     print("\nAll passed.")
 
 

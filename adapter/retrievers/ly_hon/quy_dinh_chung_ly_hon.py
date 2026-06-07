@@ -11,7 +11,7 @@ quy_dinh_chung_ly_hon_description = {
     "type": "function",
     "function": {
         "name": "quy_dinh_chung_ly_hon",
-        "description": "Tra cứu các quy định chung về ly hôn bao gồm: quyền yêu cầu giải quyết ly hôn, thụ lý đơn, thuận tình ly hôn, ly hôn theo yêu cầu một bên (đơn phương ly hôn) và thời điểm chấm dứt hôn nhân.",
+        "description": "Tra cứu các quy định chung về ly hôn bao gồm: quyền yêu cầu giải quyết ly hôn, thụ lý đơn, thuận tình ly hôn, ly hôn theo yêu cầu một bên (đơn phương ly hôn) và thời điểm chấm dứt hôn nhân. Không dùng cho các câu hỏi liên quan đến tài sản, tiền vay, nợ sau ly hôn",
         "parameters": {
             "type": "object",
             "properties": {

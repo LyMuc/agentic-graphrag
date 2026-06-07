@@ -7,17 +7,17 @@ from datetime import date
 today = date.today()
 formatted_date = today.strftime("%Y-%m-%d")
 
-dai_dien_trach_nhiem_vo_chong_description = {
+che_do_tai_san_cua_vo_chong_description = {
     "type": "function",
     "function": {
-        "name": "dai_dien_trach_nhiem_vo_chong",
-        "description": "Tra cứu các quy định về đại diện giữa vợ và chồng (căn cứ xác lập đại diện, đại diện trong kinh doanh, đại diện khi giấy tờ tài sản chỉ ghi tên một người) và trách nhiệm liên đới của vợ chồng trong giao dịch dân sự, tài sản.",
+        "name": "che_do_tai_san_cua_vo_chong",
+        "description": "Tra cứu các quy định về chế độ tài sản của vợ chồng TRƯỚC VÀ TRONG THỜI KỲ HÔN NHÂN.",
         "parameters": {
             "type": "object",
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "Câu hỏi cụ thể của người dùng về đại diện hoặc trách nhiệm liên đới giữa vợ và chồng."
+                    "description": "Câu hỏi cụ thể của người dùng."
                 }
             },
             "required": ["query"],
@@ -25,20 +25,48 @@ dai_dien_trach_nhiem_vo_chong_description = {
     },
 }
 
-async def dai_dien_trach_nhiem_vo_chong(query: str):
+async def che_do_tai_san_cua_vo_chong(query: str):
     """
-    Tool xử lý các quy định về Đại diện và Trách nhiệm liên đới (Điều 24 - Điều 27).
+    Tool xử lý các quy định về chế độ tài sản của vợ chồng trước và trong thời kỳ hôn nhân.
     """
-    print(f"[Agent dai_dien_trach_nhiem_vo_chong] Đang xử lý: '{query}'...")
+    print(f"[Agent che_do_tai_san_cua_vo_chong] Đang xử lý: '{query}'...")
 
     # 1. Trích xuất ID và thời gian
     prompt_extract = """
-    Bạn là chuyên gia xác định căn cứ pháp lý. Đọc câu hỏi và chọn đúng các Điều luật phù hợp.
+    Bạn là chuyên gia xác định căn cứ pháp lý về chế độ tài sản của vợ chồng. Đọc câu hỏi và chọn đúng các Điều luật để trả lời cho câu hỏi của người dùng. Có thể cần phải chọn nhiều hơn 1 Điều luật nếu cần thiết.
+    Trước tiên, cần xác định xem câu hỏi liên quan đến chế độ tài sản theo luật định hay theo thỏa thuận, hay cả hai.
+    Với các câu hỏi có liên quan đến các giao dịch (mua, bán, tặng cho...) thì phải xác định rõ trong câu hỏi nêu đó là tài sản chung hay tài sản riêng. Nếu không xác định được, phải phân tích câu hỏi theo cả 2 hướng và chọn đủ các Điều luật liên quan đến cả 2 loại tài sản.
+    
     Chỉ được phép chọn từ danh sách:
-    - 'Luat_HNGD_2014_Dieu_24': Căn cứ xác lập đại diện giữa vợ và chồng.
-    - 'Luat_HNGD_2014_Dieu_25': Đại diện giữa vợ và chồng trong quan hệ kinh doanh.
-    - 'Luat_HNGD_2014_Dieu_26': Đại diện trong trường hợp Giấy chứng nhận tài sản chung chỉ ghi tên vợ hoặc chồng.
-    - 'Luat_HNGD_2014_Dieu_27': Trách nhiệm liên đới của vợ, chồng trong giao dịch dân sự, tài sản.
+    Các quy định chung về chế độ tài sản:
+    - 'Luat_HNGD_2014_Dieu_28': Áp dụng chế độ tài sản của vợ chồng (theo luật định hoặc theo thỏa thuận)
+    - 'Luat_HNGD_2014_Dieu_29': Nguyên tắc chung về chế độ tài sản của vợ chồng
+    - 'Luat_HNGD_2014_Dieu_30': Quyền, nghĩa vụ của vợ, chồng trong việc đáp ứng nhu cầu thiết yếu của gia đình
+    - 'Luat_HNGD_2014_Dieu_31': Giao dịch liên quan đến nhà là nơi ở duy nhất của vợ chồng
+    - 'Luat_HNGD_2014_Dieu_32': Giao dịch với người thứ ba ngay tình liên quan đến tài khoản ngân hàng, tài khoản chứng khoán và động sản khác mà theo quy định của pháp luật không phải đăng ký quyền sở hữu, quyền sử dụng
+
+    Chế độ tài sản theo luật định:
+    - 'Luat_HNGD_2014_Dieu_33': Tài sản chung của vợ chồng
+    - 'Luat_HNGD_2014_Dieu_34': Đăng ký quyền sở hữu, quyền sử dụng đối với tài sản chung
+    - 'Luat_HNGD_2014_Dieu_35': Chiếm hữu, sử dụng, định đoạt tài sản chung 
+    - 'Luat_HNGD_2014_Dieu_36': Tài sản chung được đưa vào kinh doanh
+    - 'Luat_HNGD_2014_Dieu_37': Nghĩa vụ chung về tài sản của vợ chồng
+    - 'Luat_HNGD_2014_Dieu_38': Chia tài sản chung trong thời kỳ hôn nhân
+    - 'Luat_HNGD_2014_Dieu_39': Thời điểm có hiệu lực của việc chia tài sản chung trong thời kỳ hôn nhân
+    - 'Luat_HNGD_2014_Dieu_40': Hậu quả của việc chia tài sản chung trong thời kỳ hôn nhân
+    - 'Luat_HNGD_2014_Dieu_41': Chấm dứt hiệu lực của việc chia tài sản chung trong thời kỳ hôn nhân
+    - 'Luat_HNGD_2014_Dieu_42': Chia tài sản chung trong thời kỳ hôn nhân bị vô hiệu
+    - 'Luat_HNGD_2014_Dieu_43': Tài sản riêng của vợ, chồng
+    - 'Luat_HNGD_2014_Dieu_44': Chiếm hữu, sử dụng, định đoạt tài sản riêng
+    - 'Luat_HNGD_2014_Dieu_45': Nghĩa vụ riêng về tài sản của vợ, chồng
+    - 'Luat_HNGD_2014_Dieu_46': Nhập tài sản riêng của vợ, chồng vào tài sản chung
+
+    Chế độ tài sản theo thỏa thuận:
+    - 'Luat_HNGD_2014_Dieu_47': Thỏa thuận xác lập chế độ tài sản của vợ chồng
+    - 'Luat_HNGD_2014_Dieu_48': Nội dung cơ bản của thỏa thuận về chế độ tài sản của vợ chồng
+    - 'Luat_HNGD_2014_Dieu_49': Sửa đổi, bổ sung nội dung của thỏa thuận về chế độ tài sản của vợ chồng
+    - 'Luat_HNGD_2014_Dieu_50': Các trường hợp thỏa thuận về chế độ tài sản của vợ chồng bị vô hiệu
+
     Trích xuất mốc thời gian sự kiện (nếu có) định dạng 'YYYY-MM-DD'. Nếu người dùng chỉ nêu năm (vd: 2023), trả về 'YYYY' hoặc 'YYYY-01-01'. Nếu không có, trả về null.
     """
     # Cấu hình Gemini (tạm comment):
@@ -51,7 +79,7 @@ async def dai_dien_trach_nhiem_vo_chong(query: str):
         target_ids = extraction.dieu_luat_ids
         target_date, is_user_provide_date = lay_target_date_tu_extraction(extraction.thoi_diem_su_kien, formatted_date)
     except:
-        target_ids, target_date, is_user_provide_date = ["Luat_HNGD_2014_Dieu_24", "Luat_HNGD_2014_Dieu_27"], formatted_date, False
+        target_ids, target_date, is_user_provide_date = ["Luat_HNGD_2014_Dieu_33", "Luat_HNGD_2014_Dieu_34", "Luat_HNGD_2014_Dieu_35", "Luat_HNGD_2014_Dieu_44"], formatted_date, False
 
     # 2. Truy vấn Neo4j
     cypher = """
@@ -109,6 +137,15 @@ async def dai_dien_trach_nhiem_vo_chong(query: str):
     WHERE chi_tiet_tham_chieu.ngay_co_hieu_luc <= $target_date
     AND (chi_tiet_tham_chieu.ngay_het_hieu_luc IS NULL OR chi_tiet_tham_chieu.ngay_het_hieu_luc > $target_date)
 
+     // 8. TÌM QUY ĐỊNH THAM CHIẾU TỪ VĂN BẢN HƯỚNG DẪN (Nghị định -> Luật khác)
+    OPTIONAL MATCH (chi_tiet_huong_dan)-[:THAM_CHIEU_DEN]->(luat_tham_chieu_tu_hd)
+    WHERE luat_tham_chieu_tu_hd.ngay_co_hieu_luc <= $target_date
+    AND (luat_tham_chieu_tu_hd.ngay_het_hieu_luc IS NULL OR luat_tham_chieu_tu_hd.ngay_het_hieu_luc > $target_date)
+
+    OPTIONAL MATCH (luat_tham_chieu_tu_hd)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_tc_tu_hd)
+    WHERE chi_tiet_tc_tu_hd.ngay_co_hieu_luc <= $target_date
+    AND (chi_tiet_tc_tu_hd.ngay_het_hieu_luc IS NULL OR chi_tiet_tc_tu_hd.ngay_het_hieu_luc > $target_date)
+
     RETURN {
         can_cu_chinh: collect(DISTINCT {
             id_goc_tu_router: n_goc.id,
@@ -156,6 +193,20 @@ async def dai_dien_trach_nhiem_vo_chong(query: str):
             cap_bac: chi_tiet_tham_chieu.cap_bac_phap_ly,
             ngay_hieu_luc: chi_tiet_tham_chieu.ngay_co_hieu_luc,
             ngay_het_hieu_luc: chi_tiet_tham_chieu.ngay_het_hieu_luc
+        })
+        // [CỘNG THÊM DỮ LIỆU THAM CHIẾU TỪ HƯỚNG DẪN VÀO ĐÂY]
+        + collect(DISTINCT {
+            id: luat_tham_chieu_tu_hd.id,
+            noidung: luat_tham_chieu_tu_hd.noidung,
+            cap_bac: luat_tham_chieu_tu_hd.cap_bac_phap_ly,
+            ngay_hieu_luc: luat_tham_chieu_tu_hd.ngay_co_hieu_luc,
+            ngay_het_hieu_luc: luat_tham_chieu_tu_hd.ngay_het_hieu_luc
+        }) + collect(DISTINCT {
+            id: chi_tiet_tc_tu_hd.id,
+            noidung: chi_tiet_tc_tu_hd.noidung,
+            cap_bac: chi_tiet_tc_tu_hd.cap_bac_phap_ly,
+            ngay_hieu_luc: chi_tiet_tc_tu_hd.ngay_co_hieu_luc,
+            ngay_het_hieu_luc: chi_tiet_tc_tu_hd.ngay_het_hieu_luc
         }),
         lien_ket_huong_dan: [pair IN collect(DISTINCT {
             id_huong_dan: coalesce(chi_tiet_huong_dan.id, huong_dan.id),
@@ -166,5 +217,5 @@ async def dai_dien_trach_nhiem_vo_chong(query: str):
     } AS Context_Tho
     """
     records, _, _ = driver.execute_query(enhance_domain_retriever_cypher(cypher), danh_sach_id=target_ids, target_date=target_date)
-
+    
     return chuan_hoa_ket_qua_retriever(records, target_date, is_user_provide_date)

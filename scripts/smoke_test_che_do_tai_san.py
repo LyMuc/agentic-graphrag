@@ -1,20 +1,20 @@
-"""Smoke test cho retriever che_do_tai_san_cua_vo_chong_v3.
+"""Smoke test cho retriever che_do_tai_san_cua_vo_chong.
 
 Mục tiêu:
-- Chạy v3 trên benchmark 28 câu (`test_v1_1705_che_do_tai_san_cua_vo_chong.json`).
+- Chạy retriever trên benchmark 28 câu (`test_v1_1705_che_do_tai_san_cua_vo_chong.json`).
 - Bỏ qua các câu có can_cu_phap_ly_chinh tham chiếu tới Điều 59 (Q27 — out of
   scope Đ28-50, đã được khẳng định trong plan).
-- Với mỗi câu, capture danh sách Điều-level IDs từ debug trace của v3 và so
+- Với mỗi câu, capture danh sách Điều-level IDs từ debug trace và so
   với `can_cu_phap_ly_chinh` của benchmark.
 - In bảng kết quả + precision/recall (theo Điều, không tính Khoản/Điểm con).
 
 Cách chạy:
-    python scripts/smoke_test_che_do_tai_san_v3.py
-    python scripts/smoke_test_che_do_tai_san_v3.py --max 5      # chỉ chạy 5 câu đầu
-    python scripts/smoke_test_che_do_tai_san_v3.py --question N # chạy đúng câu thứ N (0-indexed)
+    python scripts/smoke_test_che_do_tai_san.py
+    python scripts/smoke_test_che_do_tai_san.py --max 5      # chỉ chạy 5 câu đầu
+    python scripts/smoke_test_che_do_tai_san.py --question N # chạy đúng câu thứ N (0-indexed)
 
 Lưu ý: smoke test này KHÔNG cần ground truth chuẩn 100% — mục đích là sanity
-check rằng v3 không hoàn toàn miss target. Recall trung bình ≥ 0.6 là OK
+check rằng retriever không hoàn toàn miss target. Recall trung bình ≥ 0.6 là OK
 trong giai đoạn đầu.
 """
 from __future__ import annotations
@@ -30,7 +30,7 @@ from typing import Any
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from adapter.cypher_templates.tai_san import TAI_SAN_REGISTRY  # noqa: E402
-from adapter.retrievers.quan_he_giua_vo_va_chong.che_do_tai_san_cua_vo_chong_v3 import (  # noqa: E402
+from adapter.retrievers.quan_he_giua_vo_va_chong.che_do_tai_san_cua_vo_chong import (  # noqa: E402
     _classify_templates,
     _extract_template_params,
     _run_trace_sync,

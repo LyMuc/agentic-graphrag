@@ -1,6 +1,6 @@
 """Registry các Cypher template cho topic Tài sản (Điều 28-50 Luật HNGD 2014).
 
-Được dùng bởi `adapter/retrievers/quan_he_giua_vo_va_chong/che_do_tai_san_cua_vo_chong_v3.py`.
+Được dùng bởi `adapter/retrievers/quan_he_giua_vo_va_chong/che_do_tai_san_cua_vo_chong.py`.
 
 8 template chính sách (KG ngữ nghĩa mới, schema xem `docs/kg_che_do_tai_san_schema.md`):
     1. phan_loai_tai_san — xác định tài sản chung/riêng (Đ33, Đ43, Đ40).

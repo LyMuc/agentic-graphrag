@@ -1,0 +1,155 @@
+[
+  {
+    "overall": {
+      "cases_total": 68,
+      "cases_with_llm_candidates": 14,
+      "cases_pre_scored": 14,
+      "cases_policy_scored": 14,
+      "policy_intervention_rate": 0.3571,
+      "pre_policy": {
+        "cases": 14,
+        "cases_passed": 7,
+        "pass_rate": 0.5,
+        "avg_precision": 0.7619,
+        "avg_recall": 0.9643,
+        "avg_f1": 0.831,
+        "error_type_counts": {
+          "Thiếu": 1,
+          "Thừa": 7
+        }
+      },
+      "post_policy": {
+        "cases": 14,
+        "cases_passed": 11,
+        "pass_rate": 0.7857,
+        "avg_precision": 0.9405,
+        "avg_recall": 0.9643,
+        "avg_f1": 0.9381,
+        "error_type_counts": {
+          "Thiếu": 1,
+          "Thừa": 2
+        }
+      }
+    },
+    "by_case_type": {
+      "boi_canh_phap_ly": {
+        "pre_policy": {
+          "cases": 7,
+          "cases_passed": 3,
+          "pass_rate": 0.4286,
+          "avg_precision": 0.7381,
+          "avg_recall": 0.9286,
+          "avg_f1": 0.8048,
+          "error_type_counts": {
+            "Thiếu": 1,
+            "Thừa": 4
+          }
+        },
+        "post_policy": {
+          "cases": 7,
+          "cases_passed": 4,
+          "pass_rate": 0.5714,
+          "avg_precision": 0.881,
+          "avg_recall": 0.9286,
+          "avg_f1": 0.8762,
+          "error_type_counts": {
+            "Thiếu": 1,
+            "Thừa": 2
+          }
+        }
+      },
+      "cau_don": {
+        "pre_policy": {
+          "cases": 6,
+          "cases_passed": 4,
+          "pass_rate": 0.6667,
+          "avg_precision": 0.8333,
+          "avg_recall": 1.0,
+          "avg_f1": 0.8889,
+          "error_type_counts": {
+            "Thừa": 2
+          }
+        },
+        "post_policy": {
+          "cases": 6,
+          "cases_passed": 6,
+          "pass_rate": 1.0,
+          "avg_precision": 1.0,
+          "avg_recall": 1.0,
+          "avg_f1": 1.0,
+          "error_type_counts": {}
+        }
+      },
+      "nhieu_y": {
+        "pre_policy": {
+          "cases": 1,
+          "cases_passed": 0,
+          "pass_rate": 0.0,
+          "avg_precision": 0.5,
+          "avg_recall": 1.0,
+          "avg_f1": 0.6667,
+          "error_type_counts": {
+            "Thừa": 1
+          }
+        },
+        "post_policy": {
+          "cases": 1,
+          "cases_passed": 1,
+          "pass_rate": 1.0,
+          "avg_precision": 1.0,
+          "avg_recall": 1.0,
+          "avg_f1": 1.0,
+          "error_type_counts": {}
+        }
+      }
+    },
+    "by_primary_topic": {
+      "che_do_tai_san_cua_vo_chong": {
+        "pre_policy": {
+          "cases": 9,
+          "cases_passed": 2,
+          "pass_rate": 0.2222,
+          "avg_precision": 0.6296,
+          "avg_recall": 0.9444,
+          "avg_f1": 0.7371,
+          "error_type_counts": {
+            "Thiếu": 1,
+            "Thừa": 7
+          }
+        },
+        "post_policy": {
+          "cases": 9,
+          "cases_passed": 6,
+          "pass_rate": 0.6667,
+          "avg_precision": 0.9074,
+          "avg_recall": 0.9444,
+          "avg_f1": 0.9037,
+          "error_type_counts": {
+            "Thiếu": 1,
+            "Thừa": 2
+          }
+        }
+      },
+      "chia_tai_san_sau_ly_hon": {
+        "pre_policy": {
+          "cases": 5,
+          "cases_passed": 5,
+          "pass_rate": 1.0,
+          "avg_precision": 1.0,
+          "avg_recall": 1.0,
+          "avg_f1": 1.0,
+          "error_type_counts": {}
+        },
+        "post_policy": {
+          "cases": 5,
+          "cases_passed": 5,
+          "pass_rate": 1.0,
+          "avg_precision": 1.0,
+          "avg_recall": 1.0,
+          "avg_f1": 1.0,
+          "error_type_counts": {}
+        }
+      }
+    }
+  }
+]

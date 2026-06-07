@@ -10,11 +10,11 @@ _HIEN_HANH_NEW_SIMPLE = """    OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*
     WHERE hien_hanh.ngay_co_hieu_luc <= $target_date
     AND hien_hanh.ngay_het_hieu_luc IS NULL"""
 
-_HIEN_HANH_OLD_V3 = """OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(hien_hanh)
+_HIEN_HANH_OLD_KG = """OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(hien_hanh)
   WHERE hien_hanh.ngay_het_hieu_luc IS NULL
     AND hien_hanh.id <> chi_tiet_ap_dung.id"""
 
-_HIEN_HANH_NEW_V3 = """OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(hien_hanh)
+_HIEN_HANH_NEW_KG = """OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(hien_hanh)
   WHERE hien_hanh.ngay_co_hieu_luc <= $target_date
     AND hien_hanh.ngay_het_hieu_luc IS NULL
     AND hien_hanh.id <> chi_tiet_ap_dung.id"""
@@ -43,7 +43,7 @@ FUTURE_EFFECTIVE_MATCH_CYPHER = """
     WHERE bai_bo_sap.ngay_co_hieu_luc > $target_date
 """
 
-FUTURE_EFFECTIVE_MATCH_CYPHER_V3 = """
+FUTURE_EFFECTIVE_MATCH_CYPHER_KG = """
 // 8b. VĂN BẢN ĐÃ BAN HÀNH, CHƯA CÓ HIỆU LỰC
 OPTIONAL MATCH (chi_tiet_ap_dung)-[:DUOC_SUA_DOI_BOI]->(sua_doi_sap)
   WHERE sua_doi_sap.ngay_co_hieu_luc > $target_date
@@ -245,7 +245,7 @@ _MARKER_BO_TRO_HD_BEFORE_LIEN_KET = """            ngay_het_hieu_luc: chi_tiet_t
         lien_ket_huong_dan:"""
 
 
-def _bo_tro_collect_v3(node: str) -> str:
+def _bo_tro_collect_kg(node: str) -> str:
     return f"""  collect(DISTINCT {{
     id: {node}.id,
     noidung: {node}.noidung,
@@ -255,18 +255,18 @@ def _bo_tro_collect_v3(node: str) -> str:
   }})"""
 
 
-def tham_chieu_ancestor_collect_parts_v3() -> str:
-    """Các collect DISTINCT cho WITH V3 (gom vào tc_all)."""
+def tham_chieu_ancestor_collect_parts() -> str:
+    """Các collect DISTINCT cho WITH semantic KG (gom vào tc_all)."""
     parts = []
     for prefix in ("ltc", "ctt", "ltc_hd", "ctt_hd"):
         for role in ("dieu_cha", "khoan_cha", "dieu_ong"):
             var = f"{role}_{prefix}" if role != "dieu_ong" else f"dieu_ong_{prefix}"
-            parts.append(_bo_tro_collect_v3(var))
+            parts.append(_bo_tro_collect_kg(var))
     return "\n    + ".join(parts) if parts else ""
 
 
-def tham_chieu_ancestor_var_names_v3() -> list[str]:
-    """Tên biến heading cha từ THAM_CHIEU_ANCESTOR_MATCH_V3 — cần giữ trong WITH."""
+def tham_chieu_ancestor_var_names() -> list[str]:
+    """Tên biến heading cha từ THAM_CHIEU_ANCESTOR_MATCH_KG — cần giữ trong WITH."""
     names: list[str] = []
     for prefix in ("ltc", "ctt", "ltc_hd", "ctt_hd"):
         for role in ("dieu_cha", "khoan_cha", "dieu_ong"):
@@ -274,12 +274,12 @@ def tham_chieu_ancestor_var_names_v3() -> list[str]:
     return names
 
 
-def tham_chieu_ancestor_with_vars_v3() -> str:
-    """Snippet cột bổ sung cho WITH sau ancestor match (V3 templates)."""
-    return ", ".join(tham_chieu_ancestor_var_names_v3())
+def tham_chieu_ancestor_with_vars() -> str:
+    """Snippet cột bổ sung cho WITH sau ancestor match (semantic KG templates)."""
+    return ", ".join(tham_chieu_ancestor_var_names())
 
 
-THAM_CHIEU_ANCESTOR_MATCH_V3 = (
+THAM_CHIEU_ANCESTOR_MATCH_KG = (
     "\n// 7b-8b. Heading cha cho tham chiếu (đi ngược CO_KHOAN/CO_DIEM)"
     + _ancestor_match_for_seed("luat_tham_chieu", "ltc", indent="")
     + _ancestor_match_for_seed("chi_tiet_tham_chieu", "ctt", indent="")

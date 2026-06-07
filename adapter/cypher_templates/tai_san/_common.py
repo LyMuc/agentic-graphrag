@@ -20,10 +20,10 @@ trùng khi chúng đến từ seed Khoản/Điểm riêng lẻ khác.
 from __future__ import annotations
 
 from adapter.retrievers._context_tho_common import (
-    FUTURE_EFFECTIVE_MATCH_CYPHER_V3,
-    THAM_CHIEU_ANCESTOR_MATCH_V3,
-    tham_chieu_ancestor_collect_parts_v3,
-    tham_chieu_ancestor_with_vars_v3,
+    FUTURE_EFFECTIVE_MATCH_CYPHER_KG,
+    THAM_CHIEU_ANCESTOR_MATCH_KG,
+    tham_chieu_ancestor_collect_parts,
+    tham_chieu_ancestor_with_vars,
 )
 
 # Label Neo4j gắn trên node semantic thuộc topic chế độ tài sản vợ chồng.
@@ -164,13 +164,13 @@ OPTIONAL MATCH (luat_tham_chieu_tu_hd)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_tc_tu
   WHERE chi_tiet_tc_tu_hd.ngay_co_hieu_luc <= $target_date
     AND (chi_tiet_tc_tu_hd.ngay_het_hieu_luc IS NULL
          OR chi_tiet_tc_tu_hd.ngay_het_hieu_luc > $target_date)
-""" + THAM_CHIEU_ANCESTOR_MATCH_V3 + FUTURE_EFFECTIVE_MATCH_CYPHER_V3 + """
+""" + THAM_CHIEU_ANCESTOR_MATCH_KG + FUTURE_EFFECTIVE_MATCH_CYPHER_KG + """
 // 9. Dedup căn cứ chính + gom hướng dẫn/bổ trợ (một bucket)
 WITH n_goc, dieu_seed_ids, chi_tiet_ap_dung, van_ban_sua_doi,
      huong_dan, chi_tiet_huong_dan, luat_tham_chieu, chi_tiet_tham_chieu,
      luat_tham_chieu_tu_hd, chi_tiet_tc_tu_hd, hien_hanh,
      sua_doi_sap, hd_sap, chi_tiet_hd_sap, sua_hd_sap, thay_the_sap, chi_tiet_thay_the_sap, bai_bo_sap,
-     """ + tham_chieu_ancestor_with_vars_v3() + """
+     """ + tham_chieu_ancestor_with_vars() + """
 WHERE NOT any(did IN dieu_seed_ids
   WHERE chi_tiet_ap_dung.id <> did
     AND chi_tiet_ap_dung.id STARTS WITH did + '_'
@@ -219,7 +219,7 @@ WITH dieu_seed_ids,
     ngay_hieu_luc: chi_tiet_tc_tu_hd.ngay_co_hieu_luc,
     ngay_het_hieu_luc: chi_tiet_tc_tu_hd.ngay_het_hieu_luc
   }) AS tc_hd_chi_tiet_parts,
-  """ + tham_chieu_ancestor_collect_parts_v3() + """ AS tc_ancestor_parts,
+  """ + tham_chieu_ancestor_collect_parts() + """ AS tc_ancestor_parts,
   collect(DISTINCT hien_hanh.id) AS hien_hanh_ids,
   collect({
     provision_id: chi_tiet_ap_dung.id,

@@ -1,10 +1,13 @@
-"""So sánh route+extract 1-call vs legacy (classify + extract) cho retriever v3.
+"""So sánh route+extract 1-call vs legacy (classify + extract) cho semantic retriever.
 
 Usage:
-  python scripts/compare_v3_route_extract.py --topic chia_tai_san --limit 5
-  python scripts/compare_v3_route_extract.py --topic tai_san --limit 3 --dry-run
+  python scripts/compare_route_extract.py --topic chia_tai_san --limit 5
+  python scripts/compare_route_extract.py --topic tai_san --limit 3 --dry-run
 
 Cần OPENAI_API_KEY (hoặc env LLM tương đương) khi không dùng --dry-run.
+
+Env:
+  RETRIEVER_SINGLE_LLM_ROUTE=1 — gộp classify+extract một LLM call; =0 — hai bước riêng.
 """
 from __future__ import annotations
 
@@ -20,6 +23,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from adapter.cypher_templates.router_schema import build_route_extract_schema
+
+ENV_SINGLE_LLM_ROUTE = "RETRIEVER_SINGLE_LLM_ROUTE"
 
 
 def _load_questions(topic: str, limit: int) -> list[str]:
@@ -66,12 +71,12 @@ async def _run_topic(topic: str, limit: int, dry_run: bool) -> int:
         print(f"[dry-run] {topic}: schema={combined.__name__}, n={len(questions)}")
         return 0
 
-    os.environ["RETRIEVER_V3_SINGLE_LLM"] = "0"
+    os.environ[ENV_SINGLE_LLM_ROUTE] = "0"
     import importlib
 
     if topic == "chia_tai_san":
         mod = importlib.import_module(
-            "adapter.retrievers.ly_hon.chia_tai_san_sau_ly_hon_v3"
+            "adapter.retrievers.ly_hon.chia_tai_san_sau_ly_hon"
         )
         from adapter.cypher_templates.chia_tai_san_sau_ly_hon import (
             CHIA_TAI_SAN_SAU_LY_HON_REGISTRY,
@@ -88,7 +93,7 @@ async def _run_topic(topic: str, limit: int, dry_run: bool) -> int:
         empty_ok = False
     else:
         mod = importlib.import_module(
-            "adapter.retrievers.quan_he_giua_vo_va_chong.che_do_tai_san_cua_vo_chong_v3"
+            "adapter.retrievers.quan_he_giua_vo_va_chong.che_do_tai_san_cua_vo_chong"
         )
         from adapter.cypher_templates.tai_san import TAI_SAN_REGISTRY
 
@@ -110,7 +115,7 @@ async def _run_topic(topic: str, limit: int, dry_run: bool) -> int:
     for i, q in enumerate(questions, 1):
         print(f"\n--- [{i}/{len(questions)}] {q[:80]}...")
 
-        os.environ["RETRIEVER_V3_SINGLE_LLM"] = "0"
+        os.environ[ENV_SINGLE_LLM_ROUTE] = "0"
         importlib.reload(tr)
         t0 = time.perf_counter()
         legacy = await tr.route_and_extract(
@@ -127,7 +132,7 @@ async def _run_topic(topic: str, limit: int, dry_run: bool) -> int:
         )
         t_legacy = time.perf_counter() - t0
 
-        os.environ["RETRIEVER_V3_SINGLE_LLM"] = "1"
+        os.environ[ENV_SINGLE_LLM_ROUTE] = "1"
         importlib.reload(tr)
         t0 = time.perf_counter()
         single = await tr.route_and_extract(

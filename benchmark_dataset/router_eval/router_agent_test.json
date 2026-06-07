@@ -1,0 +1,1542 @@
+[
+  {
+    "id": "router_0314388441cb",
+    "question": "Xin cho hỏi: Tôi lấy chồng cách đây 05 năm,. sinh được 1 bé trai 02 tuổi, tôi chỉ ở nhà nội trợ, còn mọi chi phí trong gia đình đều do chồng tôi đi làm mà có. Nhưng giờ đây chúng tôi sống không hạnh phúc và định ly hôn. Vậy tôi có được chia tài sản không?",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "chia_tai_san_sau_ly_hon",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "llm_candidates": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "error_types": [
+      "Đúng"
+    ],
+    "missing": [],
+    "extra": [],
+    "actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "passed": true,
+    "final_tools": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_intervened": false,
+    "rejected_tools": {},
+    "policy_precision": 1.0,
+    "policy_recall": 1.0,
+    "policy_f1": 1.0,
+    "policy_error_types": [
+      "Đúng"
+    ],
+    "policy_missing": [],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_passed": true
+  },
+  {
+    "id": "router_07446b2d653e",
+    "question": "Quyền sử dụng đất của vợ chồng khi ly hôn sẽ được chia như thế nào?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "chia_tai_san_sau_ly_hon",
+    "expected_retrievers": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "llm_candidates": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "error_types": [
+      "Đúng"
+    ],
+    "missing": [],
+    "extra": [],
+    "actual_topic_keys": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "passed": true,
+    "final_tools": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_retrievers": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_intervened": false,
+    "rejected_tools": {},
+    "policy_precision": 1.0,
+    "policy_recall": 1.0,
+    "policy_f1": 1.0,
+    "policy_error_types": [
+      "Đúng"
+    ],
+    "policy_missing": [],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_passed": true
+  },
+  {
+    "id": "router_0c06d54ba581",
+    "question": "Vợ có được chia nhà đất mà chồng đứng tên nhà đất khi ly hôn không?",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "chia_tai_san_sau_ly_hon",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "llm_candidates": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "error_types": [
+      "Đúng"
+    ],
+    "missing": [],
+    "extra": [],
+    "actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "passed": true,
+    "final_tools": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_intervened": false,
+    "rejected_tools": {},
+    "policy_precision": 1.0,
+    "policy_recall": 1.0,
+    "policy_f1": 1.0,
+    "policy_error_types": [
+      "Đúng"
+    ],
+    "policy_missing": [],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_passed": true
+  },
+  {
+    "id": "router_0c11471b0b96",
+    "question": "Trong thời kỳ hôn nhân, chồng tôi có vay 30 triệu đồng. Nay vợ chồng tôi muốn ly hôn thì sau khi ly hôn tôi có phải chịu trách nhiệm về khoản nợ đó không? Tôi có phải cùng chồng chi trả 30 triệu đồng đó không? Vì khi chồng tôi vay thì tôi không sử dụng đồng nào trong đó cả. Mong Ban biên tập tư vấn giúp tôi\r\nThảo Hiếu - TPHCM",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "dai_dien_trach_nhiem_vo_chong"
+    ],
+    "llm_candidates": [
+      "che_do_tai_san_cua_vo_chong",
+      "dai_dien_trach_nhiem_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "precision": 0.6667,
+    "recall": 1.0,
+    "f1": 0.8,
+    "error_types": [
+      "Thừa"
+    ],
+    "missing": [],
+    "extra": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon",
+      "dai_dien_trach_nhiem_vo_chong"
+    ],
+    "passed": false,
+    "final_tools": [
+      "che_do_tai_san_cua_vo_chong",
+      "dai_dien_trach_nhiem_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "dai_dien_trach_nhiem_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_intervened": false,
+    "rejected_tools": {},
+    "policy_precision": 0.6667,
+    "policy_recall": 1.0,
+    "policy_f1": 0.8,
+    "policy_error_types": [
+      "Thừa"
+    ],
+    "policy_missing": [],
+    "policy_extra": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon",
+      "dai_dien_trach_nhiem_vo_chong"
+    ],
+    "policy_passed": false
+  },
+  {
+    "id": "router_0d689ba80cc7",
+    "question": "Do có quá nhiều mâu thuẫn nên tôi và chồng quyết định đi đến ly hôn, chúng tôi đã thỏa thuận về nuôi con chung cũng như tài sản chung, Quyết định thuận tình ly hôn đã có, và nay tôi biết một vấn đề là trước đó (trong thời kỳ hôn nhân) do kinh doanh có vấn đề nên chồng tôi có vay số tiền để lớn, nay không có khả năng chi trả, tôi không rõ là mình đã ly hôn thì có phải cùng chịu trách nhiệm chi trả khoản vay đó không?",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "dai_dien_trach_nhiem_vo_chong"
+    ],
+    "llm_candidates": [
+      "quy_dinh_chung_ly_hon",
+      "che_do_tai_san_cua_vo_chong",
+      "dai_dien_trach_nhiem_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "precision": 0.5,
+    "recall": 1.0,
+    "f1": 0.6667,
+    "error_types": [
+      "Thừa"
+    ],
+    "missing": [],
+    "extra": [
+      "chia_tai_san_sau_ly_hon",
+      "quy_dinh_chung_ly_hon"
+    ],
+    "actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon",
+      "dai_dien_trach_nhiem_vo_chong",
+      "quy_dinh_chung_ly_hon"
+    ],
+    "passed": false,
+    "final_tools": [
+      "quy_dinh_chung_ly_hon",
+      "che_do_tai_san_cua_vo_chong",
+      "dai_dien_trach_nhiem_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_retrievers": [
+      "quy_dinh_chung_ly_hon",
+      "che_do_tai_san_cua_vo_chong",
+      "dai_dien_trach_nhiem_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_intervened": false,
+    "rejected_tools": {},
+    "policy_precision": 0.5,
+    "policy_recall": 1.0,
+    "policy_f1": 0.6667,
+    "policy_error_types": [
+      "Thừa"
+    ],
+    "policy_missing": [],
+    "policy_extra": [
+      "chia_tai_san_sau_ly_hon",
+      "quy_dinh_chung_ly_hon"
+    ],
+    "policy_actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon",
+      "dai_dien_trach_nhiem_vo_chong",
+      "quy_dinh_chung_ly_hon"
+    ],
+    "policy_passed": false
+  },
+  {
+    "id": "router_12560fe10608",
+    "question": "Trong thời gian ly thân muốn chia tài sản chung thì có được không?",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "quy_dinh_chung_khai_niem_phap_ly"
+    ],
+    "llm_candidates": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1": 0.5,
+    "error_types": [
+      "Thiếu",
+      "Thừa"
+    ],
+    "missing": [
+      "quy_dinh_chung_khai_niem_phap_ly"
+    ],
+    "extra": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "passed": false,
+    "final_tools": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_intervened": true,
+    "rejected_tools": {
+      "chia_tai_san_sau_ly_hon": "No required/support trigger match."
+    },
+    "policy_precision": 1.0,
+    "policy_recall": 0.5,
+    "policy_f1": 0.6667,
+    "policy_error_types": [
+      "Thiếu"
+    ],
+    "policy_missing": [
+      "quy_dinh_chung_khai_niem_phap_ly"
+    ],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_passed": false
+  },
+  {
+    "id": "router_18fd76f5b935",
+    "question": "Quyền sử dụng đất là tài sản riêng thì ly hôn có phải chia đôi không?",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "chia_tai_san_sau_ly_hon",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "llm_candidates": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "error_types": [
+      "Đúng"
+    ],
+    "missing": [],
+    "extra": [],
+    "actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "passed": true,
+    "final_tools": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_intervened": false,
+    "rejected_tools": {},
+    "policy_precision": 1.0,
+    "policy_recall": 1.0,
+    "policy_f1": 1.0,
+    "policy_error_types": [
+      "Đúng"
+    ],
+    "policy_missing": [],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_passed": true
+  },
+  {
+    "id": "router_2dd2c436f028",
+    "question": "Việc chia tài sản trong trường hợp vợ chồng sống chung với gia đình mà ly hôn được giải quyết như thế nào?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "chia_tai_san_sau_ly_hon",
+    "expected_retrievers": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "llm_candidates": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "error_types": [
+      "Đúng"
+    ],
+    "missing": [],
+    "extra": [],
+    "actual_topic_keys": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "passed": true,
+    "final_tools": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_retrievers": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_intervened": false,
+    "rejected_tools": {},
+    "policy_precision": 1.0,
+    "policy_recall": 1.0,
+    "policy_f1": 1.0,
+    "policy_error_types": [
+      "Đúng"
+    ],
+    "policy_missing": [],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "policy_passed": true
+  },
+  {
+    "id": "router_00a70be8d185",
+    "question": "Mua nhà khi độc thân, giờ bán phải hỏi ý vợ?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [
+      "che_do_tai_san_cua_vo_chong",
+      "dai_dien_trach_nhiem_vo_chong"
+    ],
+    "precision": 0.5,
+    "recall": 1.0,
+    "f1": 0.6667,
+    "error_types": [
+      "Thừa"
+    ],
+    "missing": [],
+    "extra": [
+      "dai_dien_trach_nhiem_vo_chong"
+    ],
+    "actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "dai_dien_trach_nhiem_vo_chong"
+    ],
+    "passed": false,
+    "final_tools": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_intervened": true,
+    "rejected_tools": {
+      "dai_dien_trach_nhiem_vo_chong": "No required/support trigger match."
+    },
+    "policy_precision": 1.0,
+    "policy_recall": 1.0,
+    "policy_f1": 1.0,
+    "policy_error_types": [
+      "Đúng"
+    ],
+    "policy_missing": [],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_passed": true
+  },
+  {
+    "id": "router_020526a0185a",
+    "question": "Có được thỏa thuận xác lập chế độ tài sản của vợ chồng sau khi kết hôn không? Xin chào Ban biên tập, tôi là Duy Thành, tôi đang có nhu cầu tìm hiểu các quy định của pháp luật liên quan đến lĩnh vực hôn nhân và gia đình. Tôi đang có thắc mắc cần Ban biên tập giải đáp giúp tôi. Cho tôi hỏi, thỏa thuận xác lập chế độ tài sản của vợ chồng được quy định cụ thể ra sao? Có được thỏa thuận xác lập chế độ tài sản của vợ chồng sau khi kết hôn không? Tôi có thể tìm hiểu thông tin tại văn bản pháp luật nào? Mong nhận được sự phản hồi từ Ban biên tập. Xin chân thành cảm ơn!\r\nDuy Thành (duythanh*****@gmail.com)",
+    "source": "benchmark_grouped",
+    "case_type": "nhieu_y",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [
+      "che_do_tai_san_cua_vo_chong",
+      "quy_dinh_chung_khai_niem_phap_ly"
+    ],
+    "precision": 0.5,
+    "recall": 1.0,
+    "f1": 0.6667,
+    "error_types": [
+      "Thừa"
+    ],
+    "missing": [],
+    "extra": [
+      "quy_dinh_chung_khai_niem_phap_ly"
+    ],
+    "actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "quy_dinh_chung_khai_niem_phap_ly"
+    ],
+    "passed": false,
+    "final_tools": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_intervened": true,
+    "rejected_tools": {
+      "quy_dinh_chung_khai_niem_phap_ly": "No required/support trigger match."
+    },
+    "policy_precision": 1.0,
+    "policy_recall": 1.0,
+    "policy_f1": 1.0,
+    "policy_error_types": [
+      "Đúng"
+    ],
+    "policy_missing": [],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_passed": true
+  },
+  {
+    "id": "router_039790c1042f",
+    "question": "Chia tài sản chung trong thời kỳ hôn nhân bị vô hiệu trong trường hợp nào?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "error_types": [
+      "Đúng"
+    ],
+    "missing": [],
+    "extra": [],
+    "actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "passed": true,
+    "final_tools": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_intervened": false,
+    "rejected_tools": {},
+    "policy_precision": 1.0,
+    "policy_recall": 1.0,
+    "policy_f1": 1.0,
+    "policy_error_types": [
+      "Đúng"
+    ],
+    "policy_missing": [],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_passed": true
+  },
+  {
+    "id": "router_0a521091fc77",
+    "question": "Con có được can thiệp vào tài sản chung của bố mẹ khi ly hôn?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_1a4b003263a5",
+    "question": "Tài sản chung trong thời kì hôn nhân bao gồm những tài sản nào?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_41473843d399",
+    "question": "Tiền trúng số có phải là thu nhập hợp pháp trong thời kỳ hôn nhân hay không?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [
+      "che_do_tai_san_cua_vo_chong",
+      "quyen_nghia_vu_vo_chong"
+    ],
+    "precision": 0.5,
+    "recall": 1.0,
+    "f1": 0.6667,
+    "error_types": [
+      "Thừa"
+    ],
+    "missing": [],
+    "extra": [
+      "quyen_nghia_vu_vo_chong"
+    ],
+    "actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "quyen_nghia_vu_vo_chong"
+    ],
+    "passed": false,
+    "final_tools": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_intervened": true,
+    "rejected_tools": {
+      "quyen_nghia_vu_vo_chong": "No required/support trigger match."
+    },
+    "policy_precision": 1.0,
+    "policy_recall": 1.0,
+    "policy_f1": 1.0,
+    "policy_error_types": [
+      "Đúng"
+    ],
+    "policy_missing": [],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_passed": true
+  },
+  {
+    "id": "router_1b498c6118ba",
+    "question": "Có được thành lập hợp đồng để phân chia tài sản giữa vợ và chồng không?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_fb82ef6865d0",
+    "question": "Có được ly hôn chồng đang mất tích hay không?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "quy_dinh_chung_ly_hon",
+    "expected_retrievers": [
+      "quy_dinh_chung_ly_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_0c630e799058",
+    "question": "Vợ mới sinh con có được yêu cầu ly hôn không?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "quy_dinh_chung_ly_hon",
+    "expected_retrievers": [
+      "quy_dinh_chung_ly_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_08cdfd37ef7c",
+    "question": "Vợ có được giành lại quyền nuôi con sau khi đã ly hôn nhưng chồng mất không?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "cha_me_con_sau_ly_hon",
+    "expected_retrievers": [
+      "cha_me_con_sau_ly_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_1c552d7f353a",
+    "question": "Ông bà nội có được giành quyền nuôi cháu khi người cha đã mất không?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "cha_me_con_sau_ly_hon",
+    "expected_retrievers": [
+      "cha_me_con_sau_ly_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_3bb893788ef6",
+    "question": "Sau ly hôn, người trực tiếp nuôi con cản trở quyền thăm nom con của người không trực tiếp nuôi con thì bị phạt thế nào?",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "xu_phat_vi_pham",
+    "expected_retrievers": [
+      "cha_me_con_sau_ly_hon",
+      "xu_phat_vi_pham"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_3e8964a8d930",
+    "question": "Quyền nuôi con sau khi vợ chồng ly hôn được quy định như thế nào?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "cha_me_con_sau_ly_hon",
+    "expected_retrievers": [
+      "cha_me_con_sau_ly_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_380fb5b204d3",
+    "question": "Theo thường lệ thì khi ly hôn chồng sẽ là người cấp dưỡng cho vợ. Tuy nhiên đối với trường hợp của em thì lại khác, chồng em thì không có khả năng tài chính. Vậy Ban tư vấn cho em hỏi khi ly hôn vợ có phải cấp dưỡng cho chồng không? Mong sớm nhận được phản hồi từ Ban tư vấn. Chân thành cảm ơn!\nThùy Linh - Đồng Nai",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "cap_duong",
+    "expected_retrievers": [
+      "cap_duong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_6b775edb4aed",
+    "question": "Không đăng ký kết hôn người cha có nghĩa vụ cấp dưỡng cho con không?",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "cap_duong",
+    "expected_retrievers": [
+      "cap_duong",
+      "chung_song_nhu_vo_chong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_7277fe006c7a",
+    "question": "Mức cấp dưỡng mà người cha phải cấp dưỡng cho con khi không đăng ký kết hôn là bao nhiêu?",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "cap_duong",
+    "expected_retrievers": [
+      "cap_duong",
+      "chung_song_nhu_vo_chong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_05855d34b459",
+    "question": "Chưa được xóa án tích có được đăng ký kết hôn không?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "dieu_kien_ket_hon",
+    "expected_retrievers": [
+      "dieu_kien_ket_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_0871ac8292b9",
+    "question": "Cha dượng có được kết hôn với con riêng của vợ hay không?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "dieu_kien_ket_hon",
+    "expected_retrievers": [
+      "dieu_kien_ket_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_0874932cf91f",
+    "question": "Dạ, năm nay em 25 tuổi, có quen và muốn tiến tới hôn nhân với một bạn gái 23 tuổi. Do tín ngưỡng hai bên khác nhau nên ông bà nội không đồng ý, bố mẹ em thì ly hôn lâu rồi, em ở với ông bà nội. Bây giờ, nếu chúng em kết hôn có được không?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "dieu_kien_ket_hon",
+    "expected_retrievers": [
+      "dieu_kien_ket_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_00b59b5959d8",
+    "question": "Tôi và anh A lấy nhau nhưng do tôi có bầu trước nên dự định sau khi sinh con chúng tôi mới đăng ký kết hôn và tổ chức cưới hỏi. Nay con trai tôi đã được 6 tháng thì tôi được biết anh A đã có vợ và 2 con gái dưới quê. Vậy xin hỏi trường hợp của tôi có ra tòa ly hôn được không? Anh A phải có trách nhiệm gì với con tôi?",
+    "source": "benchmark_grouped",
+    "case_type": "nhieu_y",
+    "primary_topic": "ket_hon_trai_phap_luat",
+    "expected_retrievers": [
+      "cha_me_con_sau_ly_hon",
+      "ket_hon_trai_phap_luat"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_031101fdec91",
+    "question": "Kết hôn giả để nhập quốc tịch nước ngoài bị xử lý thế nào?",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "ket_hon_trai_phap_luat",
+    "expected_retrievers": [
+      "quy_dinh_chung_khai_niem_phap_ly",
+      "xu_phat_vi_pham"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_04e0b72a0d81",
+    "question": "Vợ chồng đi đăng ký kết hôn ở đâu?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "dang_ky_ket_hon",
+    "expected_retrievers": [
+      "dang_ky_ket_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_0261f41ef08a",
+    "question": "Đang có gia đình mà ngoại tình bị xử phạt như thế nào?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "xu_phat_vi_pham",
+    "expected_retrievers": [
+      "xu_phat_vi_pham"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_72a75860dd93",
+    "question": "Nam nữ sống với nhau như vợ chồng, không đăng ký kết hôn chia tài sản chung như thế nào?",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "chung_song_nhu_vo_chong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_20ab735082d1",
+    "question": "Trường hợp người nước ngoài thường trú tại Việt Nam ly hôn thì cơ quan tại Việt Nam có thẩm quyền giải quyết không?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "quan_he_hon_nhan_co_yeu_to_nuoc_ngoai",
+    "expected_retrievers": [
+      "quan_he_hon_nhan_co_yeu_to_nuoc_ngoai"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_8b748e53155a",
+    "question": "Thời kì hôn nhân là gì?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "quy_dinh_chung_khai_niem_phap_ly",
+    "expected_retrievers": [
+      "quy_dinh_chung_khai_niem_phap_ly"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_42d0cc410fff",
+    "question": "Khi ly hon, nha mua sau ket hon nhung chi chong dung ten so do co phai chia khong?",
+    "source": "synthetic",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "chia_tai_san_sau_ly_hon",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_ac161eb5bc01",
+    "question": "Vo chong sap ly hon, chong vay no de lam an trong thoi ky hon nhan thi vo co phai tra no chung khong?",
+    "source": "synthetic",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "chia_tai_san_sau_ly_hon",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_2d52529ab478",
+    "question": "Tai san mua truoc khi cuoi co bi chia khi ly hon khong?",
+    "source": "synthetic",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "chia_tai_san_sau_ly_hon",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_5d400ca7a516",
+    "question": "Khong dang ky ket hon nhung co con chung thi cha co nghia vu cap duong cho con khong?",
+    "source": "synthetic",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "cap_duong",
+    "expected_retrievers": [
+      "cap_duong",
+      "chung_song_nhu_vo_chong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_bcbbb7c4f2c7",
+    "question": "Song thu khong dang ky ket hon khi chia tay thi tai san duoc giai quyet the nao?",
+    "source": "synthetic",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "chung_song_nhu_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "chung_song_nhu_vo_chong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_e8704d41cdba",
+    "question": "Ngoai tinh voi nguoi da co gia dinh bi xu phat nhu the nao?",
+    "source": "synthetic",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "xu_phat_vi_pham",
+    "expected_retrievers": [
+      "quy_dinh_chung_khai_niem_phap_ly",
+      "xu_phat_vi_pham"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_2728ca21b4b0",
+    "question": "Ket hon can huyet bi phat tien hay truy cuu hinh su khong?",
+    "source": "synthetic",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "xu_phat_vi_pham",
+    "expected_retrievers": [
+      "quy_dinh_chung_khai_niem_phap_ly",
+      "xu_phat_vi_pham"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_71a7551ba2ec",
+    "question": "Nam 18 tuoi co duoc ket hon khong va cha me co quyen yeu cau huy ket hon trai phap luat khong?",
+    "source": "synthetic",
+    "case_type": "nhieu_y",
+    "primary_topic": "dieu_kien_ket_hon",
+    "expected_retrievers": [
+      "dieu_kien_ket_hon",
+      "ket_hon_trai_phap_luat"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_cd68770b79bf",
+    "question": "Dang ky ket hon voi nguoi nuoc ngoai tai Viet Nam can thu tuc gi?",
+    "source": "synthetic",
+    "case_type": "cau_don",
+    "primary_topic": "quan_he_hon_nhan_co_yeu_to_nuoc_ngoai",
+    "expected_retrievers": [
+      "quan_he_hon_nhan_co_yeu_to_nuoc_ngoai"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_fb828e9a9cad",
+    "question": "Ly hon voi chong la nguoi nuoc ngoai thi toa an Viet Nam co giai quyet khong?",
+    "source": "synthetic",
+    "case_type": "cau_don",
+    "primary_topic": "quan_he_hon_nhan_co_yeu_to_nuoc_ngoai",
+    "expected_retrievers": [
+      "quan_he_hon_nhan_co_yeu_to_nuoc_ngoai"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_626e6a516297",
+    "question": "Sau ly hon toi muon gianh quyen nuoi con va yeu cau chong cap duong hang thang thi can can cu nao?",
+    "source": "synthetic",
+    "case_type": "nhieu_y",
+    "primary_topic": "cha_me_con_sau_ly_hon",
+    "expected_retrievers": [
+      "cap_duong",
+      "cha_me_con_sau_ly_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_c7bea5f6ff4c",
+    "question": "Cha me nguoc dai con chua thanh nien thi co bi han che quyen lam cha me khong?",
+    "source": "synthetic",
+    "case_type": "cau_don",
+    "primary_topic": "han_che_quyen_cha_me_con_chua_thanh_nien",
+    "expected_retrievers": [
+      "han_che_quyen_cha_me_con_chua_thanh_nien"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_e74defc6b221",
+    "question": "Muon xac dinh cha cho con bang ADN thi can can cu nao?",
+    "source": "synthetic",
+    "case_type": "cau_don",
+    "primary_topic": "xac_dinh_cha_me_con",
+    "expected_retrievers": [
+      "xac_dinh_cha_me_con"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_f9b5bbe93cde",
+    "question": "Chau co nghia vu cap duong cho ong ba khong?",
+    "source": "synthetic",
+    "case_type": "cau_don",
+    "primary_topic": "cap_duong",
+    "expected_retrievers": [
+      "cap_duong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_1fb95893154c",
+    "question": "Vo chong giao dich ban nha la tai san chung nhung so do chi dung ten chong thi ai phai dong y?",
+    "source": "synthetic",
+    "case_type": "cau_don",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_416fdca62e57",
+    "question": "Tien trung so trong thoi ky hon nhan la tai san chung hay rieng?",
+    "source": "synthetic",
+    "case_type": "cau_don",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "error_types": [
+      "Đúng"
+    ],
+    "missing": [],
+    "extra": [],
+    "actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "passed": true,
+    "final_tools": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_intervened": false,
+    "rejected_tools": {},
+    "policy_precision": 1.0,
+    "policy_recall": 1.0,
+    "policy_f1": 1.0,
+    "policy_error_types": [
+      "Đúng"
+    ],
+    "policy_missing": [],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_passed": true
+  },
+  {
+    "id": "router_fbba42e5572e",
+    "question": "Khi bán đất là tài sản chung trong thời kì hôn nhân có cần sự đồng ý của cả vợ và chồng không?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_67847d8fec9d",
+    "question": "Chào anh chị. Em chuẩn bị kết hôn và muốn xác lập chế độ tài sản của hai vợ chồng rõ ràng, không có liên quan gì về vấn đề tài sản với nhau giữa hai người. Vậy việc lập thỏa thuận về chế độ tài sản phải làm thế nào ạ?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_c32aefe8f9e7",
+    "question": "Tôi tên Thúy Hằng sinh sống tại Vĩnh Long. Tôi và chồng kết hôn đã được 11 năm, có một con chung nay đã 8 tuổi. Trong 3 năm trở lại đây chồng tôi thường xuyên rượu chè, không lo làm ăn thậm chí thường xuyên đánh tôi, chuyện này hàng xóm ai cũng biết. Giờ tôi muốn ly hôn, nhưng chồng tôi thì không muốn. Vậy Ban biên tập cho tôi hỏi: Chồng bạo lực, vợ có được chia nhiều tài sản hơn khi ly hôn không? và có được quyền nuôi con không?",
+    "source": "benchmark_grouped",
+    "case_type": "nhieu_y",
+    "primary_topic": "chia_tai_san_sau_ly_hon",
+    "expected_retrievers": [
+      "cha_me_con_sau_ly_hon",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_e0f00085641c",
+    "question": "Chào luật sư! Vợ chồng tôi kết hôn năm 2011 hiện nay đã có 2 cháu. Cháu đầu 38 tháng và cháu thứ 2 mới được 4 tháng. Vì chồng tôi sa vào bài bạc và bỏ bê gia đình vợ con nên tôi muốn ly hôn. Trong thời kỳ hôn nhân anh ta có đánh đập chửi mắng tôi. Về tài sản có 1 sổ đỏ đứng tên 2 vợ chồng (do cha mẹ chồng chuyển nhượng); 4 chỉ vàng (2 chỉ do mẹ tôi tặng và 2 chỉ mẹ chồng tặng khi kết hôn); 3 xe máy gồm 2 xe đứng tên chồng và 1 xe đứng tên tôi. Cả 2 vợ chồng đều làm ruộng. Xin hỏi luật sư, khi ly hôn Tòa sẽ phân chia tài sản và quyền nuôi con như thế nào? Mong luật sư tư vấn giúp.",
+    "source": "benchmark_grouped",
+    "case_type": "nhieu_y",
+    "primary_topic": "chia_tai_san_sau_ly_hon",
+    "expected_retrievers": [
+      "cha_me_con_sau_ly_hon",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_0fb577ff6479",
+    "question": "Kính chào Luật Sư! Tôi đã có quyết định ly hôn vào cuối năm 2013. Trong quyết định bản án kết luận là Tài sản chung của vợ chồng sẽ do hai bên thỏa thuận và nuôi dưỡng con cái sẽ do 1 bên trợ cấp nuôi con. Nhưng đến nay, sau khi có bản án bên kia không cho tôi gặp con vì tôi không thể gặp mặt và liên hệ qua điện thọai được nên không thể thỏa thuận hình thức gửi tiền trợ cấp nuôi dưỡng con. Luật sư cho Tôi hỏi: 1.Khi tôi không thỏa thuận được phân chia tài sản thì nộp đơn nhờ tòa giải quyết xét xử vụ án trong thời gian bao lâu và phân chia như thế nào về tài sản chung (Giá trị tài sản khỏang hơn 1 tỷ đồng). Tôi và bên kia đều đứng đồng sở hữu tài sản nhà và đất. 2. Tôi không thể gặp con để thăm nom và nắm tình hình nuôi dưỡng con cái được đảm bảo hay không thì thôi phải làm thế nào? Bên kia lấy lý do tôi không nộp tiền trợ cấp để thưa ra tòa vậy vụ án đòi tiền trợ cấp nuôi con có liên quan gì với vụ án phân chia tài sản không? Tôi có quyền đề nghị thay đổi quyền nuôi con thì phải liên hệ ở đâu? Rất mong Luật sự hồi âm sớm. Trân trọng cảm ơn.",
+    "source": "benchmark_grouped",
+    "case_type": "nhieu_y",
+    "primary_topic": "chia_tai_san_sau_ly_hon",
+    "expected_retrievers": [
+      "cap_duong",
+      "cha_me_con_sau_ly_hon",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_a5e1e10fae0e",
+    "question": "Mẹ tôi làm thủ tục đăng ký kết hôn với cha tôi từ năm 1971, được chế độ cũ cấp giấy hôn thú tuy nhiên mẹ tôi đã làm mất giấy hôn thú đó. Năm 1996, cha tôi lấy người phụ nữ khác khi cha mẹ tôi vẫn chưa ly hôn, để được UBND xã cấp giấy chứng nhận đăng ký kết hôn, cha tôi đã thêm chữ đệm vào họ tên nhằm đánh lừa cán bộ xã. Cha tôi đã mất vào cuối năm 2011. Cho tôi hỏi mẹ tôi có quyền yêu cầu Tòa án xử hủy hôn nhân trái pháp luật của cha tôi với người vợ sau không? Trường hợp chia tài sản của cha tôi thì mẹ tôi có dược chia một nửa tài sản không? Người vợ sau của cha tôi có được chia hoặc được thừa kế tài sản của cha tôi không? Tôi xin cảm ơn!",
+    "source": "benchmark_grouped",
+    "case_type": "nhieu_y",
+    "primary_topic": "ket_hon_trai_phap_luat",
+    "expected_retrievers": [
+      "chia_tai_san_sau_ly_hon",
+      "ket_hon_trai_phap_luat"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_3f51639b032d",
+    "question": "Người bị tòa án tuyên bố đã chết mà trở về thì quan hệ hôn nhân trước đó có còn được pháp luật thừa nhận?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "hon_nhan_cham_dut_do_vo_chong_chet",
+    "expected_retrievers": [
+      "hon_nhan_cham_dut_do_vo_chong_chet"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_51371d63ae2b",
+    "question": "Đất hai vợ chồng cùng mua nhưng một bên chết thì có coi là tài sản riêng hay không?",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "hon_nhan_cham_dut_do_vo_chong_chet",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong",
+      "hon_nhan_cham_dut_do_vo_chong_chet"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_fbbd4f60a07b",
+    "question": "Cha mẹ có quyền và nghĩa vụ như thế nào đối với con?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "quyen_nghia_vu_cha_me_con",
+    "expected_retrievers": [
+      "quyen_nghia_vu_cha_me_con"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_34180f617e94",
+    "question": "Con ngoài giá thú có quyền và nghĩa vụ gì đối với cha mẹ?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "quyen_nghia_vu_cha_me_con",
+    "expected_retrievers": [
+      "quyen_nghia_vu_cha_me_con"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_1b0d532858bb",
+    "question": "Cha me co quyen quan ly va su dung tai san rieng cua con chua thanh nien theo luat hon nhan va gia dinh nhu the nao?",
+    "source": "synthetic",
+    "case_type": "cau_don",
+    "primary_topic": "tai_san_rieng_cua_con",
+    "expected_retrievers": [
+      "tai_san_rieng_cua_con"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_a1190a1b0bac",
+    "question": "Cong ty sa thai toi vi di lam muon 3 ngay lien tuc co vi pham luat lao dong khong?",
+    "source": "synthetic",
+    "case_type": "ngoai_pham_vi",
+    "primary_topic": "ngoai_pham_vi",
+    "expected_retrievers": [],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_0840d562bc7b",
+    "question": "Mua nha dat can chuan bi nhung giay to gi theo quy dinh hien hanh?",
+    "source": "synthetic",
+    "case_type": "ngoai_pham_vi",
+    "primary_topic": "ngoai_pham_vi",
+    "expected_retrievers": [],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_226c07e34238",
+    "question": "Bi lua dao chuyen tien qua mang bi truy cuu trach nhiem hinh su the nao?",
+    "source": "synthetic",
+    "case_type": "ngoai_pham_vi",
+    "primary_topic": "ngoai_pham_vi",
+    "expected_retrievers": [],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_6463537ba03f",
+    "question": "Nguoi lao dong duoc nghi phep nam bao nhieu ngay mot nam?",
+    "source": "synthetic",
+    "case_type": "ngoai_pham_vi",
+    "primary_topic": "ngoai_pham_vi",
+    "expected_retrievers": [],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_3609f5af06fc",
+    "question": "Thanh lap cong ty trach nhiem huu han mot thanh vien can nhung thu tuc gi?",
+    "source": "synthetic",
+    "case_type": "ngoai_pham_vi",
+    "primary_topic": "ngoai_pham_vi",
+    "expected_retrievers": [],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_0aebd6c1c30e",
+    "question": "Tai nan giao thong xe may khong co bang lai bi xu phat the nao?",
+    "source": "synthetic",
+    "case_type": "ngoai_pham_vi",
+    "primary_topic": "ngoai_pham_vi",
+    "expected_retrievers": [],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_0aebd6c1c30e",
+    "question": "Trúng xổ số có phải chia cho vợ không?",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "precision": 0.5,
+    "recall": 1.0,
+    "f1": 0.6667,
+    "error_types": [
+      "Thừa"
+    ],
+    "missing": [],
+    "extra": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "passed": false,
+    "final_tools": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_intervened": true,
+    "rejected_tools": {
+      "chia_tai_san_sau_ly_hon": "No required/support trigger match."
+    },
+    "policy_precision": 1.0,
+    "policy_recall": 1.0,
+    "policy_f1": 1.0,
+    "policy_error_types": [
+      "Đúng"
+    ],
+    "policy_missing": [],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_passed": true
+  }
+]

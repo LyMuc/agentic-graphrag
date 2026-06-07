@@ -7,17 +7,17 @@ from datetime import date
 today = date.today()
 formatted_date = today.strftime("%Y-%m-%d")
 
-dai_dien_trach_nhiem_vo_chong_description = {
+chia_tai_san_sau_ly_hon_description = {
     "type": "function",
     "function": {
-        "name": "dai_dien_trach_nhiem_vo_chong",
-        "description": "Tra cứu các quy định về đại diện giữa vợ và chồng (căn cứ xác lập đại diện, đại diện trong kinh doanh, đại diện khi giấy tờ tài sản chỉ ghi tên một người) và trách nhiệm liên đới của vợ chồng trong giao dịch dân sự, tài sản.",
+        "name": "chia_tai_san_sau_ly_hon",
+        "description": "Tra cứu các quy định về chia tài sản sau khi ly hôn: giải quyết, nguyên tắc trích chia tài sản, chia tài sản trong các trường hợp đặc biệt.",
         "parameters": {
             "type": "object",
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "Câu hỏi cụ thể của người dùng về đại diện hoặc trách nhiệm liên đới giữa vợ và chồng."
+                    "description": "Câu hỏi cụ thể của người dùng về việc chia tài sản, quyền lưu cư, chia tài sản chung của vợ chồng sau khi ly hôn."
                 }
             },
             "required": ["query"],
@@ -25,20 +25,23 @@ dai_dien_trach_nhiem_vo_chong_description = {
     },
 }
 
-async def dai_dien_trach_nhiem_vo_chong(query: str):
+async def chia_tai_san_sau_ly_hon(query: str):
     """
-    Tool xử lý các quy định về Đại diện và Trách nhiệm liên đới (Điều 24 - Điều 27).
+    Tool xử lý các quy định về chia tài sản sau ly hôn (Điều 59 - Điều 64).
     """
-    print(f"[Agent dai_dien_trach_nhiem_vo_chong] Đang xử lý: '{query}'...")
+    print(f"[Agent chia_tai_san_sau_ly_hon] Đang xử lý: '{query}'...")
 
     # 1. Trích xuất ID và thời gian
     prompt_extract = """
-    Bạn là chuyên gia xác định căn cứ pháp lý. Đọc câu hỏi và chọn đúng các Điều luật phù hợp.
+    Bạn là chuyên gia xác định căn cứ pháp lý. Đọc câu hỏi và chọn đúng các Điều luật phù hợp. Có thể cần phải chọn nhiều hơn 1 Điều luật nếu cần thiết.
     Chỉ được phép chọn từ danh sách:
-    - 'Luat_HNGD_2014_Dieu_24': Căn cứ xác lập đại diện giữa vợ và chồng.
-    - 'Luat_HNGD_2014_Dieu_25': Đại diện giữa vợ và chồng trong quan hệ kinh doanh.
-    - 'Luat_HNGD_2014_Dieu_26': Đại diện trong trường hợp Giấy chứng nhận tài sản chung chỉ ghi tên vợ hoặc chồng.
-    - 'Luat_HNGD_2014_Dieu_27': Trách nhiệm liên đới của vợ, chồng trong giao dịch dân sự, tài sản.
+    - 'Luat_HNGD_2014_Dieu_59': Nguyên tắc giải quyết tài sản của vợ chồng khi ly hôn (Trong trường hợp có và không có thỏa thuận)
+    - 'Luat_HNGD_2014_Dieu_60': Giải quyết quyền, nghĩa vụ tài sản của vợ chồng đối với người thứ ba khi ly hôn.
+    - 'Luat_HNGD_2014_Dieu_61': Chia tài sản trong trường hợp vợ chồng sống chung với gia đình.
+    - 'Luat_HNGD_2014_Dieu_62': Chia quyền sử dụng đất của vợ chồng khi ly hôn.
+    - 'Luat_HNGD_2014_Dieu_63': Quyền lưu cư của vợ hoặc chồng khi ly hôn.
+    - 'Luat_HNGD_2014_Dieu_64': Chia tài sản chung của vợ chồng đưa vào kinh doanh.
+    
     Trích xuất mốc thời gian sự kiện (nếu có) định dạng 'YYYY-MM-DD'. Nếu người dùng chỉ nêu năm (vd: 2023), trả về 'YYYY' hoặc 'YYYY-01-01'. Nếu không có, trả về null.
     """
     # Cấu hình Gemini (tạm comment):
@@ -51,7 +54,9 @@ async def dai_dien_trach_nhiem_vo_chong(query: str):
         target_ids = extraction.dieu_luat_ids
         target_date, is_user_provide_date = lay_target_date_tu_extraction(extraction.thoi_diem_su_kien, formatted_date)
     except:
-        target_ids, target_date, is_user_provide_date = ["Luat_HNGD_2014_Dieu_24", "Luat_HNGD_2014_Dieu_27"], formatted_date, False
+        target_ids, target_date, is_user_provide_date = [
+            "Luat_HNGD_2014_Dieu_59",
+        ], formatted_date, False
 
     # 2. Truy vấn Neo4j
     cypher = """
@@ -109,6 +114,15 @@ async def dai_dien_trach_nhiem_vo_chong(query: str):
     WHERE chi_tiet_tham_chieu.ngay_co_hieu_luc <= $target_date
     AND (chi_tiet_tham_chieu.ngay_het_hieu_luc IS NULL OR chi_tiet_tham_chieu.ngay_het_hieu_luc > $target_date)
 
+    // 8. TÌM QUY ĐỊNH THAM CHIẾU TỪ VĂN BẢN HƯỚNG DẪN (Nghị định -> Luật khác)
+    OPTIONAL MATCH (chi_tiet_huong_dan)-[:THAM_CHIEU_DEN]->(luat_tham_chieu_tu_hd)
+    WHERE luat_tham_chieu_tu_hd.ngay_co_hieu_luc <= $target_date
+    AND (luat_tham_chieu_tu_hd.ngay_het_hieu_luc IS NULL OR luat_tham_chieu_tu_hd.ngay_het_hieu_luc > $target_date)
+
+    OPTIONAL MATCH (luat_tham_chieu_tu_hd)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_tc_tu_hd)
+    WHERE chi_tiet_tc_tu_hd.ngay_co_hieu_luc <= $target_date
+    AND (chi_tiet_tc_tu_hd.ngay_het_hieu_luc IS NULL OR chi_tiet_tc_tu_hd.ngay_het_hieu_luc > $target_date)
+
     RETURN {
         can_cu_chinh: collect(DISTINCT {
             id_goc_tu_router: n_goc.id,
@@ -156,6 +170,19 @@ async def dai_dien_trach_nhiem_vo_chong(query: str):
             cap_bac: chi_tiet_tham_chieu.cap_bac_phap_ly,
             ngay_hieu_luc: chi_tiet_tham_chieu.ngay_co_hieu_luc,
             ngay_het_hieu_luc: chi_tiet_tham_chieu.ngay_het_hieu_luc
+        })
+        + collect(DISTINCT {
+            id: luat_tham_chieu_tu_hd.id,
+            noidung: luat_tham_chieu_tu_hd.noidung,
+            cap_bac: luat_tham_chieu_tu_hd.cap_bac_phap_ly,
+            ngay_hieu_luc: luat_tham_chieu_tu_hd.ngay_co_hieu_luc,
+            ngay_het_hieu_luc: luat_tham_chieu_tu_hd.ngay_het_hieu_luc
+        }) + collect(DISTINCT {
+            id: chi_tiet_tc_tu_hd.id,
+            noidung: chi_tiet_tc_tu_hd.noidung,
+            cap_bac: chi_tiet_tc_tu_hd.cap_bac_phap_ly,
+            ngay_hieu_luc: chi_tiet_tc_tu_hd.ngay_co_hieu_luc,
+            ngay_het_hieu_luc: chi_tiet_tc_tu_hd.ngay_het_hieu_luc
         }),
         lien_ket_huong_dan: [pair IN collect(DISTINCT {
             id_huong_dan: coalesce(chi_tiet_huong_dan.id, huong_dan.id),

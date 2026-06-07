@@ -36,7 +36,8 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 from adapter.config import chat_stream  # noqa: E402
-from application.router import tool_choice, tool_picker_prompt  # noqa: E402
+from application.router import _router_tool_descriptions, tool_choice, tool_picker_prompt  # noqa: E402
+from application.retriever_policy import evaluate_retriever_policy  # noqa: E402
 from scripts._common import (  # noqa: E402
     TEST_VERSIONS_DIR,
     backup_paths,
@@ -153,6 +154,29 @@ def unique_tool_calls(llm_tool_calls: list[dict[str, Any]]) -> list[dict[str, An
     return out
 
 
+def policy_tool_calls(
+    question: str,
+    llm_tool_calls: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    decision = evaluate_retriever_policy(
+        question,
+        [call["name"] for call in llm_tool_calls],
+    )
+    print("  policy final:", ", ".join(decision.final_tools) or "(none)")
+    for line in decision.audit:
+        print("   -", line)
+
+    by_name: dict[str, dict[str, Any]] = {}
+    for call in unique_tool_calls(llm_tool_calls):
+        name = call["name"]
+        by_name[name] = {**call, "name": name}
+
+    return [
+        by_name.get(tool_name, {"name": tool_name, "args": {}})
+        for tool_name in decision.final_tools
+    ]
+
+
 async def retrieve_context(question: str) -> list[Any]:
     llm_tool_calls = await tool_choice(
         [
@@ -162,9 +186,15 @@ async def retrieve_context(question: str) -> list[Any]:
                 "content": f"Câu hỏi của người dùng cần tìm công cụ để giải quyết: '{question}'",
             },
         ],
-        tools=[tool["description"] for tool in tools.values()],
+        tools=_router_tool_descriptions(tools),
     )
-    tool_calls = unique_tool_calls(llm_tool_calls)
+    tool_calls = policy_tool_calls(question, llm_tool_calls)
+    missing = [call["name"] for call in tool_calls if call["name"] not in tools]
+    if missing:
+        raise KeyError(
+            "RetrieverPolicy selected tool(s) not registered in tools: "
+            + ", ".join(sorted(set(missing)))
+        )
     print("  tools:", ", ".join(call["name"] for call in tool_calls) or "(none)")
     return list(await asyncio.gather(*(execute_tool_call(call, question) for call in tool_calls)))
 

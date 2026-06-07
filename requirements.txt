@@ -14,3 +14,4 @@ beautifulsoup4
 pandas
 fastapi
 uvicorn
+rapidfuzz>=3.0

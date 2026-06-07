@@ -7,7 +7,7 @@ from adapter import data_layer
 from chainlit import data as cl_data
 from adapter.config import chat_stream
 from application.query_updater import query_update
-from application.router import route_question
+from application.router import route_question_with_audit
 from adapter.graph_viz import collect_viz_links
 
 from adapter.retrievers.cap_duong import cap_duong, cap_duong_description
@@ -24,10 +24,6 @@ from adapter.retrievers.ket_hon.dieu_kien_ket_hon import dieu_kien_ket_hon, dieu
 from adapter.retrievers.ket_hon.ket_hon_trai_phap_luat import ket_hon_trai_phap_luat, ket_hon_trai_phap_luat_description
 from adapter.retrievers.ly_hon.cha_me_con_sau_ly_hon import cha_me_con_sau_ly_hon, cha_me_con_sau_ly_hon_description
 from adapter.retrievers.ly_hon.chia_tai_san_sau_ly_hon import chia_tai_san_sau_ly_hon, chia_tai_san_sau_ly_hon_description
-from adapter.retrievers.ly_hon.chia_tai_san_sau_ly_hon_v3 import (
-    chia_tai_san_sau_ly_hon_v3,
-    chia_tai_san_sau_ly_hon_v3_description,
-)
 from adapter.retrievers.ly_hon.quy_dinh_chung_ly_hon import quy_dinh_chung_ly_hon, quy_dinh_chung_ly_hon_description
 from adapter.retrievers.quan_he_giua_vo_va_chong.che_do_tai_san_cua_vo_chong import (
     che_do_tai_san_cua_vo_chong,
@@ -48,14 +44,6 @@ from adapter.retrievers.quan_he_hon_nhan_co_yeu_to_nuoc_ngoai import (
 from adapter.retrievers.quy_dinh_chung_khai_niem_phap_ly import (
     quy_dinh_chung_khai_niem_phap_ly,
     quy_dinh_chung_khai_niem_phap_ly_description,
-)
-# from adapter.retrievers.quan_he_giua_vo_va_chong.che_do_tai_san_cua_vo_chong_v2 import (
-#     che_do_tai_san_cua_vo_chong_v2,
-#     che_do_tai_san_cua_vo_chong_v2_description,
-# )
-from adapter.retrievers.quan_he_giua_vo_va_chong.che_do_tai_san_cua_vo_chong_v3 import (
-    che_do_tai_san_cua_vo_chong_v3,
-    che_do_tai_san_cua_vo_chong_v3_description,
 )
 from adapter.retrievers.han_che_quyen_cha_me_con_chua_thanh_nien import (
     han_che_quyen_cha_me_con_chua_thanh_nien,
@@ -133,13 +121,9 @@ tools = {
         "description": quy_dinh_chung_ly_hon_description,
         "function": quy_dinh_chung_ly_hon
     },
-    # "chia_tai_san_sau_ly_hon": {
-    #     "description": chia_tai_san_sau_ly_hon_description,
-    #     "function": chia_tai_san_sau_ly_hon
-    # },
-    "chia_tai_san_sau_ly_hon_v3": {
-        "description": chia_tai_san_sau_ly_hon_v3_description,
-        "function": chia_tai_san_sau_ly_hon_v3
+    "chia_tai_san_sau_ly_hon": {
+        "description": chia_tai_san_sau_ly_hon_description,
+        "function": chia_tai_san_sau_ly_hon
     },
     "cha_me_con_sau_ly_hon": {
         "description": cha_me_con_sau_ly_hon_description,
@@ -153,17 +137,9 @@ tools = {
         "description": dai_dien_trach_nhiem_vo_chong_description,
         "function": dai_dien_trach_nhiem_vo_chong
     },
-    # "che_do_tai_san_cua_vo_chong": {
-    #     "description": che_do_tai_san_cua_vo_chong_description,
-    #     "function": che_do_tai_san_cua_vo_chong
-    # },
-    # "che_do_tai_san_cua_vo_chong_v2": {
-    #     "description": che_do_tai_san_cua_vo_chong_v2_description,
-    #     "function": che_do_tai_san_cua_vo_chong_v2
-    # },
-    "che_do_tai_san_cua_vo_chong_v3": {
-        "description": che_do_tai_san_cua_vo_chong_v3_description,
-        "function": che_do_tai_san_cua_vo_chong_v3
+    "che_do_tai_san_cua_vo_chong": {
+        "description": che_do_tai_san_cua_vo_chong_description,
+        "function": che_do_tai_san_cua_vo_chong
     },
     "xu_phat_vi_pham": {
         "description": xu_phat_vi_pham_description,
@@ -491,8 +467,11 @@ async def main(message: cl.Message):
         # 2. Lấy dữ liệu lần 1
         async with cl.Step(name="Router Agent", type="tool") as step2:
             step2.input = f'Router Input: "{updated_question}"'
-            tool_response = await route_question(updated_question, tools, session_history)
-            step2.metadata = {"tool_response": tool_response}
+            tool_response, router_policy = await route_question_with_audit(updated_question, tools, session_history)
+            step2.metadata = {
+                "tool_response": tool_response,
+                "router_policy": router_policy.to_dict(),
+            }
             retriever_names = []
             # for res in tool_response:
             #     if isinstance(res, dict):
@@ -502,7 +481,7 @@ async def main(message: cl.Message):
             #         )
             #     else:
             #         retriever_names.append(f"- {str(res)}")
-            step2.output = "Retriever cuối cùng đã chạy xong."
+            step2.output = router_policy.audit_text() + "\n\nRetriever cuối cùng đã chạy xong."
         
         p_step.output = "Hoàn tất truy xuất ngữ cảnh pháp lý."
 
@@ -576,4 +555,3 @@ async def main(message: cl.Message):
     session_history.append({"role": "user", "content": input_text})
     session_history.append({"role": "assistant", "content": llm_response})
     cl.user_session.set("session_history", session_history)
-

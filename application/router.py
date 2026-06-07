@@ -1,6 +1,12 @@
-import asyncio
+from __future__ import annotations
 
-from adapter.config import build_router_llm, ROUTER_LLM
+import asyncio
+from typing import Any, Optional
+
+from adapter.config import ROUTER_LLM, build_router_llm
+from application.retriever_catalog import DIRECT_TOOLS
+from application.retriever_policy import PolicyDecision, evaluate_retriever_policy
+
 
 tool_picker_prompt = """
 Bạn là một hệ thống định tuyến (Router Agent) thông minh.
@@ -27,9 +33,22 @@ Ví dụ 2 (MỘT Ý HỎI nhưng CẦN NHIỀU BỐI CẢNH PHÁP LÝ):
 - Bối cảnh pháp lý: "Không đăng ký kết hôn" -> liên quan đến quy định về chung sống như vợ chồng -> Dùng công cụ `chung_song_nhu_vo_chong`
 - Nội dung chính: "nghĩa vụ cấp dưỡng cho con" -> Dùng công cụ `nghia_vu_cap_duong`
 => BẠN PHẢI GỌI CẢ 2 CÔNG CỤ NÀY để có đầy đủ căn cứ pháp lý cho câu trả lời.
+
+Ví dụ 3 (MỘT Ý HỎI nhưng CẦN NHIỀU BỐI CẢNH PHÁP LÝ):
+- Câu hỏi: "Vợ có được chia nhà đất mà chỉ chồng đứng tên khi ly hôn không?"
+- Bối cảnh pháp lý: Cần xác định việc chỉ một người đứng tên có làm nhà đất là tài sản riêng hay vẫn là tài sản chung -> Dùng công cụ `che_do_tai_san_cua_vo_chong`.
+- Nội dung chính: Hỏi tài sản đó có được chia và chia thế nào khi ly hôn -> Dùng công cụ `chia_tai_san_sau_ly_hon`.
+=> THƯỜNG PHẢI GỌI CẢ 2 CÔNG CỤ. Cách chọn này đặc biệt phù hợp khi câu hỏi có tình tiết về thời điểm tạo lập tài sản, nguồn tiền, người đứng tên, tặng cho hoặc thừa kế. Tuy nhiên, không phải mọi câu hỏi chia tài sản sau ly hôn đều bắt buộc gọi công cụ chế độ tài sản; nếu tính chất tài sản đã rõ và câu hỏi chỉ hỏi trực tiếp quy tắc chia thì có thể chỉ gọi `chia_tai_san_sau_ly_hon`.
+
+Ví dụ 4 (MỘT Ý HỎI nhưng CẦN NHIỀU BỐI CẢNH PHÁP LÝ):
+- Câu hỏi: "Trong thời kỳ hôn nhân chồng tôi vay tiền làm ăn; sau ly hôn tôi có phải cùng trả khoản nợ đó không?"
+- Bối cảnh pháp lý: Cần xác định khoản nợ/nghĩa vụ là chung hay riêng của vợ chồng và người vợ có trách nhiệm liên đới phải trả nợ hay không -> Dùng 2 công cụ `che_do_tai_san_cua_vo_chong` và `dai_dien_trach_nhiem_vo_chong`.
+- Nội dung chính: Hỏi người vợ SAU LY HÔN có vẫn phải chịu nghĩa vụ trả nợ hay không -> Dùng công cụ `chia_tai_san_sau_ly_hon`.
+=> THƯỜNG PHẢI GỌI CẢ 3 CÔNG CỤ NÀY.
 """
 
-def _tool_accepts_query(tools: dict[str, any], tool_name: str) -> bool:
+
+def _tool_accepts_query(tools: dict[str, Any], tool_name: str) -> bool:
     properties = (
         tools[tool_name]["description"]
         .get("function", {})
@@ -39,17 +58,89 @@ def _tool_accepts_query(tools: dict[str, any], tool_name: str) -> bool:
     return "query" in properties
 
 
-async def _execute_tool_call(tools: dict[str, any], tool_call: dict[str, any], updated_question):
+def _tool_call_name(tool_call: dict[str, Any]) -> str:
+    return str(tool_call.get("name", ""))
+
+
+def _unique_tool_calls(tool_calls: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    seen_tools: set[str] = set()
+    unique_tool_calls: list[dict[str, Any]] = []
+    for tool_call in tool_calls:
+        tool_name = _tool_call_name(tool_call)
+        if not tool_name or tool_name in seen_tools:
+            continue
+        seen_tools.add(tool_name)
+        unique_tool_calls.append(tool_call)
+    return unique_tool_calls
+
+
+def _build_policy_tool_calls(
+    llm_tool_calls: list[dict[str, Any]],
+    final_tools: list[str],
+) -> list[dict[str, Any]]:
+    """Build executable tool calls from policy output, giữ tên gốc từ router.
+
+    Args:
+        llm_tool_calls: Tool calls thô từ router LLM.
+        final_tools: Danh sách tên sau policy filter.
+
+    Returns:
+        Tool calls khớp final_tools, giữ nguyên args gốc nếu có.
+    """
+    by_name: dict[str, dict[str, Any]] = {}
+    for call in _unique_tool_calls(llm_tool_calls):
+        name = _tool_call_name(call)
+        by_name[name] = {**call, "name": name}
+
+    out: list[dict[str, Any]] = []
+    for tool_name in final_tools:
+        out.append(by_name.get(tool_name, {"name": tool_name, "args": {}}))
+    return out
+
+
+def _validate_registered_tools(tools: dict[str, Any], tool_calls: list[dict[str, Any]]) -> None:
+    missing = [
+        _tool_call_name(call)
+        for call in tool_calls
+        if _tool_call_name(call) not in tools
+    ]
+    if missing:
+        missing_list = ", ".join(sorted(set(missing)))
+        raise RuntimeError(
+            "RetrieverPolicy selected tool(s) that are not registered in tools: "
+            f"{missing_list}. Register the corresponding retriever(s) before routing."
+        )
+
+
+def _router_tool_descriptions(tools: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    """Expose retriever schemas synced from adapter descriptions."""
+
+    from application.router_tool_registry import router_tools_for_llm
+
+    _ = tools
+    return router_tools_for_llm()
+
+
+async def _execute_tool_call(
+    tools: dict[str, Any],
+    tool_call: dict[str, Any],
+    updated_question: str,
+) -> Any:
     import chainlit as cl
 
-    tool_name = tool_call["name"]
+    tool_name = _tool_call_name(tool_call)
+    if tool_name not in tools:
+        raise RuntimeError(
+            f"Tool '{tool_name}' is not registered. Register the retriever in tools."
+        )
+
     async with cl.Step(name=f"Retriever: {tool_name}") as step:
         function_to_call = tools[tool_name]["function"]
         function_args = dict(tool_call.get("args", {}))
         if updated_question and _tool_accepts_query(tools, tool_name):
             function_args["query"] = updated_question
 
-        step.input = f'Tool Input: {function_args}'
+        step.input = f"Tool Input: {function_args}"
         res = await function_to_call(**function_args)
         if isinstance(res, dict):
             res["retriever_name"] = tool_name
@@ -61,14 +152,14 @@ async def _execute_tool_call(tools: dict[str, any], tool_call: dict[str, any], u
                 step.output = (
                     "\n\n".join(res["contexts"])
                     if res["contexts"]
-                    else "Không tìm thấy context phù hợp."
+                    else "Khong tim thay context phu hop."
                 )
         elif isinstance(res, list):
             parts = [str(item) for item in res if item is not None]
             step.output = (
                 "\n\n".join(parts)
                 if parts
-                else "Không tìm thấy context phù hợp."
+                else "Khong tim thay context phu hop."
             )
         else:
             step.output = str(res)
@@ -76,20 +167,17 @@ async def _execute_tool_call(tools: dict[str, any], tool_call: dict[str, any], u
         return res
 
 
-async def handle_tool_calls(tools: dict[str, any], llm_tool_calls: list[dict[str, any]], updated_question):
-    if not llm_tool_calls:
+async def handle_tool_calls(
+    tools: dict[str, Any],
+    tool_calls: list[dict[str, Any]],
+    updated_question: str,
+) -> list[Any]:
+    if not tool_calls:
         return []
 
-    print("llm_tool_calls:", llm_tool_calls)
-
-    seen_tools = set()
-    unique_tool_calls = []
-    for tool_call in llm_tool_calls:
-        tool_name = tool_call["name"]
-        if tool_name in seen_tools:
-            continue
-        seen_tools.add(tool_name)
-        unique_tool_calls.append(tool_call)
+    unique_tool_calls = _unique_tool_calls(tool_calls)
+    _validate_registered_tools(tools, unique_tool_calls)
+    print("policy_tool_calls:", unique_tool_calls)
 
     return list(
         await asyncio.gather(
@@ -100,17 +188,72 @@ async def handle_tool_calls(tools: dict[str, any], llm_tool_calls: list[dict[str
         )
     )
 
-async def tool_choice(messages, temperature=0, tools=[], config={}, model=None):
-    # Cấu hình Gemini (tạm comment):
-    # res = await ainvoke_router_with_tools(messages, tools)
+
+def llm_candidate_names(tool_calls: list[dict[str, Any]]) -> list[str]:
+    """Tên retriever gốc từ router tool_calls (trước RetrieverPolicy).
+
+    Args:
+        tool_calls: Tool calls thô từ router LLM.
+
+    Returns:
+        Danh sách tên retriever không trùng, bỏ direct tools.
+    """
+    seen: set[str] = set()
+    out: list[str] = []
+    for call in _unique_tool_calls(tool_calls):
+        name = _tool_call_name(call)
+        if name in DIRECT_TOOLS:
+            continue
+        if name in seen:
+            continue
+        seen.add(name)
+        out.append(name)
+    return out
+
+
+async def llm_retriever_candidates(
+    question: str,
+    *,
+    tools_for_llm: Optional[list[dict[str, Any]]] = None,
+) -> list[dict[str, Any]]:
+    """Return raw tool_calls from Router LLM only — no policy, no retriever execution."""
+    return await tool_choice(
+        [
+            {"role": "system", "content": tool_picker_prompt},
+            {
+                "role": "user",
+                "content": (
+                    "Cau hoi cua nguoi dung can tim cong cu de giai quyet: "
+                    f"'{question}'"
+                ),
+            },
+        ],
+        tools=tools_for_llm,
+    )
+
+
+async def tool_choice(
+    messages: list[dict[str, str]],
+    temperature: float = 0,
+    tools: Optional[list[dict[str, Any]]] = None,
+    config: Optional[dict[str, Any]] = None,
+    model: Optional[str] = None,
+) -> list[dict[str, Any]]:
+    # temperature/config/model are kept for compatibility with existing scripts.
+    _ = (temperature, config, model)
     llm = build_router_llm()
-    llm_with_tools = llm.bind_tools(tools, tool_choice="any")
+    llm_with_tools = llm.bind_tools(tools or [], tool_choice="any")
     res = await llm_with_tools.ainvoke(messages)
     if not res.tool_calls:
         print(f"[Router] No tool_calls returned. model={ROUTER_LLM} content={res.content}")
     return res.tool_calls
 
-async def route_question(question: str, tools: dict[str, any], answers: list[dict[str, str]]):
+
+async def route_question_with_audit(
+    question: str,
+    tools: dict[str, Any],
+    answers: list[dict[str, str]],
+) -> tuple[list[Any], PolicyDecision]:
     llm_tool_calls = await tool_choice(
         [
             {
@@ -120,9 +263,29 @@ async def route_question(question: str, tools: dict[str, any], answers: list[dic
             *answers,
             {
                 "role": "user",
-                "content": f"Câu hỏi của người dùng cần tìm công cụ để giải quyết: '{question}'",
+                "content": (
+                    "Cau hoi cua nguoi dung can tim cong cu de giai quyet: "
+                    f"'{question}'"
+                ),
             },
         ],
-        tools=[tool["description"] for tool in tools.values()],
+        tools=_router_tool_descriptions(tools),
     )
-    return await handle_tool_calls(tools, llm_tool_calls, question)
+
+    llm_candidate_names = [_tool_call_name(call) for call in llm_tool_calls]
+    policy_decision = evaluate_retriever_policy(question, llm_candidate_names)
+    policy_tool_calls = _build_policy_tool_calls(
+        llm_tool_calls,
+        policy_decision.final_tools,
+    )
+    tool_response = await handle_tool_calls(tools, policy_tool_calls, question)
+    return tool_response, policy_decision
+
+
+async def route_question(
+    question: str,
+    tools: dict[str, Any],
+    answers: list[dict[str, str]],
+) -> list[Any]:
+    tool_response, _ = await route_question_with_audit(question, tools, answers)
+    return tool_response
