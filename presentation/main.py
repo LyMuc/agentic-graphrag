@@ -5,6 +5,7 @@ import chainlit as cl
 # Gọi data_layer để Chainlit thiết lập PostgreSQL connection lúc khởi động
 from adapter import data_layer 
 from chainlit import data as cl_data
+import presentation.projects_api  # noqa: F401
 from adapter.config import chat_stream
 from application.query_updater import query_update
 from application.router import route_question_with_audit

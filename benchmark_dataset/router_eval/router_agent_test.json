@@ -217,59 +217,52 @@
       "dai_dien_trach_nhiem_vo_chong"
     ],
     "llm_candidates": [
-      "quy_dinh_chung_ly_hon",
       "che_do_tai_san_cua_vo_chong",
       "dai_dien_trach_nhiem_vo_chong",
       "chia_tai_san_sau_ly_hon"
     ],
-    "precision": 0.5,
+    "precision": 0.6667,
     "recall": 1.0,
-    "f1": 0.6667,
+    "f1": 0.8,
     "error_types": [
       "Thừa"
     ],
     "missing": [],
     "extra": [
-      "chia_tai_san_sau_ly_hon",
-      "quy_dinh_chung_ly_hon"
+      "chia_tai_san_sau_ly_hon"
     ],
     "actual_topic_keys": [
       "che_do_tai_san_cua_vo_chong",
       "chia_tai_san_sau_ly_hon",
-      "dai_dien_trach_nhiem_vo_chong",
-      "quy_dinh_chung_ly_hon"
+      "dai_dien_trach_nhiem_vo_chong"
     ],
     "passed": false,
     "final_tools": [
-      "quy_dinh_chung_ly_hon",
       "che_do_tai_san_cua_vo_chong",
       "dai_dien_trach_nhiem_vo_chong",
       "chia_tai_san_sau_ly_hon"
     ],
     "policy_retrievers": [
-      "quy_dinh_chung_ly_hon",
       "che_do_tai_san_cua_vo_chong",
       "dai_dien_trach_nhiem_vo_chong",
       "chia_tai_san_sau_ly_hon"
     ],
     "policy_intervened": false,
     "rejected_tools": {},
-    "policy_precision": 0.5,
+    "policy_precision": 0.6667,
     "policy_recall": 1.0,
-    "policy_f1": 0.6667,
+    "policy_f1": 0.8,
     "policy_error_types": [
       "Thừa"
     ],
     "policy_missing": [],
     "policy_extra": [
-      "chia_tai_san_sau_ly_hon",
-      "quy_dinh_chung_ly_hon"
+      "chia_tai_san_sau_ly_hon"
     ],
     "policy_actual_topic_keys": [
       "che_do_tai_san_cua_vo_chong",
       "chia_tai_san_sau_ly_hon",
-      "dai_dien_trach_nhiem_vo_chong",
-      "quy_dinh_chung_ly_hon"
+      "dai_dien_trach_nhiem_vo_chong"
     ],
     "policy_passed": false
   },
@@ -574,34 +567,55 @@
     "policy_passed": true
   },
   {
-    "id": "router_0a521091fc77",
-    "question": "Con có được can thiệp vào tài sản chung của bố mẹ khi ly hôn?",
+    "id": "router_0aebd6c1c30e",
+    "question": "Trúng xổ số có phải chia cho vợ không?",
     "source": "benchmark_grouped",
-    "case_type": "cau_don",
+    "case_type": "boi_canh_phap_ly",
     "primary_topic": "che_do_tai_san_cua_vo_chong",
     "expected_retrievers": [
       "che_do_tai_san_cua_vo_chong"
     ],
-    "llm_candidates": [],
-    "precision": null,
-    "recall": null,
-    "f1": null,
-    "error_types": []
-  },
-  {
-    "id": "router_1a4b003263a5",
-    "question": "Tài sản chung trong thời kì hôn nhân bao gồm những tài sản nào?",
-    "source": "benchmark_grouped",
-    "case_type": "cau_don",
-    "primary_topic": "che_do_tai_san_cua_vo_chong",
-    "expected_retrievers": [
+    "llm_candidates": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "precision": 0.5,
+    "recall": 1.0,
+    "f1": 0.6667,
+    "error_types": [
+      "Thừa"
+    ],
+    "missing": [],
+    "extra": [
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
+    ],
+    "passed": false,
+    "final_tools": [
       "che_do_tai_san_cua_vo_chong"
     ],
-    "llm_candidates": [],
-    "precision": null,
-    "recall": null,
-    "f1": null,
-    "error_types": []
+    "policy_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_intervened": true,
+    "rejected_tools": {
+      "chia_tai_san_sau_ly_hon": "No required/support trigger match."
+    },
+    "policy_precision": 1.0,
+    "policy_recall": 1.0,
+    "policy_f1": 1.0,
+    "policy_error_types": [
+      "Đúng"
+    ],
+    "policy_missing": [],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "policy_passed": true
   },
   {
     "id": "router_41473843d399",
@@ -653,6 +667,36 @@
       "che_do_tai_san_cua_vo_chong"
     ],
     "policy_passed": true
+  },
+  {
+    "id": "router_0a521091fc77",
+    "question": "Con có được can thiệp vào tài sản chung của bố mẹ khi ly hôn?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_1a4b003263a5",
+    "question": "Tài sản chung trong thời kì hôn nhân bao gồm những tài sản nào?",
+    "source": "benchmark_grouped",
+    "case_type": "cau_don",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
   },
   {
     "id": "router_1b498c6118ba",
@@ -1487,56 +1531,5 @@
     "recall": null,
     "f1": null,
     "error_types": []
-  },
-  {
-    "id": "router_0aebd6c1c30e",
-    "question": "Trúng xổ số có phải chia cho vợ không?",
-    "source": "benchmark_grouped",
-    "case_type": "boi_canh_phap_ly",
-    "primary_topic": "che_do_tai_san_cua_vo_chong",
-    "expected_retrievers": [
-      "che_do_tai_san_cua_vo_chong"
-    ],
-    "llm_candidates": [
-      "che_do_tai_san_cua_vo_chong",
-      "chia_tai_san_sau_ly_hon"
-    ],
-    "precision": 0.5,
-    "recall": 1.0,
-    "f1": 0.6667,
-    "error_types": [
-      "Thừa"
-    ],
-    "missing": [],
-    "extra": [
-      "chia_tai_san_sau_ly_hon"
-    ],
-    "actual_topic_keys": [
-      "che_do_tai_san_cua_vo_chong",
-      "chia_tai_san_sau_ly_hon"
-    ],
-    "passed": false,
-    "final_tools": [
-      "che_do_tai_san_cua_vo_chong"
-    ],
-    "policy_retrievers": [
-      "che_do_tai_san_cua_vo_chong"
-    ],
-    "policy_intervened": true,
-    "rejected_tools": {
-      "chia_tai_san_sau_ly_hon": "No required/support trigger match."
-    },
-    "policy_precision": 1.0,
-    "policy_recall": 1.0,
-    "policy_f1": 1.0,
-    "policy_error_types": [
-      "Đúng"
-    ],
-    "policy_missing": [],
-    "policy_extra": [],
-    "policy_actual_topic_keys": [
-      "che_do_tai_san_cua_vo_chong"
-    ],
-    "policy_passed": true
   }
 ]

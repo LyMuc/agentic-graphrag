@@ -15,6 +15,7 @@ Trọng tâm hiện tại: **Luật Hôn nhân và Gia đình** và các văn b�
 - **Giao diện Chainlit**: Streaming câu trả lời, hiển thị từng bước (Router, Retriever, tổng hợp).
 - **Visualize đồ thị (V3)**: Sau mỗi câu trả lời từ retriever V3, link mở trang web riêng (Neo4j Browser-style) hiển thị node/quan hệ từ `Context_Tho` + lớp ngữ nghĩa.
 - **Lưu hội thoại**: PostgreSQL qua Chainlit Data Layer (thread, step, resume chat).
+- **Projects**: Nhóm nhiều thread theo từng người dùng ngay trong sidebar Chainlit.
 - **Đánh giá benchmark**: Bộ câu hỏi chuẩn, script điền đáp án chatbot và tính metric trích dẫn pháp lý.
 
 ---
@@ -152,6 +153,19 @@ Trong `adapter/config.py` có sẵn khối cấu hình **Gemini API trực tiế
 
 ```bash
 chainlit run presentation/main.py -w
+```
+
+### Build frontend Chainlit tùy biến
+
+Frontend được giữ theo baseline Chainlit `2.11.1` và chỉ mở rộng sidebar cho
+Projects. Bundle production được commit tại `public/chainlit-build`.
+
+```powershell
+cd frontend
+npx.cmd pnpm@9.15.9 install --frozen-lockfile
+npx.cmd pnpm@9.15.9 type-check
+npx.cmd pnpm@9.15.9 test
+npx.cmd pnpm@9.15.9 build
 ```
 
 - `-w`: auto-reload khi sửa code

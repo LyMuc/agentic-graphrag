@@ -5,7 +5,7 @@ neo4j
 PyMuPDF
 pydantic
 python-dotenv
-chainlit
+chainlit==2.11.1
 SQLAlchemy
 asyncpg
 psycopg2-binary
