@@ -7,26 +7,17 @@ from datetime import date
 today = date.today()
 formatted_date = today.strftime("%Y-%m-%d")
 
-xac_dinh_cha_me_con_description = {
+cap_duong_description = {
     "type": "function",
     "function": {
-        "name": "xac_dinh_cha_me_con",
-        "description": (
-            "Tra cứu quy định về xác định quan hệ cha mẹ con và quyền nhận cha, mẹ, con "
-            "thủ tục nhận/từ chối nhận cha mẹ con, con không nhận cha/mẹ, "
-            "làm thủ tục không nhận cha. "
-            "KHÔNG dùng cho mang thai hộ hay quyền nghĩa vụ cha mẹ–con chung (dùng quyen_nghia_vu_cha_me_con). "
-            "KHÔNG dùng cho thăm nom/gặp con sau ly hôn (dùng cha_me_con_sau_ly_hon)."
-        ),
+        "name": "cap_duong",
+        "description": "Tool xử lý các quy định về cấp dưỡng.",
         "parameters": {
             "type": "object",
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": (
-                        "Câu hỏi về xác định cha, mẹ, con; quyền nhận cha/mẹ/con; "
-                        "con không nhận cha/mẹ; thủ tục từ chối quan hệ cha mẹ con."
-                    )
+                    "description": "Câu hỏi cụ thể của người dùng."
                 }
             },
             "required": ["query"],
@@ -34,26 +25,30 @@ xac_dinh_cha_me_con_description = {
     },
 }
 
-async def xac_dinh_cha_me_con(query: str):
+async def cap_duong(query: str):
     """
-    Tool xử lý các quy định về xác định cha, mẹ, con (Điều 88 - Điều 93, Điều 99, Điều 101 - Điều 102).
+    Tool xử lý các quy định về cấp dưỡng.
     """
-    print(f"[Agent xac_dinh_cha_me_con] Đang xử lý: '{query}'...")
+    print(f"[Agent cap_duong] Đang xử lý: '{query}'...")
 
     # 1. Trích xuất ID và thời gian
     prompt_extract = """
-    Bạn là chuyên gia xác định căn cứ pháp lý. Đọc câu hỏi và chọn đúng các Điều luật phù hợp. Có thể cần phải chọn nhiều hơn 1 Điều luật nếu cần thiết.
+    Bạn là chuyên gia xác định căn cứ pháp lý. Đọc câu hỏi và chọn đúng các Điều luật để trả lời cho câu hỏi của người dùng. Có thể cần phải chọn nhiều hơn 1 Điều luật nếu cần thiết.
     Chỉ được phép chọn từ danh sách:
-    - 'Luat_HNGD_2014_Dieu_88': Xác định cha, mẹ.
-    - 'Luat_HNGD_2014_Dieu_89': Xác định con.
-    - 'Luat_HNGD_2014_Dieu_90': Quyền nhận cha, mẹ.
-    - 'Luat_HNGD_2014_Dieu_91': Quyền nhận con.
-    - 'Luat_HNGD_2014_Dieu_92': Xác định cha, mẹ, con trong trường hợp người có yêu cầu chết.
-    - 'Luat_HNGD_2014_Dieu_93': Xác định cha, mẹ trong trường hợp sinh con bằng kỹ thuật hỗ trợ sinh sản.
-    - 'Luat_HNGD_2014_Dieu_99': Giải quyết tranh chấp liên quan đến việc sinh con bằng kỹ thuật hỗ trợ sinh sản, mang thai hộ vì mục đích nhân đạo.
-    - 'Luat_HNGD_2014_Dieu_101': Thẩm quyền giải quyết việc xác định cha, mẹ, con.
-    - 'Luat_HNGD_2014_Dieu_102': Người có quyền yêu cầu xác định cha, mẹ, con.
-    
+    - 'Luat_HNGD_2014_Dieu_107': Nghĩa vụ cấp dưỡng (nghĩa vụ cấp dưỡng được thực hiện giữa ai, nếu trốn nghĩa vụ thì sao)
+    - 'Luat_HNGD_2014_Dieu_108': Một người cấp dưỡng cho nhiều người.
+    - 'Luat_HNGD_2014_Dieu_109': Nhiều người cùng cấp dưỡng cho một người hoặc cho nhiều người.
+    - 'Luat_HNGD_2014_Dieu_110': Nghĩa vụ cấp dưỡng của cha, mẹ đối với con.
+    - 'Luat_HNGD_2014_Dieu_111': Nghĩa vụ cấp dưỡng của con đối với cha, mẹ.
+    - 'Luat_HNGD_2014_Dieu_112': Nghĩa vụ cấp dưỡng giữa anh, chị, em.
+    - 'Luat_HNGD_2014_Dieu_113': Nghĩa vụ cấp dưỡng giữa ông bà nội, ông bà ngoại và cháu.
+    - 'Luat_HNGD_2014_Dieu_114': Nghĩa vụ cấp dưỡng giữa cô, dì, chú, cậu, bác ruột và cháu ruột.
+    - 'Luat_HNGD_2014_Dieu_115': Nghĩa vụ cấp dưỡng giữa vợ và chồng khi ly hôn.
+    - 'Luat_HNGD_2014_Dieu_116': Mức cấp dưỡng.
+    - 'Luat_HNGD_2014_Dieu_117': Phương thức cấp dưỡng.
+    - 'Luat_HNGD_2014_Dieu_118': Chấm dứt nghĩa vụ cấp dưỡng.
+    - 'Luat_HNGD_2014_Dieu_119': Người có quyền yêu cầu thực hiện nghĩa vụ cấp dưỡng.
+    - 'Luat_HNGD_2014_Dieu_120': Khuyến khích việc trợ giúp của tổ chức, cá nhân. 
     Trích xuất mốc thời gian sự kiện (nếu có) định dạng 'YYYY-MM-DD'. Nếu người dùng chỉ nêu năm (vd: 2023), trả về 'YYYY' hoặc 'YYYY-01-01'. Nếu không có, trả về null.
     """
     # Cấu hình Gemini (tạm comment):
@@ -66,17 +61,7 @@ async def xac_dinh_cha_me_con(query: str):
         target_ids = extraction.dieu_luat_ids
         target_date, is_user_provide_date = lay_target_date_tu_extraction(extraction.thoi_diem_su_kien, formatted_date)
     except:
-        target_ids, target_date, is_user_provide_date = [
-            "Luat_HNGD_2014_Dieu_88",
-            "Luat_HNGD_2014_Dieu_89",
-            "Luat_HNGD_2014_Dieu_90",
-            "Luat_HNGD_2014_Dieu_91",
-            "Luat_HNGD_2014_Dieu_92",
-            "Luat_HNGD_2014_Dieu_93",
-            "Luat_HNGD_2014_Dieu_99",
-            "Luat_HNGD_2014_Dieu_101",
-            "Luat_HNGD_2014_Dieu_102",
-        ], formatted_date, False
+        target_ids, target_date, is_user_provide_date = ["Luat_HNGD_2014_Dieu_107"], formatted_date, False
 
     # 2. Truy vấn Neo4j
     cypher = """
@@ -134,15 +119,6 @@ async def xac_dinh_cha_me_con(query: str):
     WHERE chi_tiet_tham_chieu.ngay_co_hieu_luc <= $target_date
     AND (chi_tiet_tham_chieu.ngay_het_hieu_luc IS NULL OR chi_tiet_tham_chieu.ngay_het_hieu_luc > $target_date)
 
-    // 8. TÌM QUY ĐỊNH THAM CHIẾU TỪ VĂN BẢN HƯỚNG DẪN (Nghị định -> Luật khác)
-    OPTIONAL MATCH (chi_tiet_huong_dan)-[:THAM_CHIEU_DEN]->(luat_tham_chieu_tu_hd)
-    WHERE luat_tham_chieu_tu_hd.ngay_co_hieu_luc <= $target_date
-    AND (luat_tham_chieu_tu_hd.ngay_het_hieu_luc IS NULL OR luat_tham_chieu_tu_hd.ngay_het_hieu_luc > $target_date)
-
-    OPTIONAL MATCH (luat_tham_chieu_tu_hd)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_tc_tu_hd)
-    WHERE chi_tiet_tc_tu_hd.ngay_co_hieu_luc <= $target_date
-    AND (chi_tiet_tc_tu_hd.ngay_het_hieu_luc IS NULL OR chi_tiet_tc_tu_hd.ngay_het_hieu_luc > $target_date)
-
     RETURN {
         can_cu_chinh: collect(DISTINCT {
             id_goc_tu_router: n_goc.id,
@@ -190,19 +166,6 @@ async def xac_dinh_cha_me_con(query: str):
             cap_bac: chi_tiet_tham_chieu.cap_bac_phap_ly,
             ngay_hieu_luc: chi_tiet_tham_chieu.ngay_co_hieu_luc,
             ngay_het_hieu_luc: chi_tiet_tham_chieu.ngay_het_hieu_luc
-        })
-        + collect(DISTINCT {
-            id: luat_tham_chieu_tu_hd.id,
-            noidung: luat_tham_chieu_tu_hd.noidung,
-            cap_bac: luat_tham_chieu_tu_hd.cap_bac_phap_ly,
-            ngay_hieu_luc: luat_tham_chieu_tu_hd.ngay_co_hieu_luc,
-            ngay_het_hieu_luc: luat_tham_chieu_tu_hd.ngay_het_hieu_luc
-        }) + collect(DISTINCT {
-            id: chi_tiet_tc_tu_hd.id,
-            noidung: chi_tiet_tc_tu_hd.noidung,
-            cap_bac: chi_tiet_tc_tu_hd.cap_bac_phap_ly,
-            ngay_hieu_luc: chi_tiet_tc_tu_hd.ngay_co_hieu_luc,
-            ngay_het_hieu_luc: chi_tiet_tc_tu_hd.ngay_het_hieu_luc
         }),
         lien_ket_huong_dan: [pair IN collect(DISTINCT {
             id_huong_dan: coalesce(chi_tiet_huong_dan.id, huong_dan.id),
@@ -213,5 +176,5 @@ async def xac_dinh_cha_me_con(query: str):
     } AS Context_Tho
     """
     records, _, _ = driver.execute_query(enhance_domain_retriever_cypher(cypher), danh_sach_id=target_ids, target_date=target_date)
-
+    
     return chuan_hoa_ket_qua_retriever(records, target_date, is_user_provide_date)

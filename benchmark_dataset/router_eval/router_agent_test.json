@@ -1531,5 +1531,128 @@
     "recall": null,
     "f1": null,
     "error_types": []
+  },
+  {
+    "id": "router_0aebd6c1c30f",
+    "question": "Vợ chồng em đã ly hôn 01 năm rồi. Trong thời gian 01 năm qua em nhận tiền cấp dưỡng nuôi con rất khó khăn. Mỗi lần nhận tiền em phải điện thoại kêu đưa, hoặc cãi nhau thì mới lấy được. Bây giờ em không muốn nhận tiền nuôi con nữa và em muốn làm thủ tục để con em không nhận cha nữa hoặc không cho người cha được gặp con em nữa có được không?",
+    "source": "benchmark_grouped",
+    "case_type": "nhieu_y",
+    "primary_topic": "cha_me_con_sau_ly_hon",
+    "expected_retrievers": [
+      "cha_me_con_sau_ly_hon",
+      "cap_duong",
+      "xac_dinh_cha_me_con"
+    ],
+    "llm_candidates": [
+      "cap_duong",
+      "xac_dinh_cha_me_con",
+      "cha_me_con_sau_ly_hon"
+    ],
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "error_types": [
+      "Đúng"
+    ],
+    "missing": [],
+    "extra": [],
+    "actual_topic_keys": [
+      "cap_duong",
+      "cha_me_con_sau_ly_hon",
+      "xac_dinh_cha_me_con"
+    ],
+    "passed": true,
+    "final_tools": [
+      "cap_duong",
+      "xac_dinh_cha_me_con",
+      "cha_me_con_sau_ly_hon"
+    ],
+    "policy_retrievers": [
+      "cap_duong",
+      "xac_dinh_cha_me_con",
+      "cha_me_con_sau_ly_hon"
+    ],
+    "policy_intervened": false,
+    "rejected_tools": {},
+    "policy_precision": 1.0,
+    "policy_recall": 1.0,
+    "policy_f1": 1.0,
+    "policy_error_types": [
+      "Đúng"
+    ],
+    "policy_missing": [],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "cap_duong",
+      "cha_me_con_sau_ly_hon",
+      "xac_dinh_cha_me_con"
+    ],
+    "policy_passed": true
+  },
+  {
+    "id": "router_0aebd6c1c310",
+    "question": "Không cấp dưỡng nuôi con sau ly hôn có được quyền thăm con không?",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "cha_me_con_sau_ly_hon",
+    "expected_retrievers": [
+      "cha_me_con_sau_ly_hon",
+      "cap_duong"
+    ],
+    "llm_candidates": [
+      "cap_duong",
+      "cha_me_con_sau_ly_hon"
+    ],
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "error_types": [
+      "Đúng"
+    ],
+    "missing": [],
+    "extra": [],
+    "actual_topic_keys": [
+      "cap_duong",
+      "cha_me_con_sau_ly_hon"
+    ],
+    "passed": true,
+    "final_tools": [
+      "cha_me_con_sau_ly_hon",
+      "cap_duong"
+    ],
+    "policy_retrievers": [
+      "cha_me_con_sau_ly_hon",
+      "cap_duong"
+    ],
+    "policy_intervened": false,
+    "rejected_tools": {},
+    "policy_precision": 1.0,
+    "policy_recall": 1.0,
+    "policy_f1": 1.0,
+    "policy_error_types": [
+      "Đúng"
+    ],
+    "policy_missing": [],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "cap_duong",
+      "cha_me_con_sau_ly_hon"
+    ],
+    "policy_passed": true
+  },
+  {
+    "id": "router_0aebd6c1c311",
+    "question": "Có phải việc chia tài sản chung trong thời kỳ hôn nhân nhằm trốn tránh thực hiện nghĩa vụ cấp dưỡng sẽ bị vô hiệu?",
+    "source": "benchmark_grouped",
+    "case_type": "che_do_tai_san_cua_vo_chong",
+    "primary_topic": "che_do_tai_san_cua_vo_chong",
+    "expected_retrievers": [
+      "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
   }
 ]

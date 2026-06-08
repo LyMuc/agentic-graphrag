@@ -31,7 +31,7 @@ Ví dụ 1 (NHIỀU Ý HỎI):
 Ví dụ 2 (MỘT Ý HỎI nhưng CẦN NHIỀU BỐI CẢNH PHÁP LÝ):
 - Câu hỏi: "Không đăng ký kết hôn người cha có nghĩa vụ cấp dưỡng cho con không?"
 - Bối cảnh pháp lý: "Không đăng ký kết hôn" -> liên quan đến quy định về chung sống như vợ chồng -> Dùng công cụ `chung_song_nhu_vo_chong`
-- Nội dung chính: "nghĩa vụ cấp dưỡng cho con" -> Dùng công cụ `nghia_vu_cap_duong`
+- Nội dung chính: "nghĩa vụ cấp dưỡng cho con" -> Dùng công cụ `cap_duong`
 => BẠN PHẢI GỌI CẢ 2 CÔNG CỤ NÀY để có đầy đủ căn cứ pháp lý cho câu trả lời.
 
 Ví dụ 3 (MỘT Ý HỎI nhưng CẦN NHIỀU BỐI CẢNH PHÁP LÝ):
@@ -113,11 +113,21 @@ def _validate_registered_tools(tools: dict[str, Any], tool_calls: list[dict[str,
 
 
 def _router_tool_descriptions(tools: dict[str, Any] | None = None) -> list[dict[str, Any]]:
-    """Expose retriever schemas synced from adapter descriptions."""
+    """Tool schemas for Router LLM.
+
+    When ``tools`` is provided (e.g. from presentation/main.py), only those
+    registered retrievers are exposed — commenting one out in ``main.py`` takes
+    effect immediately. Otherwise fall back to the full catalog registry.
+    """
+    if tools:
+        return [
+            entry["description"]
+            for entry in tools.values()
+            if isinstance(entry, dict) and "description" in entry
+        ]
 
     from application.router_tool_registry import router_tools_for_llm
 
-    _ = tools
     return router_tools_for_llm()
 
 

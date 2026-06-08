@@ -11,13 +11,22 @@ cha_me_con_sau_ly_hon_description = {
     "type": "function",
     "function": {
         "name": "cha_me_con_sau_ly_hon",
-        "description": "Tra cứu các quy định về trông nom, chăm sóc, nuôi dưỡng, giáo dục con sau khi ly hôn.",
+        "description": (
+            "Tra cứu các quy định về trông nom, chăm sóc, nuôi dưỡng, giáo dục con sau khi ly hôn; "
+            "quyền thăm nom, cấm/cản trở cha mẹ gặp con sau ly hôn (Điều 81–84). "
+            "BẮT BUỘC dùng khi sau ly hôn hỏi không cho gặp con, cấm thăm nom, cha/mẹ gặp con. "
+            "KHÔNG dùng cho cấp dưỡng chung, trốn nghĩa vụ, chấm dứt cấp dưỡng → dùng cap_duong. "
+            "KHÔNG thay thế xac_dinh_cha_me_con khi hỏi con không nhận cha/mẹ hoặc thủ tục từ chối quan hệ cha con."
+        ),
         "parameters": {
             "type": "object",
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "Câu hỏi cụ thể của người dùng về quyền nuôi con, cấp dưỡng, thăm nom chăm sóc con sau khi ly hôn."
+                    "description": (
+                        "Câu hỏi về quyền nuôi con, thăm nom, không cho/cấm cha mẹ gặp con "
+                        "sau khi ly hôn."
+                    )
                 }
             },
             "required": ["query"],

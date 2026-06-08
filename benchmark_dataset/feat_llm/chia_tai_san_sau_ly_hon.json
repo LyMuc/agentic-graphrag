@@ -42,29 +42,28 @@
     ]
   },
   {
-    "question": "Khi ly hôn tài sản chung của vợ chồng được chia đôi những phải tính đến yếu tố nào?",
+    "question": "Có phải người yêu cầu ly hôn sẽ bị chia tài sản chung ít hơn hay không?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_59"
+    ]
+  },
+  {
+    "question": "Ngoại tình thì chia tài sản khi ly hôn có bị bất lợi không?",
     "can_cu_phap_ly_chinh": [
       "Luat_HNGD_2014_Dieu_59_Khoan_2"
     ]
   },
   {
-    "question": "Tôi và vợ tôi ly hôn trong thời kỳ hôn nhân tôi là người lao động duy nhất và hầu như toàn bộ tài sản đều do tôi làm ra vợ tôi chỉ ở nhà chăm con, làm nội trợ vậy có phải chia đôi tài sản khi ly hôn hay không ạ?",
+    "question": "​Vợ chồng tôi sắp li dị, trước khi li hôn chồng tôi có nợ một khoản tiền rất lớn và nói đó là tiền vay để làm ăn nhưng số tiền đó tôi không hề được biết. Vậy xin cho tôi hỏi: tôi có phải chịu trách nhiệm về khoản nợ này không?",
     "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_33_Khoan_1",
-      "Luat_HNGD_2014_Dieu_29_Khoan_1",
-      "Luat_HNGD_2014_Dieu_59_Khoan_2"
+      "Luat_HNGD_2014_Dieu_60",
+      "Luat_HNGD_2014_Dieu_37",
+      "Luat_HNGD_2014_Dieu_27",
+      "Luat_HNGD_2014_Dieu_30"
     ]
   },
   {
     "question": "Chào Ban tư vấn, tôi là Như Hạnh, trước đây tôi và chồng có vay ngân hàng một khoản tiền để làm ăn kinh doanh và vẫn đang trong quá trình trả nợ. Hiện tại tôi và chồng đã ly hôn. Vậy Ban tư vấn cho tôi hỏi tôi có phải cùng chịu trách nhiệm trả nợ khi ly hôn không? Khi còn trong thời kỳ hôn nhân thì tôi cũng có phụ chồng trả nợ, nhưng hiện tại thì quan hệ hôn nhân đã chấm dứt. Mong Ban tư vấn giải đáp giúp tôi vấn đề trên trong thời gian sớm nhất. Cảm ơn!",
-    "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_27",
-      "Luat_HNGD_2014_Dieu_37",
-      "Luat_HNGD_2014_Dieu_60"
-    ]
-  },
-  {
-    "question": "Vợ chồng có nghĩa vụ như thế nào khi giải quyết nợ chung trong quá trình ly hôn?",
     "can_cu_phap_ly_chinh": [
       "Luat_HNGD_2014_Dieu_27",
       "Luat_HNGD_2014_Dieu_37",
@@ -90,13 +89,13 @@
     ]
   },
   {
-    "question": "Việc chia quyền sử dụng đất là tài sản chung của vợ chồng khi ly hôn được thực hiện thế nào?",
+    "question": "Quyền sử dụng đất là tài sản chung của vợ chồng được chia như thế nào khi ly hôn?",
     "can_cu_phap_ly_chinh": [
       "Luat_HNGD_2014_Dieu_62"
     ]
   },
   {
-    "question": "Quyền sử dụng đất là tài sản riêng thì ly hôn có phải chia đôi không?",
+    "question": "Việc chia quyền sử dụng đất là tài sản chung của vợ chồng khi ly hôn được thực hiện thế nào?",
     "can_cu_phap_ly_chinh": [
       "Luat_HNGD_2014_Dieu_62"
     ]
@@ -109,7 +108,7 @@
     ]
   },
   {
-    "question": "Chồng có được ở lại nhà riêng của vợ sau ly hôn hay không?",
+    "question": "Sau khi ly hôn vợ (chồng) có được ở lại nhà thuộc sở hữu riêng của chồng (vợ) không? Xin chào Ban biên tập, tôi là Phan Tuấn, tôi đang có nhu cầu tìm hiểu các quy định của pháp luật liên quan đến lĩnh vực hôn nhân và gia đình. Tôi đang có thắc mắc cần Ban biên tập giải đáp giúp tôi. Cho tôi hỏi, quyền lưu cư của vợ hoặc chồng khi ly hôn được quy định cụ thể ra sao? Sau khi ly hôn vợ (chồng) có được ở lại nhà thuộc sở hữu riêng của chồng (vợ) không? Tôi có thể tìm hiểu thông tin tại văn bản pháp luật nào? Mong nhận được sự phản hồi từ Ban biên tập. Xin chân thành cảm ơn! Phan Tuấn (phantuan*****@gmail.com)",
     "can_cu_phap_ly_chinh": [
       "Luat_HNGD_2014_Dieu_63"
     ]
@@ -134,21 +133,35 @@
     ]
   },
   {
-    "question": "Chào anh chị! Hàng tháng, tôi có nhận tiền trợ cấp thương binh và gửi vào tài khoản tiết kiệm riêng đứng tên tôi. Hiện giờ, số tiền này khá lớn. Mới đây, tôi và vợ ly hôn. Vợ tôi đòi chia đôi khoản tiền này vì cho rằng đây là tài sản có trong thời kỳ hôn nhân. Vợ tôi nói như vậy có đúng không?",
+    "question": "Luật sư cho em hỏi: Giấy tờ nhà đất vợ chồng em cùng đứng tên khi mua nhưng tiền mua thì của em, tiền có trước khi kết hôn nhưng kết hôn sau 3 năm em mới lấy tiền đó ra mua nhà. Vợ chồng cùng đứng tên và khi ly hôn thì tài sản đó em có phải chia cho vợ em không?",
     "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_33_Khoan_1"
+      "Luat_HNGD_2014_Dieu_33"
     ]
   },
   {
-    "question": "Tài sản được cho vào ngày cưới sẽ chia như thế nào khi ly hôn?",
+    "question": "Khi ly hôn tài sản chung của vợ chồng được chia đôi những phải tính đến yếu tố nào?",
     "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_59"
+      "Luat_HNGD_2014_Dieu_59_Khoan_2"
     ]
   },
   {
     "question": "Xin chào anh chị! Tôi có thắc mắc như sau nhờ anh chị tư vấn. Anh Đức và chị Hoa kết hôn năm 2013. Trong thời gian hôn nhân, anh Đức có mua một căn nhà và giấy tờ căn nhà chỉ đứng tên anh. Năm 2018, anh Đức và chị Hoa ly hôn, anh đã trả cho chị giá trị của nửa căn nhà đó. Hiện giờ anh Đức muốn bán căn nhà đi mà không cần có sự đồng ý của chị Hoa được không? Xin cảm ơn!",
     "can_cu_phap_ly_chinh": [
       "Luat_HNGD_2014_Dieu_35"
+    ]
+  },
+  {
+    "question": "Việc chia tài sản trong trường hợp vợ chồng sống chung với gia đình khi ly hôn được quy định như thế nào? Xin chào Ban biên tập, tôi là Tiến Dụng, tôi đang có nhu cầu tìm hiểu các quy định của pháp luật liên quan đến lĩnh vực hôn nhân và gia đình. Tôi đang có thắc mắc cần Ban biên tập giải đáp giúp tôi. Cho tôi hỏi, việc chia tài sản trong trường hợp vợ chồng sống chung với gia đình khi ly hôn được quy định cụ thể ra sao? Tôi có thể tìm hiểu thông tin tại văn bản pháp luật nào? Mong nhận được sự phản hồi từ Ban biên tập. Xin chân thành cảm ơn! Tiến Dụng (tiendung*****@gmail.com)",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_61",
+      "Luat_HNGD_2014_Dieu_59"
+    ]
+  },
+  {
+    "question": "Xin chào luật sư, tôi muốn hỏi vấn đề sau đây. Tôi và chồng trong quá trình sống chung với nhau có tạo lập được một số tài sản như ô tô, nhà, đất nhưng tất cả đều được đứng tên chồng tôi, tôi không đứng tên. Vậy nếu tôi và anh ly hôn thì tôi có được chia số tài sản trên hay không?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_34",
+      "Luat_HNGD_2014_Dieu_33"
     ]
   },
   {
@@ -159,29 +172,15 @@
     ]
   },
   {
-    "question": "Trong thời kỳ hôn nhân, chồng tôi có vay 30 triệu đồng. Nay vợ chồng tôi muốn ly hôn thì sau khi ly hôn tôi có phải chịu trách nhiệm về khoản nợ đó không? Tôi có phải cùng chồng chi trả 30 triệu đồng đó không? Vì khi chồng tôi vay thì tôi không sử dụng đồng nào trong đó cả. Mong Ban biên tập tư vấn giúp tôi Thảo Hiếu - TPHCM",
+    "question": "Do nhiều mâu thuẫn xảy ra nên tôi và chồng tôi quyết định ly hôn, khi ra tòa thì chúng tôi có tranh chấp về tài sản là mảnh đất, về án phí ly hôn thì tôi đã nộp, tuy nhiên tôi muốn biết về mức án phí khi tranh chấp mảnh đất trị giá 900 triệu sẽ là bao nhiêu? Mong sớm nhận được phản hồi.",
     "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_37",
-      "Luat_HNGD_2014_Dieu_27_Khoan_2",
-      "Luat_HNGD_2014_Dieu_45_Khoan_1"
+      "NghiQuyet_326_2016_UBTVQH14_Dieu_26"
     ]
   },
   {
-    "question": "Do có quá nhiều mâu thuẫn nên tôi và chồng quyết định đi đến ly hôn, chúng tôi đã thỏa thuận về nuôi con chung cũng như tài sản chung, Quyết định thuận tình ly hôn đã có, và nay tôi biết một vấn đề là trước đó (trong thời kỳ hôn nhân) do kinh doanh có vấn đề nên chồng tôi có vay số tiền để lớn, nay không có khả năng chi trả, tôi không rõ là mình đã ly hôn thì có phải cùng chịu trách nhiệm chi trả khoản vay đó không?",
+    "question": "Chào luật sư Tôi muốn hỏi luật sư về việc chia tài sản sau khi ly hôn Tôi có 1 ông chú muon ly hôn với vợ (đơn phương xin ly hôn). Lý do xin ly hôn là vợ ngoại tinh và thường xuyên đánh đập chồng minh, và thường xuyên ngược đãi. Chú tôi đã đưa đơn ly hôn nhiều lần nhưng do chú bị điếc, nói chuyện khó khăn. Lần trước khi đưa đơn ly hôn bà ta xé đơn tại uy ban và giả bộ thương yêu chông để giảng hòa. Nhưng sau khi giảng hòa bà ta chứng nào tật nấy lại đánh đạp chồng và ngoại tình. Bắt chông vào rừng chăn bò còn mình ở nhà dẫn trai về nhà ngoài tình. Bà ta công khai chuyên ngoại tình với rất nhiều người Chú tôi muốn đơn phương ly hôn có được không? Tài sản chia thế nào Ông chú tôi là thương binh được cấp đất và nhà (trong thời ky hôn nhân) như vậy có được tính là tải sản riêng không. Các tài sản làm ra trong thời kỳ hôn nhân là chia 2 phải không. Con của họ đã trên 18 tuôi và đã có công ăn việc làm ổn định như vậy có cần chia cho con k. Chú tôi có 1 khoảng nợ vay ngân hàng để cho con đi học đại hoc, Các đứa con đi làm có gửi tiền về cho vợ chú tôi để trả nợ nhưng bà ta không trả ma lấy tiền tiêu xài riêng (ngoại tình và đánh bài). vậy so nợ đó còn là nợ chung nữa hay không Mong luật sư tư vấn giúp tôi để báo gia đình giai quyết giúp chú. Vì chú bị hành hạ quá không chịu nổi Trân trọng cảm ơn",
     "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_27"
-    ]
-  },
-  {
-    "question": "Thưa luật sư, tôi và vợ hiện tại đang ly thân, trong thời gian này tôi có mua ô tô. Vậy, xe đó là tài sản riêng của tôi đúng không?",
-    "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_43_Khoan_1"
-    ]
-  },
-  {
-    "question": "Xin cho hỏi: Tôi lấy chồng cách đây 05 năm,. sinh được 1 bé trai 02 tuổi, tôi chỉ ở nhà nội trợ, còn mọi chi phí trong gia đình đều do chồng tôi đi làm mà có. Nhưng giờ đây chúng tôi sống không hạnh phúc và định ly hôn. Vậy tôi có được chia tài sản không?",
-    "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014"
+      "Luat_HNGD_2014_Dieu_59"
     ]
   },
   {

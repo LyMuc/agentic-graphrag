@@ -13,11 +13,14 @@ han_che_quyen_cha_me_con_chua_thanh_nien_description = {
         "name": "han_che_quyen_cha_me_con_chua_thanh_nien",
         "description": (
             "Chuyên tra cứu việc Tòa án HẠN CHẾ quyền của cha, mẹ đối với con CHƯA THÀNH NIÊN "
-            "căn cứ hạn chế khi cha mẹ vi phạm nghiêm trọng, ai có quyền khởi kiện "
-            "yêu cầu hạn chế, và hậu quả pháp lý sau khi bị hạn chế. "
-            "Chỉ dùng khi câu hỏi liên quan đến hạn chế/tước quyền cha mẹ với con chưa thành niên. "
+            "khi cha mẹ vi phạm nghiêm trọng (ngược đãi, phá tan tài sản con, xúi giục...), "
+            "ai có quyền khởi kiện yêu cầu hạn chế, và hậu quả pháp lý sau khi bị hạn chế. "
+            "Chỉ dùng khi câu hỏi TRỰC TIẾP hỏi hạn chế/tước quyền cha mẹ với con chưa thành niên. "
+            "TUYỆT ĐỐI KHÔNG dùng khi câu hỏi có bối cảnh ly hôn/sau ly hôn và hỏi gặp con, thăm nom, "
+            "cấm gặp con, không cho cha/mẹ gặp con → dùng cha_me_con_sau_ly_hon. "
             "KHÔNG dùng cho quyền và nghĩa vụ cha mẹ–con bình thường (dùng quyen_nghia_vu_cha_me_con), "
-            "quyền nuôi con sau ly hôn, hay tài sản riêng của con."
+            "quyền nuôi con sau ly hôn, con không nhận cha/mẹ (dùng xac_dinh_cha_me_con), "
+            "hay tài sản riêng của con."
         ),
         "parameters": {
             "type": "object",
