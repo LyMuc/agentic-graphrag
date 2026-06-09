@@ -947,5 +947,70 @@
     "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
     "can_cu_khong_nen_ap_dung": [],
     "quan_he_chong_cheo_mau_thuan": []
+  }, 
+  {
+    "question": "Người không nuôi con trực tiếp muốn ngưng cấp dưỡng thì có được không?",
+    "ground_truth": "Căn cứ theo Điều 118 Luật Hôn nhân và gia đình 2014 có quy định như sau:\n\nNhư vậy, theo quy định trên thì người không nuôi con trực tiếp có thể ngừng cấp dưỡng nếu thuộc một trong các trường hợp sau:\n\n- Người được cấp dưỡng đã thành niên và có khả năng lao động hoặc có tài sản để tự nuôi mình;\n\n- Người được cấp dưỡng được nhận làm con nuôi;\n\n- Người cấp dưỡng đã trực tiếp nuôi dưỡng người được cấp dưỡng;\n\n- Người cấp dưỡng hoặc người được cấp dưỡng chết;\n\n- Bên được cấp dưỡng sau khi ly hôn đã kết hôn;\n\n- Trường hợp khác theo quy định của luật.\n\nTrân trọng!",
+    "chu_de_phap_ly": "cap_duong",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_118": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_118"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
+  }, 
+  {
+    "question": "Vợ tôi ly hôn được 2 năm, con gái vợ được 5 tuổi. Lúc ly hôn Tòa tuyên mỗi tháng ba đẻ cấp dưỡng cho cháu 3 triệu nhưng đó tới nay chưa được 1 đồng nào. Cho tôi hỏi bây giờ chúng tôi muốn buộc anh ta cấp dưỡng thì phải làm thế nào. Xin cảm ơn luật sư.",
+    "ground_truth": "Theo quy định tại Khoản 2 Điều 82 Luật hôn nhân và gia đình 2014 thì:\n\n\"2. Cha, mẹ không trực tiếp nuôi con có nghĩa vụ cấp dưỡng cho con.\"\n\nTheo đó, nếu một bên vợ hoặc chồng không trực tiếp nuôi con thì phải có nghĩa vụ cấp dưỡng nuôi con chưa thành niên hoặ con đã thành niên nhưng bị tàn tật, mất năng lực hành vi dân sự, không có khả năng lao động và không có tài sản để tự nuôi mình.\n\nTại Khoản 2 Điều 107 Luật hôn nhân và gia đình 2014 quy định:\n\n\"2. Trong trường hợp người có nghĩa vụ nuôi dưỡng trốn tránh nghĩa vụ thì theo yêu cầu của cá nhân, cơ quan, tổ chức được quy định tại Điều 119 của Luật này, Tòa án buộc người đó phải thực hiện nghĩa vụ cấp dưỡng theo quy định của Luật này.\"\n\nTrường hợp chồng cũ của bạn sau khi ly hôn không thực hiện nghĩa vụ cấp dưỡng cho con của bạn thì bạn có thể khởi kiện ra tòa án nhân dân nơi chồng cũ của bạn đang cư trú để được giải quyết.\n\nHồ sơ yêu cầu cấp dưỡng sau khi ly hôn bao gồm :\n\n- Đơn khởi kiện về việc cấp dưỡng;\n\n- Bản sao có chứng thực giấy chứng minh nhân dân;\n\n- Bản sao có chứng thực sổ hộ khẩu;\n\n- Quyết định/ Bản án ly hôn;\n\n- Chứng cứ chứng minh thu nhập của người chồng;\n\n- Bản sao có chứng thực giấy sinh của con.\n\nTrên đây là nội dung tư vấn của chúng tôi về vấn đề mà bạn thắc mắc.\n\nTrân trọng!",
+    "chu_de_phap_ly": "cap_duong",
+    "loai_cau_hoi": "Tình huống",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_82_Khoan_2": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_107_Khoan_2": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_82_Khoan_2",
+      "Luat_HNGD_2014_Dieu_107_Khoan_2"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
+  }, 
+  {
+    "question": "Sau ly hôn người không trực tiếp nuôi con có nghĩa vụ cấp dưỡng cho con đến lúc con bao nhiêu tuổi?",
+    "ground_truth": "Tại khoản 2 Điều 82 Luật Hôn nhân và gia đình năm 2014 có quy định về nghĩa vụ, quyền của cha, mẹ không trực tiếp nuôi con sau khi ly hôn như sau:\n\nTại Điều 110 Luật Hôn nhân và gia đình 2014 có quy định về nghĩa vụ cấp dưỡng của cha, mẹ đối với con như sau:\n\nTại khoản 1 Điều 21 Bộ Luật Dân sự 2015 có quy định về người chưa thành niên như sau:\n\nNhư vậy, sau ly hôn người không trực tiếp nuôi con có nghĩa vụ cấp dưỡng cho con chưa thành niên nghĩa là con chưa đủ 18 tuổi.\n\nDo đó nếu con đủ 18 tuổi trở lên thì người không trực tiếp nuôi con có thể không chu cấp cho con, trừ trường hợp con đã thành niên nhưng không có khả năng lao động và không có tài sản để tự nuôi mình.\n\nTiền cấp dưỡng cho con sau ly hôn là bao nhiêu? (Hình từ Internet)",
+    "chu_de_phap_ly": "cap_duong",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014",
+      "BoLuat_DanSu_2015"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_82_Khoan_2": "CO_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_110": "CO_HIEU_LUC",
+      "BoLuat_DanSu_2015_Dieu_21_Khoan_1": "CO_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_82_Khoan_2",
+      "Luat_HNGD_2014_Dieu_110"
+    ],
+    "can_cu_phap_ly_bo_tro": [
+      "BoLuat_DanSu_2015_Dieu_21_Khoan_1"
+    ],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
   }
 ]

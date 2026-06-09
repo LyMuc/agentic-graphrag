@@ -1,0 +1,49 @@
+[
+    {
+        "question": "Viện trưởng Viện kiểm sát nhân dân cấp tỉnh có thẩm quyền kháng nghị giám đốc thẩm về tranh chấp quyền nuôi con hay không?",
+        "ground_truth": "Theo Điều 331 Bộ luật tố tụng dân sự 2015 đã quy định về người có thẩm quyền kháng nghị theo thủ tục giám đốc thẩm như sau:\n\n1. Chánh án Tòa án nhân dân tối cao, Viện trưởng Viện kiểm sát nhân dân tối cao có thẩm quyền kháng nghị theo thủ tục giám đốc thẩm bản án, quyết định đã có hiệu lực pháp luật của Tòa án nhân dân cấp cao; bản án, quyết định có hiệu lực pháp luật của Tòa án khác khi xét thấy cần thiết, trừ quyết định giám đốc thẩm của Hội đồng thẩm phán Tòa án nhân dân tối cao.\n\n2. Chánh án Tòa án nhân dân cấp cao, Viện trưởng Viện kiểm sát nhân dân cấp cao có quyền kháng nghị theo thủ tục giám đốc thẩm bản án, quyết định đã có hiệu lực pháp luật của Tòa án nhân dân cấp tỉnh, Tòa án nhân dân cấp huyện trong phạm vi thẩm quyền theo lãnh thổ.\n\nTheo đó, Tòa án xét xử phúc thẩm vụ án dân sự nêu trên là Tòa án nhân dân cấp tỉnh nên thẩm quyền kháng nghị theo thủ tục giám đốc thẩm thuộc Chánh án Tòa án nhân dân cấp cao, Viện trưởng Viện kiểm sát nhân dân cấp cao. Trong trường hợp này, nếu bạn lựa chọn gửi đơn đề nghị xem xét theo thủ tục giám đốc thẩm đến Viện kiểm sát thì bạn cần gửi đơn tới Viện trưởng Viện kiểm sát nhân dân cấp cao có thẩm quyền (tại một trong ba khu vực: Hà Nội, Đà Nẵng và Tp. Hồ Chí Minh). Tuy nhiên, trong một số trường hợp khi xét thấy cần thiết, Viện trưởng Viện kiểm sát nhân dân tối cao cũng có thẩm quyền kháng nghị theo thủ tục giám đốc thẩm bản án, quyết định có hiệu lực pháp luật của Tòa án nhân dân cấp tỉnh.",
+        "chu_de_phap_ly": "to_tung_hon_nhan",
+        "loai_cau_hoi": "Lý thuyết",
+        "van_ban_phap_luat_lien_quan": [],
+        "tinh_trang_hieu_luc": {},
+        "can_cu_phap_ly_chinh": [],
+        "can_cu_phap_ly_bo_tro": [],
+        "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+        "can_cu_khong_nen_ap_dung": [],
+        "quan_he_chong_cheo_mau_thuan": []
+    }, 
+    {
+        "question": "Thời gian chuẩn bị xét xử tranh chấp dành quyền nuôi con là bao lâu?",
+        "ground_truth": "Tranh chấp dành quyền nuôi con là một trong những tranh chấp về hôn nhân và gia đình thuộc thẩm quyền giải quyết của Tòa án theo Điều 28 Bộ luật tố tụng dân sự 2015.\n\nCăn cứ Khoản 1 Điều 203 Bộ luật tố tụng dân sự 2015 có quy định về thời hạn chuẩn bị xét xử các loại vụ án, trừ các vụ án được xét xử theo thủ tục rút gọn hoặc vụ án có yếu tố nước ngoài, được quy định như sau:\n\n- Đối với các vụ án quy định tại Điều 26 và Điều 28 của Bộ luật này thì thời hạn là 04 tháng, kể từ ngày thụ lý vụ án;\n\n- Đối với các vụ án quy định tại Điều 30 và Điều 32 của Bộ luật này thì thời hạn là 02 tháng, kể từ ngày thụ lý vụ án.\n\n+ Đối với vụ án có tính chất phức tạp hoặc do sự kiện bất khả kháng, trở ngại khách quan thì Chánh án Tòa án có thể quyết định gia hạn thời hạn chuẩn bị xét xử nhưng không quá 02 tháng đối với vụ án thuộc trường hợp quy định tại điểm a khoản này và không quá 01 tháng đối với vụ án thuộc trường hợp quy định tại điểm b khoản này.\n\n+ Trường hợp có quyết định tạm đình chỉ việc giải quyết vụ án thì thời hạn chuẩn bị xét xử được tính lại kể từ ngày quyết định tiếp tục giải quyết vụ án của Tòa án có hiệu lực pháp luật.\n\nNhư vậy, theo quy định như trên nếu tranh chấp dành quyền nuôi con của bạn không có yếu tố nước ngoài và không được xét xử theo thủ tục rút gọn, thì thời gian chờ xét xử là 04 tháng kể từ ngày thụ lý.\n\nNếu tranh chấp có tính chất phức tạp hoặc do sự kiện bất khả kháng, trở ngại khách quan thì có thể được gia hạn tối đa đến 02 tháng.",
+        "chu_de_phap_ly": "to_tung_hon_nhan",
+        "loai_cau_hoi": "Lý thuyết",
+        "van_ban_phap_luat_lien_quan": [],
+        "tinh_trang_hieu_luc": {},
+        "can_cu_phap_ly_chinh": [],
+        "can_cu_phap_ly_bo_tro": [],
+        "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+        "can_cu_khong_nen_ap_dung": [],
+        "quan_he_chong_cheo_mau_thuan": []
+    }, 
+    {
+        "question": "Cho em xin hỏi việc này được không ạ. Hiện Em và Chồng đã Ly hôn được hơn một tháng (Phúc Thẩm). Theo quyết định thì Em đã được quyền nuôi con. Nhưng bên Gia đình Chồng Em vẫn không chịu giao trả con. Từ lúc ly hôn em nộp đơn đến giờ đã hơn 1 năm rồi nhưng tháng trước mới giải quyết xong. 1 năm nay em chưa được gặp con của Em. Lúc gia đình bên Chồng em xuống nhà Ngoại bắt đi là bé mới chưa được 2 tuổi. Ngoài mặt thì nói cho thăm nhưng lúc nào cũng ngăn cấm. Có lần e và ba mẹ ruột lên thăm còn bị hành hung. Em cứ tưởng tòa ra quyết định là xong nhưng giờ lại còn phải chờ bên thi hành án giải quyết. 1 tháng nay nhưng em vẫn chưa nghe thông báo gì. Thử hỏi một người mẹ mà cả năm không được gặp con mình thì sẽ như thế nào. Giờ Em chẳng biết làm gì chỉ mong Anh chị cho em xin ý kiến ạ .",
+        "ground_truth": "Theo Khoản 11 Điều 1 Luật Thi hành án dân sự sửa đổi 2014 thì đối với bản án dân sự phúc thẩm thì Tòa án đã ra bản án phải chuyển giao bản án đó cho cơ quan thi hành án dân sự có thẩm quyền trong thời hạn 30 ngày, kể từ ngày bản án, quyết định có hiệu lực pháp luật.\n\nNhư vậy, hiện chỉ mới 1 tháng trôi qua thì cơ quan thi hành án có thể chỉ mới tiếp nhận bản án và chưa thể giải quyết ngay được. Nếu cảm thấy lo lắng thì bạn cũng có thể viết đơn yêu cầu thi hành án.\n\nKhoản 13 Điều 1 Luật Thi hành án dân sự sửa đổi 2014 quy định:\n\n1. Đương sự tự mình hoặc ủy quyền cho người khác yêu cầu thi hành án bằng hình thức trực tiếp nộp đơn hoặc trình bày bằng lời nói hoặc gửi đơn qua bưu điện. Người yêu cầu phải nộp bản án, quyết định, tài liệu khác có liên quan.\n\nNgày yêu cầu thi hành án được tính từ ngày người yêu cầu nộp đơn hoặc trình bày trực tiếp hoặc ngày có dấu bưu điện nơi gửi.\n\n2. Đơn yêu cầu phải có các nội dung sau đây:\n\na) Tên, địa chỉ của người yêu cầu;\n\nb) Tên cơ quan thi hành án dân sự nơi yêu cầu;\n\nc) Tên, địa chỉ của người được thi hành án; người phải thi hành án;\n\nd) Nội dung yêu cầu thi hành án;\n\nđ) Thông tin về tài sản, điều kiện thi hành án của người phải thi hành án, nếu có;\n\ne) Ngày, tháng, năm làm đơn;\n\ng) Chữ ký hoặc điểm chỉ của người làm đơn; trường hợp là pháp nhân thì phải có chữ ký của người đại diện hợp pháp và đóng dấu của pháp nhân, nếu có.\n\n3. Trường hợp người yêu cầu trực tiếp trình bày bằng lời nói thì cơ quan thi hành án dân sự phải lập biên bản có các nội dung quy định tại khoản 2 Điều này, có chữ ký của người lập biên bản; biên bản này có giá trị như đơn yêu cầu.\n\n4. Khi tiếp nhận yêu cầu thi hành án, cơ quan thi hành án dân sự phải kiểm tra nội dung yêu cầu và các tài liệu kèm theo, vào sổ nhận yêu cầu thi hành án và thông báo bằng văn bản cho người yêu cầu.\n\n...\n\nTrân trọng!",
+        "chu_de_phap_ly": "to_tung_hon_nhan",
+        "loai_cau_hoi": "Tình huống",
+        "van_ban_phap_luat_lien_quan": [
+          "Luat_ThiHanhAnDanSu_2008"
+        ],
+        "tinh_trang_hieu_luc": {
+          "Luat_ThiHanhAnDanSu_2008_Dieu_1_Khoan_11": "CON_HIEU_LUC",
+          "Luat_ThiHanhAnDanSu_2008_Dieu_1_Khoan_13": "CON_HIEU_LUC"
+        },
+        "can_cu_phap_ly_chinh": [
+          "Luat_ThiHanhAnDanSu_2008_Dieu_1_Khoan_11",
+          "Luat_ThiHanhAnDanSu_2008_Dieu_1_Khoan_13"
+        ],
+        "can_cu_phap_ly_bo_tro": [],
+        "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+        "can_cu_khong_nen_ap_dung": [],
+        "quan_he_chong_cheo_mau_thuan": []
+      }
+]

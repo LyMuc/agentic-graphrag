@@ -1,0 +1,42 @@
+[
+    {
+        "question": "Ly hôn với chồng cũ có đổi họ cho con sang họ mẹ được không?",
+        "ground_truth": "Căn cứ quy định tại khoản 1 Điều 27 Bộ luật Dân sự 2015 quyền thay đổi họ như sau:\n\nVì vậy, căn cứ theo quy định trên, bạn có quyền yêu cầu cơ quan nhà nước có thẩm quyền công nhận việc thay đổi họ cho con của bạn từ họ cha sang họ mẹ.\n\nĐổi tên con sang họ mẹ sau khi ly hôn có được không? (Hình từ Internet)",
+        "chu_de_phap_ly": "cha_me_con_sau_ly_hon",
+        "loai_cau_hoi": "Lý thuyết",
+        "van_ban_phap_luat_lien_quan": [
+          "BoLuat_DanSu_2015"
+        ],
+        "tinh_trang_hieu_luc": {
+          "BoLuat_DanSu_2015_Dieu_27_Khoan_1": "CON_HIEU_LUC"
+        },
+        "can_cu_phap_ly_chinh": [
+          "BoLuat_DanSu_2015_Dieu_27_Khoan_1"
+        ],
+        "can_cu_phap_ly_bo_tro": [],
+        "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+        "can_cu_khong_nen_ap_dung": [],
+        "quan_he_chong_cheo_mau_thuan": []
+    }, 
+    {
+        "question": "Việc đổi họ cho con có làm mất quyền thừa kế của con khi chồng cũ chết không?",
+        "ground_truth": "Căn cứ quy định khoản 3 Điều 27 Bộ luật Dân sự 2015 quy định về quyền thay đổi họ như sau:\n\nTheo khoản 1 Điều 651 Bộ luật Dân sự 2015 những người thừa kế theo pháp luật được quy định theo thứ tự sau đây:\n\nThế nên, trong trường hợp này việc thay đổi họ cho con sẽ không làm thay đổi, chấm dứt quyền, nghĩa vụ dân sự được xác lập theo họ cũ. Nghĩa là việc thay đổi họ không ảnh hưởng đến việc thừa kế tài sản khi chồng cũ bạn chết.\n\nTrân trọng!",
+        "chu_de_phap_ly": "cha_me_con_sau_ly_hon",
+        "loai_cau_hoi": "Tình huống",
+        "van_ban_phap_luat_lien_quan": [
+          "BoLuat_DanSu_2015"
+        ],
+        "tinh_trang_hieu_luc": {
+          "BoLuat_DanSu_2015_Dieu_27_Khoan_3": "CON_HIEU_LUC",
+          "BoLuat_DanSu_2015_Dieu_651_Khoan_1": "CON_HIEU_LUC"
+        },
+        "can_cu_phap_ly_chinh": [
+          "BoLuat_DanSu_2015_Dieu_27_Khoan_3",
+          "BoLuat_DanSu_2015_Dieu_651_Khoan_1"
+        ],
+        "can_cu_phap_ly_bo_tro": [],
+        "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+        "can_cu_khong_nen_ap_dung": [],
+        "quan_he_chong_cheo_mau_thuan": []
+      }
+]

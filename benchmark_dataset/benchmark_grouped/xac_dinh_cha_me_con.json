@@ -38,5 +38,24 @@
     "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
     "can_cu_khong_nen_ap_dung": [],
     "quan_he_chong_cheo_mau_thuan": []
+  }, 
+  {
+    "question": "Cha nhận con riêng có bắt buộc có sự đồng ý của vợ không?",
+    "ground_truth": "Tôi đã kết hôn với vợ tôi được 3 năm và có được một bé. Trước khi kết hôn với vợ tôi thì tôi có quan hệ qua lại với một người con gái, nhưng do công việc làm ăn nên tôi đã rời đi lên thành phố, mới đây tôi về quê thì mới nhận được thông tin từ cô ấy là đã có con với tôi, tôi đã xét nghiệm ADN thì đúng là con của tôi. Tôi muốn nhận lại con tôi để lo cho và bù đắp cho nó nhưng vợ tôi không cho. Cho tôi hỏi trường hợp này tôi nhận con tôi thì vợ tôi có quyền can thiệp không?\n\nTrả lời:\n\nCăn cứ Điều 91 Luật Hôn nhân và gia đình 2014 quy định quyền nhận con như sau:\n\n- Cha, mẹ có quyền nhận con, kể cả trong trường hợp con đã chết.\n\n- Trong trường hợp người đang có vợ, chồng mà nhận con thì việc nhận con không cần phải có sự đồng ý của người kia.\n\nNhư vậy, theo thông tin mà bạn đưa ra là bạn có con với người khác trước khi kết hôn nên khi biết được con của mình bạn có quyền nhận con mà không cần có sự đồng ý của vợ bạn. Tuy nhiên, bạn nên bàn bạc với vợ mình để đảm bảo vừa có hạnh phúc gia đình mà vừa được nhận con của mình.\n\nTrân trọng!",
+    "chu_de_phap_ly": "xac_dinh_cha_me_con",
+    "loai_cau_hoi": "Tình huống",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_91": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_91"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
   }
 ]

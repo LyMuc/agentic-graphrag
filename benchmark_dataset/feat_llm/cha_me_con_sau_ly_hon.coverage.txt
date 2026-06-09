@@ -1,0 +1,77 @@
+--- Coverage theo intent ---
+I15_sinh_con_sau_ly_hon (1/1):
+  #55: Sinh con sau ly hôn thì có được ngăn cản cha gặp con hay không?
+I11_ong_ba_nguoi_than_nuoi_chau (2/2):
+  #18: Ông bà nội có được giành quyền nuôi cháu khi người cha đã mất không?
+  #26: Muốn nhận trực tiếp nuôi đứa con sau khi vợ chồng chị gái ly hôn thì làm thế nào?
+I08_han_che_tham_nom_va_xu_phat (2/2):
+  #54: Sau ly hôn, người trực tiếp nuôi con cản trở quyền thăm nom con của người không trực tiếp nuôi con thì bị phạt thế nào?
+  #52: Sau khi ly hôn có được tước quyền làm cha của chồng cũ không?
+I06_tham_nom_va_cap_duong_co_ban (2/2):
+  #3: Không cấp dưỡng nuôi con sau ly hôn có được quyền thăm con không?
+  #25: Pháp luật có bắt buộc phải cấp dưỡng nuôi con sau khi ly hôn hay không?
+I14_tinh_huong_ly_hon_thuc_te (2/2):
+  #1: Hai vợ chồng tôi đã kết hôn và có 1 con trai được 9 tháng. Vì mâu thuẫn gia đình, vợ và con tôi đã về nhà ngoại sống. Kh
+  #19: Vợ chồng tôi kết hôn với nhau được ba năm và có với nhau một con trai một tuổi rưỡi. Vì tôi là con một nên sau khi cưới 
+I13_tinh_huong_dac_biet (3/3):
+  #34: Tôi đã ly dị vợ và con tôi hiện tại 2 tuổi. Tòa xử cho vợ tôi được nuôi con. Bây giờ vợ tôi đi xuất khẩu lao động và chá
+  #37: Bố đi tù mẹ có được dành lại quyền nuôi con không?
+  #15: Chồng có tiền án thì vợ có giành quyền nuôi con được không (Con tôi 1 tuổi)?
+I10_gianh_lai_quyen_nuoi_tinh_huong (2/2):
+  #33: Tôi và chồng có chung với nhau một đứa con năm nay 05 tuổi. Sau khi ly hôn do điều kiện kinh tế tôi khó khăn nên chồng t
+  #48: Xin hỏi là nếu mẹ nuôi con không tốt cha có thể giành lại quyền nuôi con của mẹ không? Tôi tên Nhân năm nay 30 tuổi. tôi
+I02_uu_tien_me_con_duoi_36_thang (2/2):
+  #51: Vợ chồng ly hôn thì con bao nhiêu tuổi mặc nhiên giao cho mẹ trực tiếp nuôi?
+  #10: Khi ly hôn con dưới 3 tuổi đều sẽ giao cho mẹ trực tiếp nuôi dưỡng phải không?
+I03_ngoai_le_bo_hoac_me_khong_du (2/2):
+  #21: Trường hợp nào mẹ không được nuôi con theo quy định hiện nay?
+  #24: Khi nào thì người bố được quyền nuôi con khi ly hôn theo quy định pháp luật hiện hành?
+I04_gianh_va_xac_dinh_quyen_nuoi (3/3):
+  #22: Sau khi ly hôn thì vợ hoặc chồng phải đáp ứng điều kiện gì để giành quyền nuôi con?
+  #11: 1. Chồng làm giám đốc, vợ làm nội trợ thì ai được nuôi con khi ly hôn?
+  #2: Tôi và vợ tôi đang làm thủ tục ly hôn, hiện có 1 con chung được 24 tháng tuổi. Tôi muốn nuôi con mà vợ tôi giành quyền n
+I05_nguyen_vong_con_7_tuoi (1/1):
+  #12: Khi bố mẹ ly hôn, con bao nhiêu tuổi thì được lựa chọn sống chung với bố hoặc mẹ?
+I07_quyen_nghia_vu_khong_truc_tiep_nuoi (2/2):
+  #46: Quyền và nghĩa vụ của cha, mẹ không trực tiếp nuôi con sau khi ly hôn gồm những gì?
+  #44: Quyền và nghĩa vụ cha mẹ không trực tiếp nuôi con sau khi ly hôn được quy định như thế nào?
+I09_thay_doi_nguoi_nuoi_ly_thuyet (2/2):
+  #13: Khi nào đươc thay đổi người trực tiếp nuôi con sau khi ly hôn?
+  #42: 2. Thay đổi người trực tiếp nuôi con sau khi ly hôn có được không?
+I12_nguyen_vong_khi_thay_doi_nguoi_nuoi (1/1):
+  #39: Con từ bao nhiêu tuổi trở lên thì phải xem xét nguyện vọng của con khi thay đổi người trực tiếp nuôi con sau ly hôn?
+I01_quy_dinh_chung_dieu_81 (2/2):
+  #36: Việc trông nom, chăm sóc, nuôi dưỡng, giáo dục con sau khi ly hôn
+  #7: Quyền nuôi con sau khi vợ chồng ly hôn được quy định như thế nào?
+
+--- 30 cau da chon ---
+ 1. #55 [I15_sinh_con_sau_ly_hon]
+ 2. #18 [I11_ong_ba_nguoi_than_nuoi_chau]
+ 3. #26 [I11_ong_ba_nguoi_than_nuoi_chau]
+ 4. #54 [I08_han_che_tham_nom_va_xu_phat]
+ 5. #52 [I08_han_che_tham_nom_va_xu_phat]
+ 6. #3 [I06_tham_nom_va_cap_duong_co_ban]
+ 7. #25 [I06_tham_nom_va_cap_duong_co_ban]
+ 8. #1 [I14_tinh_huong_ly_hon_thuc_te]
+ 9. #19 [I14_tinh_huong_ly_hon_thuc_te]
+10. #34 [I13_tinh_huong_dac_biet]
+11. #37 [I13_tinh_huong_dac_biet]
+12. #15 [I13_tinh_huong_dac_biet]
+13. #33 [I10_gianh_lai_quyen_nuoi_tinh_huong]
+14. #48 [I10_gianh_lai_quyen_nuoi_tinh_huong]
+15. #51 [I02_uu_tien_me_con_duoi_36_thang]
+16. #10 [I02_uu_tien_me_con_duoi_36_thang]
+17. #21 [I03_ngoai_le_bo_hoac_me_khong_du]
+18. #24 [I03_ngoai_le_bo_hoac_me_khong_du]
+19. #22 [I04_gianh_va_xac_dinh_quyen_nuoi]
+20. #11 [I04_gianh_va_xac_dinh_quyen_nuoi]
+21. #2 [I04_gianh_va_xac_dinh_quyen_nuoi]
+22. #12 [I05_nguyen_vong_con_7_tuoi]
+23. #46 [I07_quyen_nghia_vu_khong_truc_tiep_nuoi]
+24. #44 [I07_quyen_nghia_vu_khong_truc_tiep_nuoi]
+25. #13 [I09_thay_doi_nguoi_nuoi_ly_thuyet]
+26. #42 [I09_thay_doi_nguoi_nuoi_ly_thuyet]
+27. #39 [I12_nguyen_vong_khi_thay_doi_nguoi_nuoi]
+28. #36 [I01_quy_dinh_chung_dieu_81]
+29. #7 [I01_quy_dinh_chung_dieu_81]
+30. #5 [_fallback]

@@ -1,0 +1,34 @@
+[
+    {
+        "question": "Vợ chồng tôi là người nhiễm HIV, chúng tôi cưới nhau năm ngoái nhưng đến nay vẫn chưa đăng ký kết hôn. Vợ tôi vừa sinh con được 2 tháng chưa có giấy khai sinh, vừa qua cô ấy cãi nhau với mẹ tôi và đã bế con về nhà ngoại và nói rằng sẽ ly dị với tôi. Vậy nếu vợ chồng tôi ly dị thì tôi có được nuôi con tôi không?",
+        "ground_truth": "Các bạn lấy nhau không có ĐKKH,  cho nên các bạn không được pháp luật công nhận là vợ chồng. Con bạn là con ngoài giá thú, lại chưa có giấy khai sinh và bạn cũng chưa làm thủ tục nhận con ( Pháp luật chưa biết bố cháu bé là ai). Chính vì vậy bạn không có quyền được nuôi con. Ngoài ra nếu có đăng ký kết hôn, con dưới 2 tuổi thì người mẹ vẫn được nuôi",
+        "chu_de_phap_ly": "cha_me_con_sau_ly_hon",
+        "loai_cau_hoi": "",
+        "van_ban_phap_luat_lien_quan": [],
+        "tinh_trang_hieu_luc": {},
+        "can_cu_phap_ly_chinh": [],
+        "can_cu_phap_ly_bo_tro": [],
+        "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+        "can_cu_khong_nen_ap_dung": [],
+        "quan_he_chong_cheo_mau_thuan": []
+    }, 
+    {
+        "question": "Làm giấy khai sinh cho con sinh ra sau ly hôn không có tên cha được không?",
+        "ground_truth": "Theo quy định tại Điều 15 Nghị định 123/2015/NĐ-CP thì trong trường hợp khai sinh cho trẻ chưa xác định được cha mẹ thì:\n\nTheo đó, trường hợp của bạn, trẻ được khai sinh theo diện chưa xác định được cha. Như vậy, trong Giấy khai sinh cho con bạn, bạn có thể chỉ có tên mẹ mà không cần có tên cha.",
+        "chu_de_phap_ly": "cha_me_con_sau_ly_hon",
+        "loai_cau_hoi": "Tình huống",
+        "van_ban_phap_luat_lien_quan": [
+          "Nghi_dinh_123_2015"
+        ],
+        "tinh_trang_hieu_luc": {
+          "Nghi_dinh_123_2015_Dieu_15": "CON_HIEU_LUC"
+        },
+        "can_cu_phap_ly_chinh": [],
+        "can_cu_phap_ly_bo_tro": [],
+        "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [
+          "Nghi_dinh_123_2015_Dieu_15"
+        ],
+        "can_cu_khong_nen_ap_dung": [],
+        "quan_he_chong_cheo_mau_thuan": []
+    }
+]

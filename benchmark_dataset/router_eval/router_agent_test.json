@@ -1617,12 +1617,12 @@
     ],
     "passed": true,
     "final_tools": [
-      "cha_me_con_sau_ly_hon",
-      "cap_duong"
+      "cap_duong",
+      "cha_me_con_sau_ly_hon"
     ],
     "policy_retrievers": [
-      "cha_me_con_sau_ly_hon",
-      "cap_duong"
+      "cap_duong",
+      "cha_me_con_sau_ly_hon"
     ],
     "policy_intervened": false,
     "rejected_tools": {},
@@ -1648,6 +1648,97 @@
     "primary_topic": "che_do_tai_san_cua_vo_chong",
     "expected_retrievers": [
       "che_do_tai_san_cua_vo_chong"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  },
+  {
+    "id": "router_0aebd6c1c312",
+    "question": "Tôi và vợ tôi đang làm thủ tục ly hôn, hiện có 1 con chung được 24 tháng tuổi. Tôi muốn nuôi con mà vợ tôi giành quyền nuôi con và yêu cầu tôi cấp dưỡng mỗi tháng là 2,5 triệu đồng. Tôi không đồng ý, tôi nói là có nhiều cho nhiều, có ít cho ít, nếu vợ tôi nuôi không nổi thì tôi nuôi, không cần vợ tôi phải cấp dưỡng. Như vậy tôi làm đúng không?",
+    "source": "benchmark_grouped",
+    "case_type": "nhieu_y",
+    "primary_topic": "cha_me_con_sau_ly_hon",
+    "expected_retrievers": [
+      "cha_me_con_sau_ly_hon",
+      "cap_duong"
+    ],
+    "llm_candidates": [
+      "quy_dinh_chung_ly_hon",
+      "cha_me_con_sau_ly_hon",
+      "cap_duong"
+    ],
+    "precision": 0.6667,
+    "recall": 1.0,
+    "f1": 0.8,
+    "error_types": [
+      "Thừa"
+    ],
+    "missing": [],
+    "extra": [
+      "quy_dinh_chung_ly_hon"
+    ],
+    "actual_topic_keys": [
+      "cap_duong",
+      "cha_me_con_sau_ly_hon",
+      "quy_dinh_chung_ly_hon"
+    ],
+    "passed": false,
+    "final_tools": [
+      "quy_dinh_chung_ly_hon",
+      "cha_me_con_sau_ly_hon",
+      "cap_duong"
+    ],
+    "policy_retrievers": [
+      "quy_dinh_chung_ly_hon",
+      "cha_me_con_sau_ly_hon",
+      "cap_duong"
+    ],
+    "policy_intervened": false,
+    "rejected_tools": {},
+    "policy_precision": 0.6667,
+    "policy_recall": 1.0,
+    "policy_f1": 0.8,
+    "policy_error_types": [
+      "Thừa"
+    ],
+    "policy_missing": [],
+    "policy_extra": [
+      "quy_dinh_chung_ly_hon"
+    ],
+    "policy_actual_topic_keys": [
+      "cap_duong",
+      "cha_me_con_sau_ly_hon",
+      "quy_dinh_chung_ly_hon"
+    ],
+    "policy_passed": false
+  }, 
+  {
+    "id": "router_0aebd6c1c313",
+    "question": "Khi bố mẹ ly hôn, con được sang thăm bố khi mẹ là người trực tiếp nuôi dưỡng không?",
+    "source": "benchmark_grouped",
+    "case_type": "quyen_nghia_vu_cha_me_con",
+    "primary_topic": "quyen_nghia_vu_cha_me_con",
+    "expected_retrievers": [
+      "quyen_nghia_vu_cha_me_con"
+    ],
+    "llm_candidates": [],
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "error_types": []
+  }, 
+  {
+    "id": "router_0aebd6c1c314",
+    "question": "Sinh con sau ly hôn thì có được ngăn cản cha gặp con hay không?",
+    "source": "benchmark_grouped",
+    "case_type": "boi_canh_phap_ly",
+    "primary_topic": "cha_me_con_sau_ly_hon",
+    "expected_retrievers": [
+      "cha_me_con_sau_ly_hon", 
+      "xac_dinh_cha_me_con"
     ],
     "llm_candidates": [],
     "precision": null,
