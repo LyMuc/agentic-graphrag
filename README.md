@@ -157,8 +157,9 @@ chainlit run presentation/main.py -w
 
 ### Build frontend Chainlit tùy biến
 
-Frontend được giữ theo baseline Chainlit `2.11.1` và chỉ mở rộng sidebar cho
-Projects. Bundle production được commit tại `public/chainlit-build`.
+Frontend được giữ theo baseline Chainlit `2.11.1` và mở rộng sidebar Projects
+cùng chế độ chat guest. Bundle production được commit tại
+`public/chainlit-build`.
 
 ```powershell
 cd frontend
@@ -182,7 +183,9 @@ uvicorn presentation.viz_server:app --host 0.0.0.0 --port 8501
 - Trong `.env`: `VIZ_BASE_URL=http://localhost:8501`
 - Snapshot JSON lưu tại `data/viz_snapshots/` (TTL 7 ngày)
 
-**OAuth (tùy chọn):** Điền client ID/secret trong `.env`, bật `auth` trong `.chainlit/config.toml` (hiện `enabled = false` cho password; OAuth providers đã khai báo Google/GitHub).
+**Guest và OAuth:** Người dùng chưa đăng nhập vẫn chat được nhưng hội thoại
+không được lưu và không có lịch sử/Projects. Nút **Login** mở trang OAuth mặc
+định của Chainlit; sau khi đăng nhập, lịch sử và Projects được bật cho tài khoản.
 
 ---
 

@@ -16,6 +16,7 @@ import {
   sessionIdState,
   sideViewState,
   useApi,
+  useAuth,
   useConfig
 } from '@chainlit/react-client';
 
@@ -24,6 +25,7 @@ import { useLayoutMaxWidth } from 'hooks/useLayoutMaxWidth';
 import { ErrorBoundary } from './ErrorBoundary';
 import { Loader } from './Loader';
 import { Messages } from './chat/Messages';
+import { canManageConversations } from '@/lib/auth';
 
 type Props = {
   id: string;
@@ -31,6 +33,7 @@ type Props = {
 
 const ReadOnlyThread = ({ id }: Props) => {
   const { config } = useConfig();
+  const { user } = useAuth();
   const location = useLocation();
   const isSharedRoute = location.pathname.startsWith('/share/');
   const {
@@ -152,6 +155,7 @@ const ReadOnlyThread = ({ id }: Props) => {
   const elements = thread?.elements || [];
   const actions: IAction[] = [];
   const messages = nestMessages(steps);
+  const enableFeedback = canManageConversations(config, user);
 
   const memoizedContext = useMemo(() => {
     return {
@@ -160,7 +164,7 @@ const ReadOnlyThread = ({ id }: Props) => {
       renderMarkdown: config?.features?.user_message_markdown,
       editable: false,
       loading: false,
-      showFeedbackButtons: !!config?.dataPersistence,
+      showFeedbackButtons: enableFeedback,
       uiName: config?.ui?.name || '',
       cot: config?.ui?.cot || 'hidden',
       onElementRefClick,
@@ -169,6 +173,7 @@ const ReadOnlyThread = ({ id }: Props) => {
       onFeedbackDeleted
     };
   }, [
+    enableFeedback,
     config?.ui?.name,
     config?.ui?.cot,
     config?.features?.unsafe_allow_html,

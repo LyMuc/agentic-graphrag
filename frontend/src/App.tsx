@@ -12,6 +12,7 @@ import { Loader } from '@/components/Loader';
 import { Toaster } from '@/components/ui/sonner';
 
 import { userEnvState } from 'state/user';
+import getRouterBasename from '@/lib/router';
 
 declare global {
   interface Window {
@@ -38,9 +39,12 @@ function App() {
       ? !!chatProfile
       : true
     : false;
+  const isAuthRoute =
+    window.location.pathname === getRouterBasename() + '/login' ||
+    window.location.pathname === getRouterBasename() + '/login/callback';
 
   useEffect(() => {
-    if (!isAuthenticated || !isReady || !chatProfileOk) {
+    if (!isAuthenticated || !isReady || !chatProfileOk || isAuthRoute) {
       return;
     }
 
@@ -48,7 +52,7 @@ function App() {
       transports: window.transports,
       userEnv
     });
-  }, [userEnv, isAuthenticated, connect, isReady, chatProfileOk]);
+  }, [userEnv, isAuthenticated, connect, isReady, chatProfileOk, isAuthRoute]);
 
   useEffect(() => {
     if (

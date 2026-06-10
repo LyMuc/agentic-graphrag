@@ -12,6 +12,7 @@ from adapter.projects import (
     ProjectStore,
     ThreadNotFoundError,
 )
+from adapter.guest import is_guest_user
 from chainlit.auth import get_current_user
 from chainlit.data import get_data_layer
 from chainlit.server import app
@@ -57,6 +58,11 @@ def _store() -> ProjectStore:
 
 
 def _user_id(current_user: Optional[User]) -> str:
+    if is_guest_user(current_user):
+        raise HTTPException(
+            status_code=403,
+            detail="Login is required to manage conversations",
+        )
     if not isinstance(current_user, PersistedUser):
         raise HTTPException(status_code=401, detail="Unauthorized")
     return current_user.id

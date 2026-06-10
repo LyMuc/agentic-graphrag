@@ -5,7 +5,9 @@ import chainlit as cl
 # Gọi data_layer để Chainlit thiết lập PostgreSQL connection lúc khởi động
 from adapter import data_layer 
 from chainlit import data as cl_data
+from chainlit.server import app
 import presentation.projects_api  # noqa: F401
+from presentation.guest_auth import guest_management_guard, router as guest_router
 from adapter.config import chat_stream
 from application.query_updater import query_update
 from application.router import route_question_with_audit
@@ -64,6 +66,9 @@ from adapter.retrievers.vi_pham.xu_phat_vi_pham import xu_phat_vi_pham, xu_phat_
 from utils.general import text2cypher, text2cypher_description, answer_given, answer_given_description
 from chainlit.types import ThreadDict
 from typing import Dict, Optional
+
+app.middleware("http")(guest_management_guard)
+app.include_router(guest_router)
 
 tools = {
     "quy_dinh_chung_khai_niem_phap_ly": {
@@ -415,6 +420,8 @@ async def on_chat_start():
     # Xác định user đang login
     user = cl.user_session.get("user")
     name = user.metadata.get("name") if user and user.metadata else "bạn"
+    if user and user.metadata.get("auth_mode") == "guest":
+        name = "bạn"
     
     await cl.Message(content=f"Chào {name}, tôi là trợ lý ảo về Luật Hôn nhân và Gia đình Việt Nam. Tôi có thể giúp gì cho bạn?").send()
 

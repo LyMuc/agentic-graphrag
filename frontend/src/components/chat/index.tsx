@@ -22,6 +22,7 @@ import { useUpload } from '@/hooks/useUpload';
 import { useLayoutMaxWidth } from 'hooks/useLayoutMaxWidth';
 
 import { IAttachment, attachmentsState } from 'state/chat';
+import { canManageConversations } from '@/lib/auth';
 
 import { ErrorBoundary } from '../ErrorBoundary';
 import ChatFooter from './Footer';
@@ -170,12 +171,12 @@ const Chat = () => {
   });
 
   const { threadId } = useChatMessages();
+  const canManage = canManageConversations(config, user);
 
   useEffect(() => {
     const currentPage = new URL(window.location.href);
     if (
-      user &&
-      config?.dataPersistence &&
+      canManage &&
       threadId &&
       currentPage.pathname === '/'
     ) {
