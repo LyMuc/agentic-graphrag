@@ -6,8 +6,7 @@ from typing import Any
 
 from adapter.config import driver
 from adapter.cypher_templates import CypherTemplate, TemplateRegistry
-from adapter.cypher_templates.chia_tai_san_sau_ly_hon import CHIA_TAI_SAN_SAU_LY_HON_REGISTRY
-from adapter.cypher_templates.tai_san import TAI_SAN_REGISTRY
+from adapter.cypher_templates.registry_index import ALL_TEMPLATE_REGISTRIES
 from adapter.viz_store import load_snapshot, save_snapshot, update_snapshot
 from utils.utils import _dieu_level_id
 
@@ -48,17 +47,48 @@ RETURN
   collect(DISTINCT {src: startNode(r).id, dst: endNode(r).id, type: type(r)}) AS edges
 """
 
-_VIZ_REGISTRIES: dict[str, TemplateRegistry] = {
-    "chia_tai_san_sau_ly_hon": CHIA_TAI_SAN_SAU_LY_HON_REGISTRY,
-    "tai_san": TAI_SAN_REGISTRY,
-}
+_VIZ_REGISTRIES: dict[str, TemplateRegistry] = ALL_TEMPLATE_REGISTRIES
+
+# Neo4j topic overlay labels (gắn trên semantic node) — bỏ qua khi chọn label hiển thị.
+_TOPIC_OVERLAY_LABELS = frozenset({
+    "CheDoTaiSanCuaVoChong",
+    "ChiaTaiSanSauLyHon",
+    "DangKyKetHon",
+    "QuyDinhChungLyHon",
+    "ChungSongNhuVoChong",
+    "ChaMeConSauLyHon",
+    "CapDuong",
+})
+
+# Label nghiệp vụ semantic layer (mọi topic) — dùng để gán group tím.
+_SEMANTIC_LABELS = frozenset({
+    "ChuThe",
+    "DieuKien",
+    "HanhVi",
+    "NghiaVu",
+    "Quyen",
+    "HauQua",
+    "ThoaThuan",
+    "LoaiTaiSan",
+    "ChePhapDoTaiSan",
+    "NguonGocTaiSan",
+    "CoQuanDangKy",
+    "NoiCuTru",
+    "GiayToHoTich",
+    "ThoiHan",
+    "GiaiDoanLyHon",
+    "HinhThucLyHon",
+    "TinhTrangHonNhan",
+    "QuanHeCapDuong",
+    "PhuongThucCapDuong",
+})
 
 
 def _primary_label(labels: list[str] | None) -> str:
     if not labels:
         return "Node"
     for label in labels:
-        if label not in ("CheDoTaiSanCuaVoChong", "ChiaTaiSanSauLyHon"):
+        if label not in _TOPIC_OVERLAY_LABELS:
             return label
     return labels[0]
 
@@ -75,12 +105,10 @@ def _infer_group(labels: list[str] | None, explicit: str | None = None) -> str:
     label_set = set(labels)
     if label_set & _LEGAL_LABELS:
         return "bo_tro"
-    if (
-        "LoaiTaiSan" in label_set
-        or "HanhVi" in label_set
-        or "NghiaVu" in label_set
-        or "Quyen" in label_set
-    ):
+    if label_set & _SEMANTIC_LABELS:
+        return "semantic"
+    business_labels = label_set - _TOPIC_OVERLAY_LABELS
+    if business_labels:
         return "semantic"
     return "default"
 
