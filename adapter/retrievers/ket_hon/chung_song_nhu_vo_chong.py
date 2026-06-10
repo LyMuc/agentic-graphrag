@@ -1,23 +1,51 @@
-from adapter.config import driver, build_llm, RETRIEVER_LLM
-# Cấu hình Gemini (tạm comment): from adapter.config import driver, ainvoke_structured_retriever
-from utils.utils import TrichXuatLuat, chuan_hoa_ket_qua_retriever, lay_target_date_tu_extraction
-from adapter.retrievers._context_tho_common import enhance_domain_retriever_cypher
-from datetime import date
+"""Retriever cho chủ đề "Chung sống như vợ chồng không đăng ký" — Đ5, Đ14-16 Luật HNGD 2014.
 
-today = date.today()
-formatted_date = today.strftime("%Y-%m-%d")
+Pipeline 3 bước:
+    1. CLASSIFY  -> LLM chọn 1+ template (registry topic 'chung_song_nhu_vo_chong').
+    2. EXTRACT   -> 1 LLM call mỗi template (params + thời điểm sự kiện).
+    3. EXECUTE   -> chạy Cypher qua asyncio.to_thread → chuan_hoa_Context_cho_LLM.
+
+Output: dict ``{"contexts": list[str], "debug": str}``.
+"""
+from __future__ import annotations
+
+import asyncio
+import json
+from datetime import date
+from typing import Any, List
+
+from pydantic import BaseModel, Field
+
+from adapter.config import driver, build_llm, RETRIEVER_LLM
+from adapter.cypher_templates import CypherTemplate
+from adapter.cypher_templates.extract_schema import (
+    build_params_with_date_schema,
+    split_params_and_date,
+)
+from adapter.cypher_templates.chung_song_nhu_vo_chong import (
+    CHUNG_SONG_NHU_VO_CHONG_REGISTRY,
+)
+from adapter.cypher_templates.chung_song_nhu_vo_chong.term_mapping import resolve_term
+from adapter.graph_viz import save_lazy_viz_stub
+from utils.utils import chuan_hoa_Context_cho_LLM
+
 
 chung_song_nhu_vo_chong_description = {
     "type": "function",
     "function": {
         "name": "chung_song_nhu_vo_chong",
-        "description": "Lấy thông tin quy định về Giải quyết hậu quả; Xác định quyền, nghĩa vụ của cha mẹ và con và Giải quyết quan hệ tài sản, nghĩa vụ và hợp đồng trong trường hợp nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn.",
+        "description": (
+            "Lấy thông tin quy định về giải quyết hậu quả; xác định quyền, nghĩa vụ "
+            "của cha mẹ và con; giải quyết quan hệ tài sản, nghĩa vụ và hợp đồng "
+            "trong trường hợp nam, nữ chung sống với nhau như vợ chồng mà không "
+            "đăng ký kết hôn."
+        ),
         "parameters": {
             "type": "object",
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "Câu hỏi cụ thể của người dùng."
+                    "description": "Câu hỏi cụ thể của người dùng.",
                 }
             },
             "required": ["query"],
@@ -25,145 +53,289 @@ chung_song_nhu_vo_chong_description = {
     },
 }
 
-async def chung_song_nhu_vo_chong(query: str):
-    """
-    Tool xử lý các vấn đề về nam nữ chung sống như vợ chồng mà không đăng ký kết hôn.
-    """
+
+class TemplateChoice(BaseModel):
+    template_name: str = Field(
+        description="Tên template — phải khớp 1 trong 6 template đã liệt kê."
+    )
+    reason: str = Field(description="Lý do ngắn (1 câu) chọn template này.")
+
+
+class TemplateChoiceList(BaseModel):
+    choices: List[TemplateChoice] = Field(
+        description="Danh sách template phù hợp. Tối đa 2. Hầu hết câu chỉ cần 1."
+    )
+
+
+def _build_classifier_prompt() -> str:
+    descriptions = CHUNG_SONG_NHU_VO_CHONG_REGISTRY.descriptions()
+    lines = [
+        "Các template Cypher cho chủ đề 'Chung sống như vợ chồng không đăng ký':\n"
+    ]
+    for name, desc in descriptions.items():
+        lines.append(f"\n- **{name}**:\n{desc}\n")
+    return (
+        "Bạn là router chọn template Cypher để truy xuất ngữ cảnh pháp lý cho "
+        "câu hỏi về CHUNG SỐNG NHƯ VỢ CHỒNG KHÔNG ĐĂNG KÝ KẾT HÔN "
+        "(Điều 5, 14-16 Luật HNGD 2014).\n\n"
+        "QUY TẮC ƯU TIÊN (theo thứ tự):\n"
+        "1. Có 'đang có vợ/chồng', 'đã có gia đình', 'chưa ly hôn', 'vi phạm', "
+        "'bị cấm' -> xac_dinh_tinh_hop_phap_chung_song.\n"
+        "2. Có 'con', 'nuôi con', 'chăm sóc', 'cấp dưỡng', 'quyền cha/mẹ/con' "
+        "-> quyen_nghia_vu_cha_me_con.\n"
+        "3. Có 'bao lâu phải cưới/kết hôn', 'đăng ký sau', 'hôn nhân tính từ khi nào' "
+        "-> dang_ky_ket_hon_sau_chung_song.\n"
+        "4. Có 'chia tài sản', 'tài sản lúc sống thử', 'công sức nội trợ', "
+        "'quyền lợi phụ nữ và con khi chia' -> giai_quyet_tai_san_khi_chung_song.\n"
+        "5. Có 'nợ', 'nghĩa vụ', 'ai trả', 'hợp đồng', 'giao dịch' và không phải "
+        "chia tài sản -> giai_quyet_nghia_vu_va_hop_dong.\n"
+        "6. Có 'hậu quả', 'giải quyết thế nào', 'có được coi là vợ chồng không' "
+        "mà không có nhánh cụ thể hơn -> hau_qua_phap_ly_chung_song.\n"
+        "7. 'Bạn trai/bạn gái' không đủ để suy ra độc thân hay đã có vợ/chồng.\n"
+        "8. Ranh giới: đã đăng ký kết hôn + tài sản hôn nhân -> che_do_tai_san; "
+        "thủ tục đăng ký -> dang_ky_ket_hon; nuôi con sau ly hôn -> cha_me_con_sau_ly_hon.\n"
+        "9. Mặc định 1 template/câu; tối đa 2 khi có hai yêu cầu độc lập.\n"
+        "10. KHÔNG bịa template name ngoài danh sách.\n"
+        + "".join(lines)
+    )
+
+
+async def _classify_templates(query: str) -> List[TemplateChoice]:
+    llm = build_llm(model=RETRIEVER_LLM, temperature=0)
+    structured_llm = llm.with_structured_output(TemplateChoiceList)
+    messages = [
+        {"role": "system", "content": _build_classifier_prompt()},
+        {"role": "user", "content": f"Câu hỏi: {query}"},
+    ]
+    try:
+        result: TemplateChoiceList = await structured_llm.ainvoke(messages)
+    except Exception as exc:
+        print(f"[Classifier-chung_song] Lỗi: {exc}. Fallback hậu quả.")
+        return [
+            TemplateChoice(
+                template_name="hau_qua_phap_ly_chung_song",
+                reason="Fallback do lỗi LLM",
+            )
+        ]
+
+    valid_names = set(CHUNG_SONG_NHU_VO_CHONG_REGISTRY.names())
+    valid = [c for c in result.choices if c.template_name in valid_names]
+    if not valid and result.choices:
+        bad = [c.template_name for c in result.choices]
+        print(f"[Classifier-chung_song] Template không hợp lệ: {bad}. Fallback.")
+        valid = [
+            TemplateChoice(
+                template_name="hau_qua_phap_ly_chung_song",
+                reason="Fallback template không hợp lệ",
+            )
+        ]
+    if not valid:
+        valid = [
+            TemplateChoice(
+                template_name="hau_qua_phap_ly_chung_song",
+                reason="Fallback mặc định",
+            )
+        ]
+    print(f"[Classifier-chung_song] Chọn: {[(c.template_name, c.reason) for c in valid]}")
+    return valid[:2]
+
+
+_EXTRACT_SYS_PROMPT_BASE = (
+    "Bạn là chuyên gia trích xuất tham số cho câu Cypher truy xuất luật pháp "
+    "về chung sống như vợ chồng không đăng ký kết hôn. "
+    "Điền chính xác các trường schema `{schema_name}`.\n\n"
+    "QUY TẮC:\n"
+    "1. ĐỌC description từng field — có bảng map ngữ thông tục → enum chuẩn.\n"
+    "2. Không suy luận được → chọn giá trị mặc định an toàn (khong_ro, tong_quat).\n"
+    "3. KHÔNG bịa enum ngoài Literal.\n"
+    "4. `thoi_diem_su_kien`: mốc thời gian sự kiện 'YYYY-MM-DD' hoặc null nếu "
+    "câu hỏi không nêu ngày/tháng/năm cụ thể."
+)
+
+_ENUM_FIELDS = {
+    "tinh_trang_hon_nhan_cac_ben",
+    "khia_canh_hop_phap",
+    "khia_canh_hau_qua",
+    "tinh_trang_dang_ky",
+    "khia_canh_thoi_diem",
+    "khia_canh_con",
+    "chu_the_quan_tam",
+    "co_thoa_thuan",
+    "khia_canh_tai_san",
+    "loai_quan_he",
+}
+
+
+def _normalize_with_term_mapping(params: BaseModel, query: str) -> BaseModel:
+    data = params.model_dump()
+    changed = False
+
+    for field_name in _ENUM_FIELDS:
+        if field_name not in data:
+            continue
+        current = data.get(field_name)
+        if current and current not in ("khong_ro", "chua_ro", "tat_ca", "tong_quat"):
+            continue
+        resolved = resolve_term(field_name, query)
+        if resolved and resolved != current:
+            print(f"[term_mapping] {field_name}: '{current}' → '{resolved}'")
+            data[field_name] = resolved
+            changed = True
+
+    if not changed:
+        return params
+    try:
+        return params.__class__(**data)
+    except Exception as exc:
+        print(f"[term_mapping] rebuild failed: {exc}")
+        return params
+
+
+async def _extract_template_params(
+    query: str, template: CypherTemplate
+) -> tuple[BaseModel, str | None]:
+    combined_schema = build_params_with_date_schema(template.params_schema)
+    schema_name = combined_schema.__name__
+    sys_prompt = _EXTRACT_SYS_PROMPT_BASE.format(schema_name=schema_name)
+    llm = build_llm(model=RETRIEVER_LLM, temperature=0)
+    struct_llm = llm.with_structured_output(combined_schema)
+
+    raw = await struct_llm.ainvoke(
+        [
+            {"role": "system", "content": sys_prompt},
+            {"role": "user", "content": f"Câu hỏi: {query}"},
+        ]
+    )
+    params, thoi_diem = split_params_and_date(raw, template.params_schema)
+    params = _normalize_with_term_mapping(params, query)
+    return params, thoi_diem
+
+
+def _today_str() -> str:
+    return date.today().strftime("%Y-%m-%d")
+
+
+def _run_template_sync(
+    template: CypherTemplate, params: BaseModel, target_date: str
+) -> dict[str, Any] | None:
+    runtime_params = template.build_params(params)
+    runtime_params["target_date"] = target_date
+    print(f"[Template:{template.name}] params={runtime_params}")
+    try:
+        records, _, _ = driver.execute_query(template.cypher, **runtime_params)
+    except Exception as exc:
+        print(f"[Template:{template.name}] Cypher error: {exc}")
+        return None
+    if not records:
+        print(f"[Template:{template.name}] Không có record.")
+        return None
+    return records[0].data()
+
+
+def _params_for_display(runtime_params: dict[str, Any]) -> dict[str, Any]:
+    return {k: v for k, v in runtime_params.items() if "whitelist" not in k.lower()}
+
+
+def _format_retrieval_debug(
+    template_name: str, reason: str, runtime_params: dict[str, Any]
+) -> str:
+    return "\n".join(
+        [
+            f"Template: {template_name}",
+            f"Lý do: {reason}",
+            f"Params: {_params_for_display(runtime_params)}",
+        ]
+    )
+
+
+async def chung_song_nhu_vo_chong(query: str) -> dict[str, Any]:
+    """3 bước: classify → extract → execute → normalize."""
     print(f"[Agent chung_song_nhu_vo_chong] Đang xử lý: '{query}'...")
 
-    # 1. Trích xuất ID và thời gian
-    prompt_extract = """
-    Bạn là chuyên gia xác định căn cứ pháp lý. Đọc câu hỏi và chọn đúng các Điều luật để trả lời cho câu hỏi của người dùng. Có thể cần phải chọn nhiều hơn 1 Điều luật nếu cần thiết.
-    Chỉ được phép chọn từ danh sách:
-    - 'Luat_HNGD_2014_Dieu_14': Giải quyết hậu quả của việc nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn.
-    - 'Luat_HNGD_2014_Dieu_15': Quyền, nghĩa vụ của cha mẹ và con trong trường hợp nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn.
-    - 'Luat_HNGD_2014_Dieu_16': Giải quyết quan hệ tài sản, nghĩa vụ và hợp đồng của nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn.
-    Trích xuất mốc thời gian sự kiện (nếu có) định dạng 'YYYY-MM-DD'. Nếu người dùng chỉ nêu năm (vd: 2023), trả về 'YYYY' hoặc 'YYYY-01-01'. Nếu không có, trả về null.
-    """
-    # Cấu hình Gemini (tạm comment):
-    # extraction = await structured_llm.ainvoke(...)
-    llm = build_llm(model=RETRIEVER_LLM, temperature=0)
-    structured_llm = llm.with_structured_output(TrichXuatLuat)
+    choices = await _classify_templates(query)
 
-    try:
-        extraction = await structured_llm.ainvoke([{"role": "system", "content": prompt_extract}, {"role": "user", "content": query}])
-        target_ids = extraction.dieu_luat_ids
-        target_date, is_user_provide_date = lay_target_date_tu_extraction(extraction.thoi_diem_su_kien, formatted_date)
-    except:
-        target_ids, target_date, is_user_provide_date = ["Luat_HNGD_2014_Dieu_14", "Luat_HNGD_2014_Dieu_15", "Luat_HNGD_2014_Dieu_16"], formatted_date, False
+    templates: List[CypherTemplate] = []
+    extract_tasks = []
+    for choice in choices:
+        template = CHUNG_SONG_NHU_VO_CHONG_REGISTRY.get(choice.template_name)
+        templates.append(template)
+        extract_tasks.append(_extract_template_params(query, template))
 
-    # 2. Truy vấn Neo4j
-    cypher = """
-    MATCH (n_goc:DieuLuat) WHERE n_goc.id IN $danh_sach_id
+    extracted: List[tuple[BaseModel, str | None]] = await asyncio.gather(*extract_tasks)
 
-    // 1. MỞ RỘNG THÀNH CÁC KHOẢN/ĐIỂM GỐC (Chưa lọc thời gian vội)
-    OPTIONAL MATCH (n_goc)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_goc)
+    user_dates = [d for _, d in extracted if d]
+    is_user_provide_date = bool(user_dates)
+    target_date = user_dates[0] if user_dates else _today_str()
 
-    // 2. LẤY GIA PHẢ THAY THẾ CÓ HƯỚNG (tránh kéo anh em qua hub THAY_THE_BOI)
-    OPTIONAL MATCH (chi_tiet_goc)-[:THAY_THE_BOI*0..]->(chi_tiet_moi)
-    OPTIONAL MATCH (chi_tiet_goc)<-[:THAY_THE_BOI*0..]-(chi_tiet_cu)
+    records = await asyncio.gather(
+        *(
+            asyncio.to_thread(_run_template_sync, template, params, target_date)
+            for template, (params, _) in zip(templates, extracted)
+        )
+    )
 
-    // 2b. MỞ RỘNG CHI TIẾT (KHOẢN/ĐIỂM) CỦA VĂN BẢN THAY THẾ
-    OPTIONAL MATCH (chi_tiet_moi)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_thay_the_moi)
-    OPTIONAL MATCH (chi_tiet_cu)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_thay_the_cu)
+    contexts: List[str] = []
+    debug_parts: List[str] = []
+    for template, choice, (params, _), record in zip(
+        templates, choices, extracted, records
+    ):
+        runtime_params = template.build_params(params)
+        runtime_params["target_date"] = target_date
+        debug_text = _format_retrieval_debug(
+            template_name=template.name,
+            reason=choice.reason,
+            runtime_params=runtime_params,
+        )
+        debug_parts.append(debug_text)
+        print(f"[Retriever debug]\n{debug_text}\n")
 
-    // Gom tất cả các phiên bản (Bản gốc + Bản quá khứ + Bản tương lai) vào 1 rổ
-    WITH n_goc, collect(chi_tiet_goc) + collect(chi_tiet_moi) + collect(chi_tiet_cu) + collect(chi_tiet_thay_the_moi) + collect(chi_tiet_thay_the_cu) AS tat_ca_phien_ban
-    UNWIND tat_ca_phien_ban AS node_xet_duyet
+        if record is None or "Context_Tho" not in record:
+            contexts.append(
+                "Không tìm thấy căn cứ phù hợp trong KG (main cypher trả 0 record)."
+            )
+            continue
 
-    // 3. TÌM CHÍNH XÁC PHIÊN BẢN CÓ HIỆU LỰC TẠI $target_date
-    WITH DISTINCT n_goc, node_xet_duyet AS chi_tiet_ap_dung
-    WHERE chi_tiet_ap_dung.ngay_co_hieu_luc <= $target_date
-    AND (chi_tiet_ap_dung.ngay_het_hieu_luc IS NULL OR chi_tiet_ap_dung.ngay_het_hieu_luc > $target_date)
+        try:
+            contexts.append(
+                chuan_hoa_Context_cho_LLM(
+                    record, target_date, is_user_provide_date
+                ).rstrip()
+            )
+        except Exception as exc:
+            print(f"[Template:{template.name}] Normalize error: {exc}")
+            contexts.append(
+                f"Lỗi chuẩn hoá: {exc}\n"
+                f"Raw: {json.dumps(record, ensure_ascii=False, default=str)[:500]}..."
+            )
 
-    // 4. KIỂM TRA SỬA ĐỔI BỔ SUNG ĐỐI VỚI BẢN ÁP DỤNG NÀY
-    OPTIONAL MATCH (chi_tiet_ap_dung)-[:DUOC_SUA_DOI_BOI]->(van_ban_sua_doi)
-    WHERE van_ban_sua_doi.ngay_co_hieu_luc <= $target_date
-    AND (van_ban_sua_doi.ngay_het_hieu_luc IS NULL OR van_ban_sua_doi.ngay_het_hieu_luc > $target_date)
+    graph_viz_id = None
+    lazy_sources: list[dict[str, Any]] = []
+    for template, (params, _), record in zip(templates, extracted, records):
+        if record is None or "Context_Tho" not in record:
+            continue
+        context_tho = record.get("Context_Tho")
+        if not context_tho:
+            continue
+        runtime_params = template.build_params(params)
+        runtime_params["target_date"] = target_date
+        lazy_sources.append(
+            {
+                "topic": "chung_song_nhu_vo_chong",
+                "template": template.name,
+                "params": runtime_params,
+                "context_tho": context_tho,
+            }
+        )
 
-    // 5. TÌM HƯỚNG DẪN CHI TIẾT ĐỐI VỚI BẢN ÁP DỤNG
-    OPTIONAL MATCH (chi_tiet_ap_dung)-[:HUONG_DAN_BOI]->(huong_dan)
-    WHERE huong_dan.ngay_co_hieu_luc <= $target_date
-    AND (huong_dan.ngay_het_hieu_luc IS NULL OR huong_dan.ngay_het_hieu_luc > $target_date)
+    if lazy_sources:
+        graph_viz_id = save_lazy_viz_stub(
+            lazy_sources, query=query, target_date=target_date
+        )
 
-    OPTIONAL MATCH (huong_dan)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_huong_dan)
-    WHERE chi_tiet_huong_dan.ngay_co_hieu_luc <= $target_date
-    AND (chi_tiet_huong_dan.ngay_het_hieu_luc IS NULL OR chi_tiet_huong_dan.ngay_het_hieu_luc > $target_date)
-
-    // [THEM MOI]: KIEM TRA XEM CAI KHOAN/DIEM CUA HUONG DAN CO BI SUA DOI KHONG?
-    OPTIONAL MATCH (chi_tiet_huong_dan)-[:DUOC_SUA_DOI_BOI]->(sua_doi_cua_hd)
-    WHERE sua_doi_cua_hd.ngay_co_hieu_luc <= $target_date
-    AND (sua_doi_cua_hd.ngay_het_hieu_luc IS NULL OR sua_doi_cua_hd.ngay_het_hieu_luc > $target_date)
-
-    // 6. TÌM LUẬT HIỆN HÀNH (Nếu bản áp dụng đã chết, phóng mũi tên tới tương lai để lấy bản mới nhất đối chiếu)
-    OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(hien_hanh)
-    WHERE hien_hanh.ngay_het_hieu_luc IS NULL
-
-    // 7. TÌM CÁC QUY ĐỊNH THAM CHIẾU (THAM_CHIEU_DEN)
-    OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAM_CHIEU_DEN]->(luat_tham_chieu)
-    WHERE luat_tham_chieu.ngay_co_hieu_luc <= $target_date
-    AND (luat_tham_chieu.ngay_het_hieu_luc IS NULL OR luat_tham_chieu.ngay_het_hieu_luc > $target_date)
-
-    OPTIONAL MATCH (luat_tham_chieu)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_tham_chieu)
-    WHERE chi_tiet_tham_chieu.ngay_co_hieu_luc <= $target_date
-    AND (chi_tiet_tham_chieu.ngay_het_hieu_luc IS NULL OR chi_tiet_tham_chieu.ngay_het_hieu_luc > $target_date)
-
-    RETURN {
-        can_cu_chinh: collect(DISTINCT {
-            id_goc_tu_router: n_goc.id,
-            id_thuc_te_ap_dung: chi_tiet_ap_dung.id,
-            noidung: chi_tiet_ap_dung.noidung,
-            cap_bac: chi_tiet_ap_dung.cap_bac_phap_ly,
-            het_hieu_luc: chi_tiet_ap_dung.ngay_het_hieu_luc IS NOT NULL,
-            ngay_hieu_luc: chi_tiet_ap_dung.ngay_co_hieu_luc,
-            ngay_het_hieu_luc: chi_tiet_ap_dung.ngay_het_hieu_luc,
-            id_sua_doi: van_ban_sua_doi.id,
-            noidung_sua_doi: van_ban_sua_doi.noidung,
-            ngay_hieu_luc_sua_doi: van_ban_sua_doi.ngay_co_hieu_luc,
-            ngay_het_hieu_luc_sua_doi: van_ban_sua_doi.ngay_het_hieu_luc
-        }),
-        can_cu_huong_dan: collect(DISTINCT {
-            id: huong_dan.id,
-            noidung: huong_dan.noidung,
-            cap_bac: huong_dan.cap_bac_phap_ly,
-            ngay_hieu_luc: huong_dan.ngay_co_hieu_luc,
-            ngay_het_hieu_luc: huong_dan.ngay_het_hieu_luc,
-            id_sua_doi: null,
-            noidung_sua_doi: null,
-            ngay_hieu_luc_sua_doi: null,
-            ngay_het_hieu_luc_sua_doi: null
-        }) + collect(DISTINCT {
-            id: chi_tiet_huong_dan.id,
-            noidung: chi_tiet_huong_dan.noidung,
-            cap_bac: chi_tiet_huong_dan.cap_bac_phap_ly,
-            ngay_hieu_luc: chi_tiet_huong_dan.ngay_co_hieu_luc,
-            ngay_het_hieu_luc: chi_tiet_huong_dan.ngay_het_hieu_luc,
-            id_sua_doi: sua_doi_cua_hd.id,
-            noidung_sua_doi: sua_doi_cua_hd.noidung,
-            ngay_hieu_luc_sua_doi: sua_doi_cua_hd.ngay_co_hieu_luc,
-            ngay_het_hieu_luc_sua_doi: sua_doi_cua_hd.ngay_het_hieu_luc
-        }),
-        can_cu_bo_tro: collect(DISTINCT {
-            id: luat_tham_chieu.id,
-            noidung: luat_tham_chieu.noidung,
-            cap_bac: luat_tham_chieu.cap_bac_phap_ly,
-            ngay_hieu_luc: luat_tham_chieu.ngay_co_hieu_luc,
-            ngay_het_hieu_luc: luat_tham_chieu.ngay_het_hieu_luc
-        }) + collect(DISTINCT {
-            id: chi_tiet_tham_chieu.id,
-            noidung: chi_tiet_tham_chieu.noidung,
-            cap_bac: chi_tiet_tham_chieu.cap_bac_phap_ly,
-            ngay_hieu_luc: chi_tiet_tham_chieu.ngay_co_hieu_luc,
-            ngay_het_hieu_luc: chi_tiet_tham_chieu.ngay_het_hieu_luc
-        }),
-        lien_ket_huong_dan: [pair IN collect(DISTINCT {
-            id_huong_dan: coalesce(chi_tiet_huong_dan.id, huong_dan.id),
-            id_duoc_huong_dan: chi_tiet_ap_dung.id
-        }) WHERE pair.id_huong_dan IS NOT NULL AND pair.id_duoc_huong_dan IS NOT NULL],
-
-        quy_dinh_hien_hanh_doi_chieu: collect(DISTINCT hien_hanh.id)
-    } AS Context_Tho
-    """
-    records, _, _ = driver.execute_query(enhance_domain_retriever_cypher(cypher), danh_sach_id=target_ids, target_date=target_date)
-    
-    return chuan_hoa_ket_qua_retriever(records, target_date, is_user_provide_date)
+    result: dict[str, Any] = {
+        "contexts": contexts,
+        "debug": "\n\n".join(debug_parts),
+    }
+    if graph_viz_id:
+        result["graph_viz_id"] = graph_viz_id
+    return result
