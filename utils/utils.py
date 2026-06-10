@@ -333,7 +333,26 @@ def _collect_hieu_luc(items, doc_hieu_luc_map):
             )
 
 
-def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
+def chuan_hoa_Context_cho_LLM(
+    neo4j_record,
+    target_date,
+    is_user_provide_date,
+    citation_links=None,
+):
+    """Chuẩn hóa ``Context_Tho`` thành văn bản căn cứ pháp lý cho LLM.
+
+    Args:
+        neo4j_record: Mapping chứa khóa ``Context_Tho`` từ kết quả Neo4j.
+        target_date: Ngày áp dụng pháp luật theo định dạng ``YYYY-MM-DD``.
+        is_user_provide_date: ``True`` khi người dùng nêu rõ mốc thời gian;
+            dùng để bật cảnh báo lịch sử và tắt cảnh báo luật sắp hiệu lực.
+        citation_links: Mapping tùy chọn từ ID cấp Điều tới URL TVPL. Nếu
+            không truyền, hàm tự tải link từ Neo4j như hành vi cũ.
+
+    Returns:
+        Chuỗi context đã định dạng gồm cảnh báo, hiệu lực, căn cứ chính,
+        hướng dẫn, bổ trợ, mâu thuẫn, luật sắp hiệu lực và link trích dẫn.
+    """
     data = neo4j_record['Context_Tho']
 
     context_sach = {
@@ -551,7 +570,12 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
                 f"[{item['id_dich']}]: {item['noidung_dich']}\n"
             )
 
-    bang_link = _format_bang_link_trich_dan(_fetch_tvpl_links(_collect_dieu_ids_from_context(data)))
+    link_map = (
+        dict(citation_links)
+        if citation_links is not None
+        else _fetch_tvpl_links(_collect_dieu_ids_from_context(data))
+    )
+    bang_link = _format_bang_link_trich_dan(link_map)
     if bang_link:
         final_context_string += f"\n{bang_link}"
 

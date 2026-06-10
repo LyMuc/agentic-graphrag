@@ -17,7 +17,7 @@ Pipeline 3 bước:
     1. CLASSIFY  -> LLM chọn 1+ template name (registry topic 'tai_san').
     2. EXTRACT   -> mỗi template song song: 1 LLM call (params + thời điểm sự kiện).
     3. EXECUTE   -> chạy main cypher qua asyncio.to_thread.
-                   Post-process bằng chuan_hoa_Context_cho_LLM.
+                   Post-process thành ``LegalContextBundle``.
 
 Output: dict ``{"contexts": list[str], "debug": str}`` — ``contexts`` chỉ chứa
 căn cứ pháp lý đã chuẩn hoá cho LLM; ``debug`` gồm template + lý do + params
@@ -43,8 +43,8 @@ from adapter.cypher_templates.tai_san.term_mapping import (
     COMMON_TO_LEGAL_TERMS,
     resolve_term,
 )
+from application.legal_context import encode_context_record
 from adapter.graph_viz import save_lazy_viz_stub
-from utils.utils import chuan_hoa_Context_cho_LLM
 
 
 # =============================================================================
@@ -476,11 +476,16 @@ def _format_retrieval_debug(
 # Public entrypoint cho tool router
 # =============================================================================
 async def che_do_tai_san_cua_vo_chong(query: str) -> dict[str, Any]:
-    """3 bước: classify → extract → execute → normalize.
+    """Truy xuất căn cứ về chế độ tài sản của vợ chồng.
 
-    Trả về ``{"contexts": [...], "debug": "..."}``:
-    - ``contexts``: chỉ căn cứ pháp lý đã chuẩn hoá (gửi LLM).
-    - ``debug``: template + lý do + params (hiển thị màn hình).
+    Args:
+        query: Câu hỏi pháp lý đã được Router giải nghĩa đầy đủ ngữ cảnh.
+
+    Returns:
+        Dictionary ``{"contexts": [...], "debug": "..."}``; ``contexts``
+        chứa LegalContextBundle đã encode, ``debug`` chứa template/lý do/params
+        và ``graph_viz_id`` được thêm khi có snapshot visualize. Câu hỏi ngoài
+        phạm vi hoặc lỗi template được giữ dưới dạng context text fallback.
     """
     print(f"[Agent che_do_tai_san_cua_vo_chong] Đang xử lý: '{query}'...")
 
@@ -537,9 +542,13 @@ async def che_do_tai_san_cua_vo_chong(query: str) -> dict[str, Any]:
 
         try:
             contexts.append(
-                chuan_hoa_Context_cho_LLM(
-                    record, target_date, is_user_provide_date
-                ).rstrip()
+                encode_context_record(
+                    record,
+                    target_date,
+                    is_user_provide_date,
+                    retriever_name="che_do_tai_san_cua_vo_chong",
+                    template_name=template.name,
+                )
             )
         except Exception as exc:
             print(f"[Template:{template.name}] Normalize error: {exc}")
