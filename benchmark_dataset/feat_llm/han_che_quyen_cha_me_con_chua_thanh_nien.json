@@ -1,0 +1,40 @@
+[
+  {
+    "question": "Cha, mẹ bị hạn chế quyền đối với con chưa thành niên trong các trường hợp nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_85"
+    ]
+  },
+  {
+    "question": "Các trường hợp hạn chế quyền của cha, mẹ với con chưa thành niên?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_85"
+    ]
+  },
+  {
+    "question": "Hạn chế quyền làm cha với con chưa thành niên trong trường hợp nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_85_Khoan_1",
+      "Luat_HNGD_2014_Dieu_86"
+    ]
+  },
+  {
+    "question": "Bố đi tù thì có bị hạn chế quyền đối với con?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_85_Khoan_1"
+    ]
+  },
+  {
+    "question": "Cha mẹ bị hạn chế quyền thăm nom con trong trường hợp nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_85"
+    ]
+  },
+  {
+    "question": "Trường hợp nào mẹ không được nuôi con theo quy định hiện nay?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_81",
+      "Luat_HNGD_2014_Dieu_85"
+    ]
+  }
+]

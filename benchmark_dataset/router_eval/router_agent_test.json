@@ -1714,7 +1714,7 @@
       "quy_dinh_chung_ly_hon"
     ],
     "policy_passed": false
-  }, 
+  },
   {
     "id": "router_0aebd6c1c313",
     "question": "Khi bố mẹ ly hôn, con được sang thăm bố khi mẹ là người trực tiếp nuôi dưỡng không?",
@@ -1729,7 +1729,7 @@
     "recall": null,
     "f1": null,
     "error_types": []
-  }, 
+  },
   {
     "id": "router_0aebd6c1c314",
     "question": "Sinh con sau ly hôn thì có được ngăn cản cha gặp con hay không?",
@@ -1737,7 +1737,7 @@
     "case_type": "boi_canh_phap_ly",
     "primary_topic": "cha_me_con_sau_ly_hon",
     "expected_retrievers": [
-      "cha_me_con_sau_ly_hon", 
+      "cha_me_con_sau_ly_hon",
       "xac_dinh_cha_me_con"
     ],
     "llm_candidates": [],
@@ -1745,5 +1745,56 @@
     "recall": null,
     "f1": null,
     "error_types": []
+  },
+  {
+    "id": "router_0aebd6c1c315",
+    "question": "Kết hôn có bắt buộc phải đăng ký không?",
+    "source": "benchmark_grouped",
+    "case_type": "dang_ky_ket_hon",
+    "primary_topic": "dang_ky_ket_hon",
+    "expected_retrievers": [
+      "dang_ky_ket_hon"
+    ],
+    "llm_candidates": [
+      "dang_ky_ket_hon",
+      "chung_song_nhu_vo_chong"
+    ],
+    "precision": 0.5,
+    "recall": 1.0,
+    "f1": 0.6667,
+    "error_types": [
+      "Thừa"
+    ],
+    "missing": [],
+    "extra": [
+      "chung_song_nhu_vo_chong"
+    ],
+    "actual_topic_keys": [
+      "chung_song_nhu_vo_chong",
+      "dang_ky_ket_hon"
+    ],
+    "passed": false,
+    "final_tools": [
+      "dang_ky_ket_hon"
+    ],
+    "policy_retrievers": [
+      "dang_ky_ket_hon"
+    ],
+    "policy_intervened": true,
+    "rejected_tools": {
+      "chung_song_nhu_vo_chong": "No required/support trigger match."
+    },
+    "policy_precision": 1.0,
+    "policy_recall": 1.0,
+    "policy_f1": 1.0,
+    "policy_error_types": [
+      "Đúng"
+    ],
+    "policy_missing": [],
+    "policy_extra": [],
+    "policy_actual_topic_keys": [
+      "dang_ky_ket_hon"
+    ],
+    "policy_passed": true
   }
 ]

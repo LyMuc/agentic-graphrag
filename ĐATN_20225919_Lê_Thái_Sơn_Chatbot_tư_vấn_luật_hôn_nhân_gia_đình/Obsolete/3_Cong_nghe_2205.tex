@@ -1,0 +1,99 @@
+\documentclass[../DoAn.tex]{subfiles}
+\begin{document}
+
+Chương này tập trung trình bày các nền tảng lý thuyết hệ thống và phân tích các giải pháp công nghệ được lựa chọn để xây dựng ứng dụng Chatbot tư vấn pháp luật. Nội dung chương được chia làm hai phần chính: phần lý thuyết làm rõ cơ chế biểu diễn tri thức dạng đồ thị phối hợp quy trình điều phối đa tác nhân; phần công nghệ nêu rõ chi tiết vai trò của từng thư viện, hệ quản trị cơ sở dữ liệu được sử dụng, đồng thời đối chiếu với các giải pháp thay thế để giải thích lí do lựa chọn các công nghệ đã sử dụng
+
+\section{Nền tảng lý thuyết cốt lõi}
+\label{section:3.1}
+
+\subsection{Đồ thị tri thức (Knowledge Graph)}
+\label{subsection:3.1.1}
+
+Đồ thị tri thức (Knowledge Graph) là một mạng lưới ngữ nghĩa biểu diễn các thực thể trong thế giới thực dưới dạng các nút (Nodes) và các mối quan hệ đa chiều giữa chúng dưới dạng các cạnh (Edges) \cite{Hogan_2021}. Trong hệ thống pháp luật Việt Nam, các văn bản quy phạm không tồn tại độc lập mà liên kết chặt chẽ qua các hành vi sửa đổi, bổ sung, thay thế hoặc hướng dẫn thi hành. 
+
+Việc ứng dụng đồ thị tri thức giúp mô hình hóa mối quan hệ giữa các văn bản quy phạm pháp luật, cho phép hệ thống lưu trữ đồng thời cả thông tin có cấu trúc (thứ bậc văn bản, chương, điều, khoản; các mối quan hệ tham chiếu chéo giữa các điều luật, các hành vi sửa đổi, bổ sung, thay thế; mối quan hệ hiệu lực giữa các văn bản...) lẫn thông tin phi cấu trúc (nội dung điều luật thô). Ngoài ra, việc áp dụng đồ thị tri thức còn giúp mô hình hóa mối quan hệ giữa các thực thể pháp lý và mối liên hệ giữa chúng (ví dụ: giữa “quyền nuôi con” và “độ tuổi trẻ em” hay “thỏa thuận của cha mẹ”) từ đó giúp trích dẫn chính xác điều luật. \cite{pmlr-v304-zhang26a}. 
+
+\subsection{Kiến trúc Agentic GraphRAG}
+\label{subsection:3.1.2}
+
+Kiến trúc Agentic GraphRAG là sự kết hợp giữa mô hình RAG dựa trên tác nhân thông minh (Agentic RAG) và Đồ thị tri thức. Hệ thống phân rã các tác vụ tư vấn pháp lý thành các nhiệm vụ chuyên biệt nhỏ hơn như sau (i) Bộ định tuyến truy xuất (Router Agent): Phân tích đặc điểm và ý định của câu hỏi để quyết định kích hoạt các retrieval agents phù hợp.
+(ii) Các tác nhân truy xuất (Retrieval Agents): Đóng vai trò là trực tiếp truy xuất các vùng đồ thị tri thức chuyên biệt cho từng dạng câu hỏi để lấy về căn cứ pháp lý. (iii) Bộ đánh giá câu trả lời (Answer Critic): Kiểm tra ngữ cảnh được lấy về đã đủ để trả lời cho câu hỏi của người dùng chưa để tránh việc LLM bịa ra thông tin không có trong context để trả lời cho câu hỏi của người dùng (hallucination) (iv) Tác nhân trả lời câu hỏi của người dùng nhận vào context được truy xuất từ các Retrieval Agents để sinh câu trả lời cuối cùng cho người dùng \cite{bratanic2025essential}. 
+
+\section{Công nghệ phía Backend}
+\label{section:3.2}
+
+\subsection{Cơ sở dữ liệu đồ thị Neo4j và ngôn ngữ Cypher}
+\label{subsection:3.2.1}
+
+\textbf{1. Tổng quan kỹ thuật:} Neo4j là hệ quản trị cơ sở dữ liệu đồ thị mã nguồn mở hàng đầu, tối ưu hóa cho các tập dữ liệu có tính kết nối cao. Neo4j sử dụng ngôn ngữ truy vấn Cypher - một ngôn ngữ trực quan sử dụng các ký hiệu đồ họa để thực hiện các thao tác truy vấn cơ sở dữ liệu đồ thị \cite{10162641}.
+
+\textbf{2. Giải quyết bài toán cụ thể ở Chương 2:} Công nghệ này giải quyết trực tiếp yêu cầu truy xuất căn cứ pháp lý chính xác. Neo4j cho phép các Retrieval Agents thực hiện các câu lệnh Cypher để lấy về các căn cứ pháp lý, sau đó lọc văn bản theo thời gian hiệu lực (quét qua các mối quan hệ \texttt{THAY\_THE\_BOI}, và các văn bản sửa đổi, hướng dẫn qua quan hệ \texttt{SUA\_DOI\_BOI}, \texttt{HUONG\_DAN\_BOI}) sẽ được trình bày chi tiết ở chương \ref{chapter:5}. 
+
+\textbf{3. Giải pháp thay thế và giải thích sự lựa chọn:} Các giải pháp thay thế có thể kể đến là dùng Cơ sở dữ liệu quan hệ (ví dụ MySQL, PostgreSQL...) hoặc cơ sở dữ liệu NoSQL (Ví dụ MongoDB, ...) và cơ dữ liệu vector (Chroma DB, FAISS, ...). Lí do lựa chọn cơ sở dữ liệu đồ thị và cụ thể là Neo4J bởi vì: Các DB Vector thuần túy chỉ tìm kiếm dựa trên độ tương đồng khoảng cách cosine, hiệu quả phụ thuộc vào cách chunking và vector embedding; đồng thời nếu chỉ sử dụng DB vector thuần túy cũng rất khó biểu diễn mối quan hệ giữa các văn bản quy phạm pháp luật. Cơ sở dữ liệu quan hệ khi truy vấn các mối quan hệ đa tầng (như tìm văn bản hướng dẫn của một điều luật cũ, hay tìm tham chiếu chéo giữa các văn bản) đòi hỏi quá nhiều tác vụ \texttt{JOIN} chồng chéo, gây ảnh hưởng tới hiệu năng. Neo4j (Hoặc các cơ sở dữ liệu đồ thị khác) là lựa chọn tốt hơn nhờ khả năng giữ trọn vẹn ngữ cảnh phân cấp pháp lý và quan hệ giữa các văn bản quy phạm pháp luật \cite{9631310}. 
+
+\subsection{Cơ sở dữ liệu quan hệ PostgreSQL}
+\label{subsection:3.2.2}
+
+\textbf{1. Tổng quan kỹ thuật:}
+PostgreSQL là hệ quản trị cơ sở dữ liệu quan hệ (RDBMS) mã nguồn mở có độ tin cậy và tính toàn vẹn dữ liệu cực cao. Hệ thống hỗ trợ xử lý các kiểu dữ liệu phức tạp, các truy vấn cấu trúc SQL nâng cao và quản lý giao dịch an toàn.
+
+\textbf{2. Giải quyết bài toán cụ thể ở Chương 2:}
+PostgreSQL chịu trách nhiệm đáp ứng yêu cầu lưu trữ lâu dài của nhóm Use Case Quản lý lịch sử hội thoại. PostgreSQL còn được sử dụng để lưu trữ thông tin người dùng (Google OAuth Metadata), thông tin các Threads, thông tin về bình luận đánh giá của người dùng và toàn bộ vết thực thi phân cấp dạng JSON của Agent Steps nhằm phục vụ cho việc truy vết và kiểm thử hệ thống.
+
+\textbf{3. Giải pháp thay thế và giải thích sự lựa chọn:}
+Chainlit hỗ trợ các cơ sở dữ liệu mặc định là PostgreSQL và SQLite. Nhưng SQLite không đáp ứng được yêu cầu nhiều thao tác ghi đồng thời \cite{SQLiteDoc}, do đó không thích hợp để làm ứng dụng chatbot. PostgreSQL hỗ trợ mạnh mẽ cả cấu trúc quan hệ có ràng buộc lẫn kiểu dữ liệu trường JSONB linh hoạt để lưu vết Agent. \cite{ChainlitDoc}.
+
+\section{Thư viện tiền xử lý dữ liệu và trích xuất tri thức}
+\label{section:3.3}
+
+\subsection{Thư viện PyMuPDF}
+\label{subsection:3.3.1}
+
+\textbf{1. Tổng quan kỹ thuật:}
+PyMuPDF là giao diện Python cho lõi C của engine MuPDF. Thư viện cung cấp khả năng truy cập cấu trúc DOM của tài liệu tài liệu để trích xuất văn bản thuần túy, tọa độ khối (Blocks), thông tin phông chữ (Fonts) từ các tệp định dạng PDF, EPUB.
+
+\textbf{2. Giải quyết bài toán cụ thể ở Chương 2:}
+Thư viện giải quyết vấn đề về xử lý dữ liệu đầu vào, cụ thể nó được dùng để viết các tập lệnh tự động bóc tách các tệp PDF văn bản luật pháp thô từ Cổng thông tin Quốc gia, phân tích bố cục phức tạp của văn bản pháp luật để nhận diện chính xác tiêu đề Điều/Khoản/Điểm để làm đầu vào cho việc dùng Cypher query để thêm thông tin vào cơ sở dữ liệu đồ thị Neo4J.
+
+\textbf{3. Giải pháp thay thế và giải thích sự lựa chọn:}
+Các giải pháp thay thế có thể kể đến như PyPDF2, PDFPlumber. Nhưng so với PyMuPDF thì PyPDF2 có tốc độ chậm hơn, và độ chính xác cũng không cao bằng \cite{paudel2026optimizingnepalipdfextraction}. Nhưng PyPDF2 có tốc độ xử lý chậm và thường xuyên bị lỗi mã hóa font tiếng Việt (gây mất dấu hoặc dính chữ). PyMuPDF cũng cho thấy sự vượt trội so với PDFPlumber ở các chỉ số như F1 score, BLEU-4 score cho các tài liệu pháp lý \cite{adhikari2025comparativestudypdfparsing}. 
+
+\subsection{Thư viện python-docx}
+\label{subsection:3.3.2}
+
+\textbf{1. Tổng quan kỹ thuật:}
+python-docx là một thư viện Python chuyên dụng dùng để đọc, thao tác và tạo các tệp tin tài liệu định dạng Microsoft Word (docx) thông qua việc phân tích cấu trúc XML mã nguồn của tệp.
+
+\textbf{2. Giải quyết bài toán cụ thể ở Chương 2:}
+Trong quy trình xây dựng kho tri thức pháp luật, một lượng lớn tài liệu văn bản pháp luật được lưu trữ dưới dạng file Word (docx). Thư viện này được sử dụng cùng với PyMuPDF để phân tích bố cục phức tạp của văn bản pháp luật để nhận diện chính xác tiêu đề Điều/Khoản/Điểm để làm đầu vào cho việc dùng Cypher query để thêm thông tin vào cơ sở dữ liệu đồ thị Neo4J.
+
+\textbf{3. Giải pháp thay thế và giải thích sự lựa chọn:}
+Các Giải pháp thay thế có thể kể đến như là Chuyển đổi thủ công sang file CSV hoặc dùng các bộ công cụ convert trực tuyến. Nhưng việc chuyển đổi thủ công đối với hàng trăm trang tài liệu gây tốn thời gian và dễ làm mất định dạng cấu trúc dữ liệu. Sử dụng các công cụ trực tuyến thì không thuận tiện cho việc tạo câu query để thêm dữ liệu vào cơ sở dữ liệu Neo4j.
+
+\section{Xây dựng chatbot và Phương pháp đánh giá}
+\label{section:3.4}
+
+\subsection{Xây dựng chatbot bằng thư viện Chainlit}
+\label{subsection:3.4.1}
+
+\textbf{1. Tổng quan kỹ thuật:}
+Chainlit là một framework Python mã nguồn mở giúp chuyển đổi luồng xử lý không trạng thái của LLM thành ứng dụng web có quản lý phiên, vòng đời hội thoại tích hợp và hiển thị chuỗi suy luận (Chain of Thought).
+
+\textbf{2. Giải quyết bài toán cụ thể ở Chương 2:}
+Chainlit chịu trách nhiệm xây dựng giao diện chatbot và đồng thời cung cấp các hooks để xử lý phía backend mỗi khi có các sự kiện như tạo một phiên chat mới, có tin nhắn mới, xóa phiên chat, v.v.... Thư viện cung cấp hook để đáp ứng yêu cầu hiển thị minh bạch các bước trung gian của Agent
+
+\textbf{3. Giải pháp thay thế và giải thích sự lựa chọn:}
+Các giải pháp thay thế để xây dựng ứng dụng chatbot có thể kể đến là Streamlit. Tuy vậy, Streamlit sử dụng cơ chế rerun toàn bộ Python script mỗi khi trạng thái widget thay đổi \cite{StreamlitDoc}, gây khó khăn cho việc hiển thị luồng suy luận của các agent. Mặt khác, Chainlit sử dụng kiến trúc dựa trên WebSocket, hỗ trợ mặc định cấu trúc hiển thị phân cấp các Agent Steps, tích hợp sẵn phần quản lý xác thực (Oauth) và các chức năng cơ bản khác của chatbot, giúp tiết kiệm thời gian phát triển chatbot.
+
+\subsection{Phương pháp đánh giá RAGAS}
+\label{subsection:3.4.2}
+
+\textbf{1. Tổng quan kỹ thuật:}
+RAGAS (Retrieval-Augmented Generation Assessment) là một khung sườn đánh giá thực nghiệm chuyên sâu cho hệ thống RAG, sử dụng năng lực của các mô hình LLM tiên tiến đóng vai trò làm trọng tài (LLM-as-a-judge) để tính toán các chỉ số chất lượng dữ liệu.
+
+\textbf{2. Giải quyết bài toán cụ thể ở Chương 2:}
+RAGAS trực tiếp giải quyết yêu cầu kiểm thử khả năng đưa ra các câu trả lời chính xác với đầy đủ các căn cứ pháp lý, vốn là một khó khăn đối với các chatbot hiện hành theo như khảo sát nêu tại mục \ref{subsection:2.4.3}). Thư viện thực hiện tính toán tự động ba chỉ số cốt lõi: độ phủ ngữ cảnh (Context Recall), độ trung thực không ảo giác (Faithfulness) và độ chính xác câu trả lời (Answer Correctness) trên bộ testcase 600 câu hỏi.
+
+\textbf{3. Giải pháp thay thế và giải thích sự lựa chọn:}
+Các Giải pháp thay thế có thể kể đến như DeepEval hoặc đánh giá thủ công nhờ luật sư. Phương pháp đánh giá thủ công mang có độ tin cậy cao nhưng tốn kém chi phí và thời gian lớn nên khó có thể thực hiện lặp lại mỗi khi hệ thống thực hiện các sửa đổi, cải tiến. RAGAS mang lại một quy trình đánh giá tự động hóa, phù hợp với việc đánh giá bộ câu hỏi benchmark dataset lớn gồm 600 câu.
+\end{document}

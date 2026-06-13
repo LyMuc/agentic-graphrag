@@ -198,6 +198,7 @@ _RAW_RETRIEVER_SPECS: dict[str, RetrieverSpec] = {
                         "thủ tục đăng ký",
                         "kết hôn lại",
                         "xác nhận tình trạng hôn nhân",
+                        "đăng ký"
                     ),
                 ),
                 "Cau hoi ve dang ky, tham quyen hoac thu tuc ket hon.",
@@ -375,9 +376,12 @@ _RAW_RETRIEVER_SPECS: dict[str, RetrieverSpec] = {
                         "trông nom", 
                         "giáo dục", 
                         "sinh con", 
-                        "đẻ con"
+                        "đẻ con", 
+                        "nguyện vọng", 
+                        "ở với bố", 
+                        "ở với mẹ", 
                     ),
-                    ("ly hôn", "sau ly hôn", "khi ly hôn", "cha mẹ", "cha đã chết", "cha đã mất", "mẹ đã mất", "mẹ đã chết", "hạn chế quyền cha mẹ", "hạn chế quyền cha", "hạn chế quyền mẹ", "hạn chế quyền cha mẹ đối với con"),
+                    ("ly hôn", "sau ly hôn", "khi ly hôn", "cha mẹ", "cha đã chết", "cha đã mất", "mẹ đã mất", "mẹ đã chết", "hạn chế quyền cha mẹ", "hạn chế quyền cha", "hạn chế quyền mẹ", "hạn chế quyền cha mẹ đối với con", "nuôi"),
                 ),
                 "Cau hoi ve nuoi duong/cham soc/tham nom con sau ly hon.",
             ),

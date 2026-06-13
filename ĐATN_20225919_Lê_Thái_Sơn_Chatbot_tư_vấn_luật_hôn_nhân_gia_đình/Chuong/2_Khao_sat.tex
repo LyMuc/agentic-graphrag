@@ -1,0 +1,211 @@
+\documentclass[../DoAn.tex]{subfiles}
+\begin{document}
+\section{Khảo sát hiện trạng}
+\label{section:2.1}
+
+\subsection{Khảo sát một số chatbot tư vấn pháp luật Việt Nam hiện hành}
+Phần này trình bày việc khảo sát về một số hệ thống chatbot tư vấn pháp luật Việt Nam hiện hành trên thị trường, cụ thể bao gồm: AI tra cứu luật\footnote{https://aitracuuluat.vn, truy cập lần cuối ngày 18/05/2026}, AI Luật của LuatVietNam\footnote{https://ailuat.luatvietnam.vn, truy cập lần cuối ngày 18/05/2026}, Chatbot pháp luật của Cổng Pháp luật Quốc gia\footnote{https://ai.phapluat.gov.vn/, truy cập lần cuối ngày 18/05/2026}, Gemini\footnote{https://gemini.google.com, truy cập lần cuối ngày 18/05/2026}, Trợ lý ảo pháp luật của Viettel\footnote{https://trolyao.toaan.gov.vn/, truy cập lần cuối ngày 18/04/2026} và VNPT SmartBot\footnote{https://vnptai.io/smartbot, truy cập lần cuối ngày 20/04/2026}.
+
+Hệ thống AITracuuluat là nền tảng trợ lý ảo thông minh cho phép người dùng tìm kiếm và nhận câu trả lời có viện dẫn căn cứ pháp lý... (Bên cạnh việc trả lời câu hỏi, công cụ này còn cung cấp các tính năng hỗ trợ chuyên sâu như tra cứu thủ tục hành chính và hệ thống hóa văn bản theo từng lĩnh vực cụ thể. Đây là dự án mang tính xã hội cao, giúp người dân dễ dàng tiếp cận với các quy định pháp luật của Nhà nước mà không cần phải có chuyên môn sâu. Mặc dù vậy, trong quá trình khảo sát câu trả lời của hệ thống với tập các câu hỏi về Luật hôn nhân và gia đình đã phát hiện được một số hạn chế như: Các trích dẫn căn cứ pháp lý đôi khi chưa được cập nhật với các quy định mới nhất và có thể đưa ra các căn cứ pháp lý đã hết hiệu lực. Khi đưa ra các khẳng định trong câu trả lời không trích dẫn được rõ đến từng điều khoản của căn cứ pháp lý mà chỉ tổng hợp lại các căn cứ pháp lý được dùng cho câu trả lời ở phía cuối cùng, người dùng phải tự so sánh và đối chiếu. Phần tổng hợp các căn cứ pháp lý ở phía cuối mỗi câu trả lời có thể chứa các căn cứ pháp lý không liên quan. Đặc biệt, hệ thống này hoàn toàn chưa hỗ trợ tính năng cảnh báo hiệu lực văn bản và không có cơ chế đối chiếu để đưa ra các cảnh báo về xung đột pháp lý giữa các quy định khác nhau.
+
+AI Luật của LuatVietnam và Chatbot pháp luật của Cổng pháp luật quốc gia là các trợ lý ảo tư vấn pháp luật có khả năng phân tích và đưa ra câu trả lời có độ chính xác, có thể trích dẫn chi tiết đến từng điều, khoản của văn bản quy phạm pháp luật đang còn hiệu lực giúp tránh được việc áp dụng các quy định đã cũ hoặc hết hiệu lực. Dẫu vậy, các nền tảng này lại gặp hạn chế lớn về tính đại chúng và khả năng tiếp cận đối với người dân do chỉ miễn phí 5 câu hỏi đầu tiên. Hơn thế nữa, mặc dù làm tốt ở khâu truy xuất căn cứ, cả hai hệ thống này đều thiếu vắng tính năng cảnh báo hiệu lực (như thông báo văn bản sắp hết hiệu lực, bị thay thế một phần) và đặc biệt là không có tính năng phát hiện, cảnh báo xung đột pháp lý khi một vấn đề bị chi phối bởi nhiều văn bản luật chồng chéo.
+
+Gemini là mô hình ngôn ngữ lớn phổ biến toàn cầu, được huấn luyện trên tập dữ liệu phong phú. Tuy nhiên, khi đặt vào ngữ cảnh chuyên biệt của hệ thống pháp luật Việt Nam, mô hình này thường xuyên gặp các vấn đề như: Các câu hỏi phần lớn chưa đưa ra được chính xác và đầy đủ các căn cứ pháp lý; Các căn cứ pháp lý được trích dẫn đôi khi bị hết hiệu lực do dữ liệu huấn luyện hiện nay chỉ đến năm 2025. Chính vì bản chất là một mô hình sinh ngữ (Generative AI) không tích hợp cơ sở dữ liệu pháp luật thời gian thực, Gemini hoàn toàn không có khả năng tự động cảnh báo hiệu lực văn bản và không thể thực hiện các phân tích logic chuyên sâu để cảnh báo xung đột pháp lý cho người dùng.
+
+Cuối cùng, các giải pháp như Trợ lý ảo Viettel và VNPT Smartbot hiện tại chỉ được phân quyền phục vụ cho các đối tượng đặc thù thuộc cơ quan Nhà nước như Thẩm phán, Thư ký Tòa án hoặc các tổ chức doanh nghiệp quy mô lớn, hoàn toàn chưa được mở rộng để công chúng có thể tiếp cận rộng rãi.
+
+Bên cạnh các hệ thống trong nước, các giải pháp tư vấn pháp lý quốc tế và các mô hình ngôn ngữ chuyên biệt cũng đã đạt được những bước tiến nhất định. Trong đó, nổi bật có thể kể đến AILawyer, Chatlaw (Mỹ).
+
+\subsection{Khảo sát một số chatbot tư vấn pháp luật trên thế giới}
+AILawyer và Chatlaw (Mỹ) là các nền tảng AI chuyên ngành pháp lý nổi tiếng trên thế giới. Điểm mạnh lớn nhất của các hệ thống này là khả năng trích dẫn rất chi tiết và chính xác đến từng Điều, Khoản của văn bản pháp luật hoặc án lệ nhờ vào cơ sở dữ liệu pháp luật nội địa được số hóa bài bản. Tuy nhiên, các hệ thống này cũng không trích dẫn hiệu lực căn cứ pháp lý khi trả lời câu hỏi, không có tính năng cảnh báo tình trạng hiệu lực của văn bản. Đồng thời, chúng cũng chưa có khả năng đưa ra các cảnh báo xung đột pháp lý (nếu có) trong câu trả lời.
+
+\subsection{Tổng kết so sánh các giải pháp chatbot tư vấn pháp luật hiện hành}
+Tổng hợp lại, bảng \ref{table:fixed_legal_chatbots} dưới đây so sánh tổng quan các chức năng cốt lõi của các chatbot tư vấn pháp luật hiện hành so với định hướng của đồ án.
+
+\begin{table}[H]
+\centering
+% Cấu hình độ rộng từng cột để tổng chiều rộng không vượt quá 15cm-16cm (vừa vặn khổ giấy A4)
+\begin{tabular}{|p{3cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+\hline
+\textbf{Sản phẩm} & \textbf{Tính năng trích dẫn chi tiết từng Điều, Khoản căn cứ pháp lý trong câu trả lời} & \textbf{Tính năng cảnh báo hiệu lực} & \textbf{Tính năng cảnh báo xung đột pháp lý}\\ \hline
+AITracuuluat & Không & Không & Không \\ \hline
+AI Luật & Có & Không & Không \\ \hline
+Chatbot Bộ Tư pháp & Có & Không & Không \\ \hline
+Gemini & Hạn chế & Không & Không \\ \hline
+AILawyer & Có & Không & Không \\ \hline
+Chatlaw (Mỹ) & Có & Không & Không \\ \hline
+\end{tabular}
+\caption{Bảng so sánh các tính năng của các chatbot tư vấn pháp luật hiện hành}
+\label{table:fixed_legal_chatbots}
+\end{table}
+
+Tóm lại trong các hệ thống chatbot tư vấn pháp luật hiện hành đang tồn tại các vấn đề chính, đó là vấn đề độ tin cậy trong các căn cứ pháp lý được dùng để làm cơ sở cho câu trả lời của người dùng, thiếu cơ chế để cảnh báo cho người dùng về thời hạn hiệu lực, hoặc sự xung đột, mâu thuẫn (nếu có) giữa của các căn cứ pháp lý được nêu ra hoặc là hạn chế về khả năng tiếp cận với người dân. 
+
+Từ những phân tích đã nêu ở trên, ĐATN hướng tới việc xây dựng một hệ thống hỏi đáp pháp luật hôn nhân gia đình 2014 có khả năng đưa ra các căn cứ trích dẫn chi tiết tới từng điều, khoản. Các căn cứ đưa ra được cập nhật mới nhất tới dữ liệu vào tháng 06/2026. Trong các câu trả lời đưa ra có khả năng mô tả ngắn gọn mối quan hệ giữa các căn cứ pháp lý, với mỗi căn cứ pháp lý nêu rõ thời hạn hiệu lực và có thể có các cảnh báo khi tình huống phải áp dụng các văn bản đã hết hiệu lực hoặc sắp bị sửa đổi, thay thế. Hệ thống hướng tới việc mọi người đều có thể tiếp cận được miễn phí.
+
+\section{Tổng quan chức năng}
+\label{section:2.2}
+\subsection{Biểu đồ use case tổng quan}
+\label{subsection:2.2.1}
+
+Hình \ref{fig:use_case_tong_quan} minh họa biểu đồ use case tổng quan gồm các chức năng mà ĐATN phát triển. Cụ thể các tác nhân gồm có Guest (Khách vãng lai), Registered User (Người dùng đã đăng nhập) và LLM (Mô hình ngôn ngữ lớn). Guest là người dùng mới truy cập hệ thống và chưa thực hiện xác thực có thể thực hiện các chức năng gồm: (i) Đăng nhập vào hệ thống để sử dụng các chức năng liên quan đến quản lý lịch sử hội thoại (ii) các chức năng liên quan đến hỏi đáp pháp luật (Bao gồm có việc hỏi đáp pháp luật, xem luồng hoạt động của các agent trong quá trình đưa ra câu trả lời, xem cảnh báo hiệu lực văn bản và xem cảnh báo xung đột pháp luật) . Registered User (Người dùng đã đăng nhập) ngoài tất cả các chức năng có thể thực hiện với vai trò là một khách vãng lai thì còn có thể (i) Đăng xuất khỏi hệ thống và (ii) sử dụng các chức năng liên quan đến quản lý lịch sử hội thoại. LLM (mô hình ngôn ngữ lớn) đại diện cho nền tảng trí tuệ nhân tạo bên ngoài được hệ thống kết nối qua giao diện lập trình ứng dụng (API). LLM hỗ trợ hệ thống phân tích ý định câu hỏi, định tuyến các công cụ truy xuất và tổng hợp lập luận pháp lý để sinh câu trả lời cuối cùng.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{Hinhve/Biểu đồ use case tổng quan.png}
+    \caption{Biểu đồ Use Case tổng quan của hệ thống}
+    \label{fig:use_case_tong_quan}
+\end{figure}
+\subsection{Biểu đồ use case phân rã Hỏi đáp pháp luật}
+\label{subsection:2.2.3}
+Hình \ref{fig:uc_phan_ra_hoi_dap} mô tả biển đồ phân rã use case hỏi đáp pháp luật. Guest (Khách vãng lai) có thể (i) thực hiện hỏi đáp pháp luật với chatbot, (ii) truy vấn nhanh bằng cách chọn một mẫu câu hỏi đã được hệ thống định nghĩa sẵn và nhận được câu trả lời từ chatbot (iii) xem luồng hoạt động, input và output của các agent trung gian trong quá trình sinh câu trả lời. (iv) Xem cảnh báo hiệu lực văn bản (Nếu trong câu trả lời có sử dụng các căn cứ pháp lý là các điều luật đã hết hiệu lực hoặc sắp hết hiệu lực) (v) Xem cảnh báo xung đột pháp luật (Nếu trong ngữ cảnh có những căn cứ pháp lý có mối quan hệ chồng chéo, mâu thuẫn với nhau thì sẽ có cảnh báo xung đột pháp lý và giải thích lí do áp dụng các căn cứ). Registered User (người dùng đã đăng nhập vào hệ thống) thì ngoài có thể thực hiện các chức năng của Guest thì còn có thể thực hiện đánh giá (Thích hoặc không thích) và để lại góp ý chi tiết về câu trả lời của chatbot. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{Hinhve/Phân rã use case hỏi đáp pháp luật.png}
+    \caption{Biểu đồ Use Case phân rã chức năng Hỏi đáp pháp luật}
+    \label{fig:uc_phan_ra_hoi_dap}
+\end{figure}
+
+\subsection{Biểu đồ use case phân rã use case Quản lý lịch sử hội thoại}
+\label{subsection:2.2.4}
+
+Hình \ref{fig:uc_phan_ra_lich_su} mô tả biểu đồ phân rã use case quản lý lịch sử hội thoại.  Nhóm chức năng này được thiết kế dành riêng cho người dùng đã đăng nhập nhằm quản lý, lưu trữ và tái sử dụng các cuộc đối thoại trong quá khứ.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{Hinhve/Phân rã use case quản lý lịch sử hội thoại.png}
+    \caption{Biểu đồ Use Case phân rã chức năng Quản lý lịch sử hội thoại}
+    \label{fig:uc_phan_ra_lich_su}
+\end{figure}
+
+Nhóm chức năng này chỉ dành cho Registered User (người dùng đã đăng nhập vào hệ thống). Cụ thể, registered User có thể (i) Tạo mới phiên hỏi đáp: Khởi tạo và bắt đầu một phiên hỏi đáp mới với chatbot (ii) Đổi tên phiên hỏi đáp: Người dùng có thể đổi tên phiên hỏi đáp theo ý muốn (mặc định tên phiên hỏi đáp là câu hỏi đầu tiên của người dùng thuộc phiên này) (iii) Xem lại phiên hỏi đáp cũ: Người dùng đăng nhập hệ thống có thể xem lại phiên hỏi đáp cũ của mình (Bao gồm cả lịch sử hoạt động của các agent) và tiếp tục hỏi đáp (iv) Tìm kiếm phiên hỏi đáp: Người dùng có thể tìm kiếm nhanh phiên hỏi đáp theo tên phiên hỏi đáp (v) Xóa phiên hỏi đáp: Người dùng có thể xóa một phiên hỏi đáp bất kỳ khỏi lịch sử hỏi đáp của mình. 
+
+\subsection{Quy trình nghiệp vụ Hỏi đáp pháp luật}
+\label{subsection:2.2.5}
+% Đối với hệ thống chatbot tư vấn pháp luật ứng dụng kiến trúc Agentic GraphRAG, quy trình nghiệp vụ quan trọng nhất không dừng lại ở một lượt tương tác gửi nhận tin nhắn đơn thuần, mà là \textbf{Quy trình Tư vấn, Kiểm chứng và Đóng góp Tri thức Pháp lý khép kín}. Quy trình này là sự phối hợp và kết hợp của chuỗi các Use Case bao gồm: Xác thực tài khoản, Quản lý phiên, Hỏi đáp pháp luật, Kiểm chứng luồng tác nhân và Đánh giá phản hồi nhằm giải quyết trọn vẹn nhu cầu tra cứu và tối ưu hóa hệ thống.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Hinhve/Biểu đồ hoạt động quy trình nghiệp vụ Hỏi đáp pháp luật.png}
+    \caption{Biểu đồ hoạt động (Activity Diagram) minh họa quy trình nghiệp vụ hỏi đáp pháp luật}
+    \label{fig:activity_business_process}
+\end{figure}
+
+Hình \ref{fig:activity_business_process} Mô tả chi tiết luồng hoạt động tổng thể của quy trình nghiệp vụ bao gồm các giai đoạn tuần tự như sau (i) Người dùng truy cập vào ứng dụng dưới quyền Guest (khách vãng lai) và tiến hành Đăng nhập thông qua giao thức Google OAuth. (ii) Sau khi xác thực thành công, phía Backend kiểm tra lịch sử hội thoại trong cơ sở dữ liệu PostgreSQL để load lại các phiên hội thoại cũ lên thanh điều hướng (Sidebar),  khởi tạo một mã định danh phiên hoàn toàn mới và điều hướng người dùng đến trang hội thoại chính. (iii) Sau đó người dùng lựa chọn một trong hai hình thức đặt câu hỏi: hoặc nhấp chuột vào các biểu mẫu tình huống định sẵn trên giao diện để truy vấn nhanh, hoặc tự nhập một câu hỏi tình huống thực tế bằng ngôn ngữ tự nhiên. Câu hỏi được gửi tới backend có nhiệm vụ điều phối luồng xử lý tác nhân (Agentic Workflow). (iv) Tại đây, hệ thống sẽ điều phối các tác nhân (bao gồm có các tác nhân router agent và các retriever agents) để lấy về context từ đồ thị tri thức (v) Sau đó, hệ thống sẽ chuẩn hóa context cho LLM trả lời (vi) Hệ thống kết hợp context với câu prompt đã được định nghĩa sẵn rồi gọi tới API LLM để sinh câu trả lời theo đúng format mong muốn. (vii) Kết quả trả về được hiển thị trên giao diện người dùng. Tại thời điểm này, người dùng không chỉ đọc đáp án cuối cùng mà còn có quyền nhấp mở rộng để xem luồng hoạt động của các agent. (viii) Sau khi tiếp nhận câu trả lời và đối chiếu luồng hoạt động, người dùng thực hiện quyền tương tác phản hồi chất lượng. Người dùng gán nhãn đánh giá nhanh thông qua hai nút biểu cảm (Like hoặc Dislike) và có thể nhập thêm một đoạn văn bản nhận xét chi tiết về mức độ hài lòng hoặc tính chính xác của căn cứ pháp lý. (ix) Dữ liệu phản hồi này cùng toàn bộ "vết" thực thi của Agent sẽ được lưu trữ vào PostgreSQL, làm cơ sở để tiến hành kiểm thử hồi quy và tối ưu hóa bộ dữ liệu benchmark trong tương lai.
+
+\section{Đặc tả chức năng}
+\subsection{Đặc tả use case Hỏi đáp pháp luật}
+Bảng \ref{table:uc_specs_qa} là bảng đặc tả use case hỏi đáp pháp luật.
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+\hline
+\textbf{Mã usecase:} UC01 & \textbf{Tên usecase:} Hỏi đáp pháp luật\\ \hline
+\textbf{Tác nhân} & Guest (Khách vãng lai) hoặc Registered User (Người dùng hệ thống), LLM (Mô hình ngôn ngữ lớn được gọi thông qua API) \\ \hline
+\textbf{Mô tả vắn tắt} & Tiếp nhận câu hỏi của người dùng và sinh câu trả lời \\ \hline
+\textbf{Tiền điều kiện} & Người dùng đã truy cập vào giao diện hội thoại chính của ứng dụng Chatbot. \\ \hline
+\textbf{Luồng chính} & 
+1. Người dùng nhập nội dung câu hỏi pháp lý vào ô nhập liệu và nhấn nút gửi. \newline
+2. Hệ thống tiếp nhận câu hỏi, hiển thị tin nhắn lên màn hình trò chuyện và khởi tạo giao diện hiển thị luồng phân tích của tác nhân. \newline
+3. Hệ thống kích hoạt tác nhân điều phối (Main Agent) để chuyển giao câu hỏi sang cho Tác nhân định tuyến (Router Agent). \newline
+4. Hệ thống thực hiện phân tích ý định câu hỏi thông qua Tác nhân định tuyến nhằm xác định các tác nhân truy xuất (Retrieval Agents) cần gọi. \newline
+5. Hệ thống nhận về context pháp lý truy xuất từ đồ thị tri thức \newline
+6. Hệ thống thực hiện chuẩn hóa ngữ cảnh thu được, gán các cờ cảnh báo (Flags) về sự thay đổi, bổ sung hoặc thứ bậc ưu tiên của văn bản pháp luật. \newline
+7. Hệ thống kết hợp ngữ cảnh đã được chuẩn hóa vào chỉ dẫn hệ thống (System Prompt) rồi gửi yêu cầu đến API LLM. \newline
+8. LLM xử lý dữ liệu và sinh câu trả lời lập luận tư vấn pháp lý hoàn chỉnh theo đúng cấu trúc quy định. \newline
+9. Hệ thống đóng giao diện tiến trình trung gian và hiển thị câu trả lời hoàn chỉnh của chatbot lên màn hình người dùng. \\ \hline
+\textbf{Luồng thay thế 1} & 
+4.1. Hệ thống nhận được danh sách các retriever agent cần gọi rỗng do Router Agent phân tích ý định nhưng không lựa chọn được công cụ chuyên biệt phù hợp hoặc lựa chọn công cụ không tồn tại. \newline
+4.2. Hệ thống tự động kích hoạt công cụ dự phòng mặc định \newline
+4.3. Quay lại bước 5 của luồng chính\\ \hline
+\textbf{Luồng thay thế 2} & 
+2.1. Người dùng nhấn nút dừng tiến trình ("Stop") trên giao diện ô chat khi chatbot đang trong quá trình suy luận hoặc sinh text. \newline
+2.2. Hệ thống ngay lập tức ngắt kết nối API và dừng việc hiển thị dữ liệu. Use case kết thúc tại đây. \\ \hline
+\textbf{Hậu điều kiện} & Hệ thống hiển thị thành công câu trả lời tư vấn pháp lý và các bước xử lý trung gian (Agent Trace) trên màn hình. Nếu tác nhân thực hiện là Registered User, toàn bộ phiên hội thoại và vết của Agent sẽ được ghi nhận vào cơ sở dữ liệu PostgreSQL. \\ \hline
+\end{tabular}
+\caption{Bảng đặc tả chi tiết Use Case Hỏi đáp pháp luật}
+\label{table:uc_specs_qa}
+\end{table}
+\subsection{Đặc tả use case Xem luồng hoạt động của các agent}
+Bảng \ref{table:uc_specs_trace} đặc tả chi tiết cho Use Case Xem luồng hoạt động của các agent. 
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+\hline
+\textbf{Mã usecase:} UC02 & \textbf{Tên usecase:} Xem luồng hoạt động của các agent \\ \hline
+\textbf{Tác nhân} & Khách vãng lai (Guest), Người dùng hệ thống (Registered User) \\ \hline
+\textbf{Mô tả vắn tắt} & Cho phép người dùng chủ động mở rộng giao diện tiến trình trung gian để kiểm tra chi tiết các agent được kích hoạt và dữ liệu ngữ cảnh thô trích xuất từ đồ thị tri thức. \\ \hline
+\textbf{Tiền điều kiện} & Người dùng đã thực hiện gửi câu hỏi và chatbot đã hoàn tất việc trả lời câu hỏi. \\ \hline
+\textbf{Luồng chính} & 
+1. Tại giao diện tin nhắn của phiên hội thoại hiện tại, người dùng di chuyển đến vùng hiển thị tiến trình của các tác nhân (Agent Trace). \newline
+2. Người dùng nhấp chuột vào thanh tiêu đề của khối "Luồng phân tích câu hỏi" hoặc "Tổng hợp đáp án". \newline
+3. Giao diện mở khối nội dung theo cấu trúc phân cấp. \newline
+4. Hệ thống hiển thị trạng thái đang gọi tác nhân Router Agent, sau đó lần lượt là các retrievers được gọi. \newline
+5. Người dùng cuộn chuột xuống khối dữ liệu tổng hợp, nhấp chuột vào đó để kiểm tra hộp mã nguồn định dạng JSON, chứa toàn bộ các thuộc tính và nội dung của các nút văn bản pháp luật trích xuất từ Neo4j và đã được chuẩn hóa thành context cho LLM. \newline
+6. Người dùng nhấp lại vào thanh tiêu đề một lần nữa để thu gọn khối hiển thị sau khi hoàn tất việc kiểm chứng. \\ \hline
+\textbf{Luồng thay thế 1} & 
+3.1. Người dùng yêu cầu mở rộng tiến trình nhưng có lỗi từ hệ thống. \newline
+3.2. Giao diện hiển thị thông báo lỗi: "Không tìm thấy dữ liệu luồng xử lý của phiên hội thoại này". \newline
+3.3. Người dùng nhấp đóng thông báo lỗi. Use case kết thúc tại đây. \\ \hline
+\textbf{Hậu điều kiện} & Hệ thống hiển thị chính xác, đầy đủ và trực quan toàn bộ các tham số đầu vào/đầu ra của tác nhân thông minh. \\ \hline
+\end{tabular}
+\caption{Bảng đặc tả chi tiết Use Case Xem luồng hoạt động của các agent}
+\label{table:uc_specs_trace}
+\end{table}
+\subsection{Đặc tả use case Xem lại phiên hỏi đáp cũ}
+Bảng \ref{table:uc_specs_resume} mô tả đặc tả use case Xem lại phiên hỏi đáp cũ.
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+\hline
+\textbf{Mã usecase:} UC03 & \textbf{Tên usecase:} Xem lại phiên hỏi đáp cũ \\ \hline
+\textbf{Tác nhân} & Người dùng hệ thống (Registered User) \\ \hline
+\textbf{Mô tả vắn tắt} & Cho phép người dùng đã đăng nhập truy cập vào danh mục lịch sử trò chuyện ở thanh điều hướng (sidebar) để khôi phục toàn bộ nội dung tin nhắn và vết thực thi của các tác nhân. \\ \hline
+\textbf{Tiền điều kiện} & Người dùng đã đăng nhập thành công vào hệ thống dưới quyền Registered User và có ít nhất một phiên hội thoại cũ. \\ \hline
+\textbf{Luồng chính} & 
+1. Người dùng di chuyển chuột đến thanh điều hướng (Sidebar) của giao diện Chainlit để xem danh sách các phiên hội thoại cũ. \newline
+2. Giao diện hiển thị danh sách tiêu đề của các phiên hội thoại quá khứ theo thứ tự thời gian tương tác gần nhất. \newline
+3. Người dùng nhấp chuột lựa chọn vào một phiên hội thoại cụ thể muốn xem lại. \newline
+4. Hệ thống tiếp nhận sự kiện, tải toàn bộ danh sách tin nhắn, dòng thời gian và các cấu trúc bước xử lý phân cấp (\textit{Nested Steps}) gắn liền với phiên hội thoại đó. \newline
+5. Hệ thống khôi phục và hiển thị chính xác toàn bộ lịch sử trò chuyện kèm theo các khối vết tác nhân (\textit{Agent Trace}) quá khứ lên màn hình cho người dùng. \\ \hline
+\textbf{Hậu điều kiện} & Hệ thống hiển thị thành công phiên hội thoại cũ cùng các vết thực thi của tác nhân. Cửa sổ chat sẵn sàng tiếp nhận các câu hỏi tiếp theo của người dùng cho phiên hội thoại này. \\ \hline
+\end{tabular}
+\caption{Bảng đặc tả chi tiết Use Case Xem lại phiên hỏi đáp cũ}
+\label{table:uc_specs_resume}
+\end{table}
+\subsection{Đặc tả use case Bình luận và đánh giá câu trả lời}
+Bảng \ref{table:uc_specs_feedback} mô tả đặc tả use case bình luận và đánh giá câu trả lời.
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+\hline
+\textbf{Mã usecase:} UC04 & \textbf{Tên usecase:} Bình luận và đánh giá câu trả lời \\ \hline
+\textbf{Tác nhân} & Người dùng đã đăng nhập vào hệ thống (Registered User) \\ \hline
+\textbf{Mô tả vắn tắt} & Cho phép người dùng đã xác thực thực hiện đánh giá câu trả lời từ chatbot thông qua hai hình thức: tương tác nhanh (Like/Dislike) và để lại bình luận chi tiết. \\ \hline
+\textbf{Tiền điều kiện} & Người dùng đã đăng nhập thành công và chatbot đã hoàn tất việc sinh câu trả lời, hoặc người dùng đang ở 1 phiên hội thoại cũ đã có ít nhất 1 câu trả lời hoàn chỉnh được chatbot sinh ra. \\ \hline
+\textbf{Luồng chính} & 
+1. Người dùng nhấp chuột lựa chọn vào một trong hai nút biểu cảm: Thích (Like) hoặc Không thích (Dislike) ở vùng phía dưới câu trả lời của chabot để đánh giá chất lượng đáp án. \newline
+2. Giao diện hiển thị thêm một modal có một ô nhập liệu tùy chọn cho phép để lại bình luận chi tiết. \newline
+3. Người dùng nhập văn bản góp ý, nhận xét về câu trả lời. \newline
+4. Người dùng nhấp chuột vào nút "Send feedback". \newline
+5. Hệ thống ghi nhận sự kiện, thực hiện đổi màu biểu tượng nút biểu cảm được chọn. \newline
+6. Hệ thống lưu lại phản hồi của người dùng. \newline
+7. Hệ thống thu gọn ô nhập liệu và hiển thị thông báo xác nhận: "Feedback saved". \\ \hline
+\textbf{Luồng thay thế 1} & 
+2.1. Người dùng sau khi nhấn chọn nút Like hoặc Dislike không có nhu cầu nhập thêm văn bản góp ý chi tiết và ấn nút "Send feedback". Tiếp tục bước 4 ở luồng chính \\ \hline
+\textbf{Hậu điều kiện} & Hệ thống ghi nhận thành công dữ liệu đánh giá, đóng góp ý kiến của người dùng vào cơ sở dữ liệu PostgreSQL. \\ \hline
+\end{tabular}
+\caption{Bảng đặc tả chi tiết Use Case Bình luận và đánh giá câu trả lời}
+\label{table:uc_specs_feedback}
+\end{table}
+
+\section{Yêu cầu phi chức năng}
+\label{section:2.4}
+\subsection{Yêu cầu chung về hệ thống}
+Thời gian phản hồi trung bình của hệ thống đối với mỗi truy vấn của người dùng phải đạt mức dưới 5 giây (bao gồm cả quy trình trích xuất mốc thời gian, truy vấn đồ thị Cypher, chuẩn hóa ngữ cảnh và sinh văn bản qua API LLM).
+\subsection{Yêu cầu về giao diện người dùng (UI/UX)}
+\label{subsection:2.4.2}
+Giao diện xây dựng trên nền tảng Chainlit phải có bố cục phân tách rõ ràng giữa khu vực Sidebar lưu lịch sử và khung trò chuyện chính. Khối hiển thị luồng hoạt động trung gian của các tác nhân phải được thiết kế dưới dạng cấu trúc cây phân cấp có thể đóng/mở linh hoạt. Dữ liệu trích xuất từ các retrievers  phải có định dạng rõ ràng, tường minh để người dùng dễ dàng đối chiếu, kiểm chứng căn cứ pháp lý. Các thông báo từ hệ thống nằm ở góc trên bên phải. Giao diện mặc định có 2 theme Dark và Light. 
+\subsection{Yêu cầu về giải pháp kỹ thuật đề xuất (Agentic GraphRAG)}
+\label{subsection:2.4.3}
+ Thời gian truy xuất dữ liệu từ Neo4J cho mỗi retriever không vượt quá 200ms. Phải lưu trữ được toàn bộ thông tin cuộc hội thoại, bao gồm cả nội dung text của câu hỏi, câu trả lời và chi tiết luồng thực thi của các Agent vào cơ sở dữ liệu PostgreSQL phục vụ mục đích truy vết và kiểm thử. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

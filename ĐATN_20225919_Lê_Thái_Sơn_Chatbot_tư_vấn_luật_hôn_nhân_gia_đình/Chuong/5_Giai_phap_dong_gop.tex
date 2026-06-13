@@ -1,0 +1,545 @@
+\documentclass[../DoAn.tex]{subfiles}
+\begin{document}
+\label{chapter:5}
+Chương này trình bày các đóng góp trọng tâm và các giải pháp kỹ thuật cốt lõi mà đồ án đã thiết kế và triển khai nhằm giải quyết những khó khăn đặc thù trong việc xây dựng chatbot tư vấn pháp luật.
+
+\section{Cơ chế suy luận pháp lý (legal reasoning) để tìm ra căn cứ pháp lý nhằm trả lời cho câu hỏi của người dùng}
+\label{section:5.2}
+
+\subsection{Dẫn dắt và giới thiệu bài toán}
+\label{subsection:5.2.1}
+Để một hệ thống chatbot có thể đưa ra câu trả lời đúng đắn cho câu hỏi của người dùng thì cần phải cung cấp cho chatbot ngữ cảnh là các điều luật, căn cứ pháp lý chính xác. Hơn nữa, trong lĩnh vực tư vấn pháp luật Việt Nam, một thách thức lớn là tính thay đổi, cập nhật và thứ bậc của văn bản quy phạm pháp luật. Một văn bản luật có thể đúng tại thời điểm ban hành nhưng lại trở nên vô hiệu hoặc bị sửa đổi tại thời điểm người dùng đặt câu hỏi. Hơn nữa, một sự kiện pháp lý xảy ra trong quá khứ (ví dụ: một vụ việc ly hôn năm 2018) đòi hỏi phải áp dụng đúng văn bản có hiệu lực tại thời điểm đó, chứ không phải văn bản hiện hành. Ngoài ra, với cùng một vấn đề pháp lý, thực tế có thể tồn tại nhiều văn bản cùng điều chỉnh; khi đó cần áp dụng nguyên tắc hiệu lực và thứ bậc của các văn bản quy phạm pháp luật.
+
+Vì vậy, đồ án đề xuất triển khai cơ chế xây dựng một Đồ thị tri thức nhằm mô hình hóa mối quan hệ giữa các thực thể pháp lý và thiết kế các truy vấn Cypher định sẵn (Cypher Templates) cho từng dạng câu hỏi để lấy về chính xác ngữ cảnh (context) là các căn cứ pháp lý để trả lời cho câu hỏi của người dùng. Không chỉ vậy, đồ thị tri thức còn giúp mô hình hóa mối quan hệ giữa các văn bản quy phạm pháp luật, như quan hệ hướng dẫn, sửa đổi bổ sung, thay thế hay bác bỏ. Từ đó giúp xây dựng cơ chế tự động kiểm tra hiệu lực theo thời gian, truy vấn các văn bản sửa đổi, hướng dẫn bổ sung và tham chiếu, đồng thời cảnh báo khi ngữ cảnh truy xuất gồm các quy định đã bị thay thế, hết hiệu lực hoặc có xung đột pháp lý. 
+
+\subsection{Giải pháp kỹ thuật: Xây dựng đồ thị tri thức cho Luật Hôn nhân và Gia đình năm 2014 và mẫu truy vấn Cypher (Cypher template) cho từng dạng câu hỏi}
+\label{subsection:5.2.2}
+Đồ thị tri thức được xây dựng để mô hình hóa mối quan hệ mối quan hệ giữa các văn bản quy phạm pháp luật (sửa đổi bổ sung, hướng dẫn, thay thế, bãi bỏ). và giữa các thực thể pháp lý (hành vi pháp lý, nghĩa vụ pháp lý, điều kiện pháp lý, hậu quả pháp lý...). Mô hình hóa mối quan hệ giữa các văn bản quy phạm pháp luật nhằm giải quyết bài toán kiểm tra tình trạng hiệu lực, xử lý phân loại các văn bản pháp luật (căn cứ chính, căn cứ bổ trợ, căn cứ hướng dẫn, sửa đổi, thay thế) và các căn cứ chồng chéo, xung đột. Đồ thị tri thức còn mô hình hóa mối quan hệ giữa các thực thể pháp lý nhằm giải quyết bài toán legal reasoning (lập luận pháp lý) nhằm lấy về các căn cứ pháp lý chính xác để trả lời cho câu hỏi của người dùng. Việc mô hình hóa mối quan hệ giữa các văn bản quy phạm pháp luật được thống nhất bằng một schema cụ thể, còn việc mô hình hóa mối quan hệ giữa các thực thể pháp lý thì schema đồ thị có sự khác nhau giữa các dạng câu hỏi khác nhau (Ví dụ schema đồ thị tri thức mô tả mối quan hệ các thực thể pháp lý cho dạng câu hỏi về ly hôn có thể khác schema đồ thị tri thức mô tả mối quan hệ thực thể pháp lý cho dạng câu hỏi về tài sản). Sau đây ĐATN sẽ trình bày chi tiết về thiết kế schema cho mối quan hệ giữa các văn bản quy phạm pháp luật, cách truy vấn để lấy về các căn cứ hướng dẫn, sửa đổi bổ sung còn hiệu lực hoặc phù hợp với thời điểm xảy ra sự kiện pháp lý trong câu hỏi của người dùng và xây dựng cơ chế cảnh báo hiệu lực và cảnh báo xung đột pháp lý. Sau đó ĐATN sẽ trình bày chi tiết thiết kế schema cho từng dạng câu hỏi pháp lý cụ thể kèm mã giả Cypher Template để truy vấn cho phần đồ thị tri thức tương ứng với dạng đó.
+\subsubsection{Thiết kế, xây dựng phần đồ thị thể hiện mối quan hệ giữa các văn bản quy phạm pháp luật}
+Tiếp theo sẽ trình bày về thiết kế đồ thị tri thức được dùng để lưu trữ thông tin, mối quan hệ của luật hôn nhân gia đình 2014 và các văn bản liên quan.
+Đồ thị tri thức đóng vai trò lưu trữ và biểu diễn mạng lưới các quy định pháp luật. Khác với cơ sở dữ liệu quan hệ truyền thống, mô hình đồ thị cho phép thể hiện trực quan các quan hệ đa chiều như sự dẫn chiếu, hướng dẫn hoặc thay thế giữa các văn bản quy phạm pháp luật.
+
+Các nhãn nút (Node Labels) và Quan hệ (Relationships) sẽ tương ứng với cấu trúc của các văn bản quy phạm pháp luật, các loại văn bản quy phạm phạm pháp luật Việt Nam. Các nút này được kết nối bởi hai nhóm quan hệ chính là nhóm quan hệ về cấu trúc trong một văn bản quy phạm pháp luật và nhóm quan hệ giữa những văn bản quy phạm pháp luật với nhau. Cụ thể, Nhóm quan hệ cấu trúc bao gồm \texttt{CO\_DIEU}, \texttt{CO\_KHOAN}, \texttt{CO\_DIEM}, dùng để biểu diễn thứ bậc từ văn bản tổng quát đến từng điều, khoản và điểm chi tiết. Nhóm quan hệ pháp lý bao gồm \texttt{THAM\_CHIEU\_DEN}, \texttt{DUOC\_SUA\_DOI\_BOI}, \texttt{HUONG\_DAN\_BOI}, và \texttt{THAY\_THE\_BOI}. Các quan hệ này cho phép hệ thống xác định được văn bản nào đang dẫn chiếu đến văn bản nào, hoặc xác định các hướng dẫn, thay đổi, bổ sung và thay thế của một điều khoản khi có sự thay đổi về mặt pháp lý.
+
+Bảng \ref{table: Bảng nhãn nút KG} dưới đây là danh sách các nhãn nút và ý nghĩa tương ứng trong hệ thống đồ thị tri thức.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{Nhãn Nút (Node)} & \textbf{Ý nghĩa} \\ \hline
+Luat & Đại diện cho các văn bản Luật chính quy (Ví dụ: Luật Hôn nhân và Gia đình 2014, luật Hình sự 2015, ....). \\ \hline
+NghiDinh & Các văn bản Nghị định do Chính phủ ban hành để quy định chi tiết thi hành Luật. \\ \hline
+ThongTu & Các văn bản Thông tư hướng dẫn chuyên môn từ các Bộ, cơ quan ngang Bộ. \\ \hline
+NghiQuyet & Các văn bản nghị quyết hướng dẫn áp dụng quy định của pháp luật. \\ \hline
+DieuLuat & Đại diện cho các Điều cụ thể nằm trong một văn bản pháp luật. \\ \hline
+DieuKhoanLuat & Biểu diễn các Khoản nằm trong một Điều luật nhất định. \\ \hline
+DieuKhoanDiemLuat & Biểu diễn các Điểm nằm trong một Khoản của Điều luật. \\ \hline
+\end{tabular}
+\caption{Danh sách các nhãn nút trong đồ thị tri thức}
+\label{table: Bảng nhãn nút KG}
+\end{table}
+
+Mỗi thực thể trong đồ thị được gắn kèm các thuộc tính nhằm phục vụ việc kiểm tra tình trạng hiệu lực và thứ bậc ưu tiên áp dụng. Cụ thể, Bảng~\ref{tab:kg_van_ban_properties} mô tả nhóm thuộc tính của các nút văn bản pháp luật tổng quát, còn Bảng~\ref{tab:kg_luat_component_properties} mô tả nhóm thuộc tính của các nút thành phần trong văn bản luật.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|p{8cm}|}
+\hline
+\textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả} \\ \hline
+id & STRING & Mã định danh duy nhất của văn bản. \\ \hline
+so\_hieu & STRING & Số hiệu chính thức của văn bản pháp luật. \\ \hline
+ten\_van\_ban & STRING & Tên đầy đủ của văn bản (áp dụng cho NghiDinh, ThongTu). \\ \hline
+co\_quan\_ban\_hanh & STRING & Tên cơ quan nhà nước có thẩm quyền ban hành văn bản. \\ \hline
+ngay\_ban\_hanh & STRING & Ngày văn bản được ký ban hành chính thức. \\ \hline
+ngay\_co\_hieu\_luc & STRING & Thời điểm văn bản bắt đầu có hiệu lực thi hành. \\ \hline
+tinh\_trang\_hieu\_luc & STRING & Trạng thái hiện tại (Còn hiệu lực, Hết hiệu lực, Bị sửa đ ổi). \\ \hline
+cap\_bac\_phap\_ly & INTEGER & Thứ bậc ưu tiên áp dụng (ưu tiên càng cao thì thứ tự ưu tiên càng thấp, thứ tự ưu tiên được đánh theo thứ bậc hiệu lực các văn bản quy phạm pháp luật được quy định bởi). \\ \hline
+\end{tabular}
+\caption{Cấu trúc thuộc tính các nút văn bản pháp luật tổng quát}
+\label{tab:kg_van_ban_properties}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|p{8cm}|}
+\hline
+\textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả} \\ \hline
+id & STRING & Mã định danh duy nhất cho đơn vị cấu trúc luật. \\ \hline
+chuong & STRING & Tên hoặc số thứ tự Chương chứa đơn vị đó. \\ \hline
+dieu & STRING & Số hiệu của Điều luật tương ứng. \\ \hline
+khoan & STRING & Số hiệu của Khoản luật (nếu có). \\ \hline
+diem & STRING & Ký hiệu của Điểm luật (áp dụng cho DieuKhoanDiemLuat và Dang1). \\ \hline
+noidung & STRING & Nội dung văn bản chi tiết của điều, khoản hoặc điểm đó. \\ \hline
+tinh\_trang\_hieu\_luc & STRING & Hiệu lực riêng biệt của từng đơn vị cấu trúc. \\ \hline
+cap\_bac\_phap\_ly & INTEGER & Giá trị dùng để so sánh ưu tiên khi có xung đột căn cứ. \\ \hline
+\end{tabular}
+\caption{Cấu trúc thuộc tính các nút thành phần của luật}
+\label{tab:kg_luat_component_properties}
+\end{table}
+
+\subsubsection{Cơ chế kiểm tra tình trạng hiệu lực, xử lý phân loại các văn bản pháp luật (căn cứ chính, căn cứ bổ trợ, căn cứ hướng dẫn, sửa đổi, thay thế) và các căn cứ chồng chéo, xung đột}
+
+Quá trình truy vấn gồm hai giai đoạn chính: Truy vết các căn cứ thỏa mãn điều kiện hiệu lực trên đồ thị; Sau đó phân loại các căn cứ và chuẩn hóa ngữ cảnh phục vụ mô hình ngôn ngữ lớn (LLM).
+
+\begin{algorithm}[H]
+\footnotesize
+\textbf{Input:} Danh sách điều luật dùng làm căn cứ trả lời $IDs$; mốc thời gian sự kiện $T_{event}$.
+
+\textbf{Output:} Ngữ cảnh pháp lý chuẩn hóa $C$ phục vụ sinh câu trả lời.
+
+\textbf{Giai đoạn 1: Truy xuất căn cứ còn hiệu lực trên đồ thị tri thức}
+
+\begin{enumerate}[label=\textbf{Bước \arabic*.}, leftmargin=1.6cm]
+    \item Tìm các nút điều luật gốc có mã định danh thuộc $IDs$.
+    \item Mở rộng xuống các nút chi tiết (khoản, điểm) gắn với điều luật gốc.
+    \item Duyệt quan hệ thay thế theo cả hai chiều để thu toàn bộ phiên bản trên cùng dòng thay thế.
+    \item Lọc phiên bản $V$ thỏa mãn hiệu lực tại $T_{event}$:
+    \quad $V.ngay\_co\_hieu\_luc \leq T_{event}$ và
+    \quad ($V.ngay\_het\_hieu\_luc = \text{null}$ hoặc $V.ngay\_het\_hieu\_luc > T_{event}$).
+    \item Với mỗi $V$, truy xuất văn bản sửa đổi, bổ sung $M$ qua quan hệ DUOC\_SUA\_DOI\_BOI và chỉ giữ $M$ còn hiệu lực tại $T_{event}$.
+    \item Truy xuất văn bản hướng dẫn $G$ qua quan hệ HUONG\_DAN\_BOI; mở rộng chi tiết hướng dẫn; kiểm tra sửa đổi đối với chi tiết hướng dẫn nếu có.
+    \item Truy vết theo chiều thay thế về phía tương lai để xác định quy định hiện hành $V_{current}$ phục vụ đối chiếu.
+    \item Truy xuất các quy định tham chiếu bổ trợ liên quan, có lọc hiệu lực tại $T_{event}$.
+    \item Gói kết quả thô thành tập dữ liệu $D = \{\text{căn cứ chính}, \text{hướng dẫn}, \text{tham chiếu}, \text{quy định đối chiếu}\}$.
+\end{enumerate}
+
+\textbf{Giai đoạn 2: Chuẩn hóa và gán nhãn ngữ cảnh cho LLM}
+
+\begin{enumerate}[label=\textbf{Bước \arabic*.}, leftmargin=1.6cm, resume]
+    \item Duyệt căn cứ chính: nếu tồn tại $M$, thay nội dung hiển thị bằng nội dung sửa đổi nhưng giữ nhãn văn bản gốc; kích hoạt cờ \texttt{SUA\_DOI}.
+    \item Phân loại căn cứ hướng dẫn và căn cứ tham chiếu bổ trợ; xử lý sửa đổi đối với hướng dẫn tương tự căn cứ chính.
+    \item Kích hoạt cờ \texttt{UU\_TIEN} nếu trong $D$ xuất hiện nhiều hơn một giá trị cấp bậc pháp lý.
+    \item Kích hoạt cờ \texttt{LICH\_SU} khi $UserProvided = \text{true}$, căn cứ tại $T_{event}$ đã hết hiệu lực và tồn tại $V_{current}$.
+    \item Tổng hợp thông tin hiệu lực theo tên văn bản, gồm ngày có hiệu lực và ngày hết hiệu lực.
+    \item Sắp xếp căn cứ chính và hướng dẫn theo cấp bậc tăng dần, trong đó số càng nhỏ thì cấp càng cao.
+    \item Đóng gói $C$ thành chuỗi có cấu trúc gồm thông tin cảnh báo, hiệu lực, căn cứ chính, căn cứ tham chiếu bổ trợ, căn cứ hướng dẫn và văn bản thay thế.
+\end{enumerate}
+\caption{Mô tả giải thuật truy xuất và phân loại các văn bản pháp lý}
+\label{table:algo_temporal}
+\end{algorithm}
+
+Dựa trên Bảng~\ref{table:algo_temporal}, ở Giai đoạn 1 hệ thống không chỉ truy xuất nút điều luật ban đầu mà còn mở rộng xuống các nút chi tiết (khoản, điểm), sau đó duyệt toàn bộ dòng thay thế trên đồ thị theo cả hai chiều thời gian. Điều kiện lọc hiệu lực được áp dụng thống nhất cho phiên bản áp dụng, văn bản sửa đổi, hướng dẫn và tham chiếu. Song song, thuật toán truy vết quy định hiện hành trên cùng dòng thay thế để phục vụ đối chiếu khi người dùng hỏi theo mốc thời gian quá khứ. Nhờ đó, hệ thống đạt được: (i)~nhận diện phiên bản điều khoản có hiệu lực tại thời điểm sự kiện; (ii)~liên kết văn bản sửa đổi, bổ sung và hướng dẫn trực tiếp với phiên bản đang xét; (iii)~bổ sung quy định hiện hành làm căn cứ đối chiếu. Toàn bộ căn cứ thỏa điều kiện hiệu lực và liên kết đã khai báo trên đồ thị được đưa vào tập dữ liệu thô để xử lý ở bước sau.
+
+Ở Giai đoạn~2, module chuẩn hóa ngữ cảnh phân loại dữ liệu thô thành: (i)~\textbf{căn cứ chính}: các điều khoản trực tiếp áp dụng; (ii)~\textbf{căn cứ tham chiếu bổ trợ}: quy định được tham chiếu từ căn cứ chính, hoặc được tham chiếu từ các căn cứ hướng dẫn hoặc sửa đổi; (iii)~\textbf{căn cứ hướng dẫn}: văn bản hướng dẫn thi hành; (iv)~\textbf{văn bản thay thế}: các điều luật hiện hành thay thế; (v)~\textbf{thông tin cảnh báo}: các cờ \texttt{LICH\_SU}, \texttt{UU\_TIEN} và \texttt{SUA\_DOI} cùng khối thông tin hiệu lực văn bản. Cờ \texttt{UU\_TIEN} chỉ kích hoạt khi ngữ cảnh chứa nhiều cấp bậc pháp lý khác nhau; đây là cảnh báo thứ bậc nhắc LLM cân nhắc nguyên tắc ưu tiên khi trình bày. Cờ \texttt{LICH\_SU} được kích hoạt khi người dùng nêu mốc thời gian quá khứ, căn cứ truy xuất đã hết hiệu lực tại mốc đó và tồn tại quy định thay thế hiện hành, giúp LLM thông báo cho người dùng về sự thay đổi pháp luật.
+
+Về chuẩn hóa nội dung cho LLM: thay vì đồng thời đưa cả nội dung gốc và nội dung sửa đổi gây nhiễu, thuật toán ưu tiên hiển thị nội dung từ văn bản sửa đổi nhưng vẫn giữ tên căn cứ gốc, theo dạng ``Theo quy định tại [văn bản gốc], được sửa đổi, bổ sung bởi [văn bản mới]\ldots''. Danh sách căn cứ chính và hướng dẫn được sắp xếp theo cấp bậc tăng dần (Luật trước Nghị định, Thông tư) nhằm hướng dẫn LLM trích dẫn các văn bản pháp lý theo đúng thứ tự. Cuối cùng, ngữ cảnh được đóng gói thành các mục có tiêu đề rõ ràng (bao gồm thông tin cảnh báo, thông tin hiệu lực các văn bản, căn cứ chính, căn cứ tham chiếu bổ trợ, căn cứ hướng dẫn và văn bản thay thế) trước khi đưa vào prompt sinh câu trả lời.
+
+\subsubsection{Thiết kế schema đồ thị tri thức cho từng dạng câu hỏi pháp lý cụ thể kèm mã giả Cypher Template để truy vấn cho phần đồ thị tri thức tương ứng với dạng đó.}
+Cách xây dựng đồ thị tri thức cho các dạng câu hỏi sẽ gồm có 5 bước (i) Khảo sát các câu hỏi của người dùng về dạng câu hỏi này và phân loại các câu hỏi thuộc dạng câu hỏi đó thành các nhóm intent (Ý định câu hỏi của người dùng), mục tiêu với mỗi nhóm intent chúng ta sẽ thiết kế 1 câu cypher query template để xử lý riêng cho nhóm intent đó. (ĐATN chủ yếu khảo sát các câu hỏi thuộc mục hỏi đáp pháp luật theo chủ đề trên trang thuvienphapluat). (ii) Đọc các điều luật liên quan đến từng dạng câu hỏi và xác định các entity (Thực thể pháp lý) và relationship cần thiết để mô hình hóa mối quan hệ giữa các thực thể pháp lý. Các entity và relationship bao gồm cả các thuộc tính của chúng được cân nhắc thiết kế sao cho có thể xây dựng cypher template để trả lời cho các intent của người dùng. (iii) Cung cấp schema của đồ thị tri thức đã được thiết kế, kèm theo nội dung các điều luật và yêu cầu LLM trích xuât ra các entity và relationship đúng như schema dưới dạng JSON có thể import trực tiếp vào cơ sở dữ liệu Neo4j (iv) Entity resolution: Trong quá trình trích xuất, LLM có thể trích xuất những thực thể về bản chất giống nhau nhưng cách hiển thị khác nhau (Ví dụ "Vợ chồng" với "Vợ, chồng"), cần phải gộp các node này lại. (v) Import dữ liệu vào Neo4j.
+
+Cách truy vấn để lấy về căn cứ pháp lý làm ngữ cảnh cho câu trả lời của chatbot gồm có 3 bước (i) Với đầu vào là câu hỏi của người dùng, Retriever Agent sẽ thực hiện classify intent (phân tích ý định) trong câu hỏi của người dùng để quyết định sẽ sử dụng (những) template nào để trả lời cho câu hỏi của người dùng. (ii) Retriever Agent tiếp tục trích xuất các params từ câu hỏi của người dùng để điền vào câu cypher query tương ứng với template được chọn từ bước trước (iii) Hệ thống thực thi câu query lấy về context pháp lý để trả lời câu hỏi.
+
+Trước tiên, ĐATN sẽ trình bày thiết kế schema và các Cypher Template ứng với dạng câu hỏi trọng tâm, được hỏi nhiều nhất khi tư vấn các vấn đề liên quan đến Luật hôn nhân gia đình, đó là dạng câu hỏi về chế độ tài sản của vợ và chồng, bao gồm có chế độ tài sản của vợ và chồng trước và trong hôn nhân (Chưa bao gồm việc chia tài sản sau khi ly hôn).
+
+Đầu tiên, qua khảo sát các câu hỏi thuộc chủ đề chế độ tài sản của vợ chồng\footnote{https://thuvienphapluat.vn/hoi-dap-phap-luat/chu-de/che-do-tai-san-cua-vo-chong}, tài sản chung của vợ chồng \footnote{https://thuvienphapluat.vn/hoi-dap-phap-luat/chu-de/tai-san-chung-cua-vo-chong} và tài sản riêng của vợ chồng\footnote{https://thuvienphapluat.vn/phap-luat/tag/tai-san-rieng-cua-vo-chong} trên trang thư viện pháp luật, em đã quyết định chia dạng câu hỏi này thành 8 nhóm intent được trình bày trong bảng \ref{tab:intent_che_do_tai_san}:
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{|p{2.5cm}|p{6.5cm}|p{6cm}|}
+\hline
+\textbf{Intent} & \textbf{Template} & \textbf{Mô tả dạng câu hỏi} \\ \hline
+
+Phân loại tài sản & 
+phan\_loai\_tai\_san & 
+Xác định một tài sản cụ thể phát sinh trước hoặc trong thời kỳ hôn nhân thuộc khối tài sản chung hay tài sản riêng. \\ \hline
+
+Nguyên tắc chung chế độ tài sản & 
+nguyen\_tac\_che\_do\_tai\_san & 
+Tìm hiểu các nguyên tắc nền tảng điều chỉnh chế độ tài sản, không phụ thuộc vào chế độ tài sản lựa chọn.\\ \hline
+
+Quyền định đoạt tài sản& 
+quyen\_dinh\_doat\_tai\_san & 
+Trả lời câu hỏi về quyền/nghĩa vụ khi bán, tặng, thế chấp, chuyển nhượng...tài sản chung HOẶC tài sản riêng. \\ \hline
+
+Đăng ký quyền sở hữu tài sản chung & 
+dang\_ky\_quyen\_so\_huu\_tai\_san\_chung & 
+Trả lời câu hỏi về việc đăng ký quyền sở hữu/sử dụng đối với tài sản chung phải đăng ký. \\ \hline
+
+Nghĩa vụ tài sản& 
+nghia\_vu\_tai\_san & 
+Trả lời câu hỏi về nghĩa vụ tài sản của vợ chồng, bao gồm nghĩa vụ chung và nghĩa vụ riêng về tài sản của vợ chồng, trách nhiệm liên đới của vợ chồng về các nghĩa vụ chung về tài sản của vợ chồng. \\ \hline
+
+Chia tài sản trong hôn nhân & 
+chia\_tai\_san\_thoi\_ky\_hon\_nhan & 
+Trả lời câu hỏi xoay quanh việc chia tài sản chung trong hôn nhân (không
+phải khi ly hôn) \\ \hline
+
+Thỏa thuận chế độ tài sản của vợ chồng & 
+thoa\_thuan\_che\_do\_tai\_san & 
+Trả lời câu hỏi về chế độ tài sản theo thỏa thuận (tiền hôn nhân hoặc các loại thỏa thuận liên quan tới tài sản vợ chồng trong thời kỳ hôn nhân) \\ \hline
+
+Tài sản riêng, nhà ở là chỗ ở duy nhất của vợ chồng& 
+tai\_san\_rieng\_va\_nha\_o\_duy\_nhat & 
+Trả lời các câu hỏi về các quy tắc đặc thù của tài sản riêng (Ví dụ nhập vào chung, để dành, giao dịch liên quan đến nhà là nơi ở duy nhất của vợ chồng.  \\ \hline
+\end{tabular}
+\caption{Danh sách các nhóm Intent, tên Cypher Template tương ứng và mô tả chi tiết cho dạng câu hỏi về Chế độ tài sản của vợ và chồng trước và trong thời kỳ hôn nhân}
+\label{tab:intent_che_do_tai_san}
+\end{table}
+
+Tiếp theo, đọc các điều luật từ 28 đến 50 Luật hôn nhân gia đình năm 2014 (thuộc Mục 3: CHẾ ĐỘ TÀI SẢN CỦA VỢ CHỒNG) và thiết kế các node và relationship như sau để xây dựng cypher template truy vấn các intent của người dùng được nêu ở bảng \ref{tab:nodes_che_do_tai_san} và bảng \ref{tab:relationship_che_do_tai_san}. Sau đó, cung cấp cho LLM nội dung các điều luật từ 28 đến 50 và schema đã thiết kế, yêu cầu LLM trích xuất ra các node và relationship giữa chúng dưới dạng JSON. Trong quá trình trích xuất đã xuất hiện những node có ý nghĩa giống nhau nhưng cách biểu hiện khác nhau, tiến hành gộp chúng lại với nhau. Ví dụ như node "tai\_san\_chung" và node "tai\_san\_chung\_cua\_vo\_chong" được gộp thành node "tai\_san\_chung". Cuối cùng thực hiện import các node và relationship giữa chúng vào Neo4j.
+
+
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{|p{3cm}|p{2.6cm}|p{3.4cm}|X|}
+\hline
+\textbf{Label} & \textbf{Mục đích} & \textbf{Thuộc tính bổ sung} & \textbf{Ví dụ} \\ \hline
+
+ChePhapDoTaiSan & 
+Biểu diễn hai chế độ tài sản tổng quát tại Điều 28 & 
+& 
+che\_do\_luat\_dinh \newline
+che\_do\_thoa\_thuan \\ \hline
+
+LoaiTaiSan & 
+Phân loại tài sản theo Luật HN\&GĐ & 
+tinh\_chat: chung, rieng, trung\_lap & 
+tai\_san\_chung \newline
+tai\_san\_rieng \\ \hline
+
+NguonGocTaiSan & 
+Nguồn gốc / thời điểm hình thành tài sản & 
+& 
+truoc\_ket\_hon \newline
+tang\_cho\_rieng \\ \hline
+
+ThoaThuan & 
+Thỏa thuận pháp lý & 
+yeu\_cau\_van\_ban, yeu\_cau\_cong\_chung, yeu\_cau\_chung\_thuc, thoi\_diem\_lap, co\_the\_sua\_doi & 
+thoa\_thuan\_che\_do\_tai\_san \newline
+thoa\_thuan\_kinh\_doanh \\ \hline
+
+DieuKien & 
+Điều kiện / hoàn cảnh & 
+ & 
+khong\_du\_tai\_san\_chung \newline
+giao\_dich\_ngay\_tinh \\ \hline
+
+HauQua & 
+Hậu quả pháp lý & 
+ & 
+vo\_hieu\_giao\_dich \newline
+boi\_thuong\_thiet\_hai \\ \hline
+
+HanhVi & 
+Hành vi pháp lý / giao dịch & 
+loai (Ví dụ bán tặng cho)& 
+dinh\_doat\_tai\_san\_chung, ban\_chuyen\_nhuong\_bds \\ \hline
+
+NghiaVu & 
+Nghĩa vụ tài sản & 
+loai: (chung, riêng) & 
+nghia\_vu\_chung, nghia\_vu\_rieng \\ \hline
+
+Quyen & 
+Quyền tài sản & 
+ & 
+quyen\_lua\_chon\_che\_do, quyen\_dinh\_doat\_tai\_san \newline 
+\_rieng \\ \hline
+
+ChuThe & 
+Chủ thể pháp lý & 
+loai & 
+vo, chong \\ \hline
+
+VanBanPhapLy & 
+Loại văn bản pháp lý/giấy tờ & 
+ & 
+gcn\_quyen\_so\_huu \newline
+gcn\_quyen\_su\_dung\_dat \\ \hline
+
+TruongHopNgoaiLe & 
+Trường hợp ngoại lệ cụ thể & 
+ & 
+ngoai\_le\_thoa\_thuan\_ \newline
+ghi\_ten\_mot\_ben \\ \hline
+\end{tabularx}
+\caption{Các node trong đồ thị tri thức cho dạng câu hỏi chế độ tài sản của vợ chồng}
+\label{tab:nodes_che_do_tai_san}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{|p{4.5cm}|p{5.0cm}|X|}
+\hline
+\textbf{Relationship} & \textbf{Hướng} & \textbf{Ý nghĩa} \\ \hline
+
+CAN\_CU\_TAI & 
+Từ tất cả các node tới các node lưu trữ thông tin các điều luật bao gồm có DieuLuat / DieuKhoanLuat / DieuKhoanDiemLuat & 
+\textbf Lấy về căn cứ pháp lý làm context cho LLM và trích dẫn trong câu trả lời. Mọi template cypher đều kết thúc bằng quan hệ này \\ \hline
+
+LA\_LOAI\_CON\_CUA & 
+LoaiTaiSan $\rightarrow$ LoaiTaiSan & 
+(ví dụ quyen\_su\_dung\_dat $\rightarrow$ tai\_san\_chung). \\ \hline
+
+CO\_NGUON\_GOC & 
+LoaiTaiSan $\rightarrow$ NguonGocTaiSan & 
+Đánh dấu nguồn gốc tài sản. \\ \hline
+
+THUOC\_CHE\_DO & 
+LoaiTaiSan / ThoaThuan $\rightarrow$ ChePhapDoTaiSan & 
+Đánh dấu chế độ tài sản. \\ \hline
+
+TAC\_DONG\_LEN & 
+HanhVi $\rightarrow$ LoaiTaiSan & 
+Hành vi tác động lên loại tài sản nào. \\ \hline
+
+YEU\_CAU\_THOA\_THUAN & 
+HanhVi $\rightarrow$ ThoaThuan & 
+Hành vi yêu cầu thỏa thuận nào. \\ \hline
+
+THUC\_HIEN\_BOI & 
+HanhVi / Quyen / NghiaVu $\rightarrow$ ChuThe & 
+Chủ thể thực hiện. \\ \hline
+
+PHAT\_SINH\_TU & 
+NghiaVu $\rightarrow$ HanhVi / NguonGocTaiSan / ChuThe & 
+Nghĩa vụ phát sinh từ. \\ \hline
+
+THANH\_TOAN\_BANG & 
+NghiaVu $\rightarrow$ LoaiTaiSan & 
+Nguồn thanh toán nghĩa vụ. \\ \hline
+
+AP\_DUNG\_KHI & 
+HanhVi / HauQua / ThoaThuan $\rightarrow$ DieuKien & 
+Áp dụng khi điều kiện gì. \\ \hline
+
+DAN\_TOI & 
+HanhVi / DieuKien / ThoaThuan $\rightarrow$ HauQua & 
+Dẫn tới hậu quả pháp lý. \\ \hline
+
+CO\_NGOAI\_LE & 
+HanhVi / ThoaThuan / LoaiTaiSan $\rightarrow$ TruongHopNgoaiLe & 
+Đánh dấu trường hợp ngoại lệ. \\ \hline
+
+AP\_DUNG\_CHO\_CHE\_DO & 
+DieuKhoanLuat $\rightarrow$ ChePhapDoTaiSan & 
+Áp dụng cho chế độ tài sản luật định hay thỏa thuận. Đánh dấu Đ29-32 áp dụng cho mọi chế độ. \\ \hline
+\end{tabularx}
+\caption{Danh sách các mối quan hệ (Relationship types) giữa các node trong đồ thị tri thức cho dạng câu hỏi chế độ tài sản của vợ chồng}
+\label{tab:relationship_che_do_tai_san}
+\end{table}
+
+% ============================================================================
+% Template 1 — phan_loai_tai_san
+% Include vào báo cáo/đồ án:
+%   \input{docs/do_an_che_do_tai_san/latex/template_01_phan_loai_tai_san}
+% Yêu cầu preamble (thêm vào main.tex nếu chưa có):
+%   \usepackage{booktabs}
+%   \usepackage{longtable}
+%   \usepackage{listings}
+%   \usepackage{xcolor}
+%   \usepackage{algorithm}
+%   \usepackage{algpseudocode}
+%   \usepackage{hyperref}
+%   \usepackage{babel}  % hoặc polyglossia + \setmainlanguage{vietnamese}
+% ============================================================================
+
+\section{Template 1: phan\_loai\_tai\_san — Phân loại tài sản}
+
+\subsection{Mục đích}
+
+Template phan\_loai\_tai\_san trả lời các câu hỏi xác định bản chất và phạm vi tài sản trong chế độ tài sản vợ chồng, ví dụ như "X là tài sản chung hay tài sản riêng?", "Tài sản chung gồm những gì?", "Tiền trúng số có phải tài sản chung không?"....
+
+\subsection{Bảng tham số của câu cypher query template}
+% --------------------------------------------------------------------------
+
+Bảng~\ref{tab:phan-loai-params} mô tả schema PhanLoaiTaiSanParams — các tham số do LLM trích xuất từ câu hỏi người dùng trước khi thực thi Cypher.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Tham số truy vấn của template phan\_loai\_tai\_san}
+  \label{tab:phan-loai-params}
+  \begin{tabular}{|p{3.2cm}|p{2.4cm}|p{8.4cm}|}
+    \hline
+    \textbf{Tên tham số} & \textbf{Kiểu dữ liệu} & \textbf{Ý nghĩa và quy tắc điền} \\ \hline
+    loai\_tai\_san &
+    Literal[Str] &
+    Lọc theo tinh\_chat của node LoaiTaiSan:
+    chung — chỉ tài sản chung;
+    rieng — chỉ tài sản riêng;
+    tat\_ca — cả hai (câu hỏi phân biệt hoặc liệt kê cả chung lẫn riêng). \\ \hline
+    asset\_keyword &
+    Optional[str] (mặc định null) &
+    ID của node LoaiTaiSan trong KG.
+    LLM map ngôn ngữ thường sang ID (vd ``tiền trúng số'' $\rightarrow$ thu\_nhap\_hop\_phap\_khac).
+    Để null khi câu hỏi tổng quát (``tài sản chung gồm những gì?''). \\
+    \hline
+    target\_date &
+    Optional[str] (YYYY-MM-DD) &
+    Thời điểm sự kiện để lọc hiệu lực văn bản pháp luật.
+    null nếu câu hỏi không nêu mốc thời gian. \\ \hline
+  \end{tabular}
+\end{table}
+
+Bảng~\ref{tab:phan-loai-asset-map} minh họa cách ánh xạ một số cụm từ thường gặp trong câu hỏi của người dùng sang giá trị \textit{asset\_keyword} tương ứng trong đồ thị tri thức.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Ánh xạ một số asset\_keyword thường gặp}
+  \label{tab:phan-loai-asset-map}
+  \begin{tabular}{|p{7cm}|p{7cm}|}
+    \hline
+    \textbf{Ngôn ngữ câu hỏi} & \textbf{asset\_keyword} \\ \hline
+    tiền trúng số, tiền trúng thưởng & thu\_nhap\_hop\_phap\_khac \\ \hline
+    lương, thu nhập đi làm & thu\_nhap\_lao\_dong \\ \hline
+    quyền sử dụng đất, sổ đỏ & quyen\_su\_dung\_dat \\ \hline
+    tài sản trước khi cưới & tai\_san\_truoc\_ket\_hon \\ \hline
+    hoa lợi, lợi tức & hoa\_loi\_loi\_tuc \\ \hline
+    (không xác định loại cụ thể) & null \\ \hline
+  \end{tabular}
+\end{table}
+
+% --------------------------------------------------------------------------
+\subsection{Pseudocode của câu cypher query template}
+% --------------------------------------------------------------------------
+
+Pseudocode được nêu ở Bảng~\ref{alg:phan-loai-seed} mô tả logic của câu cypher query template cho dạng câu hỏi phân loại tài sản.
+
+\begin{algorithm}[H]
+\footnotesize
+\textbf{Input:} Loại tài sản cần xét $loai\_tai\_san$; từ khóa tài sản $asset\_keyword$.
+
+\textbf{Output:} Tập căn cứ pháp lý gốc $n\_goc$ phù hợp với câu hỏi phân loại tài sản. Tập căn cứ pháp lý này sẽ tiếp tục được kiểm tra hiệu lực và mở rộng để lấy về các văn bản sửa đổi, hướng dẫn, thay thế (nếu có).
+
+\begin{enumerate}[label=\textbf{Bước \arabic*.}, leftmargin=1.6cm]
+    \item Xác định danh sách tính chất tài sản $tinh\_chat\_list$:
+    \begin{itemize}
+        \item nếu $loai\_tai\_san = \text{``chung''}$ thì $tinh\_chat\_list \leftarrow [\text{chung}]$;
+        \item nếu $loai\_tai\_san = \text{``rieng''}$ thì $tinh\_chat\_list \leftarrow [\text{rieng}]$;
+        \item ngược lại, $tinh\_chat\_list \leftarrow [\text{chung}, \text{rieng}]$.
+    \end{itemize}
+    \item Khởi tạo tập $seed\_nodes \leftarrow \varnothing$.
+    \item Với mỗi giá trị $tc \in tinh\_chat\_list$, duyệt các node $lts$ có label \texttt{LoaiTaiSan} và thỏa mãn $lts.tinh\_chat = tc$.
+    \item Thêm $lts$ vào $seed\_nodes$ nếu thỏa mãn một trong các điều kiện:
+    \begin{itemize}
+        \item $asset\_keyword$ rỗng;
+        \item $lts.id = asset\_keyword$;
+        \item $lts$ có quan hệ cha/con với $asset\_keyword$ theo mối quan hệ \texttt{LA\_LOAI\_CON\_CUA};
+        \item $lts.id$ chứa $asset\_keyword$.
+    \end{itemize}
+    \item Khởi tạo tập căn cứ pháp lý gốc $n\_goc \leftarrow \varnothing$.
+    \item Với mỗi node $sn \in seed\_nodes$, truy xuất các node luật liên kết với $sn$ qua quan hệ \texttt{CAN\_CU\_TAI} và thêm vào $n\_goc$.
+    \item Trả về $DISTINCT(n\_goc)$.
+    \item $(n\_goc)$ tiếp tục được xử lý như mô tả ở bảng \ref{table:algo_temporal}
+\end{enumerate}
+\caption{Pseudocode câu Cypher query template cho dạng câu hỏi phân loại tài sản}
+\label{alg:phan-loai-seed}
+\end{algorithm}
+
+\subsection{Ví dụ minh họa}
+
+\paragraph{Câu hỏi.}
+``Tiền trúng số có phải tài sản chung không?''
+
+\paragraph{Tham số sau khi LLM trích xuất.}
+\begin{center}
+  \begin{tabular}{|p{4cm}|p{6cm}|}
+    \hline
+    \textbf{Tham số} & \textbf{Giá trị} \\ \hline
+    loai\_tai\_san & 'chung' \\ \hline
+    asset\_keyword & 'thu\_nhap\_hop\_phap\_khac' \\ \hline
+    target\_date & null \\ \hline
+  \end{tabular}
+\end{center}
+
+\paragraph{Kết quả trả về sau khi chạy câu cypher query template}
+\begin{center}
+  \begin{tabular}{|p{6cm}|p{7cm}|}
+    \hline
+    \textbf{Node trong KG} & \textbf{ID của các node căn cứ pháp lý qua quan hệ CAN\_CU\_TAI} \\ \hline
+    LoaiTaiSan\{id: thu\_nhap\_hop\_phap\_khac\} & Luat\_HNGD\_2014\_Dieu\_33\_Khoan\_1 \\ \hline
+    LoaiTaiSan\{id: tai\_san\_chung\} & Luat\_HNGD\_2014\_Dieu\_33 \\ \hline
+  \end{tabular}
+\end{center}
+
+\paragraph{Diễn giải kết quả truy vấn}
+
+Với tham số trên, điều kiện lọc chỉ giữ LoaiTaiSan có tinh\_chat = 'chung' và liên quan tới thu\_nhap\_hop\_phap\_khac. Node \\ thu\_nhap\_hop\_phap\_khac có quan hệ LA\_LOAI\_CON\_CUA tới tai\_san\_chung, nên cả hai node đều được lấy về. Qua quan hệ CAN\_CU\_TAI, truy vấn lấy Điều 33 (và Khoản 1) làm n\_goc. Sau đó tiếp tục mở rộng toàn bộ Khoản/Điểm của Đ33 và kéo thêm Nghị định 126/2014 Điều 9 (hướng dẫn thu nhập hợp pháp khác, gồm tiền trúng thưởng) làm căn cứ hướng dẫn thông qua truy vấn được trình bày ở bảng \ref{table:algo_temporal})
+
+\subsection{Xây dựng tập Benchmark đánh giá hệ thống tư vấn pháp luật}
+\label{subsection:benchmark}
+Ngoài cơ chế truy xuất theo thời gian trên đồ thị tri thức, đồ án đóng góp một tập benchmark dataset phục vụ đánh giá có hệ thống chất lượng câu trả lời của chatbot trong lĩnh vực Luật Hôn nhân và gia đình. Tập dữ liệu được xây dựng qua các giai đoạn như sau:
+
+\subsubsection{Thu thập dữ liệu}
+
+Nguồn dữ liệu ban đầu lấy từ chuyên mục \textit{Hỏi đáp pháp luật} trên cổng thuvienphapluat.vn, được tổ chức theo dạng câu hỏi pháp lý, ví dụ: điều kiện kết hôn, đăng ký kết hôn, chế độ tài sản vợ chồng, ly hôn, cấp dưỡng\ldots
+
+Trong quá trình crawl dữ liệu, khó khăn phát sinh vì các câu hỏi, câu trả lời và đặc biệt là phần căn cứ pháp lý của mỗi câu hỏi trên trang thuvienphapluat.vn được trình bày theo ba kiểu HTML khác nhau tùy theo từng bài đăng. Script crawl dữ liệu phải xử lý và nhận diện được cả ba trường hợp này để lấy về đúng những thông tin cần thiết. Các thông tin được lấy về ở giai đoạn crawl gồm question (câu hỏi của người dùng) và ground\_truth (câu trả lời nguyên văn từ đội tư vấn Thư viện Pháp luật). Sau khi thu thập các câu hỏi đã được phân loại theo từng chủ đề ở chuyên mục hỏi đáp pháp luật, cần tiếp tục phân loại lại dạng (chủ đề) câu hỏi theo cách thủ công. Nguyên nhân là tuy mục hỏi đáp pháp luật của thuvienphapluat.vn đã được chia thành các chủ đề, các bài đăng thuộc cùng một chủ đề vẫn có thể chứa câu hỏi thuộc chủ đề khác. Ví dụ, bài đăng thuộc chủ đề điều kiện kết hôn vẫn có thể chứa câu hỏi về kết hôn trái pháp luật và ngược lại. Vì muốn chia và đánh giá các câu hỏi trong tập benchmark dataset theo chủ đề, đồ án phải thực hiện bước phân loại lại. Ở bước này có thể sử dụng LLM để phân loại câu hỏi theo chủ đề, nhưng khi xử lý số lượng lớn câu hỏi được lấy về (khoảng 700 câu), phương pháp này phát sinh chi phí lớn và vẫn cần đánh giá thủ công lại.
+
+Quá trình thu thập các câu hỏi và câu trả lời mẫu từ các trang web khác không gặp quá nhiều khó khăn vì định dạng câu hỏi, câu trả lời có bố cục rõ ràng.
+
+\subsubsection{Cấu trúc mẫu dữ liệu trong tập benchmark}
+
+Mỗi mẫu trong tập benchmark dataset là một đối tượng JSON gồm 11 trường chuẩn. Bảng~\ref{tab:benchmark_schema} mô tả tên trường, kiểu dữ liệu và ý nghĩa của từng trường trong một mẫu benchmark.
+
+\begin{table}[H]
+\centering
+\caption{Cấu trúc trường dữ liệu của một mẫu benchmark}
+\label{tab:benchmark_schema}
+\begin{tabular}{|p{4.5cm}|p{2.5cm}|p{7.5cm}|}
+\hline
+\textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ý nghĩa} \\
+\hline
+question & String & Câu hỏi của người dùng (thu từ nguồn crawl hoặc biên soạn bổ sung). \\
+\hline
+ground\_\allowbreak truth & String & Câu trả lời tham chiếu từ đội ngũ tư vấn pháp luật Thư viện Pháp luật; dùng làm chuẩn so sánh khi đánh giá chatbot. \\
+\hline
+chu\_\allowbreak de\_\allowbreak phap\_\allowbreak ly & String & Mã chủ đề pháp lý tương ứng retriever/agent (vd.\ che\_do\_tai\_san\_cua\_vo\_chong, ly\_hon\ldots). \\
+\hline
+loai\_\allowbreak cau\_\allowbreak hoi & String & Phân loại dạng câu hỏi, thường là \textit{Lý thuyết} hoặc \textit{Tình huống}. \\
+\hline
+van\_\allowbreak ban\_\allowbreak phap\_\allowbreak luat\_\allowbreak lien\_\allowbreak quan & List & Tập mã định danh văn bản pháp luật có liên quan đến câu hỏi (vd.\ Luat\_HNGD\_2014, BoLuat\_DanSu\_2015). \\
+\hline
+tinh\_\allowbreak trang\_\allowbreak hieu\_\allowbreak luc & Dictionary & Ánh xạ từng điều/khoản (khóa ID) sang trạng thái hiệu lực tại thời điểm đánh giá (vd.\ CON\_HIEU\_LUC). \\
+\hline
+can\_\allowbreak cu\_\allowbreak phap\_\allowbreak ly\_\allowbreak chinh & List & Danh sách ID điều/khoản là căn cứ pháp lý chính bắt buộc phải được truy xuất và trích dẫn. \\
+\hline
+can\_\allowbreak cu\_\allowbreak phap\_\allowbreak ly\_\allowbreak bo\_\allowbreak tro & List & Căn cứ tham chiếu bổ trợ (điều luật/văn bản được dẫn chiếu thêm, không phải trọng tâm). \\
+\hline
+van\_\allowbreak ban\_\allowbreak huong\_\allowbreak dan\_\allowbreak sua\_\allowbreak doi\_\allowbreak bo\_\allowbreak sung\_\allowbreak thay\_\allowbreak the & List & Văn bản hướng dẫn, sửa đổi, bổ sung hoặc có liên quan thay thế cần đính kèm khi trả lời. \\
+\hline
+can\_\allowbreak cu\_\allowbreak khong\_\allowbreak nen\_\allowbreak ap\_\allowbreak dung & List & Các căn cứ không được áp dụng tại thời điểm sự kiện pháp lý: thường là văn bản thuộc quá khứ (đã hết hiệu lực/bị thay thế) hoặc tương lai (chưa có hiệu lực) so với mốc thời gian của tình huống. \\
+\hline
+quan\_\allowbreak he\_\allowbreak chong\_\allowbreak cheo\_\allowbreak mau\_\allowbreak thuan & List & Ghi nhận quan hệ chồng chéo hoặc mâu thuẫn giữa các căn cứ (nếu có), phục vụ đánh giá khả năng phát hiện xung đột ngữ cảnh. \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Quy trình hiệu chỉnh và gán nhãn thủ công}
+
+Sau khi crawl, tập benchmark trải qua các bước hiệu chỉnh sau:
+
+\textbf{Bước 1: Gán chủ đề pháp lý}
+Gán chu\_de\_phap\_ly cho từng câu hỏi; loại bỏ hoặc chỉnh sửa mẫu nhiễu (nội dung không thuộc HNGĐ, trùng lặp, lỗi phân tích cú pháp).
+
+\textbf{Bước 2 --- Cập nhật căn cứ pháp lý cho câu hỏi không có dữ kiện thời gian.}
+Đối với các câu hỏi không nêu mốc thời gian sự kiện, hệ thống chatbot mặc định truy xuất theo thời điểm hiện tại. Do đó, trong tập benchmark, người hiệu chỉnh phải tự cập nhật các căn cứ pháp lý trong ground\_truth và các trường metadata liên quan (can\_cu\_phap\_ly\_chinh, van\_ban\_phap\_luat\_lien\_quan, tinh\_trang\_hieu\_luc\ldots) theo phiên bản văn bản mới nhất còn hiệu lực, thay cho các viện dẫn luật cũ có thể còn sót trong bài tư vấn gốc.
+
+\textbf{Bước 3 --- Gán nhãn pháp lý dựa trên ground truth.}
+Dựa trên nội dung ground\_truth từ đội ngũ tư vấn pháp luật, người hiệu chỉnh điền thủ công các trường:
+\begin{itemize}
+    \item loai\_cau\_hoi: phân biệt câu lý thuyết và câu tình huống cụ thể;
+    \item van\_ban\_phap\_luat\_lien\_quan, tinh\_trang\_hieu\_luc: ID của các văn bản liên quan và trạng thái hiệu lực từng điều khoản;
+    \item can\_cu\_phap\_ly\_chinh, can\_cu\_phap\_ly\_bo\_tro, \\ van\_ban\_huong\_dan\_sua\_doi\_bo\_sung\_thay\_the: tách căn cứ chính, bổ trợ, hướng dẫn;
+    \item can\_cu\_khong\_nen\_ap\_dung: liệt kê các ID văn bản không phù hợp với thời điểm xảy ra sự kiện---bao gồm văn bản quá khứ đã bị thay thế/hết hiệu lực hoặc văn bản tương lai chưa áp dụng---nhằm đánh giá khả năng hệ thống không đưa nhầm căn cứ lỗi thời vào câu trả lời;
+    \item quan\_he\_chong\_cheo\_mau\_thuan: ghi nhận xung đột/chồng chéo giữa căn cứ (nếu phát hiện khi đối chiếu).
+\end{itemize}
+
+\subsubsection{Thiết kế test case cho các trường hợp ngoại lệ}
+
+Bên cạnh các mẫu Q\&A chuẩn từ nguồn tư vấn, đồ án dự kiến bổ sung nhóm test case ngoại lệ để kiểm tra và đánh giá quá trình tool selection của router agent, quá trình retrieve của retriever agent và các test case có các câu hỏi thuộc trường hợp đặc biệt (ví dụ chào hỏi, hỏi mình có thể làm gì, hỏi câu không liên quan luật hôn nhân gia đình. Những câu hỏi có liên quan nhưng không có thông tin, ví dụ hỏi tình huống năm 1998. Test các câu hỏi đòi hỏi aggregations và filtering (Có bao nhiêu điều? Có bao nhiêu nghị định ...) Cụ thể như sau:
+
+\subsection{Kết quả đạt được}
+\label{subsection:5.1.3}
+
+Giải pháp kiểm tra hiệu lực động đã mang lại những cải thiện về chất lượng tư vấn: (i)Tính minh bạch cao: hệ thống không chỉ trả lời kết quả mà còn giải thích được ``tại sao văn bản này được chọn'' dựa trên mốc thời gian; (ii)khắc phục hiện tượng ảo giác (Hallucination): bằng cách giới hạn LLM chỉ được suy luận trên ``ngữ cảnh sạch'' đã qua lọc hiệu lực từ Neo4j, tỷ lệ viện dẫn sai văn bản đã hết hiệu lực giảm xuống dưới 10\% (theo chỉ số Invalid Citation Rate); (iii)xử lý xung đột pháp lý: hệ thống đạt độ chính xác trên 80\% trong việc nhận diện và cảnh báo các trường hợp văn bản chồng chéo. Người dùng nhận được thông tin đầy đủ về việc một điều luật được sửa đổi bởi nghị định nào, giúp tăng tính thuyết phục của phản hồi.
+
+\end{document}
