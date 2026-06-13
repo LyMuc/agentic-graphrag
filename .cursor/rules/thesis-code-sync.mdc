@@ -1,0 +1,14 @@
+---
+description: Đồng bộ nội dung kỹ thuật đồ án với codebase
+alwaysApply: true
+---
+
+# Thesis Code Sync
+
+Đọc `thesis-context/AGENT_WORKFLOW.md` §Quy trình đồng bộ code.
+
+- Trước khi sửa mô tả kỹ thuật: đọc `thesis-context/ch05-code-map.md`.
+- Chỉ mở file code được map; không quét toàn repo.
+- Code thực tế > mô tả cũ trong `.tex` nếu lệch nhau.
+- Không bịa tên module/relationship Neo4j.
+- Không mô tả `adapter/obsolete_retrievers/`.

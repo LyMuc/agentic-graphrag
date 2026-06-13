@@ -70,7 +70,10 @@ Trong quy trình xây dựng kho tri thức pháp luật, một lượng lớn t
 \textbf{3. Giải pháp thay thế và giải thích sự lựa chọn:}
 Các Giải pháp thay thế có thể kể đến như là Chuyển đổi thủ công sang file CSV hoặc dùng các bộ công cụ convert trực tuyến. Nhưng việc chuyển đổi thủ công đối với hàng trăm trang tài liệu gây tốn thời gian và dễ làm mất định dạng cấu trúc dữ liệu. Sử dụng các công cụ trực tuyến thì không thuận tiện cho việc viết mã tạo câu query để thêm dữ liệu vào cơ sở dữ liệu Neo4j.
 
-\subsection{Thư viện Beautiful Soup}\label{subsection:3.3.2}\textbf{1. Tổng quan kỹ thuật:}
+\subsection{Thư viện Beautiful Soup}
+\label{subsection:3.3.3}
+
+\textbf{1. Tổng quan kỹ thuật:}
 Beautiful Soup là một thư viện Python mạnh mẽ được thiết kế cho các tác vụ thu thập dữ liệu từ môi trường mạng (Web scraping) thông qua việc phân tích cú pháp các tài liệu định dạng HTML và XML. Thư viện này cung cấp các công cụ trực quan để điều hướng, tìm kiếm và chỉnh sửa cây cú pháp (parse tree), giúp lập trình viên dễ dàng trích xuất các trường dữ liệu cụ thể từ các cấu trúc tài liệu web phi cấu trúc \cite{BeautifulSoupDoc} 
 
 \textbf{2. Giải quyết bài toán cụ thể ở Chương 2:}
@@ -79,7 +82,9 @@ Thư viện giải quyết trực tiếp bài toán thu thập dữ liệu thô 
 \textbf{3. Giải pháp thay thế và giải thích sự lựa chọn:}
 Các giải pháp thay thế phổ biến trong hệ sinh thái Python bao gồm Scrapy và Selenium. Scrapy là framework web scraping bất đồng bộ mạnh mẽ và phù hợp cho các hệ thống crawl quy mô lớn. Tuy nhiên, do kiến trúc nhiều thành phần và cơ chế async dựa trên Twisted, việc học và cấu hình có thể phức tạp hơn so với các thư viện scraping đơn giản. Selenium có chi phí tài nguyên và thời gian thực thi cao hơn các công cụ scraping truyền thống do phải khởi chạy và điều khiển trình duyệt thật (thường ở chế độ headless) \cite{GARCIA2026108077}. Vì vậy, Selenium đặc biệt phù hợp với các website có nội dung động được render bằng JavaScript, trong khi với các website tĩnh thì các HTTP client thông thường thường hiệu quả hơn.
 
-\subsection{Thư viện Pydantic}\label{subsection:3.3.3}
+\subsection{Thư viện Pydantic}
+\label{subsection:3.3.4}
+
 \textbf{1. Tổng quan kỹ thuật:} Pydantic là một thư viện kiểm định dữ liệu (Data validation) và quản lý cấu hình cấu trúc mạnh mẽ dành cho ngôn ngữ Python, hoạt động dựa trên cơ chế Type Hints của hệ thống mã nguồn. Khác với các công cụ kiểm tra tĩnh, Pydantic thực thi việc ép kiểu và kiểm tra tính hợp lệ của dữ liệu ngay tại thời điểm thực thi (Runtime), đảm bảo dữ liệu đầu ra luôn tuân thủ nghiêm ngặt theo một lược đồ cấu trúc (Schema) đã được định nghĩa trước \cite{PydanticDoc}.
 
 \textbf{2. Giải quyết bài toán cụ thể ở Chương 2:}

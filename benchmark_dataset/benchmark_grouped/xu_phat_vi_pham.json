@@ -846,5 +846,254 @@
     "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
     "can_cu_khong_nen_ap_dung": [],
     "quan_he_chong_cheo_mau_thuan": []
+  },
+  {
+    "question": "Kết hôn cận huyết bị pháp luật truy cứu trách nhiệm hình sự như thế nào?",
+    "ground_truth": "Căn cứ theo Điều 184 Bộ luật Hình sự 2015 quy định về tội loạn luân như sau:\n\nNhư vậy, kết hôn cận huyết có thể bị truy cứu trách nhiệm hình sự với mức phạt tù từ 01 đến 05 năm tù giam đối với hành vi người nào giao cấu với người mà biết rõ người đó cùng dòng máu về trực hệ, là anh chị em cùng cha mẹ, anh chị em cùng cha khác mẹ hoặc cùng mẹ khác cha.",
+    "chu_de_phap_ly": "xu_phat_vi_pham",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "BoLuat_HinhSu_2015"
+    ],
+    "tinh_trang_hieu_luc": {
+      "BoLuat_HinhSu_2015_Dieu_184": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "BoLuat_HinhSu_2015_Dieu_184"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
+  },
+  {
+    "question": "Em ở hiện đang học lớp 10, mới 16 tuổi nhưng trót có bầu với bạn trai 22 tuổi cùng xóm. Hai gia đình chúng em đã quyết định tổ chức cưới. Cán bộ Hội phụ nữ xã đã đến nhà em yêu cầu hủy kết hôn, không được chung sống với nhau. Chúng em chung sống như vậy có vi phạm pháp luật không? Chúng em bị xử phạt như thế nào? Cán bộ Hội phụ nữ có quyền yêu cầu chúng em như vậy không?",
+    "ground_truth": "Khoản 8 Điều 3 Luật hôn nhân và gia đình năm 2014 như sau: “. Tảo hôn là việc lấy vợ, lấy chồng khi một bên hoặc cả hai bên chưa đủ tuổi kết hôn theo quy định tại điểm a khoản 1 Điều 8 của Luật này.”\n\nĐiều kiện về tuổi kết hôn tại điểm a khoản 1 Điều 8 Luật hôn nhân và gia đình 2014 như sau: “Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên”.\n\nTheo đó thì nam chưa đủ 20 tuổi, nữ chưa đủ 18 tuổi mà kết hôn thì gọi là tảo hôn\n\nNhững trường hợp cấm kết hôn được quy định tại Điểm a,b,c,d Khoản 2 Điều 5 Luật hôn nhân và gia đình 2014 như sau:\n\n“a) Kết hôn giả tạo, ly hôn giả tạo;\n\nb) Tảo hôn, cưỡng ép kết hôn, lừa dối kết hôn, cản trở kết hôn;\n\nc) Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ;\n\nd) Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng”.\n\nNhư vậy, do bạn mới 16 tuổi hành vi của các bạn đã vi phạm quy định của Luật hôn nhân và gia đình.\n\nTheo Điều 47 Nghị định số 110/2013/NĐ-CP của Chính phủ thì mức phạt đối với hành vi tảo hôn được quy định như sau:\n\n“Điều 47. Hành vi tảo hôn, tổ chức tảo hôn\n\n1. Cảnh cáo hoặc phạt tiền từ 500.000 đồng đến 1.000.000 đồng đối với hành vi tổ chức lấy vợ, lấy chồng cho người chưa đủ tuổi kết hôn.\n\n2. Phạt tiền từ 1.000.000 đồng đến 3.000.000 đồng đối với hành vi cố ý duy trì quan hệ vợ chồng trái pháp luật với người chưa đủ tuổi kết hôn mặc dù đã có quyết định của Tòa án nhân dân buộc chấm dứt quan hệ đó.”\n\nTheo đó nếu vi phạm điều kiện kết hôn về độ tuổi kết hôn lần đầu thì sẽ bị phạt cảnh cáo hoặc phạt tiền từ 500.000 đồng đến 1.000.000 đồng. Nếu sau đó đã bị xử phạt và bị Tòa án buộc chấm dứt quan hệ vợ chồng mà vẫn cố ý duy trì quan hệ vợ chồng đó thì sẽ bị phạt tiền từ 1.000.000 đồng đến 3.000.000 đồng.\n\nTheo quy định tại khoản 2 Điều 10 Luật hôn nhân và gia đình năm 2014 về người có quyền yêu cầu hủy việc kết hôn trái pháp luật\n\n“2. Cá nhân, cơ quan, tổ chức sau đây, theo quy định của pháp luật về tố tụng dân sự, có quyền yêu cầu Tòa án hủy việc kết hôn trái pháp luật do việc kết hôn vi phạm quy định tại các điểm a, c và d khoản 1 Điều 8 của Luật này:\n\na) Vợ, chồng của người đang có vợ, có chồng mà kết hôn với người khác; cha, mẹ, con, người giám hộ hoặc người đại diện theo pháp luật khác của người kết hôn trái pháp luật;\n\nb) Cơ quan quản lý nhà nước về gia đình;\n\nc) Cơ quan quản lý nhà nước về trẻ em;\n\nd) Hội liên hiệp phụ nữ”\n\nNhư vậy, Hội liên hiệp phụ nữ xã  có quyền yêu cầu Tòa án hủy việc kết hôn trái pháp luật trong trường hợp tảo hôn nhưng việc không có quyền đến nhà bạn yêu cầu hủy kết hôn, không được chung sống với nhau. Vì vậy, việc cán bộ Hội phụ nữ xã đến nhà yêu cầu hủy kết hôn, không được chung sống với nhau là không đúng với quy định của pháp luật.",
+    "chu_de_phap_ly": "xu_phat_vi_pham",
+    "loai_cau_hoi": "Tình huống",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014",
+      "NghiDinh_110_2013_ND_CP"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_3_Khoan_8": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_8_Khoan_1_Diem_a": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_a": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_b": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_c": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_d": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_10_Khoan_2": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_3_Khoan_8",
+      "Luat_HNGD_2014_Dieu_8_Khoan_1_Diem_a",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_a",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_b",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_c",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_d",
+      "Luat_HNGD_2014_Dieu_10_Khoan_2"
+    ],
+    "can_cu_phap_ly_bo_tro": [
+      "NghiDinh_110_2013_ND_CP_Dieu_47"
+    ],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
+  },
+  {
+    "question": "Kết hôn giả để nhập quốc tịch nước ngoài bị xử lý thế nào?",
+    "ground_truth": "Căn cứ khoản 2; khoản 3 Điều 59 Nghị định 82/2020/NĐ-CP quy định mức xử phạt hành vi vi phạm quy định về kết hôn, ly hôn và vi phạm chế độ hôn nhân một vợ, một chồng:\n\nCăn cứ Điều 4 Nghị định 82/2020/NĐ-CP quy định về mức phạt tiền, thẩm quyền phạt tiền đối với cá nhân, tổ chức:\n\nNhư vậy, người nào có hành vi kết hôn giả để nhập quốc tịch nước ngoài thì bị phạt tiền từ 10.000.000 đồng đến 20.000.000 đồng và buộc phải nộp lại số lợi bất hợp pháp có được do thực hiện hành vi kết hôn giả tạo để nhập quốc tịch nước ngoài (nếu có).\n\nLưu ý: Mức phạt trên áp dụng đối với cá nhân. Tổ chức có cùng hành vi vi phạm thì mức phạt tiền gấp 02 lần cá nhân",
+    "chu_de_phap_ly": "xu_phat_vi_pham",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "NghiDinh_82_2020_ND_CP"
+    ],
+    "tinh_trang_hieu_luc": {
+      "NghiDinh_82_2020_ND_CP_Dieu_59_Khoan_2": "CON_HIEU_LUC",
+      "NghiDinh_82_2020_ND_CP_Dieu_59_Khoan_3": "CON_HIEU_LUC",
+      "NghiDinh_82_2020_ND_CP_Dieu_4": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [],
+    "can_cu_phap_ly_bo_tro": [
+      "NghiDinh_82_2020_ND_CP_Dieu_59_Khoan_2",
+      "NghiDinh_82_2020_ND_CP_Dieu_59_Khoan_3",
+      "NghiDinh_82_2020_ND_CP_Dieu_4"
+    ],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
+  },
+  {
+    "question": "Kết hôn giữa những người cùng dòng máu về trực hệ bị xử phạt như thế nào?",
+    "ground_truth": "Căn cứ theo khoản 2 Điều 59 Nghị định 82/2020/NĐ-CP quy đinh về kết hôn giữa những người cùng dòng máu về trực hệ bị xử phạt như sau:\n\nNhư vậy, hành vi kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ hoặc giữa những người có họ trong phạm vi ba đời thì có thể bị xử phạt từ 10.000.000 đồng đến 20.000.000 đồng.\n\nLưu ý: Mức phạt tiền kể trên áp dụng đối với hành vi vi phạm hành chính do cá nhân thực hiện.",
+    "chu_de_phap_ly": "xu_phat_vi_pham",
+    "loai_cau_hoi": "",
+    "van_ban_phap_luat_lien_quan": [],
+    "tinh_trang_hieu_luc": {},
+    "can_cu_phap_ly_chinh": [],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
+  },
+  {
+    "question": "Xử lý việc kết hôn trái pháp luật như thế nào?",
+    "ground_truth": "Căn cứ Điều 11 Luật Hôn nhân và gia đình 2014 quy định như sau:\n\nTheo đó, việc xử lý việc kết hôn trái pháp luật được Tòa án thực hiện theo quy định tại Luật Hôn nhân và gia đình 2014 và pháp luật về tố tụng dân sự, trừ trường hợp tại thời điểm Tòa án giải quyết yêu cầu hủy việc kết hôn trái pháp luật mà cả hai bên kết hôn đã có đủ các điều kiện kết hôn theo quy định tại Điều 8 Luật Hôn nhân và gia đình 2014 và hai bên yêu cầu công nhận quan hệ hôn nhân thì Tòa án công nhận quan hệ hôn nhân đó.",
+    "chu_de_phap_ly": "xu_phat_vi_pham",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_11": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_11"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
+  },
+  {
+    "question": "Xin hỏi trường hợp nào bị coi là kết hôn trái pháp luật và những người có hành vi vi phạm này sẽ bị xử lý như thế nào?",
+    "ground_truth": "Khoản 6 Điều 3 Luật hôn nhân và gia đình số 52/2014/QH13 ngày 19/06/2014 (có hiệu lực từ 01/01/2015) quy định kết hôn trái pháp luật là việc nam, nữ đã đăng ký kết hôn tại cơ quan nhà nước có thẩm quyền nhưng một bên hoặc cả hai bên vi phạm về điều kiện kết hôn. Điều kiện kết hôn theo quy định của pháp luật là nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên; việc kết hôn do nam và nữ tự nguyện quyết ðịnh; không bị mất nãng lực hành vi dân sự; việc kết hôn không thuộc một trong các trường hợp cấm kết hôn theo quy định tại các điểm a, b, c và d khoản 2 Điều 5 của Luật này (cụ thể là: kết hôn giả tạo, ly hôn giả tạo; tảo hôn, cưỡng ép kết hôn, lừa dối kết hôn, cản trở kết hôn; người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ; kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng); hà nước không thừa nhận hôn nhân giữa những người cùng giới tính. Người có hành vi vi phạm tùy theo tính chất và mức độ có thể bị xử lý hành chính hoặc xử lý hình sự. Việc xử lý hành chính sẽ theo Nghị định 110/2013/NĐ-CP ngày 24/09/2013 (có hiệu lực từ 11/11/2013) Quy định xử phạt vi phạm hành chính trong lĩnh vực bổ trợ tư pháp, hành chính tư pháp, hôn nhân và gia đình, thi hành án dân sự, phá sản doanh nghiệp, hợp tác xã.  Tùy hành vi vi phạm mà mức phạt tiền thấp nhất là 300.000 đồng và cao nhất là 30.000.000 đồng (Điều 28 và Điều 48). Hiện nay, Bộ Tư pháp đang được giao để chủ trì, phối hợp với các cơ quan hữu quan xây dựng dự thảo Nghị định sửa đổi, bổ sung một số điều của Nghị định số 110/2013/NĐ-CP để đảm bảo phù hợp hơn với một số Luật mới có hiệu lực từ 01/01/2015, trong đó có Luật hôn nhân và gia đình 52/2014/QH13. Nếu hành vi kết hôn trái pháp luật có đủ yếu tố cấu thành tội phạm sẽ bị xử lý hình sự theo các tội danh tương ứng của Bộ luật hình sự: Tội cưỡng ép kết hôn hoặc cản trở hôn nhân tự nguyện, tiến bộ (Điều 146 BLHS) sẽ bị phạt cảnh cáo, cải tạo không giam giữ đến 3 năm hoặc phạt tù từ 3 tháng đến 3 năm. Tội vi phạm chế độ một vợ, một chồng (Điều 147 BLHS). Nếu thuộc khoản 1 bị phạt cảnh cáo, cải tạo không giam giữ đến 1 năm hoặc phạt tù từ 3 tháng đến 1 năm; thuộc khoản 2 bị phạt tù từ 6 tháng đến 3 năm. Tội tổ chức tảo hôn, tội tảo hôn (Điều 148 BLHS) sẽ bị phạt cảnh cáo, cải tạo không giam giữ đến 2 năm hoặc phạt tù từ 3 tháng đến 2 năm. Tội đăng ký kết hôn trái pháp luật (Điều 149 BLHS) sẽ bị phạt cảnh cáo, cải tạo không giam giữ đến 2 năm hoặc phạt tù từ 3 tháng đến 2 năm. Người phạm tội còn có thể bị cấm đảm nhiệm chức vụ nhất định từ 1 năm đến 5 năm.",
+    "chu_de_phap_ly": "xu_phat_vi_pham",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "BoLuat_HinhSu_2015",
+      "Luat_HNGD_2014",
+      "NghiDinh_110_2013_ND_CP"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_3_Khoan_6": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_a": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_b": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_c": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_d": "CON_HIEU_LUC",
+      "BoLuat_HinhSu_2015_Dieu_146": "CON_HIEU_LUC",
+      "BoLuat_HinhSu_2015_Dieu_147": "CON_HIEU_LUC",
+      "BoLuat_HinhSu_2015_Dieu_148": "CON_HIEU_LUC",
+      "BoLuat_HinhSu_2015_Dieu_149": "CON_HIEU_LUC",
+      "NghiDinh_110_2013_ND_CP_Dieu_48": "CON_HIEU_LUC",
+      "NghiDinh_110_2013_ND_CP_Dieu_28": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_3_Khoan_6",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_a",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_b",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_c",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_d",
+      "BoLuat_HinhSu_2015_Dieu_146",
+      "BoLuat_HinhSu_2015_Dieu_147",
+      "BoLuat_HinhSu_2015_Dieu_148",
+      "BoLuat_HinhSu_2015_Dieu_149"
+    ],
+    "can_cu_phap_ly_bo_tro": [
+      "NghiDinh_110_2013_ND_CP_Dieu_48",
+      "NghiDinh_110_2013_ND_CP_Dieu_28"
+    ],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
+  },
+  {
+    "question": "Việc kết hôn trái pháp luật được xử lý thế nào?",
+    "ground_truth": "Căn cứ theo Điều 11 Luật Hôn nhân và gia đình 2014 quy định về xử lý việc kết hôn trái pháp luật như sau:\n\nNhư vậy, việc kết hôn trái pháp luật được xử lý như sau:\n\n- Xử lý việc kết hôn trái pháp luật được Tòa án thực hiện theo quy định tại Luật Hôn nhân và gia đình 2014 và pháp luật về tố tụng dân sự.\n\n- Trong trường hợp tại thời điểm Tòa án giải quyết yêu cầu hủy việc kết hôn trái pháp luật mà cả hai bên kết hôn đã có đủ các điều kiện kết hôn theo quy định tại Điều 8 Luật Hôn nhân và gia đình 2014 và hai bên yêu cầu công nhận quan hệ hôn nhân thì Tòa án công nhận quan hệ hôn nhân đó.\n\nTrong trường hợp này, quan hệ hôn nhân được xác lập từ thời điểm các bên đủ điều kiện kết hôn theo quy định của Luật Hôn nhân và gia đình 2014 .\n\n- Quyết định của Tòa án về việc hủy kết hôn trái pháp luật hoặc công nhận quan hệ hôn nhân phải được gửi cho cơ quan đã thực hiện việc đăng ký kết hôn để ghi vào sổ hộ tịch; hai bên kết hôn trái pháp luật; cá nhân, cơ quan, tổ chức liên quan theo quy định của pháp luật về tố tụng dân sự.",
+    "chu_de_phap_ly": "xu_phat_vi_pham",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_11": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_11"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
+  },
+  {
+    "question": "Kết hôn cận huyết có bị xử phạt vi phạm hành chính không?",
+    "ground_truth": "Căn cứ theo Điều 59 Nghị định 82/2020/NĐ-CP quy định hành vi vi phạm quy định về kết hôn cận huyết như sau:\n\nTại Điều 4 Nghị định 82/2020/NĐ-CP quy định về mức phạt tiền như sau:\n\nNhư vậy, kết hôn cận huyết bị xử phạt vi phạm hành chính cụ thể như sau:\n\n- Phạt tiền từ 10.000.000 đồng đến 20.000.000 đồng: Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ hoặc giữa những người có họ trong phạm vi ba đời\n\nNgoài ra, trường hợp tuy không cùng huyết thống nhưng có mối quan hệ gần như đã từng là cha mẹ nuôi với con nuôi, cha chồng, con dâu,... nếu kết hôn cũng sẽ vi phạm pháp luật:\n\n- Phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng: Kết hôn hoặc chung sống như vợ chồng giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng;\n\n- Phạt tiền từ 10.000.000 đồng đến 20.000.000 đồng: Kết hôn hoặc chung sống như vợ chồng giữa cha, mẹ nuôi với con nuôi.",
+    "chu_de_phap_ly": "xu_phat_vi_pham",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "NghiDinh_82_2020_ND_CP_Dieu_59"
+    ],
+    "tinh_trang_hieu_luc": {
+      "NghiDinh_82_2020_ND_CP_Dieu_59": "Con CON_HIEU_LUC",
+      "NghiDinh_82_2020_ND_CP_Dieu_4": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [],
+    "can_cu_phap_ly_bo_tro": [
+      "NghiDinh_82_2020_ND_CP_Dieu_59",
+      "NghiDinh_82_2020_ND_CP_Dieu_4"
+    ],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
+  },
+  {
+    "question": "Vợ chồng sẽ bị xử phạt như thế nào khi kết hôn chưa đủ 18 tuổi?",
+    "ground_truth": "Căn cứ tại Điều 58 Nghị định 82/2020/NĐ-CP quy định hành vi tảo hôn, tổ chức tảo hôn như sau:\n\nCăn cứ tại Điều 183 Bộ luật Hình sự 2015 quy định tội tổ chức tảo hôn như sau:\n\nNhư vậy, vợ chồng khi kết hôn chưa đủ 18 tuổi bị xử phạt cụ thể như sau:\n\n- Xử phạt vi phạm hành chính:\n\n+ Hành vi tổ chức lấy vợ, lấy chồng cho người chưa đủ tuổi kết hôn: Phạt tiền từ 1.000.000 đồng đến 3.000.000 đồng;\n\n+ Hành vi duy trì quan hệ vợ chồng trái pháp luật với người chưa đủ tuổi kết hôn mặc dù đã có bản án, quyết định đã có hiệu lực pháp luật của Toà án: Phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng.\n\n- Truy cứu trách nhiệm hình sự:\n\nNgười nào tổ chức việc lấy vợ, lấy chồng cho những người chưa đến tuổi kết hôn, đã bị xử phạt vi phạm hành chính về hành vi này mà còn vi phạm: Phạt tiền từ 10.000.000 đồng đến 30.000.000 đồng hoặc phạt cải tạo không giam giữ đến 02 năm.",
+    "chu_de_phap_ly": "xu_phat_vi_pham",
+    "loai_cau_hoi": "",
+    "van_ban_phap_luat_lien_quan": [],
+    "tinh_trang_hieu_luc": {},
+    "can_cu_phap_ly_chinh": [],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
+  },
+  {
+    "question": "Anh trai tôi lấy vợ năm 2009 khi vợ mới 16 tuổi. Đến năm 2011 thì lấy giấy đăng ký kết hôn. Con của anh chị giờ đã gần 3 tuổi, vợ thì không có nghề nghiệp ổn định còn anh đã học hết trung cấp và hiện tại đang đi làm. Nếu anh chị tôi ly hôn thì sau khi ly hôn, quyền nuôi con thuộc về ai? Và anh tôi có thể được nuôi con không? Nếu chị dâu tôi làm đơn kiện anh trai tôi đã quan hệ với trẻ vị thành niên và đã làm cho chị dâu tôi có bầu khi mới 16 tuổi tuy rằng cả 2 người đều tự nguyện trong mối quan hệ này thì nếu ra tòa anh tôi phải lãnh bản án như thế nào và có phải bồi thường gì không?",
+    "ground_truth": "1. Đối với vấn đề kết hôn trái pháp luật khi vi phạm điều kiện kết hôn về độ tuổi\n\nĐiểm d.1 mục 2 Nghị quyết của Hội đồng Thẩm phán Toà án nhân dân tối cao số 02/2000/NĐ-HĐTP ngày 23 tháng 12 năm 2000 hướng dẫn áp dụng một số quy định của Luật Hôn nhân và Gia đình năm 2000 có quy định về huỷ kết hôn trái pháp luật như sau:\n\n“d.1. Đối với những trường hợp kết hôn khi một bên hoặc cả hai bên chưa đến tuổi kết hôn là vi phạm điều kiện kết hôn quy định tại điểm 1 Điều 9. Tuy nhiên, tuỳ từng trường hợp mà quyết định như sau:\n\n- Nếu đến thời điểm có yêu cầu huỷ việc kết hôn trái pháp luật mà một bên hoặc cả hai bên vẫn chưa đến tuổi kết hôn thì quyết định huỷ việc kết hôn trái pháp luật.\n\n- Nếu đến thời điểm có yêu cầu huỷ việc kết hôn trái pháp luật cả hai bên tuy đã đến tuổi kết hôn, nhưng cuộc sống của họ trong thời gian đã qua không có hạnh phúc, không có tình cảm vợ chồng, thì quyết định huỷ việc kết hôn trái pháp luật.\n\n- Nếu đến thời điểm có yêu cầu huỷ việc kết hôn trái pháp luật cả hai bên đã đến tuổi kết hôn, trong thời gian đã qua họ chung sống bình thường, đã có con, có tài sản chung thì không quyết định huỷ việc kết hôn trái pháp luật. Nếu mới phát sinh mâu thuẫn và có yêu cầu Toà án giải quyết việc ly hôn thì Toà án thụ lý vụ án để giải quyết ly hôn theo thủ tục chung”.\n\nNhư vậy, anh trai bạn kết hôn với người vợ khi mới 16 tuổi là vi phạm điều kiện kết hôn về độ tuổi kết hôn theo quy định theo quy định tại điểm 1 Điều 9 Luật Hôn nhân và gia đình năm 2000. Tuy nhiên, vợ chồng anh trai bạn đã đăng ký kết hôn khi người vợ đã bước sang tuổi 18, có nghĩa là hôn nhân đã được pháp luật công nhận. Do đó, đây không phải là kết hôn trái pháp luật và anh trai bạn không phải chịu trách nhiệm hình sự theo quy định tại Bộ luật Hình sự về hành vi giao cấu với trẻ vị thành niên cũng như không phải chịu trách nhiệm bồi thường cho chị dâu bạn. Trường hợp này, khi vợ chồng anh trai bạn có yêu cầu ly hôn, Toà án sẽ thụ lý vụ án để giải quyết ly hôn theo thủ tục chung.\n\n2. Đối với vấn đề trông nom, chăm sóc, giáo dục, nuôi dưỡng con sau khi ly hôn\n\nĐiểm d mục 11 Nghị quyết của Hội đồng Thẩm phán Toà án nhân dân tối cao số 02/2000/NĐ-HĐTP ngày 23 tháng 12 năm 2000 hướng dẫn áp dụng một số quy định của Luật Hôn nhân và Gia đình năm 2000 có quy định cụ thể như sau:\n\n“d. Trong trường hợp vợ, chồng không thoả thuận được về người trực tiếp nuôi con thì Toà án quyết định giao con cho một bên trực tiếp nuôi con căn cứ vào quyền lợi về mọi mặt của con, đặc biệt là các điều kiện cho sự phát triển về thể chất, bảo đảm việc học hành và các điều kiện cho sự phát triển tốt về tinh thần. Nếu con từ đủ chín tuổi trở lên, thì trước khi quyết định, Toà án phải hỏi ý kiến của người con đó về nguyện vọng được sống trực tiếp với ai.\n\nVề nguyên tắc, con dưới ba mươi sáu tháng tuổi được giao cho mẹ trực tiếp nuôi con, nếu các bên không có thoả thuận khác”.\n\nNhư vậy, về nguyên tắc vợ, chồng anh trai bạn khi ly hôn có thể thoả thuận về người trực tiếp nuôi con căn cứ vào quyền lợi về mọi mặt của con. Tuy nhiên, do cháu bé hiện mới được gần 3 tuổi (tức là dưới 36 tháng tuổi) nên sau khi anh chị bạn ly hôn, chị dâu bạn sẽ được quyền nuôi con nếu anh chị bạn không có thoả thuận nào khác.\n\nTrường hợp anh trai bạn muốn được trực tiếp nuôi cháu bé thì phải căn cứ vào quy định tại Điều 93 Luật Hôn nhân và Gia đình năm 2000, cụ thể là: “Vì lợi ích của con, theo yêu cầu của một hoặc cả hai bên, Toà án có thể quyết định thay đổi người trực tiếp nuôi con. Việc thay đổi người trực tiếp nuôi con được thực hiện trong trường hợp người trực tiếp nuôi con không bảo đảm quyền lợi về mọi mặt của con và phải tính đến nguyện vọng của con, nếu con từ đủ chín tuổi trở lên”. Như vậy, trường hợp chị dâu bạn không có điều kiện chăm sóc, giáo dục, nuôi dưỡng con thì anh trai bạn hoàn toàn có quyền làm đơn yêu cầu Tòa án thay đổi người trực tiếp nuôi con. Sau khi thụ lý đơn, Tòa án sẽ xem xét quyền lợi về mọi mặt của cháu bé. Nếu xét thấy chị dâu bạn không đảm bảo được các quyền lợi của con (như điều kiện về nuôi dưỡng, chăm sóc, giáo dục; đặc biệt là các điều kiện cần thiết cho sự phát triển về thể chất, bảo đảm về việc học hành và các điều kiện cho sự phát triển tốt về tinh thần của con) trong khi đó, anh trai bạn lại đáp ứng được đầy đủ được những điều kiện này thì Tòa án sẽ ra quyết định chuyển quyền nuôi con cho anh trai bạn.",
+    "chu_de_phap_ly": "xu_phat_vi_pham",
+    "loai_cau_hoi": "Tình huống",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2000",
+      "NghiQuyet_02_2000_ND_HDTP"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2000_Dieu_9_Diem_1": "CON_HIEU_LUC",
+      "Luat_HNGD_2000_Dieu_93": "CON_HIEU_LUC",
+      "NghiQuyet_02_2000_ND_HDTP_Muc_11_Diem_d": "CON_HIEU_LUC",
+      "NghiQuyet_02_2000_ND_HDTP_Muc_11_Diem_d1": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2000_Dieu_9_Diem_1",
+      "Luat_HNGD_2000_Dieu_93"
+    ],
+    "can_cu_phap_ly_bo_tro": [
+      "NghiQuyet_02_2000_ND_HDTP_Muc_11_Diem_d",
+      "NghiQuyet_02_2000_ND_HDTP_Muc_11_Diem_d1"
+    ],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
+  },
+  {
+    "question": "Tiến hành kết hôn khi chưa đủ tuổi sẽ bị xử lý ra sao?",
+    "ground_truth": "Theo Điều 58 Nghị định 82/2020/NĐ-CP quy định về việc xử phạt hành chính về hành vi tảo hôn, tổ chức tảo hôn như sau:\n\nTheo đó, nếu bạn và gia đình vẫn tổ chức kết hôn sẽ bị phạt vi phạm hành chính với mức phạt từ 1.000.000 đồng đến 3.000.000 đồng với hành vi tổ chức kết hôn và từ 3.000.000 đồng đến 5.000.000 đồng đối với hành vi duy trì quan hệ vợ chồng trên.\n\nTrong trường hợp nặng hơn có thể bị truy cứu trách nhiệm hình sự.",
+    "chu_de_phap_ly": "xu_phat_vi_pham",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "NghiDinh_82_2020_ND_CP"
+    ],
+    "tinh_trang_hieu_luc": {
+      "NghiDinh_82_2020_ND_CP_Dieu_58": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [],
+    "can_cu_phap_ly_bo_tro": [
+      "NghiDinh_82_2020_ND_CP_Dieu_58"
+    ],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
   }
 ]

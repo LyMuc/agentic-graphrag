@@ -1,0 +1,15 @@
+---
+description: Quy tắc LaTeX UET/ĐATN khi sửa file đồ án
+globs: ĐATN_**/*.tex
+alwaysApply: false
+---
+
+# Thesis LaTeX Rules
+
+Đọc `thesis-context/AGENT_WORKFLOW.md` §Quy tắc LaTeX trước khi sửa.
+
+- Giữ cấu trúc `\section`, `\subsection`, label `\ref{}` hiện có.
+- Viết tiếng Việt học thuật.
+- Chèn code bằng `\lstinputlisting` (config: `lstlisting.tex`).
+- Không đổi preamble `DoAn.tex` trừ khi được yêu cầu.
+- Build qua `scripts/build-thesis.ps1` hoặc LaTeX Workshop (recipe pdflatex, không latexmk).

@@ -1,0 +1,31 @@
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    breakatwhitespace=false,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    tabsize=4,
+    frame=single,
+    rulecolor=\color{black!30},
+    numbers=left,
+    numberstyle=\tiny\color{black!60},
+    stepnumber=1,
+    numbersep=8pt,
+    captionpos=b,
+    aboveskip=1em,
+    belowskip=1em,
+    xleftmargin=2em,
+    framexleftmargin=1.5em
+}
+
+\lstdefinelanguage{Cypher}{
+    morekeywords={MATCH,OPTIONAL,WHERE,WITH,RETURN,UNWIND,AS,AND,OR,NOT,IN,ORDER,BY,DISTINCT,collect,labels,coalesce},
+    sensitive=true,
+    morecomment=[l]{//},
+    morestring=[b]",
+}
+
+\lstdefinelanguage{PythonPlus}[]{Python}{
+    morekeywords={async,await}
+}

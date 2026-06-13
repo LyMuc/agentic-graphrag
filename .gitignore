@@ -50,7 +50,6 @@ coverage.xml
 
 # --- IDE / OS ---
 .idea/
-.vscode/
 *.swp
 *.swo
 *~
@@ -68,6 +67,7 @@ frontend/node_modules/
 
 # --- Project-specific ---
 docs
+ĐATN_*/build/
 
 # Benchmark pipeline: keep manifest, exclude rolling backups & pre-recovery dumps
 benchmark_dataset/_state/backups/

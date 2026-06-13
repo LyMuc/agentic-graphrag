@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Sync thesis-context from code",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-File", "${workspaceFolder}/scripts/sync-thesis-context.ps1"],
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Build thesis (DoAn.tex)",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-File", "${workspaceFolder}/scripts/build-thesis.ps1"],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    }
+  ]
+}

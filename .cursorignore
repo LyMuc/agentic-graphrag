@@ -1,0 +1,11 @@
+﻿data/
+extraction/
+benchmark_dataset/_state/
+benchmark_dataset/benchmark/
+frontend/node_modules/
+public/chainlit-build/
+**/*.docx
+**/*.pdf
+data/viz_snapshots/
+DATN_*/build/
+DATN_*/Obsolete/

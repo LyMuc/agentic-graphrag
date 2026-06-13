@@ -1,0 +1,56 @@
+{
+  "latex-workshop.latex.rootFile.useSubFile": true,
+  "latex-workshop.latex.rootFile.doNotPrompt": true,
+  "latex-workshop.latex.rootFile": "ĐATN_20225919_Lê_Thái_Sơn_Chatbot_tư_vấn_luật_hôn_nhân_gia_đình/DoAn.tex",
+  "latex-workshop.latex.outDir": "%DIR%/build",
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.build.forceRecipeUsage": true,
+  "latex-workshop.latex.recipe.default": "pdflatex -> bibtex -> pdflatex x2",
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "pdflatex -> bibtex -> pdflatex x2",
+      "tools": ["pdflatex", "bibtex-thesis", "pdflatex", "pdflatex"]
+    }
+  ],
+  "latex-workshop.latex.tools": [
+    {
+      "name": "pdflatex",
+      "command": "pdflatex",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-output-directory=build",
+        "%DOCFILE%.tex"
+      ]
+    },
+    {
+      "name": "bibtex-thesis",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "%WORKSPACE_FOLDER%/scripts/bibtex-thesis.ps1",
+        "-ThesisDir",
+        "%DIR%"
+      ]
+    }
+  ],
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.synctex.afterBuild.enabled": true,
+  "latex-workshop.linting.chktex.enabled": false,
+  "latex-workshop.linting.duplicateLabels.enabled": true,
+  "files.exclude": {
+    "**/data/viz_snapshots": true,
+    "**/frontend/node_modules": true,
+    "**/public/chainlit-build": true,
+    "ĐATN_20225919_Lê_Thái_Sơn_Chatbot_tư_vấn_luật_hôn_nhân_gia_đình/build": true
+  },
+  "files.watcherExclude": {
+    "**/data/**": true,
+    "**/extraction/**": true,
+    "**/frontend/node_modules/**": true
+  }
+}
