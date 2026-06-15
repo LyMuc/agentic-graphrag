@@ -1,18 +1,5 @@
 [
   {
-    "question": "Tòa án nào có thẩm quyền giải quyết ly hôn khi chồng đang ở nước ngoài?",
-    "ground_truth": "Căn cứ khoản 2 Điều 123 Luật Hôn nhân và gia đình 2014 quy định thẩm quyền giải quyết các vụ việc hôn nhân và gia đình có yếu tố nước ngoài:\n\nCăn cứ khoản 3 Điều 35 Bộ luật Tố tụng dân sự 2015 quy định thẩm quyền của Tòa án nhân dân cấp huyện:\n\nCăn cứ Điều 37 Bộ luật Tố tụng dân sự 2015 quy định thẩm quyền của Tòa án nhân dân cấp tỉnh:\n\nTheo quy định trên, tòa án nhân dân cấp huyện không giải quyết những tranh chấp, yêu cầu mà có đương sự ở nước ngoài. Vì vậy, khi chồng đang ở nước ngoài thì việc giải quyết ly hôn thuộc thẩm quyền của Tòa án nhân dân cấp tỉnh.\n\nThủ tục đơn phương ly hôn khi chồng đang ở nước ngoài năm 2024? (Hình từ Intenret)",
-    "chu_de_phap_ly": "quan_he_hon_nhan_co_yeu_to_nuoc_ngoai",
-    "loai_cau_hoi": "Lý thuyết",
-    "van_ban_phap_luat_lien_quan": [],
-    "tinh_trang_hieu_luc": {},
-    "can_cu_phap_ly_chinh": [],
-    "can_cu_phap_ly_bo_tro": [],
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
-    "can_cu_khong_nen_ap_dung": [],
-    "quan_he_chong_cheo_mau_thuan": []
-  },
-  {
     "question": "Việc bảo vệ quyền, lợi ích hợp pháp của các bên trong quan hệ hôn nhân và gia đình có yếu tố nước ngoài được quy định như thế nào? Xin chào Ban biên tập, tôi là Ngọc Duyên, tôi đang có nhu cầu tìm hiểu các quy định của pháp luật liên quan đến lĩnh vực hôn nhân và gia đình. Tôi đang có thắc mắc cần Ban biên tập giải đáp giúp tôi. Cho tôi hỏi, việc bảo vệ quyền, lợi ích hợp pháp của các bên trong quan hệ hôn nhân và gia đình có yếu tố nước ngoài được quy định cụ thể ra sao? Tôi có thể tìm hiểu thông tin tại văn bản pháp luật nào? Mong nhận được sự phản hồi từ Ban biên tập. Xin chân thành cảm ơn!\nNgọc Duyên (ngocduyen*****@gmail.com)",
     "ground_truth": "Theo quy định tại Điều 121 Luật Hôn nhân và gia đình 2014 thì việc bảo vệ quyền, lợi ích hợp pháp của các bên trong quan hệ hôn nhân và gia đình có yếu tố nước ngoài được quy định cụ thể như sau:\n\n- Ở nước Cộng hòa xã hội chủ nghĩa Việt Nam, quan hệ hôn nhân và gia đình có yếu tố nước ngoài được tôn trọng và bảo vệ phù hợp với các quy định của pháp luật Việt Nam và điều ước quốc tế mà Cộng hòa xã hội chủ nghĩa Việt Nam là thành viên.\n\n- Trong quan hệ hôn nhân và gia đình với công dân Việt Nam, người nước ngoài tại Việt Nam có các quyền, nghĩa vụ như công dân Việt Nam, trừ trường hợp pháp luật Việt Nam có quy định khác.\n\n- Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam bảo hộ quyền, lợi ích hợp pháp của công dân Việt Nam ở nước ngoài trong quan hệ hôn nhân và gia đình phù hợp với pháp luật Việt Nam, pháp luật của nước sở tại, pháp luật và tập quán quốc tế.\n\n- Chính phủ quy định chi tiết việc giải quyết quan hệ hôn nhân và gia đình có yếu tố nước ngoài nhằm bảo đảm quyền, lợi ích hợp pháp của các bên và bảo đảm thực hiện quy định tại khoản 2 Điều 5 của Luật Hôn nhân và gia đình 2014.\n\nTrên đây là nội dung tư vấn về việc bảo vệ quyền, lợi ích hợp pháp của các bên trong quan hệ hôn nhân và gia đình có yếu tố nước ngoài. Để biết thêm thông tin chi tiết, bạn nên tham khảo thêm tại Luật Hôn nhân và gia đình 2014.\n\nTrân trọng!",
     "chu_de_phap_ly": "quan_he_hon_nhan_co_yeu_to_nuoc_ngoai",
@@ -58,25 +45,6 @@
     "quan_he_chong_cheo_mau_thuan": []
   },
   {
-    "question": "Người Việt Nam kết hôn đồng giới ở nước ngoài có được không?",
-    "ground_truth": "Căn cứ Điều 34 Nghị định 123/2015/NĐ-CP quy định điều kiện ghi vào Sổ hộ tịch việc kết hôn của công dân Việt Nam đã được giải quyết tại cơ quan có thẩm quyền của nước ngoài ở nước ngoài như sau:\n\n1. Việc kết hôn giữa công dân Việt Nam với nhau hoặc với người nước ngoài đã được giải quyết tại cơ quan có thẩm quyền của nước ngoài ở nước ngoài được ghi vào Sổ hộ tịch nếu tại thời điểm kết hôn, các bên đáp ứng đủ điều kiện kết hôn và không vi phạm điều cấm theo quy định của Luật Hôn nhân và gia đình Việt Nam.\n\n2. Nếu vào thời điểm đăng ký tại cơ quan có thẩm quyền nước ngoài, việc kết hôn không đáp ứng điều kiện kết hôn, nhưng không vi phạm điều cấm theo quy định của Luật Hôn nhân và gia đình, nhưng vào thời điểm yêu cầu ghi vào Sổ hộ tịch việc kết hôn, hậu quả đã được khắc phục hoặc việc ghi chú kết hôn là nhằm bảo vệ quyền lợi của công dân Việt Nam và trẻ em, thì việc kết hôn cũng được ghi vào Sổ hộ tịch.\n\nNhư vậy, việc kết hôn đồng giới ở một số nước đã công nhận và bạn có thể đăng ký kết hôn tại các quốc gia đã công nhận việc này. Tuy nhiên, Việt Nam sẽ không công nhận việc kết hôn đồng giới để ghi vào Sổ hộ tịch do pháp luật Việt Nam không công nhận kết hôn đồng giới.",
-    "chu_de_phap_ly": "quan_he_hon_nhan_co_yeu_to_nuoc_ngoai",
-    "loai_cau_hoi": "Lý thuyết",
-    "van_ban_phap_luat_lien_quan": [
-      "NghiDinh_123_2015_ND_CP"
-    ],
-    "tinh_trang_hieu_luc": {
-      "NghiDinh_123_2015_ND_CP_Dieu_34": "CON_HIEU_LUC"
-    },
-    "can_cu_phap_ly_chinh": [],
-    "can_cu_phap_ly_bo_tro": [
-      "NghiDinh_123_2015_ND_CP_Dieu_34"
-    ],
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
-    "can_cu_khong_nen_ap_dung": [],
-    "quan_he_chong_cheo_mau_thuan": []
-  },
-  {
     "question": "Tôi và anh ấy quan nhau sau một lần tình cờ, anh ấy là người Anh qua Việt Nam du lịch. Qua thời gian tìm hiểu thì chúng tôi tiến đến kết hôn. Nên tôi muốn tìm hiểu, cần đáp ứng những điều kiện gì để được kết hôn với người nước ngoài? Rất mong các bạn hỗ trợ giúp.",
     "ground_truth": "Căn cứ theo quy định tại Điều 8 Luật Hôn nhân gia đình 2014 có quy định điều kiện kết hôn như sau:\n\n- Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây:\n\n+ Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên;\n\n+ Việc kết hôn do nam và nữ tự nguyện quyết định;\n\n+ Không bị mất năng lực hành vi dân sự;\n\n+ Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn sau:\n\n++ Kết hôn giả tạo, ly hôn giả tạo;\n\n++ Tảo hôn, cưỡng ép kết hôn, lừa dối kết hôn, cản trở kết hôn;\n\n++ Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ;\n\n++ Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng;\n\n- Nhà nước không thừa nhận hôn nhân giữa những người cùng giới tính.\n\nNhư vậy, khi kết hôn cần đáp ứng các điều kiện trên bạn nhé. Theo đó, mỗi bên phải tuân theo quy định pháp luật nước mình về điều kiện kết hôn, ngoài ra người nước ngoài phải đáp ứng điều kiện kết hôn theo pháp luật Việt Nam khi tiến hành thủ tục kết hôn tại Việt Nam.",
     "chu_de_phap_ly": "quan_he_hon_nhan_co_yeu_to_nuoc_ngoai",
@@ -108,10 +76,9 @@
       "Luat_HNGD_2014_Dieu_5_Khoan_2": "CON_HIEU_LUC"
     },
     "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_8",
-      "Luat_HNGD_2014_Dieu_5_Khoan_2"
+      "Luat_HNGD_2014_Dieu_8"
     ],
-    "can_cu_phap_ly_bo_tro": [],
+    "can_cu_phap_ly_bo_tro": ["Luat_HNGD_2014_Dieu_5_Khoan_2"],
     "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
     "can_cu_khong_nen_ap_dung": [],
     "quan_he_chong_cheo_mau_thuan": []

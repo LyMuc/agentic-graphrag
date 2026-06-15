@@ -1,26 +1,5 @@
 [
   {
-    "question": "Vợ chồng tôi đang có ý định ly hôn, chúng tôi có 01 con chung 30 tháng tuổi. Hiện vợ tôi chưa có việc làm, trong khi tôi đã có công việc với thu nhập ổn định. Tôi muốn nuôi cháu có được không?",
-    "ground_truth": "Căn cứ Khoản 3 Điều 81 Luật hôn nhân gia đình 2014 quy định:\n\n- Con dưới 36 tháng tuổi được giao cho mẹ trực tiếp nuôi, trừ trường hợp người mẹ không đủ điều kiện để trực tiếp trông nom, chăm sóc, nuôi dưỡng, giáo dục con hoặc cha mẹ có thỏa thuận khác phù hợp với lợi ích của con .\n\nTheo quy định trên, về nguyên tắc, con dưới 36 tháng tuổi được giao cho người mẹ trực tiếp nuôi, trừ trường hợp:\n\n– Người mẹ đồng ý cho bạn nuôi con.\n\n– Người mẹ không đủ điều kiện để trực tiếp trông nom, chăm sóc, nuôi dưỡng, giáo dục con.\n\nNhư vậy, để được nuôi con dưới 36 tháng tuổi trong trường hợp này, bạn phải thoả thuận và được sự đồng ý của người mẹ, hoặc đưa ra các chứng cứ chứng minh người mẹ không đủ điều kiện về vật chất, tinh thần để trực tiếp trông nom, chăm sóc, giáo dục con.\n\nTuy nhiên, khi con đủ 36 tháng tuổi, bạn có quyền yêu cầu thay đổi người trực tiếp nuôi con căn cứ Điều 84 Luật hôn nhân và gia đình 2014 về thay đổi người trực tiếp nuôi con sau khi ly hôn theo đó:\n\n1. Trong trường hợp có yêu cầu của cha, mẹ hoặc cá nhân, tổ chức được quy định tại khoản 5 Điều này, Tòa án có thể quyết định việc thay đổi người trực tiếp nuôi con.\n\n2. Việc thay đổi người trực tiếp nuôi con được giải quyết khi có một trong các căn cứ sau đây:\n\na) Cha, mẹ có thỏa thuận về việc thay đổi người trực tiếp nuôi con phù hợp với lợi ích của con;\n\nb) Người trực tiếp nuôi con không còn đủ điều kiện trực tiếp trông nom, chăm sóc, nuôi dưỡng, giáo dục con.\n\n3. Việc thay đổi người trực tiếp nuôi con phải xem xét nguyện vọng của con từ đủ 07 tuổi trở lên.\n\nKhi có yêu cầu của bạn, Toà án sẽ xem xét lại điều kiện nuôi con của người vợ, nếu không còn đủ điều kiện trực tiếp trông nom, chăm sóc, nuôi dưỡng, giáo dục con thì toà án sẽ quyết định thay đổi người trực tiếp nuôi con.\n\nTrên đây là nội dung tư vấn của chúng tôi về vấn đề mà bạn thắc mắc.\n\nTrân trọng!",
-    "chu_de_phap_ly": "quyen_nghia_vu_cha_me_con",
-    "loai_cau_hoi": "Tình huống",
-    "van_ban_phap_luat_lien_quan": [
-      "Luat_HNGD_2014"
-    ],
-    "tinh_trang_hieu_luc": {
-      "Luat_HNGD_2014_Dieu_81_Khoan_3": "CON_HIEU_LUC",
-      "Luat_HNGD_2014_Dieu_84": "CON_HIEU_LUC"
-    },
-    "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_81_Khoan_3",
-      "Luat_HNGD_2014_Dieu_84"
-    ],
-    "can_cu_phap_ly_bo_tro": [],
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
-    "can_cu_khong_nen_ap_dung": [],
-    "quan_he_chong_cheo_mau_thuan": []
-  },
-  {
     "question": "Dạ thưa luật sư em và chồng em ly thân được 3 năm nhưng con em gửi cho bà nội nhưng rồi chồng em có con với người khác và công khai như vậy em có thể đem con em về nuôi dưỡng khi bà nội không đồng ý được không ạ?",
     "ground_truth": "Điều 69 Luật Hôn nhân Gia đình 2014 quy định:\n\nNghĩa vụ và quyền của cha mẹ\n\n1. Thương yêu con, tôn trọng ý kiến của con; chăm lo việc học tập, giáo dục để con phát triển lành mạnh về thể chất, trí tuệ, đạo đức, trở thành người con hiếu thảo của gia đình, công dân có ích cho xã hội.\n\n2. Trông nom, nuôi dưỡng, chăm sóc, bảo vệ quyền, lợi ích hợp pháp của con chưa thành niên, con đã thành niên mất năng lực hành vi dân sự hoặc không có khả năng lao động và không có tài sản để tự nuôi mình.\n\n...\n\nNhư vậy, cha mẹ có nghĩa vụ nuôi dưỡng, chăm sóc con, ở đây dù vợ chồng bạn có ly thân hay không thì bà nội cũng không có quyền can thiệp, cản trở việc nuôi con của bạn. Do đó, bạn nên nói chuyện nghiêm túc với chồng bạn về việc nuôi con vì dù sao anh ta cũng có người tình mới và đã có con, về lâu dài sẽ không tốt cho bạn và con, bạn có thể khởi kiện ly hôn và giành quyền nuôi con vì bạn đang có lợi thế hơn chồng mình, khi đó chồng sẽ có nghĩa vụ cấp dưỡng cho con.\n\nTrân trọng!",
     "chu_de_phap_ly": "quyen_nghia_vu_cha_me_con",
@@ -58,25 +37,6 @@
     "can_cu_khong_nen_ap_dung": [],
     "quan_he_chong_cheo_mau_thuan": []
   },
-  {
-    "question": "Bé nhà em sinh tháng 10/2015 nay bé được 4 tuổi rồi ạ. Em đang làm nhân viên văn phòng thu nhập bình quân 8 triệu/ tháng. Chồng em thì làm tự do, vợ chồng em thì đang ở chung với mẹ chồng. Quyền sở hữu đất cũng là của mẹ chồng.\r\nMẫu thuẫn giữa hai vợ chồng có rất nhiều, nhưng chồng em rất hay chửi bới, nhục mạ em, và cứ có mẫu thuẫn là chồng em lại đuổi em ra khỏi nhà. Chồng em đã từng có tiền án tiền sự, từng vào trại. Cái này thì sau khi lấy chồng em mới biết, và cũng không dám hỏi lý do vì sao vào trại nữa. Tư vấn cho em giành quyền nuôi con?",
-    "ground_truth": "Việc trông nom, chăm sóc, nuôi dưỡng, giáo dục con sau khi ly hôn được quy định tại Điều 81 Luật Hôn nhân Gia đình 2014 như sau:\n\n1. Sau khi ly hôn, cha mẹ vẫn có quyền, nghĩa vụ trông nom, chăm sóc, nuôi dưỡng, giáo dục con chưa thành niên, con đã thành niên mất năng lực hành vi dân sự hoặc không có khả năng lao động và không có tài sản để tự nuôi mình theo quy định của Luật này, Bộ luật dân sự và các luật khác có liên quan.\n\n2. Vợ, chồng thỏa thuận về người trực tiếp nuôi con, nghĩa vụ, quyền của mỗi bên sau khi ly hôn đối với con; trường hợp không thỏa thuận được thì Tòa án quyết định giao con cho một bên trực tiếp nuôi căn cứ vào quyền lợi về mọi mặt của con; nếu con từ đủ 07 tuổi trở lên thì phải xem xét nguyện vọng của con.\n\n3. Con dưới 36 tháng tuổi được giao cho mẹ trực tiếp nuôi, trừ trường hợp người mẹ không đủ điều kiện để trực tiếp trông nom, chăm sóc, nuôi dưỡng, giáo dục con hoặc cha mẹ có thỏa thuận khác phù hợp với lợi ích của con.\n\nỞ đây, việc nuôi con sẽ căn cứ trên nhiều yếu tố, điều kiện tốt nhất để xác định, em có lợi thế hơn vì thu nhập em ổn định, bên cạnh đó chồng em còn từng có tiền án, tiền sự; có hành vi bạo lực với em. Người không trực tiếp nuôi con thì có nghĩa vụ cấp dưỡng cho con, mức cấp dưỡng sẽ do thỏa thuận của hai bên, nếu không thì Tòa xác định mức cụ thể.\n\nTrân trọng!",
-    "chu_de_phap_ly": "quyen_nghia_vu_cha_me_con",
-    "loai_cau_hoi": "Tình huống",
-    "van_ban_phap_luat_lien_quan": [
-      "Luat_HNGD_2014"
-    ],
-    "tinh_trang_hieu_luc": {
-      "Luat_HNGD_2014_Dieu_81": "CON_HIEU_LUC"
-    },
-    "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_81"
-    ],
-    "can_cu_phap_ly_bo_tro": [],
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
-    "can_cu_khong_nen_ap_dung": [],
-    "quan_he_chong_cheo_mau_thuan": []
-  }, 
   {
     "question": "Cha mẹ có quyền và nghĩa vụ như thế nào đối với con?",
     "ground_truth": "Căn cứ theo quy định Điều 69 Luật Hôn nhân và Gia đình 2014 quy định về nghĩa vụ và quyền của cha mẹ. Theo đó, đối với con cha mẹ có các quyền và nghĩa vụ như sau:\n\n(1) Thương yêu con, tôn trọng ý kiến của con.\n\n(2) Chăm lo việc học tập, giáo dục để con phát triển lành mạnh về thể chất, trí tuệ, đạo đức, trở thành người con hiếu thảo của gia đình, công dân có ích cho xã hội.\n\n(3) Trông nom, nuôi dưỡng, chăm sóc, bảo vệ quyền, lợi ích hợp pháp của con chưa thành niên, con đã thành niên mất năng lực hành vi dân sự hoặc không có khả năng lao động và không có tài sản để tự nuôi mình.\n\n(4) Giám hộ hoặc đại diện theo quy định của Bộ luật dân sự cho con chưa thành niên, con đã thành niên mất năng lực hành vi dân sự.\n\n(5) Không được phân biệt đối xử với con trên cơ sở giới hoặc theo tình trạng hôn nhân của cha mẹ;\n\n(6) Không được lạm dụng sức lao động của con chưa thành niên, con đã thành niên mất năng lực hành vi dân sự hoặc không có khả năng lao động.\n\n(7) Không được xúi giục, ép buộc con làm việc trái pháp luật, trái đạo đức xã hội.\n\nTrường hợp nào mẹ không được nuôi con theo quy định hiện nay? (Hình từ Internet)",
@@ -137,7 +97,7 @@
   {
     "question": "Khi bố mẹ ly hôn, con được sang thăm bố khi mẹ là người trực tiếp nuôi dưỡng không?",
     "ground_truth": "Tại Điều 70 Luật Hôn nhân và gia đình 2014 quy định về quyền và nghĩa vụ của con cụ thể như sau:\n\nNhư vậy, đối với việc khi bố mẹ ly hôn con được sang thăm bố khi mẹ là người trực tiếp nuôi dưỡng hoàn toàn đúng với quy định của pháp luật vì không những bố mẹ phải có nghĩa vụ với con cái mà ngược lại con cái cũng phải có nghĩa vụ chăm sóc, yêu thương bố mẹ.\n\nTrân trọng!",
-    "chu_de_phap_ly": "cha_me_con_sau_ly_hon",
+    "chu_de_phap_ly": "quyen_nghia_vu_cha_me_con",
     "loai_cau_hoi": "Lý thuyết",
     "van_ban_phap_luat_lien_quan": [
       "Luat_HNGD_2014"

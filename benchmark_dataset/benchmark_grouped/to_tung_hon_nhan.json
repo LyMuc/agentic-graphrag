@@ -45,5 +45,63 @@
         "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
         "can_cu_khong_nen_ap_dung": [],
         "quan_he_chong_cheo_mau_thuan": []
+      }, 
+      {
+        "question": "Tòa án nào giải quyết yêu cầu hủy việc kết hôn trái pháp luật? Trong xóm có một cặp vợ chồng muốn đưa nhau ra tòa để ly hôn. Nhưng tôi nghe nói cặp đó kết hôn trái pháp luật (do bị ép buộc). Vậy tôi thắc mắc không biết Tòa án nào giải quyết yêu cầu hủy việc kết hôn trái pháp luật? Và văn bản pháp luật nào quy định về điều này? Mong Ban biên tập Thư Ký Luật trả lời giúp tôi. Xin cám ơn!",
+        "ground_truth": "Nội dung mà bạn hỏi liên quan tới thẩm quyền giải quyết việc  dân sự của Tòa án theo lãnh thổ được quy định tại Bộ luật tố tụng dân sự 2015 (Có hiệu lực từ ngày 01/07/2016).\n\nTheo đó, Tòa án nơi việc đăng ký kết hôn trái pháp luật được thực hiện có thẩm quyền giải quyết yêu cầu hủy việc kết hôn trái pháp luật.\n\n(Điểm g Khoản 2 Điều 39 Bộ luật tố tụng dân sự 2015)\n\nTrên đây là trả lời của Ban biên tập Thư Ký Luật về thẩm quyền giải quyết việc  dân sự của Tòa án theo lãnh thổ được quy định tại Bộ luật tố tụng dân sự 2015 . Bạn vui lòng tham khảo văn bản này để có thể hiểu rõ hơn.\n\nTrân trọng!",
+        "chu_de_phap_ly": "to_tung_hon_nhan",
+        "loai_cau_hoi": "Tình huống",
+        "van_ban_phap_luat_lien_quan": [
+          "BoLuat_DanSu_2015"
+        ],
+        "tinh_trang_hieu_luc": {
+          "BoLuat_DanSu_2015_Dieu_39_Khoan_2_Diem_g": "CON_HIEU_LUC"
+        },
+        "can_cu_phap_ly_chinh": [
+          "BoLuat_DanSu_2015_Dieu_39_Khoan_2_Diem_g"
+        ],
+        "can_cu_phap_ly_bo_tro": [],
+        "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+        "can_cu_khong_nen_ap_dung": [],
+        "quan_he_chong_cheo_mau_thuan": []
+      }, 
+      {
+        "question": "Tôi muốn hỏi khi tôi nộp đơn yêu cầu Tòa án hủy việc kết hôn trái pháp luật, sau khi Tòa thụ lý tôi muốn lại rút đơn yêu cầu thì Tòa án có chấp nhận không? Tòa án sẽ giải quyết ra sao?",
+        "ground_truth": "Thứ nhất: về thời hạn chuẩn bị xét đơn yêu cầu Tòa án hủy việc kết hôn trái pháp luật\n\nViệc bạn nộp đơn yêu cầu Tòa án hủy việc kết hôn trái pháp luật thuộc vụ việc dân sự được quy định tại khoản 1 Điều 28 Văn bản hợp nhất số 02/VBHN-VPQH hợp nhất Bộ luật Tố tụng dân sự của Văn phòng quốc hội ban hành ngày 20/3/2013. Cũng trong quy định tại Điều 311 văn bản hợp nhất này thì: “Tòa án áp dụng những quy định của Chương này, đồng thời áp dụng những quy định khác của Bộ luật này không trái với những quy định của Chương này để giải quyết những việc dân sự quy định tại các khoản 1, 2, 3, 4, 6, 7 và 8 Điều 26, các khoản 1, 2, 3, 4, 5 và 7 Điều 28, khoản 1 và khoản 4 Điều 30, khoản 3 Điều 32 của Bộ luật này”.\n\nVì thế, quy định về thời hạn chuẩn bị xét đơn yêu cầu của bạn sau khi đã được Tòa án thụ lý sẽ được áp dụng theo tinh thần Điều 179 văn bản pháp luật nói trên. Theo đó, kể từ thời điểm Tòa án thụ lý, thời hạn chuẩn bị xét đơn yêu cầu là từ 2 đến 4 tháng đối với vụ việc đơn giản và 3 đến 6 tháng đối với các vụ việc phức tạp.\n\nThứ hai: về việc Tòa án có chấp nhận đề nghị rút đơn yêu cầu của bạn hay không?\n\nTrong khoảng thời gian chuẩn bị xét đơn yêu cầu nói trên mà bạn rút đơn yêu cầu thì Tòa án sẽ ra quyết định đình chỉ giải quyết vụ án dân sự trong trường hợp “Người khởi kiện rút đơn khởi kiện và được Tòa án chấp nhận” theo quy định tại điểm c khoản 1 Điều 192 Văn bản hợp nhất. Điều kiện được Tòa án chấp nhận được quy định tại khoản 1 Điều 24 Nghị quyết số 05/2012/NQ-HĐTP ngày 03/12/2012 của Hội đồng thẩm phán Tòa án nhân dân tối cao hướng dẫn thi hành một số quy định trong phần thứ hai «Thủ tục giải quyết vụ án tại tòa án cấp sơ thẩm» của Bộ luật Tố tụng dân sự đã được sửa đổi bổ sung theo Luật sửa đổi, bổ sung một số điều của Bộ luật Tố tụng dân sự  như sau:«Khi người khởi kiện rút đơn khởi kiện, thì Toà án cần phải xem xét trong vụ án có yêu cầu phản tố của bị đơn hoặc yêu cầu độc lập của người có quyền lợi, nghĩa vụ liên quan hay không để quyết định… »\n\nTuy nhiên, cũng tại Điều 311 Văn bản hợp nhất có quy định: “Việc dân sự là việc cá nhân, cơ quan, tổ chức không có tranh chấp, nhưng có yêu cầu Tòa án công nhận hoặc không công nhận một sự kiện pháp lý là căn cứ làm phát sinh quyền, nghĩa vụ dân sự, hôn nhân và gia đình, kinh doanh, thương mại, lao động của mình hoặc của cá nhân, cơ quan, tổ chức khác; yêu cầu Tòa án công nhận cho mình quyền về dân sự, hôn nhân và gia đình, kinh doanh, thương mại, lao động”\n\nNhận thấy, mục đích mà bạn hướng tới khi nộp đơn là yêu cầu hủy việc kết hôn trái pháp luật, đây là việc dân sự không có tranh chấp. Vì thế, trong vụ việc dân sự này thứ nhất sẽ không có bị đơn, nên sẽ không có yêu cầu phản tố từ phía bị đơn; thứ hai, không có người có quyền lợi và nghĩa vụ liên quan nên sẽ không phát sinh yêu cầu độc lập của đối tượng này... (ở đây chỉ có người liên quan là người tham gia tố tụng cùng với bạn nếu yêu cầu được Tòa án đưa ra giải quyết theo thủ tục tố tụng tại Tòa)\n\nMà tại khoản 1 Điều 24 Nghị quyết trên quy định : «Trong trường hợp không có yêu cầu phản tố và yêu cầu độc lập, thì Toà án chấp nhận việc người khởi kiện rút đơn khởi kiện và căn cứ vào điểm c khoản 1 Điều 192 của Bộ luật Tố tụng dân sự ra quyết định đình chỉ giải quyết vụ án dân sự »\n\nDo vậy, trong trường hợp bạn rút đơn yêu cầu trong thời gian chuẩn bị xét đơn sau khi Tòa án thụ lý đơn của bạn thì Tòa án sẽ căn cứ các quy định pháp luật nói trên :\n\n- Chấp nhận việc rút đơn của bạn ;\n\n- Ra quyết định đình chỉ vụ án ;\n\n- Xóa tên yêu cầu hủy kết hôn trái pháp luật này trong sổ thụ lý và trả lại đơn yêu cầu và tài liệu, chứng cứ kèm theo cho bạn nếu bạn có yêu cầu theo quy định tại Khoản 2 điều 24 Nghị quyết nói trên;\n\n- Trả lại tạm ứng án phí mà bạn đã nộp theo quy định tại khoản 3 Điều 193 Văn bản hợp nhất Bộ luật Tố tụng dân sự.",
+        "chu_de_phap_ly": "to_tung_hon_nhan",
+        "loai_cau_hoi": "",
+        "van_ban_phap_luat_lien_quan": [],
+        "tinh_trang_hieu_luc": {},
+        "can_cu_phap_ly_chinh": [],
+        "can_cu_phap_ly_bo_tro": [],
+        "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+        "can_cu_khong_nen_ap_dung": [],
+        "quan_he_chong_cheo_mau_thuan": []
+      }, 
+      {
+        "question": "Ông A khởi kiện yêu cầu Tòa án giải quyết ly hôn và chia tài sản chung với bà B. Tại thời điểm đăng ký kết hôn, ông A chưa đủ tuổi kết hôn. Tại thời điểm xin ly hôn thì ông A đã đủ tuổi đăng ký kết hôn. Bà B yêu cầu hủy kết hôn trái pháp luật. Vậy trong trường hợp này Tòa án thụ lý giải quyết việc dân sự hay thụ lý vụ án dân sự?",
+        "ground_truth": "Trường hợp có đương sự khởi kiện yêu cầu Tòa án giải quyết ly hôn và chia tài sản khi ly hôn, có đương sự yêu cầu hủy kết hôn trái pháp luật thì Tòa án thụ lý vụ án ly hôn, vì khi thụ lý thì Tòa án chưa thể khẳng định yêu cầu hủy kết hôn trái pháp luật có căn cứ hay không.\n\nTrong quá trình giải quyết, nếu có đủ cơ sở hủy việc kết hôn trái pháp luật thì Tòa án căn cứ khoản 7 Điều 28 Bộ luật Tố tụng Dân sự năm 2015 xác định lại quan hệ pháp luật có tranh chấp là tranh chấp về nuôi con, chia tài sản khi hủy kết hôn trái pháp luật để hủy kết hôn trái pháp luật và giải quyết tranh chấp về nuôi con, chia tài sản.\n\nTrường hợp trong quá trình giải quyết, nếu hai bên đã đủ điều kiện kết hôn theo quy định tại Điều 8 Luật Hôn nhân và Gia đình năm 2014 và hai bên yêu cầu công nhận quan hệ hôn nhân thì Tòa án công nhận quan hệ hôn nhân đó; quan hệ hôn nhân được xác lập từ thời điểm các bên đủ điều kiện kết hôn, quy định tại khoản 2 Điều 11 Luật Hôn nhân và Gia đình năm 2014; trường hợp này, Tòa án giải quyết vụ án ly hôn, tranh chấp về nuôi con, chia tài sản khi ly hôn theo quy định của Luật Hôn nhân và Gia đình.",
+        "chu_de_phap_ly": "to_tung_hon_nhan",
+        "loai_cau_hoi": "Tình huống",
+        "van_ban_phap_luat_lien_quan": [],
+        "tinh_trang_hieu_luc": {},
+        "can_cu_phap_ly_chinh": [],
+        "can_cu_phap_ly_bo_tro": [],
+        "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+        "can_cu_khong_nen_ap_dung": [],
+        "quan_he_chong_cheo_mau_thuan": []
+      }, 
+      {
+        "question": "Tòa án nào có thẩm quyền giải quyết ly hôn khi chồng đang ở nước ngoài?",
+        "ground_truth": "Căn cứ khoản 2 Điều 123 Luật Hôn nhân và gia đình 2014 quy định thẩm quyền giải quyết các vụ việc hôn nhân và gia đình có yếu tố nước ngoài:\n\nCăn cứ khoản 3 Điều 35 Bộ luật Tố tụng dân sự 2015 quy định thẩm quyền của Tòa án nhân dân cấp huyện:\n\nCăn cứ Điều 37 Bộ luật Tố tụng dân sự 2015 quy định thẩm quyền của Tòa án nhân dân cấp tỉnh:\n\nTheo quy định trên, tòa án nhân dân cấp huyện không giải quyết những tranh chấp, yêu cầu mà có đương sự ở nước ngoài. Vì vậy, khi chồng đang ở nước ngoài thì việc giải quyết ly hôn thuộc thẩm quyền của Tòa án nhân dân cấp tỉnh.\n\nThủ tục đơn phương ly hôn khi chồng đang ở nước ngoài năm 2024? (Hình từ Intenret)",
+        "chu_de_phap_ly": "quan_he_hon_nhan_co_yeu_to_nuoc_ngoai",
+        "loai_cau_hoi": "Lý thuyết",
+        "van_ban_phap_luat_lien_quan": [],
+        "tinh_trang_hieu_luc": {},
+        "can_cu_phap_ly_chinh": [],
+        "can_cu_phap_ly_bo_tro": [],
+        "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+        "can_cu_khong_nen_ap_dung": [],
+        "quan_he_chong_cheo_mau_thuan": []
       }
 ]

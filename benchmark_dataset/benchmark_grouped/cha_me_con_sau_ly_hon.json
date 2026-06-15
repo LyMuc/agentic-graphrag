@@ -1,5 +1,45 @@
 [
   {
+    "question": "Bé nhà em sinh tháng 10/2015 nay bé được 4 tuổi rồi ạ. Em đang làm nhân viên văn phòng thu nhập bình quân 8 triệu/ tháng. Chồng em thì làm tự do, vợ chồng em thì đang ở chung với mẹ chồng. Quyền sở hữu đất cũng là của mẹ chồng.\r\nMẫu thuẫn giữa hai vợ chồng có rất nhiều, nhưng chồng em rất hay chửi bới, nhục mạ em, và cứ có mẫu thuẫn là chồng em lại đuổi em ra khỏi nhà. Chồng em đã từng có tiền án tiền sự, từng vào trại. Cái này thì sau khi lấy chồng em mới biết, và cũng không dám hỏi lý do vì sao vào trại nữa. Tư vấn cho em giành quyền nuôi con?",
+    "ground_truth": "Việc trông nom, chăm sóc, nuôi dưỡng, giáo dục con sau khi ly hôn được quy định tại Điều 81 Luật Hôn nhân Gia đình 2014 như sau:\n\n1. Sau khi ly hôn, cha mẹ vẫn có quyền, nghĩa vụ trông nom, chăm sóc, nuôi dưỡng, giáo dục con chưa thành niên, con đã thành niên mất năng lực hành vi dân sự hoặc không có khả năng lao động và không có tài sản để tự nuôi mình theo quy định của Luật này, Bộ luật dân sự và các luật khác có liên quan.\n\n2. Vợ, chồng thỏa thuận về người trực tiếp nuôi con, nghĩa vụ, quyền của mỗi bên sau khi ly hôn đối với con; trường hợp không thỏa thuận được thì Tòa án quyết định giao con cho một bên trực tiếp nuôi căn cứ vào quyền lợi về mọi mặt của con; nếu con từ đủ 07 tuổi trở lên thì phải xem xét nguyện vọng của con.\n\n3. Con dưới 36 tháng tuổi được giao cho mẹ trực tiếp nuôi, trừ trường hợp người mẹ không đủ điều kiện để trực tiếp trông nom, chăm sóc, nuôi dưỡng, giáo dục con hoặc cha mẹ có thỏa thuận khác phù hợp với lợi ích của con.\n\nỞ đây, việc nuôi con sẽ căn cứ trên nhiều yếu tố, điều kiện tốt nhất để xác định, em có lợi thế hơn vì thu nhập em ổn định, bên cạnh đó chồng em còn từng có tiền án, tiền sự; có hành vi bạo lực với em. Người không trực tiếp nuôi con thì có nghĩa vụ cấp dưỡng cho con, mức cấp dưỡng sẽ do thỏa thuận của hai bên, nếu không thì Tòa xác định mức cụ thể.\n\nTrân trọng!",
+    "chu_de_phap_ly": "quyen_nghia_vu_cha_me_con",
+    "loai_cau_hoi": "Tình huống",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_81": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_81"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
+  }, 
+  {
+    "question": "Vợ chồng tôi đang có ý định ly hôn, chúng tôi có 01 con chung 30 tháng tuổi. Hiện vợ tôi chưa có việc làm, trong khi tôi đã có công việc với thu nhập ổn định. Tôi muốn nuôi cháu có được không?",
+    "ground_truth": "Căn cứ Khoản 3 Điều 81 Luật hôn nhân gia đình 2014 quy định:\n\n- Con dưới 36 tháng tuổi được giao cho mẹ trực tiếp nuôi, trừ trường hợp người mẹ không đủ điều kiện để trực tiếp trông nom, chăm sóc, nuôi dưỡng, giáo dục con hoặc cha mẹ có thỏa thuận khác phù hợp với lợi ích của con .\n\nTheo quy định trên, về nguyên tắc, con dưới 36 tháng tuổi được giao cho người mẹ trực tiếp nuôi, trừ trường hợp:\n\n– Người mẹ đồng ý cho bạn nuôi con.\n\n– Người mẹ không đủ điều kiện để trực tiếp trông nom, chăm sóc, nuôi dưỡng, giáo dục con.\n\nNhư vậy, để được nuôi con dưới 36 tháng tuổi trong trường hợp này, bạn phải thoả thuận và được sự đồng ý của người mẹ, hoặc đưa ra các chứng cứ chứng minh người mẹ không đủ điều kiện về vật chất, tinh thần để trực tiếp trông nom, chăm sóc, giáo dục con.\n\nTuy nhiên, khi con đủ 36 tháng tuổi, bạn có quyền yêu cầu thay đổi người trực tiếp nuôi con căn cứ Điều 84 Luật hôn nhân và gia đình 2014 về thay đổi người trực tiếp nuôi con sau khi ly hôn theo đó:\n\n1. Trong trường hợp có yêu cầu của cha, mẹ hoặc cá nhân, tổ chức được quy định tại khoản 5 Điều này, Tòa án có thể quyết định việc thay đổi người trực tiếp nuôi con.\n\n2. Việc thay đổi người trực tiếp nuôi con được giải quyết khi có một trong các căn cứ sau đây:\n\na) Cha, mẹ có thỏa thuận về việc thay đổi người trực tiếp nuôi con phù hợp với lợi ích của con;\n\nb) Người trực tiếp nuôi con không còn đủ điều kiện trực tiếp trông nom, chăm sóc, nuôi dưỡng, giáo dục con.\n\n3. Việc thay đổi người trực tiếp nuôi con phải xem xét nguyện vọng của con từ đủ 07 tuổi trở lên.\n\nKhi có yêu cầu của bạn, Toà án sẽ xem xét lại điều kiện nuôi con của người vợ, nếu không còn đủ điều kiện trực tiếp trông nom, chăm sóc, nuôi dưỡng, giáo dục con thì toà án sẽ quyết định thay đổi người trực tiếp nuôi con.\n\nTrên đây là nội dung tư vấn của chúng tôi về vấn đề mà bạn thắc mắc.\n\nTrân trọng!",
+    "chu_de_phap_ly": "quyen_nghia_vu_cha_me_con",
+    "loai_cau_hoi": "Tình huống",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_81_Khoan_3": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_84": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_81_Khoan_3",
+      "Luat_HNGD_2014_Dieu_84"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
+  },
+  {
     "question": "Hai vợ chồng tôi đã kết hôn và có 1 con trai được 9 tháng. Vì mâu thuẫn gia đình, vợ và con tôi đã về nhà ngoại sống. Khi tôi tới thăm con thì bị vợ tôi ngăn cản và vợ tôi còn yêu cầu tôi phải chu cấp cho con. Giờ tôi muốn làm thủ tục ly hôn và xin hỏi: tôi có được tự do tới thăm con không? nghĩa vụ cấp dưỡng của tôi với con được luật pháp quy định như thế nào?",
     "ground_truth": "Theo quy định trong Điều 81 Luật Hôn nhân và gia đình năm 2014 về vấn đề trông nom, chăm sóc, nuôi dưỡng, giáo dục con thì sau khi hai vợ chồng hoàn thành thủ tục ly hôn thì cha mẹ vẫn có quyền, nghĩa vụ trông nom, chăm sóc hay nuôi dưỡng, giáo dục các con chưa thành niên, con đã thành niên mất năng lực hành vi dân sự hay con không có khả năng lao động và không có tài sản để có thể tự nuôi mình. Vợ, chồng cần thỏa thuận về người trực tiếp nuôi dưỡng con, nghĩa vụ, quyền của từng bên sau khi ly hôn đối với con; đối với trường hợp không thỏa thuận được thì Tòa án nhân dân quyết định giao con cho 1 bên trực tiếp nuôi dưỡng và căn cứ vào quyền lợi về mọi mặt của con. Đối với trường hợp con dưới 36 tháng tuổi được giao cho người mẹ trực tiếp nuôi dưỡng, trừ một số trường hợp người mẹ không đáp ứng đủ điều kiện để trực tiếp trông nom, chăm sóc, nuôi dưỡng và giáo dục con hoặc cha mẹ có thỏa thuận khác phù hợp với những lợi ích của con. Về quyền thăm nom cũng như nghĩa vụ cấp dưỡng, khoản 2, 3 Điều 82 của bộ luật này quy định:\n\nCha, mẹ không trực tiếp nuôi dưỡng con có nghĩa vụ cấp dưỡng cho con. Sau khi làm thủ tục ly hôn, người không trực tiếp nuôi dưỡng con có quyền và nghĩa vụ thăm nom con mà không ai được phép cản trở.\n\nDo đó, anh hoàn toàn có quyền tự do tới thăm con, đồng thời có nghĩa vụ cấp dưỡng để nuôi con. Cha, mẹ trực tiếp nuôi dưỡng con cùng những thành viên gia đình không được ngăn cản người không trực tiếp nuôi dưỡng con trong việc thăm nom, chăm sóc, nuôi dưỡng và giáo dục con. Trừ một số trường hợp cha, mẹ không trực tiếp nuôi dưỡng con lạm dụng việc thăm nom để ngăn cản hoặc gây ảnh hưởng xấu tới việc trông nom, chăm sóc, nuôi dưỡng và giáo dục con thì người trực tiếp nuôi dưỡng con có quyền yêu cầu Tòa án nhân dân hạn chế quyền thăm nom con của người đó.",
     "chu_de_phap_ly": "cha_me_con_sau_ly_hon",

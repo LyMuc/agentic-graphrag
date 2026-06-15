@@ -1,0 +1,215 @@
+[
+  {
+    "question": "Việc bảo vệ quyền, lợi ích hợp pháp của các bên trong quan hệ hôn nhân và gia đình có yếu tố nước ngoài được quy định như thế nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_121"
+    ]
+  },
+  {
+    "question": "Quan hệ hôn nhân và gia đình có yếu tố nước ngoài tại Việt Nam được tôn trọng và bảo vệ theo quy định nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_121_Khoan_1"
+    ]
+  },
+  {
+    "question": "Người nước ngoài tại Việt Nam trong quan hệ hôn nhân và gia đình với công dân Việt Nam có quyền và nghĩa vụ như thế nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_121_Khoan_2"
+    ]
+  },
+  {
+    "question": "Nhà nước Việt Nam bảo hộ quyền, lợi ích hợp pháp của công dân Việt Nam ở nước ngoài trong quan hệ hôn nhân và gia đình theo quy định nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_121_Khoan_3"
+    ]
+  },
+  {
+    "question": "Chính phủ quy định chi tiết việc giải quyết quan hệ hôn nhân và gia đình có yếu tố nước ngoài như thế nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_121_Khoan_4"
+    ]
+  },
+  {
+    "question": "Việc áp dụng pháp luật đối với quan hệ hôn nhân và gia đình có yếu tố nước ngoài được quy định như thế nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_122"
+    ]
+  },
+  {
+    "question": "Khi điều ước quốc tế mà Việt Nam là thành viên có quy định khác với Luật Hôn nhân và gia đình 2014 thì áp dụng pháp luật nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_122_Khoan_1"
+    ]
+  },
+  {
+    "question": "Trong quan hệ hôn nhân và gia đình có yếu tố nước ngoài, khi nào pháp luật nước ngoài được áp dụng?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_122_Khoan_2",
+      "Luat_HNGD_2014_Dieu_122_Khoan_3"
+    ]
+  },
+  {
+    "question": "Trường hợp pháp luật nước ngoài dẫn chiếu trở lại pháp luật Việt Nam thì áp dụng pháp luật nào đối với quan hệ hôn nhân và gia đình có yếu tố nước ngoài?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_122_Khoan_2"
+    ]
+  },
+  {
+    "question": "Thẩm quyền đăng ký hộ tịch liên quan đến quan hệ hôn nhân và gia đình có yếu tố nước ngoài được quy định như thế nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_123_Khoan_1"
+    ]
+  },
+  {
+    "question": "Thẩm quyền giải quyết các vụ việc hôn nhân và gia đình có yếu tố nước ngoài tại Tòa án được quy định ra sao?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_123_Khoan_2"
+    ]
+  },
+  {
+    "question": "Tòa án nhân dân cấp huyện nơi cư trú công dân Việt Nam có thẩm quyền giải quyết ly hôn, tranh chấp hôn nhân gia đình giữa công dân Việt Nam ở khu vực biên giới với công dân nước láng giềng không?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_123_Khoan_3"
+    ]
+  },
+  {
+    "question": "Giấy tờ do cơ quan có thẩm quyền của nước ngoài lập để giải quyết vụ việc hôn nhân và gia đình tại Việt Nam có cần hợp pháp hóa lãnh sự không?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_124"
+    ]
+  },
+  {
+    "question": "Trường hợp nào giấy tờ nước ngoài về hôn nhân và gia đình được miễn hợp pháp hóa lãnh sự tại Việt Nam?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_124"
+    ]
+  },
+  {
+    "question": "Việc công nhận bản án, quyết định của Tòa án nước ngoài về hôn nhân và gia đình có yêu cầu thi hành tại Việt Nam được thực hiện như thế nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_125_Khoan_1"
+    ]
+  },
+  {
+    "question": "Bản án, quyết định của Tòa án nước ngoài về hôn nhân và gia đình không có yêu cầu thi hành tại Việt Nam có được ghi vào sổ hộ tịch không?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_125_Khoan_2"
+    ]
+  },
+  {
+    "question": "Công dân Việt Nam kết hôn với người nước ngoài phải tuân theo pháp luật nước nào về điều kiện kết hôn?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_126_Khoan_1"
+    ]
+  },
+  {
+    "question": "Tôi là công dân Việt Nam, bạn trai là người Mỹ. Chúng tôi muốn đăng ký kết hôn tại Việt Nam, mỗi bên phải tuân theo điều kiện kết hôn của pháp luật nước nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_126_Khoan_1"
+    ]
+  },
+  {
+    "question": "Việc kết hôn giữa những người nước ngoài thường trú tại Việt Nam phải đáp ứng điều kiện gì?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_126",
+      "Luat_HNGD_2014_Dieu_8",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_a",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_b",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_c",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_d"
+    ]
+  },
+  {
+    "question": "Trường hợp người nước ngoài thường trú tại Việt Nam ly hôn thì cơ quan tại Việt Nam có thẩm quyền giải quyết không?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_127_Khoan_1"
+    ]
+  },
+  {
+    "question": "Thuận tình ly hôn với người nước ngoài được quy định như thế nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_127"
+    ]
+  },
+  {
+    "question": "Công dân Việt Nam không thường trú tại Việt Nam yêu cầu ly hôn có yếu tố nước ngoài thì áp dụng pháp luật nước nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_127_Khoan_2"
+    ]
+  },
+  {
+    "question": "Vợ chồng tôi là công dân Việt Nam nhưng đang thường trú ở Singapore, không có nơi thường trú chung tại Việt Nam. Nếu ly hôn thì pháp luật nước nào được áp dụng?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_127_Khoan_2"
+    ]
+  },
+  {
+    "question": "Tài sản là bất động sản ở nước ngoài khi ly hôn có yếu tố nước ngoài được giải quyết theo pháp luật nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_127_Khoan_3"
+    ]
+  },
+  {
+    "question": "Xin chào quý anh chị trong Ban biên tập! Tôi có vấn đề thắc mắc mong được anh chị giải đáp giúp ạ. Chị Trang quốc tịch Việt Nam và chồng chị quốc tịch Thụy Điển. Sau 10 năm kết hôn, hai anh chị xảy ra mâu thuẫn. Người chồng về Thụy Điển và ly thân từ đó. Bây giờ, chị Trang muốn đơn phương ly hôn có được không và thủ tục như thế nào? Tài sản chung của 2 vợ chồng là căn nhà mua ở Thụy Điển thì giải quyết ra sao? Rất mong được anh chị giải đáp ạ. Xin chân thành cảm ơn!",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_51_Khoan_1",
+      "Luat_HNGD_2014_Dieu_127",
+      "Luat_HNGD_2014_Dieu_127_Khoan_3"
+    ]
+  },
+  {
+    "question": "Cơ quan đăng ký hộ tịch Việt Nam có thẩm quyền xác định cha, mẹ, con có yếu tố nước ngoài trong trường hợp nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_128_Khoan_1"
+    ]
+  },
+  {
+    "question": "Tòa án Việt Nam giải quyết xác định cha, mẹ, con có yếu tố nước ngoài trong những trường hợp nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_128_Khoan_2"
+    ]
+  },
+  {
+    "question": "Tôi là công dân Việt Nam, bạn gái là người Pháp định cư tại Việt Nam. Chúng tôi có con nhưng chưa đăng ký khai sinh vì tranh chấp về cha của con. Việc xác định cha, con có yếu tố nước ngoài do cơ quan nào giải quyết?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_128_Khoan_2"
+    ]
+  },
+  {
+    "question": "Nghĩa vụ cấp dưỡng có yếu tố nước ngoài được áp dụng theo pháp luật của nước nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_129_Khoan_1"
+    ]
+  },
+  {
+    "question": "Cơ quan nào có thẩm quyền giải quyết đơn yêu cầu cấp dưỡng có yếu tố nước ngoài?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_129_Khoan_2"
+    ]
+  },
+  {
+    "question": "Chồng tôi là công dân Đức đang làm việc tại Việt Nam, tôi yêu cầu anh cấp dưỡng cho con. Pháp luật nước nào được áp dụng để xác định nghĩa vụ cấp dưỡng?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_129_Khoan_1",
+      "Luat_HNGD_2014_Dieu_129_Khoan_2"
+    ]
+  },
+  {
+    "question": "Chế độ tài sản của vợ chồng theo thỏa thuận có yếu tố nước ngoài được giải quyết như thế nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_130"
+    ]
+  },
+  {
+    "question": "Nam, nữ chung sống như vợ chồng mà không đăng ký kết hôn có yếu tố nước ngoài được giải quyết theo quy định nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_130"
+    ]
+  },
+  {
+    "question": "Tôi là người Việt Nam, bạn trai là người Hàn Quốc, chúng tôi chung sống như vợ chồng tại Việt Nam nhưng chưa đăng ký kết hôn. Khi chia tay, tài sản chung được giải quyết theo pháp luật nào?",
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_130"
+    ]
+  }
+]

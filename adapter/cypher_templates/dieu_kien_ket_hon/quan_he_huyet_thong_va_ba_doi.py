@@ -75,7 +75,7 @@ WITH $lqh AS lqh, $lrh AS lrh, $kc AS kc, $seed_cam AS seed_cam,
      $whitelist_dieu_ids AS wl
 
 OPTIONAL MATCH (qh:QuanHe:{TOPIC_LABEL} {{id: lqh, topic: '{TOPIC}'}})
-WHERE lqh <> '' AND lrh NOT IN ['khong_ro', 'can_huyet_khong_ro']
+WHERE lqh <> '' AND NOT lrh IN ['khong_ro', 'can_huyet_khong_ro']
 
 OPTIONAL MATCH (qh_truc:QuanHe:{TOPIC_LABEL} {{
   id: 'cung_dong_mau_ve_truc_he', topic: '{TOPIC}'
@@ -95,7 +95,7 @@ OPTIONAL MATCH (hv_cam:HanhVi:{TOPIC_LABEL} {{
 }})
 WHERE seed_cam = true
 
-WITH wl, kc, lrh,
+WITH wl, kc, lrh, seed_cam,
   [x IN collect(DISTINCT qh) + collect(DISTINCT qh_truc) + collect(DISTINCT qh_ba)
        + collect(DISTINCT hv_cam)
    WHERE x IS NOT NULL] AS seed_nodes,

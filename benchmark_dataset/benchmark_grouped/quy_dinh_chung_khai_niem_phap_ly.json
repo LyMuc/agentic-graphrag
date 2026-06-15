@@ -1,28 +1,5 @@
 [
   {
-    "question": "Thế nào là hợp đồng hôn nhân trái pháp luật?",
-    "ground_truth": "Căn cứ theo Điều 28 Luật Hôn nhân và gia đình 2014 quy định về áp dụng chế độ tài sản của vợ chồng như sau:\n\nĐồng thời tại Điều 47 Luật Hôn nhân và gia đình 2014 quy định về thỏa thuận xác lập chế độ tài sản vợ chồng như sau:\n\nTheo khoản 11 Điều 3 Luật Hôn nhân và gia đình 2014 giải thích về kết hôn giả tạo như sau:\n\nQua đó có thể thấy, theo pháp luật về hôn nhân và gia đình hiện nay chỉ ghi nhận việc thỏa thuận về chế độ tài sản của vợ chồng được lập thành hợp đồng\n\nTheo đó, nếu 02 bên giao kết hợp đồng hôn nhân mà không nhằm mục đích xây dựng gia đình mà để xuất cảnh, nhập cảnh, cư trú, nhập quốc tịch Việt Nam, quốc tịch nước ngoài; hưởng chế độ ưu đãi của Nhà nước hoặc để đạt được mục đích khác sẽ hành vi vi phạm pháp luật\n\nGiao kết hợp đồng hôn nhân trái pháp luật sẽ bị xử phạt như thế nào? (Hình từ Internet)",
-    "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
-    "loai_cau_hoi": "Lý thuyết",
-    "van_ban_phap_luat_lien_quan": [
-      "Luat_HNGD_2014"
-    ],
-    "tinh_trang_hieu_luc": {
-      "Luat_HNGD_2014_Dieu_28": "CON_HIEU_LUC",
-      "Luat_HNGD_2014_Dieu_47": "CON_HIEU_LUC",
-      "Luat_HNGD_2014_Dieu_3_Khoan_11": "CON_HIEU_LUC"
-    },
-    "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_28",
-      "Luat_HNGD_2014_Dieu_47",
-      "Luat_HNGD_2014_Dieu_3_Khoan_11"
-    ],
-    "can_cu_phap_ly_bo_tro": [],
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
-    "can_cu_khong_nen_ap_dung": [],
-    "quan_he_chong_cheo_mau_thuan": []
-  },
-  {
     "question": "Chế độ hôn nhân và gia đình có những nguyên tắc cơ bản nào?",
     "ground_truth": "Căn cứ theo Điều 2 Luật Hôn nhân và gia đình 2014 quy định chế độ hôn nhân và gia đình có những nguyên tắc cơ bản sau:\n\n[1] Hôn nhân tự nguyện, tiến bộ, một vợ một chồng, vợ chồng bình đẳng.\n\n[2] Hôn nhân giữa công dân Việt Nam thuộc các dân tộc, tôn giáo, giữa người theo tôn giáo với người không theo tôn giáo, giữa người có tín ngưỡng với người không có tín ngưỡng, giữa công dân Việt Nam với người nước ngoài được tôn trọng và được pháp luật bảo vệ.\n\n[3] Xây dựng gia đình ấm no, tiến bộ, hạnh phúc; các thành viên gia đình có nghĩa vụ tôn trọng, quan tâm, chăm sóc, giúp đỡ nhau; không phân biệt đối xử giữa các con.\n\n[4] Nhà nước, xã hội và gia đình có trách nhiệm bảo vệ, hỗ trợ trẻ em, người cao tuổi, người khuyết tật thực hiện các quyền về hôn nhân và gia đình; giúp đỡ các bà mẹ thực hiện tốt chức năng cao quý của người mẹ; thực hiện kế hoạch hóa gia đình.\n\n[5] Kế thừa, phát huy truyền thống văn hóa, đạo đức tốt đẹp của dân tộc Việt Nam về hôn nhân và gia đình.",
     "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
@@ -150,19 +127,6 @@
     "quan_he_chong_cheo_mau_thuan": []
   },
   {
-    "question": "Khi ly hôn rồi tôi có nghĩa vụ chăm lo cho cha mẹ chồng nữa không?\nTôi tên Phi năm nay 35 tuổi có chồng là Minh, vợ chồng tôi lấy nhau được 12 năm thì bất hòa phải ly hôn. Tuy nhiên mặc dù đã 03 năm từ khi ly hôn chồng tôi đã lấy vợ mới nhưng ba mẹ tôi vẫn ở cùng nhà với tôi và muốn tôi chăm lo.",
-    "ground_truth": "Căn cứ theo Khoản 13 Điều 3 Luật Hôn nhân và gia đình 2014 giải thích nghĩa của từ Thời kỳ hôn nhân như sau:\n\nThời kỳ hôn nhân là khoảng thời gian tồn tại quan hệ vợ chồng, được tính từ ngày đăng ký kết hôn đến ngày chấm dứt hôn nhân.\n\nTheo đó, tại Điều 57 Luật Hôn nhân và gia đình 2014 quy định về Thời điểm chấm dứt hôn nhân và trách nhiệm gửi bản án, quyết định ly hôn như sau:\n\n- Quan hệ hôn nhân chấm dứt kể từ ngày bản án, quyết định ly hôn của Tòa án có hiệu lực pháp luật.\n\n- Tòa án đã giải quyết ly hôn phải gửi bản án, quyết định ly hôn đã có hiệu lực pháp luật cho cơ quan đã thực hiện việc đăng ký kết hôn để ghi vào sổ hộ tịch; hai bên ly hôn; cá nhân, cơ quan, tổ chức khác theo quy định của Bộ luật tố tụng dân sự và các luật khác có liên quan.\n\nNgoài ra, Tại Điều 80 Luật Hôn nhân và gia đình 2014 quy định về Quyền, nghĩa vụ của con dâu, con rể, cha mẹ vợ, cha mẹ chồng như sau:\n\nTrong trường hợp con dâu, con rể sống chung với cha mẹ chồng, cha mẹ vợ thì giữa các bên có các quyền, nghĩa vụ tôn trọng, quan tâm, chăm sóc và giúp đỡ nhau theo quy định tại các điều 69, 70, 71 và 72 của Luật này.\n\nNhư vậy, theo quy định hiện hành con dâu trong thời kỳ hôn nhân và sống chung với mẹ chồng thì phải thực hiện các nghĩa vụ tôn trọng, quan tâm, chăm sóc và giúp đỡ cha mẹ chồng. Tuy nhiên, thời điểm hôn nhân chấm dứt thì con dâu không phải đương nhiên sẽ chấm dứt quyền nghĩa vụ nuôi dưỡng với cha mẹ chồng.\n\nĐối chiếu với trường hợp của bạn, mặc dù bạn đã ly hôn với chồng tuy nhiên bạn vẫn đang sống chung với bố mẹ chồng nên bạn có quyền và nghĩa vụ của con dâu đối với bố mẹ chồng.\n\nTrân trọng!",
-    "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
-    "loai_cau_hoi": "Tình huống",
-    "van_ban_phap_luat_lien_quan": [],
-    "tinh_trang_hieu_luc": {},
-    "can_cu_phap_ly_chinh": [],
-    "can_cu_phap_ly_bo_tro": [],
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
-    "can_cu_khong_nen_ap_dung": [],
-    "quan_he_chong_cheo_mau_thuan": []
-  },
-  {
     "question": "Kết hôn trái pháp luật là gì?",
     "ground_truth": "Căn cứ pháp lý: Luật Hôn nhân và Gia đình 2014\n\nKết hôn trái pháp luật là Việc xác lập quan hệ vợ chồng có đăng ký kết hôn nhưng vi phạm điều kiện kết hôn do pháp luật quy định.",
     "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
@@ -175,25 +139,6 @@
     },
     "can_cu_phap_ly_chinh": [
       "Luat_HNGD_2014"
-    ],
-    "can_cu_phap_ly_bo_tro": [],
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
-    "can_cu_khong_nen_ap_dung": [],
-    "quan_he_chong_cheo_mau_thuan": []
-  },
-  {
-    "question": "Quy định của luật hôn nhân về tình nghĩa vợ chồng?",
-    "ground_truth": "Theo quy định tại Điều 19 Luật Hôn nhân và gia đình 2014 quy định về tình nghĩa vợ chồng như sau:\n\nTheo quy định của pháp luật nêu trên, vợ chồng có nghĩa vụ yêu thương, chung thủy, tôn trọng, quan tâm, chăm sóc, giúp đỡ nhau….\n\nTrân trọng!",
-    "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
-    "loai_cau_hoi": "Lý thuyết",
-    "van_ban_phap_luat_lien_quan": [
-      "Luat_HNGD_2014"
-    ],
-    "tinh_trang_hieu_luc": {
-      "Luat_HNGD_2014_Dieu_19": "CON_HIEU_LUC"
-    },
-    "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_19"
     ],
     "can_cu_phap_ly_bo_tro": [],
     "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
@@ -220,19 +165,6 @@
     "quan_he_chong_cheo_mau_thuan": []
   },
   {
-    "question": "Đơn phương ly hôn là gì? Những vấn đề xung quanh việc đơn phương ly hôn?",
-    "ground_truth": "Trong xã hội hiện đại, ly hôn không còn là điều xa lạ hay đáng sợ mà đã trở nên phổ biến, đặc biệt là với vợ chồng trẻ. Khi cuộc hôn nhân đã không còn ý nghĩa, đời sống chung không thể kéo dài, nhiều người chọn cách ly hôn nhưng một bên lại không đồng ý. Trong trường hợp đó, chúng ta hoàn toàn có thể lựa chọn cách đơn phương ly hôn. Việc đơn phương ly hôn được quy định tại Chương IV Luật Hôn nhân và gia đình 2014 .\n\n1. Các trường hợp đơn phương ly hôn:\n\n- TH1: Đơn phương ly hôn theo yêu cầu của một bên: Khi vợ hoặc chồng yêu cầu ly hôn mà hòa giải tại Tòa án không thành thì Tòa án giải quyết cho ly hôn nếu có căn cứ về việc vợ, chồng có hành vi bạo lực gia đình hoặc vi phạm nghiêm trọng quyền, nghĩa vụ của vợ, chồng làm cho hôn nhân lâm vào tình trạng trầm trọng, đời sống chung không thể kéo dài, mục đích của hôn nhân không đạt được.\n\n- TH2: Đơn phương ly hôn trong trường hợp vợ hoặc chồng của người bị Tòa án tuyên bố mất tích yêu cầu ly hôn thì Tòa án giải quyết cho ly hôn.\n\n- TH3: Đơn phương ly hôn trong trường hợp có yêu cầu ly hôn của cha, mẹ, người thân thích khác yêu cầu Tòa án giải quyết ly hôn khi một bên vợ, chồng do bị bệnh tâm thần hoặc mắc bệnh khác không thể nhận thức, làm chủ được hành vi của mình, đồng thời là nạn nhân của bạo lực gia đình do chồng, vợ của họ gây ra thì Tòa án giải quyết cho ly hôn nếu có căn cứ về việc chồng, vợ có hành vi bạo lực gia đình làm ảnh hưởng nghiêm trọng đến tính mạng, sức khỏe, tinh thần của người kia.\n\nĐơn phương ly hôn (Hình từ Internet)\n\n2. Ai được quyền yêu cầu đơn phương ly hôn?\n\n- Vợ hoặc chồng;\n\n- Vợ hoặc chồng của người bị Tòa án tuyên bố mất tích;\n\n- Cha, mẹ, người thân thích khác có yêu cầu Tòa án giải quyết ly hôn khi một bên vợ, chồng do bị bệnh tâm thần hoặc mắc bệnh khác mà không thể nhận thức, làm chủ được hành vi của mình, đồng thời là nạn nhân của bạo lực gia đình do chồng, vợ của họ gây ra làm ảnh hưởng nghiêm trọng đến tính mạng, sức khỏe, tinh thần của họ.\n\n3. Cơ quan nào giải quyết?\n\nTòa án là cơ quan có thẩm quyền giải quyết vụ án đơn phương ly hôn. Tòa án có thẩm quyền xét xử những vụ án ly hôn là Tòa án nhân dân cấp quận/huyện nơi thường trú hoặc làm việc của bị đơn.\n\n4. Các bước tiến hành thủ tục đơn phương ly hôn:\n\n– Bước 1: Nộp hồ sơ khởi kiện về việc xin đơn phương ly hôn tại TAND có thẩm quyền;\n\n– Bước 2: Nhận kết quả xử lý đơn;\n\n– Bước 3: Nộp tiền tạm ứng án phí dân sự sơ thẩm tại cơ quan thi hành án dân sự có thẩm quyền và nộp lại biên lai tiền tạm ứng án phí đơn phương cho Tòa án;\n\n– Bước 4: Tòa án triệu tập đương sự lấy lời khai, hòa giải và tiến hành thủ tục theo quy định pháp luật tố tụng dân sự.\n\n5. Hồ sơ đơn phương ly hôn gồm những gì?\n\n- Đơn xin ly hôn theo mẫu (Có sẵn tại bộ phận nhận đơn khởi kiện của tất cả các tòa án);\n\n- Bản chính Giấy chứng nhận đăng ký kết hôn;\n\n- 01 Bản sao có chứng thực Sổ hộ khẩu của hai vợ chồng;\n\n- Bản sao có chứng thực CMND/hộ chiếu của hai vợ chồng;\n\n- Giấy khai sinh của con (bản sao có chứng thực; nếu có);\n\n- Các tài liệu, chứng cứ khác chứng minh tài sản chung như: Giấy chứng nhận quyền sử dụng đất quyền sở hữu nhà ở và tài sản khác gắn liền với đất (sổ đỏ); đăng ký xe; sổ tiết kiệm… (bản sao; nếu có)...\n\n6. Tòa giải quyết đơn phương ly hôn trong bao lâu?\n\n– Giải quyết ly hôn tại cấp sơ thẩm: khoảng từ 4 đến 6 tháng (nếu có tranh chấp tài sản, phức tạp thì có thể kéo dài hơn).\n\n– Giải quyết ly hôn tại cấp phúc thẩm: khoảng từ 3 đến 4 tháng (nếu có kháng cáo hoặc kháng nghị).\n\n7. Phân chia tài sản thế nào khi đơn phương ly hôn?\n\nTranh chấp về chia tài sản khi ly hôn sẽ được giải quyết cùng với yêu cầu ly hôn hoặc được tách ra giải quyết ở một vụ án riêng. Pháp luật luôn công nhận việc thỏa thuận phân chia tài sản giữa vợ và chồng, khi hai bên không thỏa thuận được, Tòa án sẽ giải quyết việc phân chia. Việc giải quyết tài sản khi ly hôn sẽ được Tòa án giải quyết dựa trên các nguyên tắc của Luật Hôn nhân và gia đình cũng như Bộ luật dân sự. Theo quy định của pháp luật, việc phân chia tài sản như sau:\n\n-Tài sản riêng: Tài sản riêng của vợ, chồng thuộc quyền sở hữu của người đó, trừ trường hợp tài sản riêng đã nhập vào tài sản chung theo quy định của Luật Hôn nhân và gia đình.\n\n- Tài sản chung: Về nguyên tắc, tài sản chung của vợ chồng được chia đôi nhưng có tính đến các yếu tố: Hoàn cảnh của gia đình của vợ, chồng; Công sức đóng góp của vợ, chồng vào việc tạo lập, duy trì và phát triển khối tài sản chung; và lỗi của mỗi bên trong vi phạm quyền, nghĩa vụ của vợ chồng.\n\nTrong quá trình phân chia tài sản, pháp luật bảo vệ quyền, lợi ích hợp pháp của vợ, con chưa thành niên, con đã thành niên mất năng lực hành vi dân sự hoặc không có khả năng lao động và không có tài sản để tự nuôi mình.\n\n8. Ai có quyền nuôi con khi đơn phương ly hôn?\n\n- Pháp luật tôn trọng sự thỏa thuận của vợ, chồng về người trực tiếp nuôi con, nghĩa vụ, quyền của mỗi bên sau khi ly hôn đối với con; trường hợp không thỏa thuận được thì Tòa án quyết định giao con cho một bên trực tiếp nuôi căn cứ vào quyền lợi về mọi mặt của con.\n\n- Nếu con từ đủ 07 tuổi trở lên thì phải xem xét nguyện vọng của con; Con dưới 36 tháng tuổi được giao cho mẹ trực tiếp nuôi, trừ trường hợp người mẹ không đủ điều kiện để trực tiếp trông nom, chăm sóc, nuôi dưỡng, giáo dục con hoặc cha mẹ có thỏa thuận khác phù hợp với lợi ích của con.\n\n- Người không trực tiếp nuôi con sau ly hôn có nghĩa vụ cấp dưỡng cho con và phải tôn trọng quyền của con được sống chung với người trực tiếp nuôi. Nếu cha, mẹ không trực tiếp nuôi con mà lạm dụng việc thăm nom để cản trở hoặc gây ảnh hưởng xấu đến việc trông nom, chăm sóc, nuôi dưỡng, giáo dục con thì người trực tiếp nuôi con có quyền yêu cầu Tòa án hạn chế quyền thăm nom con của người đó.\n\n9. Án phí khi thực hiện đơn phương ly hôn:\n\n– Án phí dân sự sơ thẩm: 300.000 đồng nếu không có tranh chấp về tài sản (theo quy định tại Nghị quyết 326/2016/UBTVQH14 ).\n\n– Nếu có tranh chấp thì án phí phải đóng như sau:\n\n10. Những lưu ý khi thực hiện thủ tục đơn phương ly hôn:\n\n- Vợ đang mang thai hoặc con dưới 12 tháng tuổi thì chồng không có quyền yêu cầu đơn phương ly hôn;\n\n- Có thể yêu cầu Tòa án nơi làm việc của bị đơn giải quyết nếu không xác định được nơi cư trú bị đơn;\n\n- Tòa sẽ triệu tập các con từ 7 tuổi đến dưới 18 tuổi để lấy lời khai về nguyện vọng sống với bố hoặc mẹ.\n\nTrên thực tế, nhiều người cho rằng việc đơn phương ly hôn sẽ rất khó khăn và thủ tục để đơn phương ly hôn sẽ vô cùng rắc rối. Tuy nhiên, đơn phương ly hôn không quá phức tạp như bạn tưởng. Khi đã tìm hiểu đầy đủ các quy định của pháp luật về hồ sơ, trình tự thủ tục cùng các căn cứ để đơn phương ly hôn thì quá trình ly hôn sẽ dễ dàng hơn rất nhiều. Hy vọng với những thông tin của bài viết sẽ giúp bạn đọc có thêm kiến thức về đơn phương ly hôn để thực hiện thủ tục này một cách nhanh chóng, chính xác, sớm được giải thoát khỏi cuộc sống hôn nhân khi đã rơi vào giai đoạn “địa ngục trần gian”.\n\nTrân trọng!",
-    "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
-    "loai_cau_hoi": "",
-    "van_ban_phap_luat_lien_quan": [],
-    "tinh_trang_hieu_luc": {},
-    "can_cu_phap_ly_chinh": [],
-    "can_cu_phap_ly_bo_tro": [],
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
-    "can_cu_khong_nen_ap_dung": [],
-    "quan_he_chong_cheo_mau_thuan": []
-  },
-  {
     "question": "Những người có họ trong phạm vi ba đời gồm những ai?",
     "ground_truth": "Căn cứ tại khoản 18 Điều 3 Luật Hôn nhân và gia đình 2014 quy định về những người có họ trong phạm vi ba đời như sau:\n\nĐiều 3. Giải thích từ ngữ\n\nTrong Luật này, các từ ngữ dưới đây được hiểu như sau:\n\n[...]\n\n17. Những người cùng dòng máu về trực hệ là những người có quan hệ huyết thống, trong đó, người này sinh ra người kia kế tiếp nhau.\n\n18. Những người có họ trong phạm vi ba đời là những người cùng một gốc sinh ra gồm cha mẹ là đời thứ nhất; anh, chị, em cùng cha mẹ, cùng cha khác mẹ, cùng mẹ khác cha là đời thứ hai; anh, chị, em con chú, con bác, con cô, con cậu, con dì là đời thứ ba.\n\n19. Người thân thích là người có quan hệ hôn nhân, nuôi dưỡng, người có cùng dòng máu về trực hệ và người có họ trong phạm vi ba đời.\n\n[...]\n\nNhư vậy, những người có họ trong phạm vi ba đời là những người cùng một gốc sinh ra gồm:\n\n- Đời thứ nhất là cha mẹ;\n\n- Đời thứ hai là anh, chị, em cùng cha mẹ, cùng cha khác mẹ, cùng mẹ khác cha;\n\n- Đời thứ ba là anh, chị, em con chú, con bác, con cô, con cậu, con dì.",
     "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
@@ -245,27 +177,6 @@
     },
     "can_cu_phap_ly_chinh": [
       "Luat_HNGD_2014_Dieu_3_Khoan_18"
-    ],
-    "can_cu_phap_ly_bo_tro": [],
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
-    "can_cu_khong_nen_ap_dung": [],
-    "quan_he_chong_cheo_mau_thuan": []
-  },
-  {
-    "question": "Thế nào là thuận tình ly hôn theo quy định pháp luật hiện hành?",
-    "ground_truth": "Theo quy định tại khoản 14 Điều 3 Luật Hôn nhân và gia đình 2014 về ly hôn như sau:\n\nCăn cứ theo Điều 55 Luật Hôn nhân và gia đình 2014 về thuận tình ly hôn như sau:\n\nTheo đó, thuận tình ly hôn là khi yêu cầu ly hôn xuất phát từ cả vợ và chồng.\n\nTrường hợp hai bên tự nguyện ly hôn và thỏa thuận xong về việc phân chia tài sản, trông nom, nuôi dưỡng, giáo dục, chăm sóc con dựa trên cơ sở đảm bảo quyền lợi chính đáng của vợ và con thì Tòa án công nhận thuận tình ly hôn.\n\nMẫu Đơn thuận tình ly hôn với người nước năm 2023? (Hình từ Internet).",
-    "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
-    "loai_cau_hoi": "Lý thuyết",
-    "van_ban_phap_luat_lien_quan": [
-      "Luat_HNGD_2014"
-    ],
-    "tinh_trang_hieu_luc": {
-      "Luat_HNGD_2014_Dieu_3_Khoan_14": "CON_HIEU_LUC",
-      "Luat_HNGD_2014_Dieu_55": "CON_HIEU_LUC"
-    },
-    "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_3_Khoan_14",
-      "Luat_HNGD_2014_Dieu_55"
     ],
     "can_cu_phap_ly_bo_tro": [],
     "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
@@ -336,51 +247,6 @@
     "quan_he_chong_cheo_mau_thuan": []
   },
   {
-    "question": "Nơi cư trú của vợ chồng do người chồng quyết định có đúng không?",
-    "ground_truth": "Theo Điều 20 Luật Hôn nhân và gia đình 2014 quy định: Nơi cư trú của vợ, chồng do vợ, chồng lựa chọn không bị ràng buộc bởi phong tục, tập quán, địa giới hành chính.\n\nTại Điều 14 Luật Cư trú 2020 quy định:\n\nVới các căn cứ nêu trên của pháp luật, thì quan điểm vợ phải theo chồng và nơi cư trú của vợ, chồng do người chồng quyết định là không đúng. Việc lựa chọn nơi cư trú do vợ, chồng thoả thuận.\n\nTrên đây là tư vấn của Ban biên tập về quyết định nơi cư trú của vợ chồng. Bạn nên tham khảo chi tiết Luật Hôn nhân và gia đình 2014 để nắm rõ quy định này.\n\nTrân trọng!",
-    "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
-    "loai_cau_hoi": "Lý thuyết",
-    "van_ban_phap_luat_lien_quan": [
-      "Luat_HNGD_2014",
-      "Luat_CuTru_2020"
-    ],
-    "tinh_trang_hieu_luc": {
-      "Luat_HNGD_2014_Dieu_20": "CON_HIEU_LUC",
-      "Luat_CuTru_2020_Dieu_14": "CON_HIEU_LUC"
-    },
-    "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_20",
-      "Luat_CuTru_2020_Dieu_14"
-    ],
-    "can_cu_phap_ly_bo_tro": [],
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
-    "can_cu_khong_nen_ap_dung": [],
-    "quan_he_chong_cheo_mau_thuan": []
-  },
-  {
-    "question": "Ly hôn thuận tình là gì?",
-    "ground_truth": "Khoản 14 Điều 3 Luật Hôn nhân và gia đình 2014 quy định ly hôn là việc chấm dứt quan hệ vợ chồng theo bản án, quyết định có hiệu lực pháp luật của Tòa án.\n\nTại Điều 55 Luật Hôn nhân và gia đình 2014 có quy định về ly hôn thuận tình như sau:\n\nTại Điều 56 Luật Hôn nhân và gia đình 2014 có quy định về ly hôn theo yêu cầu của một bên như sau:\n\nTheo đó, có 2 trường hợp ly hôn :\n\nThuận tình ly hôn là việc cả hai bên thật sự tự nguyện ly hôn và đã thỏa thuận các vấn đề liên quan đến ly hôn.\n\nLy hôn theo yêu cầu của một bên (hay còn gọi là ly hôn đơn phương) là việc ly hôn xuất phát từ ý chí của một bên, vợ hoặc chồng yêu cầu ly hôn mà hòa giải tại Tòa án không thành.\n\nThuận tình ly hôn là gì? Thuận tình ly hôn có cần phải đóng lệ phí hay không? (Hình từ Internet)",
-    "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
-    "loai_cau_hoi": "Lý thuyết",
-    "van_ban_phap_luat_lien_quan": [
-      "Luat_HNGD_2014"
-    ],
-    "tinh_trang_hieu_luc": {
-      "Luat_HNGD_2014_Dieu_3_Khoan_14": "CON_HIEU_LUC",
-      "Luat_HNGD_2014_Dieu_55": "CON_HIEU_LUC",
-      "Luat_HNGD_2014_Dieu_56": "CON_HIEU_LUC"
-    },
-    "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_3_Khoan_14",
-      "Luat_HNGD_2014_Dieu_55",
-      "Luat_HNGD_2014_Dieu_56"
-    ],
-    "can_cu_phap_ly_bo_tro": [],
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
-    "can_cu_khong_nen_ap_dung": [],
-    "quan_he_chong_cheo_mau_thuan": []
-  },
-  {
     "question": "Thời kì hôn nhân là gì?",
     "ground_truth": "Theo khoản 13 Điều 3 Luật Hôn nhân và gia đình 2014 quy định thời kì hôn nhân là khoảng thời gian tồn tại quan hệ vợ chồng, được tính từ ngày đăng ký kết hôn đến ngày chấm dứt hôn nhân.\n\nTài sản chung của vợ chồng trong thời kì hôn nhân có được lấy để trả nợ riêng không? (Hình từ Internet)",
     "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
@@ -393,27 +259,6 @@
     },
     "can_cu_phap_ly_chinh": [
       "Luat_HNGD_2014_Dieu_3"
-    ],
-    "can_cu_phap_ly_bo_tro": [],
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
-    "can_cu_khong_nen_ap_dung": [],
-    "quan_he_chong_cheo_mau_thuan": []
-  },
-  {
-    "question": "Thuận tình ly hôn và đơn phương ly hôn là gì?",
-    "ground_truth": "Hiện nay khi chấm dứt quan hệ hôn nhân thì công dân có thể yêu cầu cơ quan có thẩm quyền giải quyết ly hôn. Có 02 trường hợp ly hôn gồm thuận tình ly hôn và đơn phương ly hôn.\n\n- Thuận tình ly hôn theo quy định tại Điều 55 Luật Hôn nhân và Gia đình 2014 có thể hiểu là việc cả 02 vợ chồng cùng đồng thuận chấm dứt hôn nhân và thỏa thuận với nhau được về chế độ tài sản, quyền nuôi con,...\n\n- Đơn phương ly hôn: Căn cứ Điều 56 Luật Hôn nhân và Gia đình 2014 đơn phương ly hôn là việc một bên vợ/chồng có yêu cầu chấm dứt hôn nhân mà chưa có sự đồng ý của bên còn lại. Hiên nay có các trường đơn phương hôn gồm:\n\n+ Ly hôn do yêu cầu của một bên;\n\n+ Ly hôn do một bên vợ/chồng bị mất tích hoặc bị tuyên bố là đã chết;\n\n+ Ly hôn do cha, mẹ, người thân thích của một bên yêu cầu ly hôn do vợ/chồng bị hạn chế trong việc nhận thức và làm chủ hành vi, đồng thời là nạn nhân của bạo ực gia đình.",
-    "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
-    "loai_cau_hoi": "Lý thuyết",
-    "van_ban_phap_luat_lien_quan": [
-      "Luat_HNGD_2014"
-    ],
-    "tinh_trang_hieu_luc": {
-      "Luat_HNGD_2014_Dieu_55": "CON_HIEU_LUC",
-      "Luat_HNGD_2014_Dieu_56": "CON_HIEU_LUC"
-    },
-    "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_55",
-      "Luat_HNGD_2014_Dieu_56"
     ],
     "can_cu_phap_ly_bo_tro": [],
     "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
@@ -443,55 +288,41 @@
     "question": "Kết hôn cận huyết là gì?",
     "ground_truth": "Căn cứ Điều 5 Luật Hôn nhân và gia đình 2014 quy định bảo vệ chế độ hôn nhân và gia đình:\n\nĐiều 5. Bảo vệ chế độ hôn nhân và gia đình\n\n1. Quan hệ hôn nhân và gia đình được xác lập, thực hiện theo quy định của Luật này được tôn trọng và được pháp luật bảo vệ.\n\n2. Cấm các hành vi sau đây:\n\na) Kết hôn giả tạo, ly hôn giả tạo;\n\nb) Tảo hôn, cưỡng ép kết hôn, lừa dối kết hôn, cản trở kết hôn;\n\nc) Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ;\n\nd) Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng;\n\n[...]\n\nTheo quy định trên, có thể hiểu kết hôn cận huyết là việc kết hôn hoặc chung sống như vợ chồng giữa những người có cùng dòng máu trực hệ hoặc người có họ trong phạm vi ba đời.\n\nCác khái niệm về cùng dòng máu trực hệ và cùng có họ trong phạm vi ba đời được quy định cụ thể tại khoản 17 và khoản 18 Điều 3 Luật Hôn nhân và gia đình 2014 như sau:\n\n- Những người có cùng dòng máu về trực hệ được quy định những người có quan hệ huyết thống với nhau, theo đó, người này sinh ra người kia kế tiếp nhau. Ví dụ như giữa cha mẹ đẻ và con đẻ.\n\n- Những người có họ trong phạm vi ba đời được hiểu là những người cùng một gốc được sinh ra. Bao gồm:\n\n+ Đời thứ nhất gồm cha, mẹ;\n\n+ Đời thứ hai bao gồm anh, chị, em cùng cha mẹ; anh, chị, em cùng mẹ khác cha và anh, chị, em cùng cha khác mẹ;\n\n+ Đời thứ ba bao gồm anh, chị, em con cậu, con bác, con chú, con cô, con dì;\n\nNhư vậy, kết hôn cận huyết là hôn nhân giữa những người thuộc một trong các trường hợp nêu trên.",
     "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
-    "loai_cau_hoi": "",
-    "van_ban_phap_luat_lien_quan": [],
-    "tinh_trang_hieu_luc": {},
-    "can_cu_phap_ly_chinh": [],
-    "can_cu_phap_ly_bo_tro": [],
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
-    "can_cu_khong_nen_ap_dung": [],
-    "quan_he_chong_cheo_mau_thuan": []
-  },
-  {
-    "question": "Con ngoài giá thú là gì?",
-    "ground_truth": "Hiện nay, pháp luật Việt Nam chưa quy định cụ thể nào là con ngoài giá thú .\n\nTuy nhiên có thể hiểu rằng, con ngoài giá thú là con được sinh ra nhưng cha mẹ sinh ra không phải là vợ chồng và không có quan hệ hôn nhân theo quy định của pháp luật.\n\nCon ngoài giá thú có quyền lợi gì? (Hình từ Internet)",
-    "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
-    "loai_cau_hoi": "",
-    "van_ban_phap_luat_lien_quan": [],
-    "tinh_trang_hieu_luc": {},
-    "can_cu_phap_ly_chinh": [],
-    "can_cu_phap_ly_bo_tro": [],
-    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
-    "can_cu_khong_nen_ap_dung": [],
-    "quan_he_chong_cheo_mau_thuan": []
-  },
-  {
-    "question": "Vợ chồng không đeo nhẫn cưới có vi phạm về pháp luật hôn nhân và gia đình không?",
-    "ground_truth": "Tại Điều 19 Luật Hôn nhân và gia đình 2014 quy định về tình nghĩa của vợ chồng là:\n\n1. Vợ chồng có nghĩa vụ thương yêu, chung thủy, tôn trọng, quan tâm, chăm sóc, giúp đỡ nhau; cùng nhau chia sẻ, thực hiện các công việc trong gia đình.\n\n2. Vợ chồng có nghĩa vụ sống chung với nhau, trừ trường hợp vợ chồng có thỏa thuận khác hoặc do yêu cầu của nghề nghiệp, công tác, học tập, tham gia các hoạt động chính trị, kinh tế, văn hóa, xã hội và lý do chính đáng khác.\n\nPháp luật hiện hành không có bất cứ quy định nào về vấn đề xử phạt hay vi phạm về hành vi sau khi cưới mà các bên không đeo nhẫn cưới, hơn nữa nhẫn cưới không phải là cơ sở để chứng minh quan hệ vợ chồng về mặt pháp luật. Do đó, việc đeo hay không đeo thì pháp luật không quy định về chế tài.",
-    "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
     "loai_cau_hoi": "Lý thuyết",
     "van_ban_phap_luat_lien_quan": [
       "Luat_HNGD_2014"
     ],
     "tinh_trang_hieu_luc": {
-      "Luat_HNGD_2014_Dieu_19": "CON_HIEU_LUC"
+      "Luat_HNGD_2014_Dieu_5": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_3_Khoan_17": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_3_Khoan_18": "CON_HIEU_LUC"
     },
     "can_cu_phap_ly_chinh": [
-      "Luat_HNGD_2014_Dieu_19"
+      "Luat_HNGD_2014_Dieu_5", 
+      "Luat_HNGD_2014_Dieu_3_Khoan_17",
+      "Luat_HNGD_2014_Dieu_3_Khoan_18"
     ],
     "can_cu_phap_ly_bo_tro": [],
     "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
     "can_cu_khong_nen_ap_dung": [],
     "quan_he_chong_cheo_mau_thuan": []
-  },
+  }, 
   {
-    "question": "Ngoại tình là gì?",
-    "ground_truth": "Hiện nay chưa có định nghĩa cụ thể cho ngoại tình là gì, đây vẫn là một khái niệm có rất nhiều ý kiến khác nhau. Một số định nghĩa về ngoại tình như sau:\n\nNgoại tình (tiếng Anh: Adultery) là từ ngữ dùng để đề cập đến việc một người đã kết hôn có tình cảm như vợ chồng với người khác không phải là người vợ chồng chính thức của họ.\n\nTừ một góc độ khác, từ này cũng áp dụng cho một người độc thân có quan hệ tình dục với một người đã kết hôn. Việc ngoại tình thường được liên hệ với các cá nhân có ham muốn tình dục nhiều hơn người bạn đời của họ.\n\nTheo từ điển Tiếng Việt ngoại tình: là việc người đã có vợ hoặc có chồng có quan hệ yêu đương bất chính với người khác.\n\nTuy nhiên chung quy lại thì các luồng ý kiến đều có điểm chung về ngoại tình là khi một người đang trong quan hệ hôn nhân hợp pháp nhưng lại có quan hệ tình cảm với người không phải là người còn lại trong quan hệ hôn nhân của mình\n\nTội ngoại tình trong Luật hôn nhân gia đình được quy định như thế nào? Ngoại tình với người đã có gia đình sẽ bị xử lý như thế nào? (Hình từ Internet)",
-    "chu_de_phap_ly": "quy_dinh_chung_khai_niem_phap_ly",
-    "loai_cau_hoi": "",
-    "van_ban_phap_luat_lien_quan": [],
-    "tinh_trang_hieu_luc": {},
-    "can_cu_phap_ly_chinh": [],
+    "question": "Tội ngoại tình trong Luật hôn nhân gia đình được quy định như thế nào?",
+    "ground_truth": "Theo khoản 1 Điều 2 Luật Hôn nhân và gia đình 2014 quy định về nguyên tắc cơ bản của chế độ hôn nhân và gia đình như sau:\n\nTheo khoản 2 Điều 5 Luật Hôn nhân và Gia đình 2014 quy định về bảo vệ chế độ hôn nhân và gia đình như sau:\n\nQua đó có thể thấy, chế độ hôn nhân và gia đình Việt Nam thực hiện theo nguyên tắc một vợ một chồng và nghiêm cấm người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác hoặc chưa có vợ, chưa có chồng mà kết hôn hoặc chung sống như vợ chồng với người đang có chồng, có vợ\n\nTức là bất kỳ mối quan hệ nào vi phạm chế độ 1:1 trong hôn nhân sẽ bị xem là vi phạm pháp luật về hôn nhân gia đình và hành vi của người vi phạm chế độ hôn nhân này sẽ có thể xem là tội ngoại tình\n\nVà mọi hành vi vi phạm pháp luật về hôn nhân gia đình phải được xử lý nghiêm minh, đúng pháp luật. Hành vi ngoại tình có thể bị truy cứu trách nhiệm hình sự về tội vi phạm chế độ một vợ, một chồng.",
+    "chu_de_phap_ly": "xu_phat_vi_pham",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_2_Khoan_1": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_2_Khoan_1",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2"
+    ],
     "can_cu_phap_ly_bo_tro": [],
     "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
     "can_cu_khong_nen_ap_dung": [],

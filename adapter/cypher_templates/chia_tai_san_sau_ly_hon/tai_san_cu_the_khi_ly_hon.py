@@ -139,7 +139,8 @@ WITH wl, lts_param, dctt,
   size([x IN c_chia + c_hv + c_hq_tt + c_lts_chung WHERE x IS NOT NULL]) > 0 AS has_chung_leaf,
   c_giai, c_chia, c_hv, c_hq_tt, c_xac, c_hq_rieng, c_lts_chung, c_lts_rieng
 
-WITH wl,
+WITH wl, lts_param, dctt, has_rieng_leaf, has_chung_leaf,
+  c_giai, c_chia, c_hv, c_hq_tt, c_xac, c_hq_rieng, c_lts_chung, c_lts_rieng,
   [x IN c_giai + c_chia + c_hv + c_hq_tt + c_xac + c_hq_rieng
        + c_lts_chung + c_lts_rieng WHERE x IS NOT NULL] AS seed_nodes,
   CASE

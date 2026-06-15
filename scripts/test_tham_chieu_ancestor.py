@@ -11,7 +11,9 @@ from adapter.retrievers._context_tho_common import (  # noqa: E402
     tham_chieu_ancestor_collect_parts,
 )
 from adapter.retrievers.ket_hon import dieu_kien_ket_hon  # noqa: E402
-from adapter.retrievers import quan_he_giua_cac_thanh_vien_khac_trong_gia_dinh as qh  # noqa: E402
+from adapter.cypher_templates.quan_he_giua_cac_thanh_vien_khac_trong_gia_dinh import (  # noqa: E402
+    QUAN_HE_GIUA_CAC_THANH_VIEN_KHAC_TRONG_GIA_DINH_REGISTRY,
+)
 from utils.utils import chuan_hoa_Context_cho_LLM  # noqa: E402
 
 DIEU_5 = "Luat_HNGD_2014_Dieu_5"
@@ -38,9 +40,10 @@ def test_enhance_simple_retriever() -> None:
 
 
 def test_enhance_hd_retriever() -> None:
-    out = enhance_domain_retriever_cypher(
-        _extract_cypher(qh.quan_he_giua_cac_thanh_vien_khac_trong_gia_dinh)
+    tpl = QUAN_HE_GIUA_CAC_THANH_VIEN_KHAC_TRONG_GIA_DINH_REGISTRY.get(
+        "quyen_nghia_vu_chung_thanh_vien_gia_dinh"
     )
+    out = enhance_domain_retriever_cypher(tpl.cypher)
     assert "dieu_cha_ltc_hd" in out
     assert "dieu_ong_ctt_hd" in out
     print("  [OK] enhance HD: co ancestor tu huong dan")

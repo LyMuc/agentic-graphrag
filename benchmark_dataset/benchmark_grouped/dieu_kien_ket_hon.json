@@ -905,5 +905,28 @@
     "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
     "can_cu_khong_nen_ap_dung": [],
     "quan_he_chong_cheo_mau_thuan": []
+  }, 
+  {
+    "question": "Pháp luật Việt Nam hiện nay có cho phép kết hôn cận huyết không?",
+    "ground_truth": "Căn cứ tại khoản 17, khoản 18 Điều 3 Luật Hôn nhân và Gia đình 2014 quy định định nghĩa về hôn nhân cận huyết như sau:\n\nTheo quy định trên, hôn nhân cận huyết được hiểu là việc kết hôn giữa những người cùng dòng máu về trực hệ hoặc những người có họ trong phạm vi 3 đời.\n\n- Những người cùng dòng máu về trực hệ là những người có quan hệ huyết thống, trong đó, người này sinh ra người kia kế tiếp nhau\n\n- Những người có họ trong phạm vi ba đời gồm:\n\n+ Những người cùng một gốc sinh ra gồm cha mẹ là đời thứ nhất;\n\n+ Anh, chị, em cùng cha mẹ, cùng cha khác mẹ, cùng mẹ khác cha là đời thứ hai;\n\n+ Anh, chị, em con chú, con bác, con cô, con cậu, con dì là đời thứ ba.\n\nCăn cứ tại điểm d khoản 2 Điều 5 Luật Hôn nhân và Gia đình 2014 cũng nêu một số hành vi bị cấm, trong đó có hành vi:\n\nNhư vậy, pháp luật Việt Nam hiện nay đã quy định rõ ràng về việc nghiêm cấm kết hôn cận huyết.\n\nCác chế tài xử lý vi phạm pháp luật kết hôn cận huyết hiện nay như thế nào? (Hình từ Internet)",
+    "chu_de_phap_ly": "dieu_kien_ket_hon",
+    "loai_cau_hoi": "Lý thuyết",
+    "van_ban_phap_luat_lien_quan": [
+      "Luat_HNGD_2014"
+    ],
+    "tinh_trang_hieu_luc": {
+      "Luat_HNGD_2014_Dieu_3_Khoan_17": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_3_Khoan_18": "CON_HIEU_LUC",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_d": "CON_HIEU_LUC"
+    },
+    "can_cu_phap_ly_chinh": [
+      "Luat_HNGD_2014_Dieu_3_Khoan_17",
+      "Luat_HNGD_2014_Dieu_3_Khoan_18",
+      "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_d"
+    ],
+    "can_cu_phap_ly_bo_tro": [],
+    "van_ban_huong_dan_sua_doi_bo_sung_thay_the": [],
+    "can_cu_khong_nen_ap_dung": [],
+    "quan_he_chong_cheo_mau_thuan": []
   }
 ]

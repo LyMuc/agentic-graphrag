@@ -72,7 +72,7 @@ OPTIONAL MATCH (nv_cd)-[:LIEN_KET_CAP_DUONG]->(nv_cap:NghiaVu:CapDuong {{
 }})
 WHERE cycd = 'co'
 
-WITH wl,
+WITH wl, ttm, ttk, cycd,
   collect(DISTINCT dk36) + collect(DISTINCT hq36) + collect(DISTINCT dk_me)
     + collect(DISTINCT dk_tt) + collect(DISTINCT nv_cd) + collect(DISTINCT nv_cap) AS seed_nodes,
   CASE

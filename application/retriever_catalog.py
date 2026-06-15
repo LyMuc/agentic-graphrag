@@ -363,6 +363,8 @@ _RAW_RETRIEVER_SPECS: dict[str, RetrieverSpec] = {
                 "children_after_divorce",
                 (
                     (
+                        "nuôi cháu", 
+                        "nuôi bé", 
                         "nuôi con",
                         "quyền nuôi con",
                         "giành quyền nuôi",

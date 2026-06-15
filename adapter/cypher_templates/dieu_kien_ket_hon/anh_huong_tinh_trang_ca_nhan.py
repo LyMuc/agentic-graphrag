@@ -85,7 +85,7 @@ OPTIONAL MATCH (qd_cam:QuyDinh:{TOPIC_LABEL} {{
 }})
 WHERE seed_tong_quat = true
 
-WITH wl, kc,
+WITH wl, kc, seed_khong_dk, hc,
   [x IN collect(DISTINCT qd) + collect(DISTINCT dk_nl) + collect(DISTINCT dk)
        + collect(DISTINCT hq_kd) + collect(DISTINCT qd_cam)
    WHERE x IS NOT NULL] AS seed_nodes,
