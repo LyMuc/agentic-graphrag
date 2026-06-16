@@ -77,6 +77,8 @@ WHERE {extra_dk_match}
     else:
         ct_collect = " + collect(DISTINCT ct_vphc)"
 
+    dk_collect = " + collect(DISTINCT dk)" if extra_dk_match else ""
+
     return f"""
 WITH ${router_param} AS rp, $leaf_id AS leaf_id, $loai_che_tai AS lct,
      $whitelist_dieu_ids AS wl, $khia_canh_che_tai AS kcc
@@ -88,13 +90,12 @@ WHERE leaf IS NOT NULL
   AND (rp IN ['tong_quat', 'khong_ro'] OR leaf.id = leaf_id)
 {che_tai_block}{dk_block}
 WITH wl, rp, lct, kcc,
-  collect(DISTINCT parent) + collect(DISTINCT leaf){ct_collect}
-    + collect(DISTINCT dk) AS seed_nodes,
+  (collect(DISTINCT parent) + collect(DISTINCT leaf){ct_collect}{dk_collect}) AS seed_nodes,
   CASE
-    WHEN rp NOT IN ['tong_quat', 'khong_ro'] AND leaf IS NOT NULL
+    WHEN NOT (rp IN ['tong_quat', 'khong_ro'])
+         AND size([x IN collect(DISTINCT leaf) WHERE x IS NOT NULL]) > 0
       THEN [x IN collect(DISTINCT leaf) WHERE x IS NOT NULL]
-    ELSE [x IN collect(DISTINCT parent) + collect(DISTINCT leaf)
-              + collect(DISTINCT dk)
+    ELSE [x IN collect(DISTINCT parent) + collect(DISTINCT leaf){dk_collect}
          WHERE x IS NOT NULL]
   END AS leaf_seed_nodes
 """
