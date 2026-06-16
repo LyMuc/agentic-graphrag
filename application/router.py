@@ -144,16 +144,25 @@ async def _execute_tool_call(
             f"Tool '{tool_name}' is not registered. Register the retriever in tools."
         )
 
-    async with cl.Step(name=f"Retriever: {tool_name}") as step:
-        function_to_call = tools[tool_name]["function"]
-        function_args = dict(tool_call.get("args", {}))
-        if updated_question and _tool_accepts_query(tools, tool_name):
-            function_args["query"] = updated_question
+    function_to_call = tools[tool_name]["function"]
+    function_args = dict(tool_call.get("args", {}))
+    if updated_question and _tool_accepts_query(tools, tool_name):
+        function_args["query"] = updated_question
 
-        step.input = f"Tool Input: {function_args}"
+    expert_mode = bool(cl.user_session.get("expert_mode", False))
+
+    async def _run() -> Any:
         res = await function_to_call(**function_args)
         if isinstance(res, dict):
             res["retriever_name"] = tool_name
+        return res
+
+    if not expert_mode:
+        return await _run()
+
+    async with cl.Step(name=f"Retriever: {tool_name}") as step:
+        step.input = f"Tool Input: {function_args}"
+        res = await _run()
         if isinstance(res, dict) and "contexts" in res:
             debug = (res.get("debug") or "").strip()
             if debug:

@@ -62,8 +62,35 @@ from adapter.retrievers.tai_san_rieng_cua_con import tai_san_rieng_cua_con, tai_
 from adapter.retrievers.xac_dinh_cha_me_con import xac_dinh_cha_me_con, xac_dinh_cha_me_con_description
 from adapter.retrievers.vi_pham.xu_phat_vi_pham import xu_phat_vi_pham, xu_phat_vi_pham_description
 from utils.general import text2cypher, text2cypher_description, answer_given, answer_given_description
+from chainlit.input_widget import Switch
 from chainlit.types import ThreadDict
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
+
+EXPERT_MODE_SETTING_ID = "expert_mode"
+
+
+def _is_expert_mode() -> bool:
+    return bool(cl.user_session.get("expert_mode", False))
+
+
+def _apply_expert_mode_setting(settings: dict[str, Any]) -> None:
+    cl.user_session.set("expert_mode", settings.get(EXPERT_MODE_SETTING_ID, False))
+
+
+async def _send_chat_settings() -> None:
+    settings = await cl.ChatSettings(
+        [
+            Switch(
+                id=EXPERT_MODE_SETTING_ID,
+                label="Chế độ chuyên gia pháp lý",
+                initial=False,
+                description=(
+                    "Bật để xem luồng Router/Retriever và link visualize đồ thị tri thức."
+                ),
+            ),
+        ]
+    ).send()
+    _apply_expert_mode_setting(settings)
 
 tools = {
     "quy_dinh_chung_khai_niem_phap_ly": {
@@ -409,14 +436,18 @@ def oauth_callback(
 # =================================================================
 @cl.on_chat_start
 async def on_chat_start():
-    # Reset history
     cl.user_session.set("session_history", [])
-    
-    # Xác định user đang login
+    await _send_chat_settings()
+
     user = cl.user_session.get("user")
     name = user.metadata.get("name") if user and user.metadata else "bạn"
-    
+
     await cl.Message(content=f"Chào {name}, tôi là trợ lý ảo về Luật Hôn nhân và Gia đình Việt Nam. Tôi có thể giúp gì cho bạn?").send()
+
+
+@cl.on_settings_update
+async def on_settings_update(settings: dict[str, Any]):
+    _apply_expert_mode_setting(settings)
 
 @cl.on_chat_resume
 async def on_chat_resume(thread: ThreadDict):
@@ -437,9 +468,13 @@ async def on_chat_resume(thread: ThreadDict):
              session_history.append({"role": "assistant", "content": step.get("output", "")})
                  
     cl.user_session.set("session_history", session_history)
+    cl.user_session.set("expert_mode", False)
+    await _send_chat_settings()
 
 
 def _viz_footer(tool_response: list) -> str:
+    if not _is_expert_mode():
+        return ""
     base = os.environ.get("VIZ_BASE_URL", "http://localhost:8501").rstrip("/")
     links = collect_viz_links(tool_response)
     if not links:
@@ -451,40 +486,75 @@ def _viz_footer(tool_response: list) -> str:
     return "\n\n" + "\n".join(parts)
 
 
+async def _route_with_optional_steps(
+    updated_question: str,
+    session_history: list[dict[str, str]],
+) -> tuple[list[Any], Any]:
+    if not _is_expert_mode():
+        return await route_question_with_audit(updated_question, tools, session_history)
+
+    async with cl.Step(name="Luồng truy xuất ngữ cảnh") as p_step:
+        async with cl.Step(name="Router Agent", type="tool") as step2:
+            step2.input = f'Router Input: "{updated_question}"'
+            tool_response, router_policy = await route_question_with_audit(
+                updated_question, tools, session_history
+            )
+            step2.metadata = {
+                "tool_response": tool_response,
+                "router_policy": router_policy.to_dict(),
+            }
+            step2.output = (
+                router_policy.audit_text() + "\n\nRetriever cuối cùng đã chạy xong."
+            )
+        p_step.output = "Hoàn tất truy xuất ngữ cảnh pháp lý."
+    return tool_response, router_policy
+
+
+async def _stream_answer(
+    llm_messages: list[dict[str, str]],
+    contexts_text_for_llm: str,
+    msg: cl.Message,
+) -> str:
+    llm_response = ""
+
+    async def _stream_tokens() -> None:
+        nonlocal llm_response
+        try:
+            async for token in chat_stream(llm_messages):
+                llm_response += token
+                await msg.stream_token(token)
+        except Exception:
+            fallback = (
+                "Xin lỗi, hệ thống gặp sự cố kết nối khi sinh câu trả lời. "
+                "Vui lòng thử lại sau vài giây."
+            )
+            if llm_response:
+                llm_response += f"\n\n{fallback}"
+                await msg.stream_token(f"\n\n{fallback}")
+            else:
+                llm_response = fallback
+                await msg.stream_token(fallback)
+
+    if _is_expert_mode():
+        async with cl.Step(name="Tổng hợp đáp án", type="llm") as ans_step:
+            ans_step.input = "Context:\n" + contexts_text_for_llm
+            await _stream_tokens()
+            ans_step.output = llm_response
+    else:
+        await _stream_tokens()
+
+    return llm_response
+
+
 @cl.on_message
 async def main(message: cl.Message):
     input_text = message.content
     session_history = cl.user_session.get("session_history")
 
-    async with cl.Step(name="Luồng truy xuất ngữ cảnh") as p_step:
-        # 1. Cập nhật câu hỏi dựa trên lịch sử
-        # async with cl.Step(name="Query Updater", type="tool") as step1:
-        #     step1.input = input_text
-        #     updated_question = await query_update(input_text, session_history)
-        #     step1.output = updated_question
-
-        updated_question = input_text
-
-        # 2. Lấy dữ liệu lần 1
-        async with cl.Step(name="Router Agent", type="tool") as step2:
-            step2.input = f'Router Input: "{updated_question}"'
-            tool_response, router_policy = await route_question_with_audit(updated_question, tools, session_history)
-            step2.metadata = {
-                "tool_response": tool_response,
-                "router_policy": router_policy.to_dict(),
-            }
-            retriever_names = []
-            # for res in tool_response:
-            #     if isinstance(res, dict):
-            #         retriever_names.append(
-            #             f"- {len(res.get('contexts', []))} context, "
-            #             f"{len(res.get('raw_ids', {}).get('can_cu_chinh', []))} căn cứ chính"
-            #         )
-            #     else:
-            #         retriever_names.append(f"- {str(res)}")
-            step2.output = router_policy.audit_text() + "\n\nRetriever cuối cùng đã chạy xong."
-        
-        p_step.output = "Hoàn tất truy xuất ngữ cảnh pháp lý."
+    updated_question = input_text
+    tool_response, router_policy = await _route_with_optional_steps(
+        updated_question, session_history
+    )
 
     contexts_for_llm = []
     for res in tool_response:
@@ -526,25 +596,7 @@ async def main(message: cl.Message):
         {"role": "user", "content": f"Câu hỏi của người dùng: {input_text}"},
     ]
     msg = cl.Message(content="")
-    llm_response = ""
-    async with cl.Step(name="Tổng hợp đáp án", type="llm") as ans_step:
-        ans_step.input = "Context:\n" + contexts_text_for_llm
-        try:
-            async for token in chat_stream(llm_messages):
-                llm_response += token
-                await msg.stream_token(token)
-        except Exception:
-            fallback = (
-                "Xin lỗi, hệ thống gặp sự cố kết nối khi sinh câu trả lời. "
-                "Vui lòng thử lại sau vài giây."
-            )
-            if llm_response:
-                llm_response += f"\n\n{fallback}"
-                await msg.stream_token(f"\n\n{fallback}")
-            else:
-                llm_response = fallback
-                await msg.stream_token(fallback)
-        ans_step.output = llm_response
+    llm_response = await _stream_answer(llm_messages, contexts_text_for_llm, msg)
 
     viz_extra = _viz_footer(tool_response)
     if viz_extra:
