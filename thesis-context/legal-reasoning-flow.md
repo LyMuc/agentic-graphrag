@@ -7,10 +7,10 @@ Pipeline thực tế từ câu hỏi → context chuẩn hóa cho Response LLM.
 ```text
 User query
   → Router (application/router.py) chọn retriever(s)
-  → Retriever LLM: TrichXuatLuat (utils/utils.py)
-       • dieu_luat_ids
-       • thoi_diem_su_kien (optional)
-  → Retriever chọn Cypher template / inline query
+  → Retriever LLM trong adapter/retrievers/
+       • phân loại một hoặc nhiều Cypher template
+       • trích xuất params + thoi_diem_su_kien (optional)
+  → Retriever thực thi Cypher template đã chọn
   → Neo4j → record Context_Tho
   → chuan_hoa_Context_cho_LLM (utils/utils.py)
   → Response LLM (presentation/main.py main_prompt)
@@ -18,7 +18,8 @@ User query
 
 ## Giai đoạn 1 — Truy xuất trên đồ thị (Cypher)
 
-Implement trong `adapter/cypher_templates/*/_common.py` và retriever V2 inline:
+Implement trong `adapter/cypher_templates/*/_common.py`, dùng snippet chung từ
+`adapter/retrievers/_context_tho_common.py`:
 
 1. Match seed điều/khoản/điểm (từ IDs hoặc semantic graph).
 2. Expand cấu trúc (`CO_KHOAN`, `CO_DIEM`) và heading cha.
@@ -44,7 +45,7 @@ File: `utils/utils.py` (hàm `chuan_hoa_Context_cho_LLM`).
 ## Flags trong code (auto)
 
 <!-- BEGIN AUTO-GENERATED:sync_thesis_context.py -->
-_Cập nhật lúc 2026-06-13 08:52 UTC_
+_Cập nhật lúc 2026-06-15 16:10 UTC_
 
 Trích từ `utils/utils.py` → `chuan_hoa_Context_cho_LLM`:
 

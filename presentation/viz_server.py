@@ -52,5 +52,5 @@ def root():
         "<p>Truy cập: <code>http://localhost:8501/viz/{viz_id}</code></p>"
         "<p><em>Không dùng <code>0.0.0.0</code> trên trình duyệt — chỉ dùng "
         "<code>localhost</code>.</em></p>"
-        "<p>Link visualize xuất hiện ở cuối câu trả lời chatbot (retriever V3).</p>"
+        "<p>Link visualize xuất hiện ở cuối câu trả lời chatbot khi retriever hỗ trợ.</p>"
     )

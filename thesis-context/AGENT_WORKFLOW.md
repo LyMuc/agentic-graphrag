@@ -22,6 +22,7 @@ Nguồn sự thật cho Cursor Agent, Codex (VS Code), và mọi prompt. Cập n
 ## Quy trình đồng bộ code
 
 - **Code thực tế > mô tả cũ** trong `.tex` nếu lệch nhau.
+- Toàn bộ retriever đang sử dụng nằm trong `adapter/retrievers/`; không gắn nhãn phiên bản cho kiến trúc retriever.
 - **Catalog / template / quan hệ / flags:** chạy `powershell -File scripts/sync-thesis-context.ps1` — không cập nhật tay các bảng AUTO trong `thesis-context/`.
 - **Chương 5 (.tex):** vẫn cần agent hoặc sinh viên (skill `sync-thesis-ch5`) — script không sửa LaTeX.
 - Chỉ sửa `.tex` khi nhiệm vụ là viết đồ án; không refactor codebase trừ khi được yêu cầu.

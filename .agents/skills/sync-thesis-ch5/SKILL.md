@@ -26,6 +26,7 @@ description: Đồng bộ Chương 5 đồ án với codebase Agentic GraphRAG. 
 ## Ràng buộc
 
 - Chỉ sửa `.tex` trừ khi được yêu cầu sửa code.
+- Retriever đang sử dụng nằm trong `adapter/retrievers/`; không mô tả bằng nhãn phiên bản.
 - Không bịa tên relationship; dùng `DUOC_SUA_DOI_BOI`, `THAY_THE_BOI`, `HUONG_DAN_BOI`, `BAI_BO_BOI`.
 - Không mô tả `adapter/obsolete_retrievers/`.
 - Sau sửa lớn: nhắc chạy `scripts/build-thesis.ps1`.

@@ -8,8 +8,8 @@ Chạy từ root repo (cần .env với NEO4J_* và GOOGLE_API_KEY / GEMINI_API_
     python scripts/setup_neo4j_semantic_embeddings.py --dry-run
     python scripts/setup_neo4j_semantic_embeddings.py --query "vợ mua nhà cho nhân tình chồng có đòi được không?"
 
-Sau khi setup, retriever v2 dùng:
-    PARAM_MATCH_BACKEND=neo4j_vector   (mặc định)
+Sau khi setup, retriever dùng vector index Neo4j:
+    NEO4J_VECTOR_INDEX=che_do_tai_san_semantic_embedding
     CALL db.index.vector.queryNodes(...)
 
 Lưu ý: Đang dùng Gemini embedding (gemini-embedding-001, 768 dims).

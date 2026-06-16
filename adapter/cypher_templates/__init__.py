@@ -1,4 +1,4 @@
-"""Cypher template engine cho retriever v2/v3.
+"""Cypher template engine cho các retriever đang sử dụng.
 
 Mỗi template gồm 4 phần:
 - params_schema (BaseModel): Pydantic model cho LLM extract param

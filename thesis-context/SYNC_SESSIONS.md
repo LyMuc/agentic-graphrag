@@ -6,11 +6,11 @@ Mỗi session = **một** subsection. Dùng prompt từ [PROMPTS.md](PROMPTS.md)
 
 | # | Subsection | Label | Trạng thái | Ghi chú |
 |---|---|---|---|---|
-| 1 | Hiệu lực + algo | `table:algo_temporal` | Ready | Map: `legal-reasoning-flow.md` |
+| 1 | Hiệu lực + algo | `table:algo_temporal` | Done | Đồng bộ đủ 5 flags, mâu thuẫn và văn bản sắp hiệu lực |
 | 2 | KG văn bản QPPL | `table: Bảng nhãn nút KG` | Done | Đã thêm `BAI_BO_BOI` vào §5.2.2 |
-| 3 | Schema che_do_tai_san | `tab:nodes_che_do_tai_san` | Ready | `tai_san/_common.py` |
-| 4 | Template phan_loai_tai_san | `alg:phan-loai-seed` | Ready | `cypher_templates/tai_san/` |
-| 5 | Benchmark | `subsection:benchmark` | Ready | `benchmark_dataset/` |
+| 3 | Schema che_do_tai_san | `tab:nodes_che_do_tai_san` | Done | Khớp label và relationship trong template tài sản đang dùng |
+| 4 | Template phan_loai_tai_san | `alg:phan-loai-seed` | Done | Khớp params, runtime date và quy tắc đối chiếu chung--riêng |
+| 5 | Benchmark | `subsection:benchmark` | Done | Giữ nguyên claim phát hiện mâu thuẫn trên 80% |
 | 6 | Router | — | Optional | `router.py` + `retriever_catalog.py` |
 
 ## Session 1 — Algorithm hiệu lực
@@ -21,10 +21,10 @@ Mỗi session = **một** subsection. Dùng prompt từ [PROMPTS.md](PROMPTS.md)
 - `adapter/cypher_templates/chia_tai_san_sau_ly_hon/_common.py`
 - `adapter/retrievers/_context_tho_common.py`
 
-**Audit đã thực hiện khi setup (2026-06-13):**
+**Audit cập nhật (2026-06-15):**
 
 - Code dùng `DUOC_SUA_DOI_BOI` — đồ án §5.2.2 đã liệt kê đúng tên này.
-- Flags trong code: `FLAG_CANH_BAO_*` khớp mô tả `legal-reasoning-flow.md`.
+- Năm flags trong code, gồm `FLAG_MAU_THUAN` và `FLAG_VAN_BAN_SAP_HIEU_LUC`, đã được phản ánh trong algorithm.
 - Giai đoạn 1 Cypher + Giai đoạn 2 Python tách rõ như algorithm env.
 
 **Prompt Cursor:**

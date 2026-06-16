@@ -2,6 +2,8 @@
 
 File đồ án: `ĐATN_20225919_Lê_Thái_Sơn_Chatbot_tư_vấn_luật_hôn_nhân_gia_đình/Chuong/5_Giai_phap_dong_gop.tex`
 
+**Quy mô hiện tại (2026-06):** **20 retriever** + 2 direct tool (`respond`, `text2cypher`); **20** `TemplateRegistry` trong `registry_index.py`. Bảng đầy đủ: `retriever-catalog.md`, `cypher-template-index.md` (chạy `sync-thesis-context.ps1` trước khi đối chiếu).
+
 ## §5.2 Legal reasoning (`section:5.2`)
 
 ### `subsection:5.2.1` — Dẫn dắt bài toán
@@ -52,18 +54,27 @@ File đồ án: `ĐATN_20225919_Lê_Thái_Sơn_Chatbot_tư_vấn_luật_hôn_nh�
 | Scoring | `benchmark_dataset/scripts/` (e.g. `score_router_agent.py`) |
 | Kết quả | `subsection:5.1.3` — đối chiếu metric thực tế từ script output |
 
-## Router (nếu mở rộng mô tả từ Chương 4/5)
+## Router (Chương 4/5 — mô tả hệ retriever)
 
 - `application/router.py` — `route_question`, `tool_picker_prompt`
-- `application/retriever_catalog.py` — `RETRIEVER_SPECS`
+- `application/retriever_catalog.py` — `RETRIEVER_SPECS` (**20** tool)
 - `application/retriever_policy.py` — policy bổ sung
+- `application/router_tool_registry.py` — schema tool cho LLM
 - Registry UI: `presentation/main.py`
 
-## Retriever không dùng template registry (Cypher inline V2)
+Danh sách tool ↔ file ↔ template: **`retriever-catalog.md`** (auto).
 
-- `adapter/retrievers/quy_dinh_chung_khai_niem_phap_ly.py`
-- `adapter/retrievers/ket_hon/dieu_kien_ket_hon.py`
-- Pattern tương tự `_context_tho_common.py` cho THAY_THE / SUA_DOI
+## Retriever đang sử dụng + Cypher templates
+
+Toàn bộ retriever đang sử dụng nằm trong `adapter/retrievers/`. Mọi retriever chính đều có thư mục `adapter/cypher_templates/<topic>/` và đăng ký trong `ALL_TEMPLATE_REGISTRIES` — **trừ mapping đặc biệt**:
+
+| Tool | Thư mục template | Ghi chú |
+|---|---|---|
+| `che_do_tai_san_cua_vo_chong` | `adapter/cypher_templates/tai_san/` | Registry key `tai_san`, không trùng tên tool |
+
+Các domain mới (2026): `xac_dinh_cha_me_con`, `tai_san_rieng_cua_con`, `ket_hon_trai_phap_luat`, `quyen_nghia_vu_vo_chong`, `dai_dien_trach_nhiem_vo_chong`, `quyen_nghia_vu_cha_me_con`, `quan_he_hon_nhan_co_yeu_to_nuoc_ngoai`, `quan_he_giua_cac_thanh_vien_khac_trong_gia_dinh`, `xu_phat_vi_pham`, `quy_dinh_chung_khai_niem_phap_ly` — xem số template trong `cypher-template-index.md`.
+
+Snippet hiệu lực / tham chiếu chung vẫn dùng `adapter/retrievers/_context_tho_common.py` trong `_common.py` từng domain.
 
 ## Files KHÔNG dùng
 

@@ -1,7 +1,7 @@
 """Ánh xạ thuật ngữ thông thường → thuật ngữ pháp lý chuẩn cho topic Tài sản.
 
 Cung cấp `COMMON_TO_LEGAL_TERMS` (dict đa cấp theo field) và hàm
-`resolve_term(field, raw_text)` để retriever v3 chuẩn hoá raw text trước
+`resolve_term(field, raw_text)` để retriever chuẩn hoá raw text trước
 khi đẩy params vào Cypher SEED.
 
 Cách hoạt động:

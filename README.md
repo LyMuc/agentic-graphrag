@@ -13,7 +13,7 @@ Trọng tâm hiện tại: **Luật Hôn nhân và Gia đình** và các văn b�
 - **Text2Cypher dự phòng**: Retriever tổng quát khi không khớp domain cụ thể.
 - **Tổng hợp đáp án có kiểm soát**: Prompt phản hồi quy định cách trích dẫn Điều/Khoản/Điểm, thứ bậc văn bản, hiệu lực, văn bản sửa đổi và cảnh báo đa cấp pháp lý.
 - **Giao diện Chainlit**: Streaming câu trả lời, hiển thị từng bước (Router, Retriever, tổng hợp).
-- **Visualize đồ thị (V3)**: Sau mỗi câu trả lời từ retriever V3, link mở trang web riêng (Neo4j Browser-style) hiển thị node/quan hệ từ `Context_Tho` + lớp ngữ nghĩa.
+- **Visualize đồ thị**: Sau mỗi câu trả lời từ retriever hỗ trợ trực quan hóa, link mở trang web riêng (Neo4j Browser-style) hiển thị node/quan hệ từ `Context_Tho` + lớp ngữ nghĩa.
 - **Lưu hội thoại**: PostgreSQL qua Chainlit Data Layer (thread, step, resume chat).
 - **Projects**: Nhóm nhiều thread theo từng người dùng ngay trong sidebar Chainlit.
 - **Đánh giá benchmark**: Bộ câu hỏi chuẩn, script điền đáp án chatbot và tính metric trích dẫn pháp lý.

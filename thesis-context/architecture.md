@@ -30,8 +30,9 @@ Người dùng (Chainlit UI)
 
 ## Agentic GraphRAG
 
-- Router chọn **một hoặc nhiều** retriever, chạy **song song**.
-- Mỗi retriever: structured output `TrichXuatLuat` (điều luật IDs + `thoi_diem_su_kien`) → Cypher → `Context_Tho`.
+- Router chọn **một hoặc nhiều** retriever (**20** domain), chạy **song song**.
+- Toàn bộ retriever đang sử dụng nằm trong `adapter/retrievers/`.
+- Mỗi retriever phân loại một hoặc nhiều Cypher template, trích xuất params cùng `thoi_diem_su_kien`, thực thi Neo4j và trả `Context_Tho`.
 - Fallback: `text2cypher` khi không khớp domain.
 
 ## Liên hệ đồ án

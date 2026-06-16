@@ -25,6 +25,9 @@ UTILS_PY = REPO_ROOT / "utils" / "utils.py"
 AUTO_BEGIN = "<!-- BEGIN AUTO-GENERATED:sync_thesis_context.py -->"
 AUTO_END = "<!-- END AUTO-GENERATED:sync_thesis_context.py -->"
 
+NON_LEGAL_RELATIONSHIPS = frozenset({"CAN_CU_TAI"})
+SCHEMA_ONLY_RELATIONSHIPS = frozenset({"CO_DIEU"})
+
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
@@ -64,9 +67,19 @@ def _template_dirs_with_common() -> list[str]:
 
 
 def _extract_relationships() -> list[str]:
-    text = CONTEXT_THO.read_text(encoding="utf-8")
-    rels = sorted(set(re.findall(r"\[:([A-Z][A-Z0-9_]*)\]", text)))
-    return rels
+    rels = set(SCHEMA_ONLY_RELATIONSHIPS)
+    source_files = [CONTEXT_THO, *sorted(TEMPLATE_ROOT.glob("*/_common.py"))]
+
+    for path in source_files:
+        text = path.read_text(encoding="utf-8")
+        relationship_exprs = re.findall(
+            r"\[:([A-Z][A-Z0-9_|]*)(?:\*[^\]]*)?\]",
+            text,
+        )
+        for expression in relationship_exprs:
+            rels.update(expression.split("|"))
+
+    return sorted(rels - NON_LEGAL_RELATIONSHIPS)
 
 
 def _extract_flags() -> list[str]:
@@ -175,7 +188,10 @@ def _render_kg_legal_relationships() -> str:
     lines = [
         f"_Cập nhật lúc {_stamp()}_",
         "",
-        "Trích từ `adapter/retrievers/_context_tho_common.py` (pattern `[:REL]` trong Cypher):",
+        "Trích từ Cypher dùng chung đang hoạt động trong "
+        "`adapter/retrievers/_context_tho_common.py` và "
+        "`adapter/cypher_templates/*/_common.py`. `CO_DIEU` được giữ như "
+        "quan hệ cấu trúc của schema dù các truy vấn retriever thường bắt đầu từ nút Điều:",
         "",
         "| Relationship |",
         "|---|",
@@ -183,7 +199,7 @@ def _render_kg_legal_relationships() -> str:
     for rel in rels:
         lines.append(f"| `{rel}` |")
     lines.append("")
-    lines.append(f"Tổng: **{len(rels)}** quan hệ được quét tự động.")
+    lines.append(f"Tổng: **{len(rels)}** quan hệ legal trong bảng đồng bộ.")
     return "\n".join(lines)
 
 

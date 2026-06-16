@@ -496,7 +496,7 @@ async def main(message: cl.Message):
             contexts_for_llm.append(res)
 
     # Chỉ bỏ qua LLM khi tool trả thẳng 1 chuỗi (vd `respond` / answer_given).
-    # Retriever trả list[str] (vd v3) sau khi extend vẫn phải qua bước tổng hợp đáp án.
+    # Retriever trả list[str] sau khi extend vẫn phải qua bước tổng hợp đáp án.
     if (
         len(tool_response) == 1
         and isinstance(tool_response[0], str)

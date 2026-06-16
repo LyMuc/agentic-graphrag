@@ -14,16 +14,20 @@ Thuộc tính chính: `id`, `so_hieu`, `ngay_co_hieu_luc`, `ngay_het_hieu_luc`, 
 ## Legal layer — Relationships (auto từ code)
 
 <!-- BEGIN AUTO-GENERATED:sync_thesis_context.py -->
-_Cập nhật lúc 2026-06-13 08:52 UTC_
+_Cập nhật lúc 2026-06-15 16:10 UTC_
 
-Trích từ `adapter/retrievers/_context_tho_common.py` (pattern `[:REL]` trong Cypher):
+Trích từ Cypher dùng chung đang hoạt động trong `adapter/retrievers/_context_tho_common.py` và `adapter/cypher_templates/*/_common.py`. `CO_DIEU` được giữ như quan hệ cấu trúc của schema dù các truy vấn retriever thường bắt đầu từ nút Điều:
 
 | Relationship |
 |---|
+| `BAI_BO_BOI` |
 | `CO_DIEM` |
+| `CO_DIEU` |
 | `CO_KHOAN` |
 | `DUOC_SUA_DOI_BOI` |
 | `HUONG_DAN_BOI` |
+| `THAM_CHIEU_DEN` |
+| `THAY_THE_BOI` |
 
-Tổng: **4** quan hệ được quét tự động.
+Tổng: **8** quan hệ legal trong bảng đồng bộ.
 <!-- END AUTO-GENERATED:sync_thesis_context.py -->

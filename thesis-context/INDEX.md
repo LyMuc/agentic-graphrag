@@ -51,6 +51,7 @@ PDF: `ĐATN_20225919_Lê_Thái_Sơn_Chatbot_tư_vấn_luật_hôn_nhân_gia_đì
 | 2026-06-13 | Setup | Tạo thesis-context, AGENTS.md, rules, skills; build PDF 80 trang OK |
 | 2026-06-13 | §5.2.2 KG | Thêm quan hệ `BAI_BO_BOI` vào mô tả (khớp `_context_tho_common.py`) |
 | 2026-06-13 | Sync script | `scripts/sync_thesis_context.py` — auto catalog/registry/KG rels/flags |
+| 2026-06-15 | 20 retrievers | Sync catalog + registry; xác nhận retriever đang dùng nằm trong `adapter/retrievers/` và đủ 20 domain |
 
 ## Tham chiếu repo
 
