@@ -16,6 +16,7 @@ from adapter.cypher_templates.xu_phat_vi_pham._seed_factory import make_parent_l
 _LEAF_MAP: dict[str, str] = {
     "sinh_con_ho_tro_thuong_mai": "sinh_con_ho_tro_vi_muc_dich_thuong_mai",
         "sinh_san_vo_tinh": "thuc_hien_sinh_san_vo_tinh",
+        "lua_chon_gioi_tinh_thai_nhi": "lua_chon_gioi_tinh_thai_nhi",
         "mang_thai_ho_thuong_mai": "mang_thai_ho_vi_muc_dich_thuong_mai",
         "to_chuc_mang_thai_ho_thuong_mai": "to_chuc_mang_thai_ho_vi_muc_dich_thuong_mai",
         "tong_quat": ""
@@ -26,7 +27,7 @@ _HS_WHITELIST = ['BoLuat_HinhSu_2015_Dieu_187']
 
 
 class SinhConMangThaiHoThuongMaiParams(BaseModel):
-    dang_hanh_vi: Literal["sinh_con_ho_tro_thuong_mai","sinh_san_vo_tinh","mang_thai_ho_thuong_mai","to_chuc_mang_thai_ho_thuong_mai","tong_quat"] = Field(description="mang thai hộ lấy tiền; tổ chức mang thai hộ thương mại.")
+    dang_hanh_vi: Literal["sinh_con_ho_tro_thuong_mai","sinh_san_vo_tinh","lua_chon_gioi_tinh_thai_nhi","mang_thai_ho_thuong_mai","to_chuc_mang_thai_ho_thuong_mai","tong_quat"] = Field(description="mang thai hộ lấy tiền; chọn giới tính thai nhi; tổ chức mang thai hộ thương mại.")
     loai_che_tai: LoaiCheTai = LOAI_CHE_TAI_FIELD
     khia_canh_che_tai: KhiaCanhCheTai = KHIA_CANH_CHE_TAI_FIELD
 

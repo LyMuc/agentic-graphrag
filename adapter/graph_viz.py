@@ -300,18 +300,24 @@ def _collect_ids_from_context(context_tho: dict[str, Any]) -> tuple[_GraphBuilde
         builder.add_edge(vb, goc, str(loai))
 
     hien_hanh_ids = context_tho.get("quy_dinh_hien_hanh_doi_chieu") or []
-    main_ids = [
-        item.get("id_thuc_te_ap_dung") or item.get("id")
-        for item in context_tho.get("can_cu_chinh", []) or []
-        if isinstance(item, dict)
-    ]
     for hh_id in hien_hanh_ids:
         if hh_id:
             builder.add_node(hh_id, group="hien_hanh_doi_chieu")
             legal_ids.append(hh_id)
-            for mid in main_ids:
-                if mid and mid != hh_id:
-                    builder.add_edge(mid, hh_id, "THAY_THE_BOI")
+
+    for pair in context_tho.get("lien_ket_hien_hanh", []) or []:
+        if not isinstance(pair, dict):
+            continue
+        hh = pair.get("id_hien_hanh")
+        goc = pair.get("id_duoc_thay_the")
+        if hh:
+            builder.add_node(hh, group="hien_hanh_doi_chieu")
+            legal_ids.append(hh)
+        if goc:
+            builder.add_node(goc, group="can_cu_chinh")
+            legal_ids.append(goc)
+        if hh and goc and hh != goc:
+            builder.add_edge(goc, hh, "THAY_THE_BOI")
 
     unique_legal = list(dict.fromkeys(i for i in legal_ids if i))
     return builder, unique_legal

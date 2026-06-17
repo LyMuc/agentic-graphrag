@@ -54,7 +54,7 @@ xu_phat_vi_pham_description = {
 
 class TemplateChoice(BaseModel):
     template_name: str = Field(
-        description="Tên template — phải khớp 1 trong 28 template đã liệt kê."
+        description="Tên template — phải khớp 1 trong 29 template đã liệt kê."
     )
     reason: str = Field(description="Lý do ngắn (1 câu) chọn template này.")
 
@@ -75,6 +75,8 @@ def _build_classifier_prompt() -> str:
         "câu hỏi về XỬ PHẠT VI PHẠM trong lĩnh vực hôn nhân gia đình.\n\n"
         "QUY TẮC ƯU TIÊN:\n"
         "1. Ưu tiên hành vi cụ thể; chỉ dùng xu_phat_ket_hon_ly_hon_tong_quat khi câu mơ hồ.\n"
+        "1b. 'Hành vi bị cấm', 'Điều 5 khoản 2', 'pháp luật cấm gì' → hanh_vi_bi_cam_hngd_tong_quat; "
+        "không dùng nếu câu chỉ hỏi mức phạt/TNHS và đã map rõ template xử phạt.\n"
         "2. 'Phạt tiền/phạt hành chính' → nhánh VPHC; 'truy cứu TNHS/phạt tù' → hình sự; "
         "không rõ → template kết hợp seed cả hai khi có loai_che_tai.\n"
         "3. Ngoại tình/một vợ một chồng → vi_pham_mot_vo_mot_chong; không chọn hình sự "
@@ -91,7 +93,8 @@ def _build_classifier_prompt() -> str:
         "10. Ngăn thăm con → ngan_can_tham_nom_cham_soc; không cấp dưỡng → vi_pham_cap_duong_nuoi_duong.\n"
         "11. Chiếm tài sản vợ/chồng → bao_luc_kinh_te.\n"
         "12. Kết hôn/ly hôn giả → ket_hon_ly_hon_gia_tao.\n"
-        "13. Mặc định 1 template/câu; tối đa 2 khi hai hành vi độc lập hoặc cần ranh giới VPHC/HS.\n"
+        "13. Mặc định 1 template/câu; tối đa 2 khi hai hành vi độc lập, cần ranh giới VPHC/HS, "
+        "hoặc vừa hỏi bị cấm vừa hỏi xử phạt.\n"
         "14. KHÔNG bịa template name ngoài danh sách.\n"
         + "".join(lines)
     )
@@ -100,6 +103,17 @@ def _build_classifier_prompt() -> str:
 def _safety_net_classify(query: str, choices: List[TemplateChoice]) -> List[TemplateChoice]:
     q = query.lower()
     names = {c.template_name for c in choices}
+
+    if re.search(r"điều 5 khoản 2|hành vi bị cấm|pháp luật cấm gì", q) and not re.search(
+        r"phạt|mức phạt|truy cứu|tội|tnhs", q
+    ):
+        if "hanh_vi_bi_cam_hngd_tong_quat" not in names:
+            choices = [
+                TemplateChoice(
+                    template_name="hanh_vi_bi_cam_hngd_tong_quat",
+                    reason="Safety-net: hành vi bị cấm Điều 5 khoản 2",
+                )
+            ] + choices
 
     if re.search(r"ngoại tình|một vợ|một chồng|có bồ", q) and not re.search(
         r"loạn luân|giao cấu|cận huyết.*hình sự", q
@@ -308,6 +322,7 @@ def _run_template_sync(
 ) -> dict[str, Any] | None:
     runtime_params = template.build_params(params)
     runtime_params["target_date"] = target_date
+    runtime_params["query_date"] = _today_str()
     print(f"[Template:{template.name}] params={runtime_params}")
     try:
         records, _, _ = driver.execute_query(template.cypher, **runtime_params)
@@ -369,6 +384,7 @@ async def xu_phat_vi_pham(query: str) -> dict[str, Any]:
     ):
         runtime_params = template.build_params(params)
         runtime_params["target_date"] = target_date
+        runtime_params["query_date"] = _today_str()
         debug_text = _format_retrieval_debug(
             template_name=template.name,
             reason=choice.reason,
@@ -406,6 +422,7 @@ async def xu_phat_vi_pham(query: str) -> dict[str, Any]:
             continue
         runtime_params = template.build_params(params)
         runtime_params["target_date"] = target_date
+        runtime_params["query_date"] = _today_str()
         lazy_sources.append(
             {
                 "topic": "xu_phat_vi_pham",

@@ -123,6 +123,7 @@ XU_PHAT_PHRASES = (
     "tội ngoại tình",
     "chế tài",
     "xử lý",
+    "sao không"
 )
 
 

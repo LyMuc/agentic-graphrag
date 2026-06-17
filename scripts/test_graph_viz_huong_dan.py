@@ -99,9 +99,37 @@ def test_other_tac_dong_unchanged() -> None:
     assert sua_edges == [("ND_SUA", LUAT, "SUA_DOI_BOI")]
 
 
+def test_lien_ket_hien_hanh_paired_only() -> None:
+    """Chỉ vẽ THAY_THE_BOI theo cặp lien_ket_hien_hanh, không nối chéo can_cu_chinh."""
+    nd82 = "NghiDinh_82_2020_ND_CP_Dieu_58"
+    luat5 = "Luat_HNGD_2014_Dieu_5"
+    nd109 = "NghiDinh_109_2026_ND_CP_Dieu_61"
+    context = {
+        "can_cu_chinh": [
+            {"id_thuc_te_ap_dung": nd82},
+            {"id_thuc_te_ap_dung": luat5},
+        ],
+        "quy_dinh_hien_hanh_doi_chieu": [nd109],
+        "lien_ket_hien_hanh": [
+            {"id_hien_hanh": nd109, "id_duoc_thay_the": "NghiDinh_82_2020_ND_CP_Dieu_61"},
+        ],
+    }
+    builder, _ = _collect_ids_from_context(context)
+    graph = builder.to_dict()
+    thay_the_edges = [
+        (e["from"], e["to"])
+        for e in graph["edges"]
+        if e.get("label") == "THAY_THE_BOI"
+    ]
+    assert thay_the_edges == [("NghiDinh_82_2020_ND_CP_Dieu_61", nd109)]
+    assert (luat5, nd109) not in thay_the_edges
+    assert (nd82, nd109) not in thay_the_edges
+
+
 if __name__ == "__main__":
     test_lien_ket_huong_dan_direction_and_deduplicate()
     test_lien_ket_sap_hieu_luc_huong_dan_boi()
     test_can_cu_sap_hieu_luc_huong_dan_boi()
     test_other_tac_dong_unchanged()
+    test_lien_ket_hien_hanh_paired_only()
     print("OK: test_graph_viz_huong_dan")

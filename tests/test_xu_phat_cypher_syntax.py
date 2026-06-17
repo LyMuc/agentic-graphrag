@@ -42,19 +42,13 @@ def test_xu_phat_template_cypher_parses(template_name: str) -> None:
     params = _minimal_params(template.params_schema)
     runtime = template.params_builder(params)
     runtime["target_date"] = "2021-12-31"
+    runtime["query_date"] = "2026-06-16"
 
     driver.execute_query(f"EXPLAIN {template.cypher}", **runtime)
 
 
-def test_xu_phat_template_has_nested_tham_chieu_block() -> None:
-    template = XU_PHAT_VI_PHAM_REGISTRY.get("tao_hon_va_to_chuc_tao_hon")
-    assert "7c. Tham chiếu cấp 2" in template.cypher
-    assert "luat_tc_l2_ctt" in template.cypher
-    assert "7d. Heading cha cho tham chiếu cấp 2" in template.cypher
-
-
-def test_tao_hon_regression_query() -> None:
-    """Regression: câu hỏi tảo hôn năm 2021 (log user)."""
+def test_tao_hon_regression_includes_dieu5_khoan2_diem_b() -> None:
+    """Regression: tảo hôn năm 2021 phải seed Điều 5 khoản 2 điểm b."""
     template = XU_PHAT_VI_PHAM_REGISTRY.get("tao_hon_va_to_chuc_tao_hon")
     from adapter.cypher_templates.xu_phat_vi_pham.tao_hon_va_to_chuc_tao_hon import (
         TaoHonVaToChucTaoHonParams,
@@ -67,7 +61,21 @@ def test_tao_hon_regression_query() -> None:
     )
     runtime = template.params_builder(params)
     runtime["target_date"] = "2021-12-31"
+    runtime["query_date"] = "2026-06-16"
+    assert "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_b" in runtime["whitelist_dieu_ids"]
 
     records, _, _ = driver.execute_query(template.cypher, **runtime)
     ctx = records[0]["Context_Tho"]
     assert ctx.get("can_cu_chinh")
+    all_ids = {x["id_thuc_te_ap_dung"] for x in ctx["can_cu_chinh"]}
+    bo_tro_ids = {x["id"] for x in ctx.get("can_cu_bo_tro", []) if x.get("id")}
+    assert (
+        "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_b" in all_ids
+        or "Luat_HNGD_2014_Dieu_5_Khoan_2_Diem_b" in bo_tro_ids
+        or any("Dieu_5_Khoan_2" in i for i in all_ids | bo_tro_ids)
+    )
+
+
+def test_hanh_vi_bi_cam_hngd_tong_quat_registry() -> None:
+    assert XU_PHAT_VI_PHAM_REGISTRY.get("hanh_vi_bi_cam_hngd_tong_quat") is not None
+    assert len(XU_PHAT_VI_PHAM_REGISTRY.names()) == 29

@@ -7,7 +7,7 @@ _HIEN_HANH_OLD_SIMPLE = """    OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*
     WHERE hien_hanh.ngay_het_hieu_luc IS NULL"""
 
 _HIEN_HANH_NEW_SIMPLE = """    OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(hien_hanh)
-    WHERE hien_hanh.ngay_co_hieu_luc <= $target_date
+    WHERE hien_hanh.ngay_co_hieu_luc <= $query_date
     AND hien_hanh.ngay_het_hieu_luc IS NULL"""
 
 _HIEN_HANH_OLD_KG = """OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(hien_hanh)
@@ -15,56 +15,56 @@ _HIEN_HANH_OLD_KG = """OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(h
     AND hien_hanh.id <> chi_tiet_ap_dung.id"""
 
 _HIEN_HANH_NEW_KG = """OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(hien_hanh)
-  WHERE hien_hanh.ngay_co_hieu_luc <= $target_date
+  WHERE hien_hanh.ngay_co_hieu_luc <= $query_date
     AND hien_hanh.ngay_het_hieu_luc IS NULL
     AND hien_hanh.id <> chi_tiet_ap_dung.id"""
 
 FUTURE_EFFECTIVE_MATCH_CYPHER = """
-    // 8. VĂN BẢN ĐÃ BAN HÀNH, CHƯA CÓ HIỆU LỰC (sắp tác động tới căn cứ hiện hành)
+    // 8. VĂN BẢN ĐÃ BAN HÀNH, CHƯA CÓ HIỆU LỰC tại thời điểm đặt câu hỏi ($query_date)
     OPTIONAL MATCH (chi_tiet_ap_dung)-[:DUOC_SUA_DOI_BOI]->(sua_doi_sap)
-    WHERE sua_doi_sap.ngay_co_hieu_luc > $target_date
+    WHERE sua_doi_sap.ngay_co_hieu_luc > $query_date
 
     OPTIONAL MATCH (chi_tiet_ap_dung)-[:HUONG_DAN_BOI]->(hd_sap)
-    WHERE hd_sap.ngay_co_hieu_luc > $target_date
+    WHERE hd_sap.ngay_co_hieu_luc > $query_date
 
     OPTIONAL MATCH (hd_sap)-[:CO_KHOAN|CO_DIEM*0..2]->(chi_tiet_hd_sap)
-    WHERE chi_tiet_hd_sap.ngay_co_hieu_luc > $target_date
+    WHERE chi_tiet_hd_sap.ngay_co_hieu_luc > $query_date
 
     OPTIONAL MATCH (chi_tiet_huong_dan)-[:DUOC_SUA_DOI_BOI]->(sua_hd_sap)
-    WHERE sua_hd_sap.ngay_co_hieu_luc > $target_date
+    WHERE sua_hd_sap.ngay_co_hieu_luc > $query_date
 
     OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(thay_the_sap)
-    WHERE thay_the_sap.ngay_co_hieu_luc > $target_date
+    WHERE thay_the_sap.ngay_co_hieu_luc > $query_date
 
     OPTIONAL MATCH (thay_the_sap)-[:CO_KHOAN|CO_DIEM*1..2]->(chi_tiet_thay_the_sap)
-    WHERE chi_tiet_thay_the_sap.ngay_co_hieu_luc > $target_date
+    WHERE chi_tiet_thay_the_sap.ngay_co_hieu_luc > $query_date
 
     OPTIONAL MATCH (chi_tiet_ap_dung)-[:BAI_BO_BOI*1..]->(bai_bo_sap)
-    WHERE bai_bo_sap.ngay_co_hieu_luc > $target_date
+    WHERE bai_bo_sap.ngay_co_hieu_luc > $query_date
 """
 
 FUTURE_EFFECTIVE_MATCH_CYPHER_KG = """
-// 8b. VĂN BẢN ĐÃ BAN HÀNH, CHƯA CÓ HIỆU LỰC
+// 8b. VĂN BẢN ĐÃ BAN HÀNH, CHƯA CÓ HIỆU LỰC tại thời điểm đặt câu hỏi ($query_date)
 OPTIONAL MATCH (chi_tiet_ap_dung)-[:DUOC_SUA_DOI_BOI]->(sua_doi_sap)
-  WHERE sua_doi_sap.ngay_co_hieu_luc > $target_date
+  WHERE sua_doi_sap.ngay_co_hieu_luc > $query_date
 
 OPTIONAL MATCH (chi_tiet_ap_dung)-[:HUONG_DAN_BOI]->(hd_sap)
-  WHERE hd_sap.ngay_co_hieu_luc > $target_date
+  WHERE hd_sap.ngay_co_hieu_luc > $query_date
 
 OPTIONAL MATCH (hd_sap)-[:CO_KHOAN|CO_DIEM*1..2]->(chi_tiet_hd_sap)
-  WHERE chi_tiet_hd_sap.ngay_co_hieu_luc > $target_date
+  WHERE chi_tiet_hd_sap.ngay_co_hieu_luc > $query_date
 
 OPTIONAL MATCH (chi_tiet_huong_dan)-[:DUOC_SUA_DOI_BOI]->(sua_hd_sap)
-  WHERE sua_hd_sap.ngay_co_hieu_luc > $target_date
+  WHERE sua_hd_sap.ngay_co_hieu_luc > $query_date
 
 OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(thay_the_sap)
-  WHERE thay_the_sap.ngay_co_hieu_luc > $target_date
+  WHERE thay_the_sap.ngay_co_hieu_luc > $query_date
 
 OPTIONAL MATCH (thay_the_sap)-[:CO_KHOAN|CO_DIEM*1..2]->(chi_tiet_thay_the_sap)
-  WHERE chi_tiet_thay_the_sap.ngay_co_hieu_luc > $target_date
+  WHERE chi_tiet_thay_the_sap.ngay_co_hieu_luc > $query_date
 
 OPTIONAL MATCH (chi_tiet_ap_dung)-[:BAI_BO_BOI*1..]->(bai_bo_sap)
-  WHERE bai_bo_sap.ngay_co_hieu_luc > $target_date
+  WHERE bai_bo_sap.ngay_co_hieu_luc > $query_date
 """
 
 _SAP_HIEU_LUC_ITEM_FIELDS = """            id: {id_expr},
@@ -148,7 +148,7 @@ RETURN_SAP_HIEU_LUC_FIELDS = """,
     id_duoc_tac_dong_expr="chi_tiet_ap_dung.id",
 ) + """
             })
-            + collect(DISTINCT CASE WHEN chi_tiet_ap_dung.ngay_het_hieu_luc > $target_date THEN {
+            + collect(DISTINCT CASE WHEN chi_tiet_ap_dung.ngay_het_hieu_luc > $query_date THEN {
                 id: chi_tiet_ap_dung.id,
                 noidung: chi_tiet_ap_dung.noidung,
                 cap_bac: chi_tiet_ap_dung.cap_bac_phap_ly,
@@ -165,7 +165,7 @@ RETURN_SAP_HIEU_LUC_FIELDS = """,
             + collect(DISTINCT {id_van_ban: sua_hd_sap.id, id_duoc_tac_dong: coalesce(chi_tiet_huong_dan.id, huong_dan.id), loai_tac_dong: 'SUA_DOI_HUONG_DAN'})
             + collect(DISTINCT {id_van_ban: thay_the_sap.id, id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'THAY_THE'})
             + collect(DISTINCT {id_van_ban: bai_bo_sap.id, id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'BAI_BO'})
-            + collect(DISTINCT CASE WHEN chi_tiet_ap_dung.ngay_het_hieu_luc > $target_date THEN {
+            + collect(DISTINCT CASE WHEN chi_tiet_ap_dung.ngay_het_hieu_luc > $query_date THEN {
                 id_van_ban: chi_tiet_ap_dung.id, id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'HET_HIEU_LUC'
             } END)
         ) WHERE pair.id_van_ban IS NOT NULL AND pair.id_duoc_tac_dong IS NOT NULL]"""

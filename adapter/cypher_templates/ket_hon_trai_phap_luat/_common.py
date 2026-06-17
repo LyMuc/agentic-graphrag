@@ -126,7 +126,7 @@ OPTIONAL MATCH (huong_dan)-[:CO_KHOAN|CO_DIEM*1..2]->(chi_tiet_huong_dan)
          OR chi_tiet_huong_dan.ngay_het_hieu_luc > $target_date)
 
 OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(hien_hanh)
-  WHERE hien_hanh.ngay_co_hieu_luc <= $target_date
+  WHERE hien_hanh.ngay_co_hieu_luc <= $query_date
     AND hien_hanh.ngay_het_hieu_luc IS NULL
     AND hien_hanh.id <> chi_tiet_ap_dung.id
 
@@ -203,6 +203,11 @@ WITH dieu_seed_ids,
   }) AS tc_hd_chi_tiet_parts,
   """ + tham_chieu_ancestor_collect_parts() + """ AS tc_ancestor_parts,
   collect(DISTINCT hien_hanh.id) AS hien_hanh_ids,
+  collect(DISTINCT CASE WHEN hien_hanh IS NOT NULL AND hien_hanh.id IS NOT NULL AND chi_tiet_ap_dung.id IS NOT NULL THEN {
+    id_hien_hanh: hien_hanh.id,
+    id_duoc_thay_the: chi_tiet_ap_dung.id,
+    loai_tac_dong: 'THAY_THE'
+  } END) AS lien_ket_hien_hanh_raw,
   collect({
     provision_id: chi_tiet_ap_dung.id,
     seed_rank: CASE
@@ -258,7 +263,7 @@ WITH dieu_seed_ids,
       ngay_het_hieu_luc: bai_bo_sap.ngay_het_hieu_luc, loai_tac_dong: 'BAI_BO',
       id_duoc_tac_dong: chi_tiet_ap_dung.id
     })
-    + collect(DISTINCT CASE WHEN chi_tiet_ap_dung.ngay_het_hieu_luc > $target_date THEN {
+    + collect(DISTINCT CASE WHEN chi_tiet_ap_dung.ngay_het_hieu_luc > $query_date THEN {
       id: chi_tiet_ap_dung.id, noidung: chi_tiet_ap_dung.noidung, cap_bac: chi_tiet_ap_dung.cap_bac_phap_ly,
       ngay_ban_hanh: chi_tiet_ap_dung.ngay_ban_hanh, ngay_hieu_luc: chi_tiet_ap_dung.ngay_co_hieu_luc,
       ngay_het_hieu_luc: chi_tiet_ap_dung.ngay_het_hieu_luc, loai_tac_dong: 'HET_HIEU_LUC',
@@ -271,7 +276,7 @@ WITH dieu_seed_ids,
     + collect(DISTINCT {id_van_ban: sua_hd_sap.id, id_duoc_tac_dong: coalesce(chi_tiet_huong_dan.id, huong_dan.id), loai_tac_dong: 'SUA_DOI_HUONG_DAN'})
     + collect(DISTINCT {id_van_ban: thay_the_sap.id, id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'THAY_THE'})
     + collect(DISTINCT {id_van_ban: bai_bo_sap.id, id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'BAI_BO'})
-    + collect(DISTINCT CASE WHEN chi_tiet_ap_dung.ngay_het_hieu_luc > $target_date THEN {
+    + collect(DISTINCT CASE WHEN chi_tiet_ap_dung.ngay_het_hieu_luc > $query_date THEN {
       id_van_ban: chi_tiet_ap_dung.id, id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'HET_HIEU_LUC'
     } END)
   ) WHERE pair.id_van_ban IS NOT NULL AND pair.id_duoc_tac_dong IS NOT NULL] AS lien_ket_sap_hieu_luc_raw
@@ -304,6 +309,8 @@ WITH hd_van_ban_parts + hd_chi_tiet_parts AS hd_all,
      hien_hanh_ids, coalesce(can_cu_chinh_inner, []) AS can_cu_chinh,
      [x IN lien_ket_huong_dan_raw
       WHERE x.id_huong_dan IS NOT NULL AND x.id_duoc_huong_dan IS NOT NULL] AS lien_ket_huong_dan_inner,
+     [x IN lien_ket_hien_hanh_raw
+      WHERE x.id_hien_hanh IS NOT NULL AND x.id_duoc_thay_the IS NOT NULL] AS lien_ket_hien_hanh_inner,
      can_cu_sap_hieu_luc_raw, lien_ket_sap_hieu_luc_raw
 
 OPTIONAL CALL {
@@ -314,7 +321,7 @@ OPTIONAL CALL {
   RETURN collect(hd_one) AS can_cu_huong_dan_inner
 }
 WITH tc_all, hien_hanh_ids, can_cu_chinh, can_cu_huong_dan_inner, lien_ket_huong_dan_inner,
-     can_cu_sap_hieu_luc_raw, lien_ket_sap_hieu_luc_raw
+     lien_ket_hien_hanh_inner, can_cu_sap_hieu_luc_raw, lien_ket_sap_hieu_luc_raw
 
 OPTIONAL CALL {
   WITH tc_all
@@ -329,6 +336,7 @@ RETURN {
     can_cu_bo_tro: coalesce(can_cu_bo_tro_inner, []),
     lien_ket_huong_dan: coalesce(lien_ket_huong_dan_inner, []),
     quy_dinh_hien_hanh_doi_chieu: [x IN hien_hanh_ids WHERE x IS NOT NULL],
+    lien_ket_hien_hanh: coalesce(lien_ket_hien_hanh_inner, []),
     can_cu_sap_hieu_luc: can_cu_sap_hieu_luc_raw,
     lien_ket_sap_hieu_luc: lien_ket_sap_hieu_luc_raw
 } AS Context_Tho

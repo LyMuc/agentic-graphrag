@@ -21,6 +21,7 @@ from typing import Any
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from adapter.config import driver  # noqa: E402
+from adapter.cypher_templates.xu_phat_vi_pham._hngd_dieu5 import merge_dieu5_can_cu  # noqa: E402
 
 
 TOPIC = "xu_phat_vi_pham"
@@ -40,7 +41,7 @@ SEMANTIC_LABELS = [
 LEGAL_LABELS = {"DieuLuat", "DieuKhoanLuat", "DieuKhoanDiemLuat"}
 
 # (id, ten, label, [CAN_CU_TAI legal ids])
-_SEMANTIC_ROWS: list[tuple[str, str, str, list[str]]] = [
+_SEMANTIC_ROWS_BASE: list[tuple[str, str, str, list[str]]] = [
     ("che_tai_vi_pham_hanh_chinh", "Xử phạt vi phạm hành chính trong phạm vi topic", "CheTai", ["NghiDinh_82_2020_ND_CP_Dieu_58", "NghiDinh_82_2020_ND_CP_Dieu_59", "NghiDinh_82_2020_ND_CP_Dieu_60", "NghiDinh_82_2020_ND_CP_Dieu_61", "NghiDinh_82_2020_ND_CP_Dieu_62", "NghiDinh_82_2020_ND_CP_Dieu_63", "NghiDinh_282_2025_ND_CP_Dieu_37", "NghiDinh_282_2025_ND_CP_Dieu_38", "NghiDinh_282_2025_ND_CP_Dieu_39", "NghiDinh_282_2025_ND_CP_Dieu_40", "NghiDinh_282_2025_ND_CP_Dieu_41", "NghiDinh_282_2025_ND_CP_Dieu_42", "NghiDinh_282_2025_ND_CP_Dieu_43", "NghiDinh_282_2025_ND_CP_Dieu_44", "NghiDinh_282_2025_ND_CP_Dieu_45", "NghiDinh_282_2025_ND_CP_Dieu_46", "NghiDinh_282_2025_ND_CP_Dieu_47", "NghiDinh_282_2025_ND_CP_Dieu_48", "NghiDinh_282_2025_ND_CP_Dieu_49", "NghiDinh_282_2025_ND_CP_Dieu_50", "NghiDinh_282_2025_ND_CP_Dieu_51", "NghiDinh_282_2025_ND_CP_Dieu_52", "NghiDinh_282_2025_ND_CP_Dieu_53"]),
     ("che_tai_trach_nhiem_hinh_su", "Truy cứu trách nhiệm hình sự trong phạm vi topic", "CheTai", ["BoLuat_HinhSu_2015_Dieu_181", "BoLuat_HinhSu_2015_Dieu_182", "BoLuat_HinhSu_2015_Dieu_183", "BoLuat_HinhSu_2015_Dieu_184", "BoLuat_HinhSu_2015_Dieu_185", "BoLuat_HinhSu_2015_Dieu_186", "BoLuat_HinhSu_2015_Dieu_187"]),
     ("che_tai_hinh_thuc_bo_sung", "Hình thức xử phạt hoặc hình phạt bổ sung", "CheTai", ["NghiDinh_82_2020_ND_CP_Dieu_62_Khoan_4", "NghiDinh_82_2020_ND_CP_Dieu_63_Khoan_7", "NghiDinh_282_2025_ND_CP_Dieu_37_Khoan_4", "NghiDinh_282_2025_ND_CP_Dieu_51_Khoan_3", "NghiDinh_282_2025_ND_CP_Dieu_53_Khoan_3", "BoLuat_HinhSu_2015_Dieu_187"]),
@@ -182,8 +183,47 @@ _SEMANTIC_ROWS: list[tuple[str, str, str, list[str]]] = [
     ("co_so_tro_giup_hoat_dong_chua_dang_ky", "Cơ sở trợ giúp hoạt động khi chưa được cấp giấy chứng nhận hoặc không đăng ký", "HanhVi", ["NghiDinh_282_2025_ND_CP_Dieu_52_Khoan_2"]),
     ("co_tinh_den_gan_nguoi_bi_cam_tiep_xuc", "Cố tình đến gần nạn nhân trong phạm vi 100 m khi đang thi hành quyết định cấm tiếp xúc", "HanhVi", ["NghiDinh_282_2025_ND_CP_Dieu_53_Khoan_1"]),
     ("dung_phuong_tien_de_bao_luc_nguoi_bi_cam_tiep_xuc", "Dùng điện thoại, thư điện tử hoặc công cụ khác để bạo lực với người không được tiếp xúc", "HanhVi", ["NghiDinh_282_2025_ND_CP_Dieu_53_Khoan_2"]),
+    (
+        "quy_dinh_hanh_vi_bi_cam_hngd",
+        "Các hành vi bị cấm trong chế độ hôn nhân và gia đình tại Điều 5 khoản 2",
+        "QuyDinh",
+        [],
+    ),
+    ("lua_chon_gioi_tinh_thai_nhi", "Lựa chọn giới tính thai nhi", "HanhVi", []),
+    (
+        "loi_dung_quyen_hngd_de_mua_ban_nguoi_truc_loi",
+        "Lợi dụng quyền hôn nhân và gia đình để mua bán người, bóc lột sức lao động, xâm phạm tình dục hoặc trục lợi",
+        "HanhVi",
+        [],
+    ),
+]
+
+_SEMANTIC_ROWS = [
+    (sid, ten, label, merge_dieu5_can_cu(legal_ids, sid))
+    for sid, ten, label, legal_ids in _SEMANTIC_ROWS_BASE
 ]
 _BAO_GOM: dict[str, list[str]] = {
+    "quy_dinh_hanh_vi_bi_cam_hngd": [
+        "ket_hon_gia_tao_de_dat_muc_dich_khac",
+        "ly_hon_gia_tao_de_tron_nghia_vu",
+        "to_chuc_lay_vo_chong_cho_nguoi_chua_du_tuoi",
+        "can_tro_ket_hon_hoac_ly_hon",
+        "cuong_ep_ket_hon_hoac_ly_hon",
+        "lua_doi_ket_hon_hoac_ly_hon",
+        "ket_hon_khi_dang_co_vo_chong",
+        "chung_song_voi_nguoi_khac_khi_dang_co_vo_chong",
+        "chung_song_voi_nguoi_biet_ro_dang_co_vo_chong",
+        "ket_hon_chung_song_cung_dong_mau_truc_he_hoac_ba_doi",
+        "ket_hon_chung_song_cha_me_nuoi_con_nuoi",
+        "ket_hon_chung_song_quan_he_thong_gia_nuoi_duong_cu",
+        "yeu_sach_cua_cai_trong_ket_hon",
+        "sinh_con_ho_tro_vi_muc_dich_thuong_mai",
+        "mang_thai_ho_vi_muc_dich_thuong_mai",
+        "to_chuc_mang_thai_ho_vi_muc_dich_thuong_mai",
+        "lua_chon_gioi_tinh_thai_nhi",
+        "thuc_hien_sinh_san_vo_tinh",
+        "loi_dung_quyen_hngd_de_mua_ban_nguoi_truc_loi",
+    ],
     "quy_dinh_ket_hon_ly_hon_tong_quat": ["ket_hon_khi_dang_co_vo_chong", "chung_song_voi_nguoi_khac_khi_dang_co_vo_chong", "can_tro_ket_hon_hoac_ly_hon", "cuong_ep_ket_hon_hoac_ly_hon", "ket_hon_gia_tao_de_dat_muc_dich_khac", "ly_hon_gia_tao_de_tron_nghia_vu"],
     "quy_dinh_tao_hon": ["to_chuc_lay_vo_chong_cho_nguoi_chua_du_tuoi", "duy_tri_quan_he_vo_chong_voi_nguoi_chua_du_tuoi_sau_ban_an", "dieu_kien_da_bi_xu_phat_vphc_ma_con_vi_pham"],
     "quy_dinh_mot_vo_mot_chong": ["ket_hon_khi_dang_co_vo_chong", "chung_song_voi_nguoi_khac_khi_dang_co_vo_chong", "chung_song_voi_nguoi_biet_ro_dang_co_vo_chong", "mot_vo_mot_chong_lam_quan_he_hon_nhan_dan_den_ly_hon", "mot_vo_mot_chong_lam_vo_chong_con_tu_sat", "mot_vo_mot_chong_khong_chap_hanh_quyet_dinh_toa"],
@@ -191,7 +231,7 @@ _BAO_GOM: dict[str, list[str]] = {
     "quy_dinh_quan_he_hon_nhan_bi_cam_vphc": ["ket_hon_chung_song_quan_he_thong_gia_nuoi_duong_cu", "ket_hon_chung_song_cung_dong_mau_truc_he_hoac_ba_doi", "ket_hon_chung_song_cha_me_nuoi_con_nuoi"],
     "quy_dinh_toi_loan_luan": ["giao_cau_voi_nguoi_cung_dong_mau_truc_he_hoac_anh_chi_em"],
     "quy_dinh_ket_hon_ly_hon_gia_tao": ["ket_hon_gia_tao_de_dat_muc_dich_khac", "ly_hon_gia_tao_de_tron_nghia_vu", "bien_phap_nop_lai_loi_bat_hop_phap"],
-    "quy_dinh_sinh_con_mang_thai_ho_thuong_mai": ["sinh_con_ho_tro_vi_muc_dich_thuong_mai", "thuc_hien_sinh_san_vo_tinh", "mang_thai_ho_vi_muc_dich_thuong_mai", "to_chuc_mang_thai_ho_vi_muc_dich_thuong_mai"],
+    "quy_dinh_sinh_con_mang_thai_ho_thuong_mai": ["sinh_con_ho_tro_vi_muc_dich_thuong_mai", "thuc_hien_sinh_san_vo_tinh", "lua_chon_gioi_tinh_thai_nhi", "mang_thai_ho_vi_muc_dich_thuong_mai", "to_chuc_mang_thai_ho_vi_muc_dich_thuong_mai"],
     "quy_dinh_vi_pham_giam_ho": ["tron_tranh_khong_thuc_hien_nghia_vu_giam_ho", "loi_dung_giam_ho_de_truc_loi", "loi_dung_giam_ho_xam_pham_tinh_duc_boc_lot"],
     "quy_dinh_vi_pham_nuoi_con_nuoi": ["khai_sai_de_dang_ky_nuoi_con_nuoi", "phan_biet_doi_xu_con_de_con_nuoi", "khong_bao_cao_tinh_hinh_con_nuoi_trong_nuoc", "tay_xoa_giay_to_nuoi_con_nuoi", "loi_dung_cho_con_nuoi_vi_pham_dan_so", "loi_dung_lam_con_nuoi_de_huong_uu_dai", "mua_chuoc_ep_buoc_de_co_dong_y_cho_con_nuoi", "loi_dung_cho_nhan_gioi_thieu_con_nuoi_de_truc_loi", "loi_dung_nhan_con_nuoi_de_boc_lot"],
     "quy_dinh_van_phong_con_nuoi_nuoc_ngoai": ["tay_xoa_ho_so_giay_phep_van_phong_con_nuoi", "khong_thong_bao_cham_dut_van_phong_con_nuoi", "vi_pham_bao_cao_so_sach_van_phong_con_nuoi", "thay_doi_nguoi_dung_dau_van_phong_con_nuoi_chua_duoc_phep", "gioi_thieu_tre_em_lam_con_nuoi_trai_phap_luat", "cho_thue_muon_giay_phep_van_phong_con_nuoi", "su_dung_giay_phep_van_phong_con_nuoi_khac", "van_phong_con_nuoi_hoat_dong_khong_du_dieu_kien", "van_phong_con_nuoi_vi_pham_phi_loi_nhuan"],

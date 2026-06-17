@@ -13,6 +13,10 @@ from adapter.cypher_templates.xu_phat_vi_pham._common import (
     assemble_semantic_viz_from_trace_prefix,
     should_keep_whitelist,
 )
+from adapter.cypher_templates.xu_phat_vi_pham._hngd_dieu5 import (
+    TEMPLATE_BROAD_DIEU5,
+    dieu5_for_leaf,
+)
 
 BROAD = frozenset({"tong_quat", "khong_ro", "tat_ca", "chua_ro"})
 
@@ -145,6 +149,11 @@ def make_parent_leaf_template(
             "khong_ro",
         )
         wl = che_tai_whitelist(lct, vphc_whitelist, hs_whitelist) if use_wl else []
+        wl = list(wl) + dieu5_for_leaf(leaf_id)
+        broad_d5 = TEMPLATE_BROAD_DIEU5.get(name, [])
+        if use_wl and broad_d5:
+            wl = list(wl) + broad_d5
+        wl = list(dict.fromkeys(wl))
         out: dict[str, Any] = {
             router_field: rp,
             "leaf_id": leaf_id,

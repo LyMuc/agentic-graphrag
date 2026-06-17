@@ -332,6 +332,7 @@ def _run_template_sync(
 ) -> dict[str, Any] | None:
     runtime_params = template.build_params(params)
     runtime_params["target_date"] = target_date
+    runtime_params["query_date"] = _today_str()
     print(f"[Template:{template.name}] params={runtime_params}")
     try:
         records, _, _ = driver.execute_query(template.cypher, **runtime_params)
@@ -393,6 +394,7 @@ async def quan_he_hon_nhan_co_yeu_to_nuoc_ngoai(query: str) -> dict[str, Any]:
     ):
         runtime_params = template.build_params(params)
         runtime_params["target_date"] = target_date
+        runtime_params["query_date"] = _today_str()
         debug_text = _format_retrieval_debug(
             template_name=template.name,
             reason=choice.reason,
@@ -430,6 +432,7 @@ async def quan_he_hon_nhan_co_yeu_to_nuoc_ngoai(query: str) -> dict[str, Any]:
             continue
         runtime_params = template.build_params(params)
         runtime_params["target_date"] = target_date
+        runtime_params["query_date"] = _today_str()
         lazy_sources.append(
             {
                 "topic": "quan_he_hon_nhan_co_yeu_to_nuoc_ngoai",

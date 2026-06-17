@@ -31,6 +31,7 @@ from adapter.cypher_templates.xu_phat_vi_pham.tiet_lo_thong_tin_va_bang_gia impo
 from adapter.cypher_templates.xu_phat_vi_pham.loi_dung_hoat_dong_phong_chong_bao_luc import loi_dung_hoat_dong_phong_chong_bao_luc
 from adapter.cypher_templates.xu_phat_vi_pham.vi_pham_dang_ky_co_so_tro_giup import vi_pham_dang_ky_co_so_tro_giup
 from adapter.cypher_templates.xu_phat_vi_pham.vi_pham_cam_tiep_xuc import vi_pham_cam_tiep_xuc
+from adapter.cypher_templates.xu_phat_vi_pham.hanh_vi_bi_cam_hngd_tong_quat import hanh_vi_bi_cam_hngd_tong_quat
 
 XU_PHAT_VI_PHAM_REGISTRY = TemplateRegistry(topic="xu_phat_vi_pham")
 XU_PHAT_VI_PHAM_REGISTRY.register(xu_phat_ket_hon_ly_hon_tong_quat)
@@ -61,6 +62,7 @@ XU_PHAT_VI_PHAM_REGISTRY.register(tiet_lo_thong_tin_va_bang_gia)
 XU_PHAT_VI_PHAM_REGISTRY.register(loi_dung_hoat_dong_phong_chong_bao_luc)
 XU_PHAT_VI_PHAM_REGISTRY.register(vi_pham_dang_ky_co_so_tro_giup)
 XU_PHAT_VI_PHAM_REGISTRY.register(vi_pham_cam_tiep_xuc)
+XU_PHAT_VI_PHAM_REGISTRY.register(hanh_vi_bi_cam_hngd_tong_quat)
 
 __all__ = [
     "XU_PHAT_VI_PHAM_REGISTRY",
@@ -92,4 +94,5 @@ __all__ = [
     "loi_dung_hoat_dong_phong_chong_bao_luc",
     "vi_pham_dang_ky_co_so_tro_giup",
     "vi_pham_cam_tiep_xuc",
+    "hanh_vi_bi_cam_hngd_tong_quat",
 ]

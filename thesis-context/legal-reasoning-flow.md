@@ -26,8 +26,9 @@ Implement trong `adapter/cypher_templates/*/_common.py`, dùng snippet chung t�
 3. `THAY_THE_BOI` có hướng (moi/cu) — lọc theo `$target_date`.
 4. `DUOC_SUA_DOI_BOI`, `HUONG_DAN_BOI`, mở rộng chi tiết hướng dẫn.
 5. `THAM_CHIEU_DEN` / ancestor collect (`_context_tho_common.py`).
-6. `quy_dinh_hien_hanh_doi_chieu` (thay thế về phía tương lai).
-7. (Optional) `can_cu_sap_hieu_luc` khi không có mốc thời gian user.
+6. `quy_dinh_hien_hanh_doi_chieu` — văn bản thay thế đã có hiệu lực tại `$query_date` (ngày đặt câu hỏi).
+7. `lien_ket_hien_hanh` — cặp `(id_hien_hanh, id_duoc_thay_the)` cho từng quan hệ thay thế hiện hành.
+8. `can_cu_sap_hieu_luc` — văn bản chưa có hiệu lực tại `$query_date`; `$target_date` chỉ lọc căn cứ áp dụng theo mốc sự kiện.
 
 ## Giai đoạn 2 — Chuẩn hóa (`chuan_hoa_Context_cho_LLM`)
 

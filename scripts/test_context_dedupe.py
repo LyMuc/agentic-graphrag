@@ -22,6 +22,15 @@ DIEU_SAP = "Luat_Test_2026_Dieu_16"
 LUAT_MOI = "Luat_Test_2026"
 
 
+def _mock_tvpl_links(all_links: dict):
+    """Mock _fetch_tvpl_links — chỉ trả link cho ID được yêu cầu."""
+
+    def _fetch(dieu_ids: set[str]) -> dict[str, str]:
+        return {k: v for k, v in all_links.items() if k in dieu_ids}
+
+    return _fetch
+
+
 def _run(label: str, context_tho: dict, checks: list[tuple[str, bool]]) -> None:
     record = {"Context_Tho": context_tho}
     text = chuan_hoa_Context_cho_LLM(record, "2026-06-01", False)
@@ -145,7 +154,7 @@ def test_sap_hieu_luc_content_deduped_link_kept() -> None:
 
 
 def test_van_ban_thay_the_filtered_by_registry() -> None:
-    """Văn bản thay thế trùng node đã trong registry bị loại."""
+    """Văn bản thay thế trùng node đã trong registry bị loại; giữ cặp có liên kết rõ."""
     record = {
         "Context_Tho": {
             "can_cu_chinh": [{
@@ -154,6 +163,10 @@ def test_van_ban_thay_the_filtered_by_registry() -> None:
                 "cap_bac": 1,
             }],
             "quy_dinh_hien_hanh_doi_chieu": [LUAT_MOI, "Luat_Test_2014"],
+            "lien_ket_hien_hanh": [
+                {"id_hien_hanh": LUAT_MOI, "id_duoc_thay_the": "Luat_Test_2014_Dieu_38"},
+                {"id_hien_hanh": "NghiDinh_Test_2026_Dieu_61", "id_duoc_thay_the": "NghiDinh_Test_2020_Dieu_61"},
+            ],
         }
     }
     text = chuan_hoa_Context_cho_LLM(record, "2026-06-01", False)
@@ -161,8 +174,8 @@ def test_van_ban_thay_the_filtered_by_registry() -> None:
     assert marker in text, "Thiếu section văn bản thay thế"
     thay_the_block = text.split(marker, 1)[1].split("\n---", 1)[0]
     assert LUAT_MOI not in thay_the_block, f"ID trùng registry vẫn còn: {thay_the_block!r}"
-    assert "Luat_Test_2014" in thay_the_block, f"ID thay thế hợp lệ bị mất: {thay_the_block!r}"
-    print("  [OK] van_ban_thay_the: registry lọc đúng trong section thay thế")
+    assert "NghiDinh_Test_2026_Dieu_61 thay thế [NghiDinh_Test_2020_Dieu_61]" in thay_the_block
+    print("  [OK] van_ban_thay_the: registry lọc đúng + cặp thay thế hiển thị")
 
 
 def test_collect_dieu_ids_rollup() -> None:
@@ -220,6 +233,69 @@ def test_bang_link_section_dieu_only() -> None:
     print("  [OK] bang_link: chỉ cấp Điều trong section link")
 
 
+def test_bang_link_includes_replacement_when_section_shown() -> None:
+    """BẢNG LINK gồm id_hien_hanh khi section VĂN BẢN THAY THẾ được in."""
+    nd109 = "NghiDinh_109_2026_ND_CP_Dieu_61"
+    nd82_old = "NghiDinh_82_2020_ND_CP_Dieu_58"
+    fake_links = {
+        DIEU_X: "https://example.test/?anchor=dieu_38",
+        nd109: "https://example.test/?anchor=dieu_61",
+        nd82_old: "https://example.test/?anchor=dieu_58",
+    }
+    with patch("utils.utils._fetch_tvpl_links", side_effect=_mock_tvpl_links(fake_links)):
+        record = {
+            "Context_Tho": {
+                "can_cu_chinh": [{
+                    "id_thuc_te_ap_dung": KHOAN_X,
+                    "noidung": "Khoản 1",
+                    "cap_bac": 1,
+                }],
+                "lien_ket_hien_hanh": [{
+                    "id_hien_hanh": nd109,
+                    "id_duoc_thay_the": nd82_old,
+                }],
+            }
+        }
+        text = chuan_hoa_Context_cho_LLM(record, "2021-12-31", True)
+
+    link_block = text.split("--- BẢNG LINK TRÍCH DẪN (TVPL) ---")[1]
+    assert f"[{nd109}] → {fake_links[nd109]}" in link_block
+    assert nd82_old not in link_block, "Không link văn bản cũ bị thay thế"
+    print("  [OK] bang_link: văn bản thay thế mới có link, văn bản cũ không")
+
+
+def test_bang_link_excludes_router_seed() -> None:
+    """BẢNG LINK không lấy id_goc_tu_router (seed) khi id_thuc_te_ap_dung khác."""
+    nd109_k1 = "NghiDinh_109_2026_ND_CP_Dieu_61_Khoan_1"
+    nd109_dieu = "NghiDinh_109_2026_ND_CP_Dieu_61"
+    nd82_dieu = "NghiDinh_82_2020_ND_CP_Dieu_58"
+    fake_links = {
+        nd109_dieu: "https://example.test/?anchor=dieu_61",
+        nd82_dieu: "https://example.test/?anchor=dieu_58",
+    }
+    with patch("utils.utils._fetch_tvpl_links", side_effect=_mock_tvpl_links(fake_links)):
+        record = {
+            "Context_Tho": {
+                "can_cu_chinh": [{
+                    "id_goc_tu_router": nd82_dieu,
+                    "id_thuc_te_ap_dung": nd109_k1,
+                    "noidung": "Phạt tiền tảo hôn",
+                    "cap_bac": 5,
+                }],
+                "lien_ket_hien_hanh": [{
+                    "id_hien_hanh": "NghiDinh_109_2026_ND_CP_Dieu_61",
+                    "id_duoc_thay_the": nd82_dieu,
+                }],
+            }
+        }
+        text = chuan_hoa_Context_cho_LLM(record, "2026-06-16", False)
+
+    link_block = text.split("--- BẢNG LINK TRÍCH DẪN (TVPL) ---")[1]
+    assert nd109_dieu in link_block
+    assert nd82_dieu not in link_block
+    print("  [OK] bang_link: loại seed router và văn bản cũ không in trong căn cứ")
+
+
 def test_bang_link_empty_when_no_links() -> None:
     """Không có link Neo4j → không append section BẢNG LINK."""
     with patch("utils.utils._fetch_tvpl_links", return_value={}):
@@ -248,6 +324,8 @@ def main() -> None:
         test_van_ban_thay_the_filtered_by_registry,
         test_collect_dieu_ids_rollup,
         test_bang_link_section_dieu_only,
+        test_bang_link_includes_replacement_when_section_shown,
+        test_bang_link_excludes_router_seed,
         test_bang_link_empty_when_no_links,
         test_format_bang_link_trich_dan,
     ]

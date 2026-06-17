@@ -153,6 +153,25 @@ def _format_lien_ket_sap_hieu_luc(pairs: list) -> str:
     return ", ".join(parts)
 
 
+def _format_lien_ket_hien_hanh(pairs: list) -> str:
+    """Ghép các cặp (văn bản hiện hành thay thế, căn cứ cũ) — gộp cấp Điều."""
+    seen = set()
+    parts: list[str] = []
+    for pair in pairs or []:
+        if not isinstance(pair, dict):
+            continue
+        id_hh = _dieu_level_id(pair.get("id_hien_hanh"))
+        id_goc = _dieu_level_id(pair.get("id_duoc_thay_the"))
+        if not id_hh or not id_goc:
+            continue
+        key = (id_hh, id_goc)
+        if key in seen:
+            continue
+        seen.add(key)
+        parts.append(f"{id_hh} thay thế [{id_goc}]")
+    return ", ".join(parts)
+
+
 def _format_lien_ket_huong_dan(pairs: list) -> str:
     """Ghép các cặp (văn bản hướng dẫn, căn cứ được hướng dẫn) thành một dòng — gộp cấp Điều."""
     seen = set()
@@ -197,28 +216,85 @@ def _to_dieu_id(node_id) -> str | None:
 
 
 def _collect_dieu_ids_from_context(data: dict) -> set[str]:
-    """Gom ID Điều (dedupe) từ mọi mục trong Context_Tho."""
-    raw_ids: list[str] = []
+    """Gom ID Điều từ Context_Tho thô (dùng cho test/diagnostic, không cho BẢNG LINK)."""
+    raw_ids: list[str | None] = []
+
+    def _add(*values) -> None:
+        raw_ids.extend(values)
+
     for item in data.get("can_cu_chinh", []) or []:
         if not isinstance(item, dict):
             continue
-        raw_ids.append(item.get("id_thuc_te_ap_dung"))
-        raw_ids.append(item.get("id_sua_doi"))
+        _add(item.get("id_thuc_te_ap_dung"), item.get("id_goc_tu_router"), item.get("id_sua_doi"))
     for item in data.get("can_cu_huong_dan", []) or []:
         if not isinstance(item, dict):
             continue
-        raw_ids.append(item.get("id"))
-        raw_ids.append(item.get("id_sua_doi"))
+        _add(item.get("id"), item.get("id_sua_doi"))
     for item in data.get("can_cu_bo_tro", []) or []:
         if isinstance(item, dict):
-            raw_ids.append(item.get("id"))
+            _add(item.get("id"))
     for item in data.get("can_cu_mau_thuan", []) or []:
         if isinstance(item, dict):
-            raw_ids.append(item.get("id_nguon"))
-            raw_ids.append(item.get("id_dich"))
+            _add(item.get("id_nguon"), item.get("id_dich"))
     for item in data.get("can_cu_sap_hieu_luc", []) or []:
         if isinstance(item, dict):
-            raw_ids.append(item.get("id"))
+            _add(item.get("id"))
+    for node_id in data.get("quy_dinh_hien_hanh_doi_chieu", []) or []:
+        _add(node_id)
+    for pair in data.get("lien_ket_hien_hanh", []) or []:
+        if isinstance(pair, dict):
+            _add(pair.get("id_hien_hanh"), pair.get("id_duoc_thay_the"))
+    for pair in data.get("lien_ket_sap_hieu_luc", []) or []:
+        if isinstance(pair, dict):
+            _add(pair.get("id_van_ban"), pair.get("id_duoc_tac_dong"))
+    for pair in data.get("lien_ket_huong_dan", []) or []:
+        if isinstance(pair, dict):
+            _add(pair.get("id_huong_dan"), pair.get("id_duoc_huong_dan"))
+
+    dieu_ids: set[str] = set()
+    for node_id in raw_ids:
+        dieu_id = _to_dieu_id(node_id)
+        if dieu_id:
+            dieu_ids.add(dieu_id)
+    return dieu_ids
+
+
+def _collect_dieu_ids_for_bang_link(
+    *,
+    can_cu_chinh_kept: list,
+    can_cu_huong_dan_kept: list,
+    can_cu_bo_tro_kept: list,
+    mau_thuan_kept: list,
+    sap_hieu_luc_kept: list,
+    lien_ket_hien_hanh_kept: list,
+    van_ban_thay_the_ids: list,
+) -> set[str]:
+    """Gom ID Điều chỉ từ căn cứ đã qua dedupe — khớp nội dung gửi LLM."""
+    raw_ids: list[str | None] = []
+
+    def _add(*values) -> None:
+        raw_ids.extend(values)
+
+    for item in can_cu_chinh_kept:
+        if isinstance(item, dict):
+            _add(item.get("id_thuc_te_ap_dung"), item.get("id_sua_doi"))
+    for item in can_cu_huong_dan_kept:
+        if isinstance(item, dict):
+            _add(item.get("id"), item.get("id_sua_doi"))
+    for item in can_cu_bo_tro_kept:
+        if isinstance(item, dict):
+            _add(item.get("id"))
+    for item in mau_thuan_kept:
+        if isinstance(item, dict):
+            _add(item.get("id_nguon"), item.get("id_dich"))
+    for item in sap_hieu_luc_kept:
+        if isinstance(item, dict):
+            _add(item.get("id"))
+    for pair in lien_ket_hien_hanh_kept:
+        if isinstance(pair, dict):
+            _add(pair.get("id_hien_hanh"))
+    for node_id in van_ban_thay_the_ids or []:
+        _add(node_id)
 
     dieu_ids: set[str] = set()
     for node_id in raw_ids:
@@ -229,7 +305,7 @@ def _collect_dieu_ids_from_context(data: dict) -> set[str]:
 
 
 def _fetch_tvpl_links(dieu_ids: set[str]) -> dict[str, str]:
-    """Tra link TVPL trên node DieuLuat theo batch."""
+    """Tra link TVPL trên node pháp lý (ưu tiên cấp Điều) theo batch."""
     if not dieu_ids:
         return {}
     try:
@@ -237,8 +313,10 @@ def _fetch_tvpl_links(dieu_ids: set[str]) -> dict[str, str]:
     except ImportError:
         return {}
     cypher = """
-    MATCH (n:DieuLuat)
-    WHERE n.id IN $ids AND n.link IS NOT NULL
+    MATCH (n)
+    WHERE (n:DieuLuat OR n:DieuKhoanLuat OR n:DieuKhoanDiemLuat)
+      AND n.id IN $ids
+      AND n.link IS NOT NULL
     RETURN n.id AS id, n.link AS link
     """
     try:
@@ -302,6 +380,39 @@ def _filter_van_ban_thay_the_thuc(
     if flag_lich_su:
         return raw
     return [i for i in raw if i not in _seen_node_ids(seen_provisions)]
+
+
+def _filter_lien_ket_hien_hanh(
+    pairs: list,
+    seen_provisions: set,
+    flag_lich_su: str,
+) -> list[dict]:
+    """Lọc cặp thay thế hiện hành — bỏ cặp trùng provision đã có trong registry."""
+    out: list[dict] = []
+    seen_pair: set[tuple[str, str]] = set()
+    for pair in pairs or []:
+        if not isinstance(pair, dict):
+            continue
+        id_hh = pair.get("id_hien_hanh")
+        id_goc = pair.get("id_duoc_thay_the")
+        if not id_hh or not id_goc:
+            continue
+        key = (str(id_hh), str(id_goc))
+        if key in seen_pair:
+            continue
+        if not flag_lich_su and str(id_hh) in _seen_node_ids(seen_provisions):
+            continue
+        # So khớp cấp Điều (Khoản/Điểm → Điều) — tắt: không cần ẩn section khi id_hien_hanh
+        # trùng provision đã có ở cấp con; chỉ giữ lọc ID node khớp chính xác ở trên.
+        # seen_nodes = _seen_node_ids(seen_provisions)
+        # seen_dieu = {_dieu_level_id(n) for n in seen_nodes if _dieu_level_id(n)}
+        # if not flag_lich_su:
+        #     id_hh_dieu = _dieu_level_id(id_hh)
+        #     if str(id_hh) in seen_nodes or (id_hh_dieu and id_hh_dieu in seen_dieu):
+        #         continue
+        seen_pair.add(key)
+        out.append(pair)
+    return out
 
 
 def _collect_hieu_luc(items, doc_hieu_luc_map):
@@ -451,22 +562,42 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
         context_sach["FLAG_CANH_BAO_THU_TU_UU_TIEN"] = "CÓ_NHIỀU_CẤP_BẬC_PHÁP_LÝ"
 
     quy_dinh_hien_hanh = data.get('quy_dinh_hien_hanh_doi_chieu', []) if 'quy_dinh_hien_hanh_doi_chieu' in data else []
+    lien_ket_hh_raw = data.get("lien_ket_hien_hanh", []) if "lien_ket_hien_hanh" in data else []
+    lien_ket_hh = _filter_lien_ket_hien_hanh(
+        lien_ket_hh_raw,
+        seen_provisions,
+        context_sach["FLAG_CANH_BAO_LICH_SU"],
+    )
+    context_sach["lien_ket_hien_hanh"] = lien_ket_hh
     context_sach["danh_sach_van_ban_thay_the"] = _filter_van_ban_thay_the_thuc(
         quy_dinh_hien_hanh,
         seen_provisions,
         context_sach["FLAG_CANH_BAO_LICH_SU"],
     )
-    if is_user_provide_date and luat_da_het_hieu_luc and context_sach["danh_sach_van_ban_thay_the"]:
-        luat_moi = ", ".join(context_sach["danh_sach_van_ban_thay_the"])
-        context_sach["FLAG_CANH_BAO_LICH_SU"] = f"ÁP DỤNG LUẬT CŨ TẠI THỜI ĐIỂM {target_date}. LUẬT HIỆN HÀNH BÂY GIỜ LÀ: {luat_moi}"
+    if is_user_provide_date and luat_da_het_hieu_luc:
+        if lien_ket_hh:
+            luat_moi = ", ".join(
+                f"{_dieu_level_id(p['id_hien_hanh'])} thay thế [{_dieu_level_id(p['id_duoc_thay_the'])}]"
+                for p in lien_ket_hh
+            )
+        elif context_sach["danh_sach_van_ban_thay_the"]:
+            luat_moi = ", ".join(context_sach["danh_sach_van_ban_thay_the"])
+        else:
+            luat_moi = ""
+        if luat_moi:
+            context_sach["FLAG_CANH_BAO_LICH_SU"] = (
+                f"ÁP DỤNG LUẬT CŨ TẠI THỜI ĐIỂM {target_date}. LUẬT HIỆN HÀNH BÂY GIỜ LÀ: {luat_moi}"
+            )
 
     # 5. VĂN BẢN SẮP CÓ HIỆU LỰC (chỉ khi không nêu mốc thời gian)
+    can_cu_sap_kept: list = []
     can_cu_sap_raw = data.get("can_cu_sap_hieu_luc", []) if "can_cu_sap_hieu_luc" in data else []
     if not is_user_provide_date and can_cu_sap_raw:
         context_sach["FLAG_VAN_BAN_SAP_HIEU_LUC"] = "CÓ_VĂN_BẢN_SẮP_CÓ_HIỆU_LỰC"
         for sap in _filter_sap_hieu_luc_noi_dung(can_cu_sap_raw):
             if not _register_provision(seen_provisions, sap):
                 continue
+            can_cu_sap_kept.append(sap)
             context_sach["danh_sach_sap_hieu_luc"].append({
                 "cap_bac": sap.get("cap_bac"),
                 "text": f"[{sap['id']}]: {sap.get('noidung') or ''}",
@@ -535,10 +666,17 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
             for idx, item in enumerate(sap_sorted, 1):
                 final_context_string += f"{idx}. {item['text']}\n"
 
-    if context_sach["danh_sach_van_ban_thay_the"]:
+    show_van_ban_thay_the = bool(
+        context_sach["lien_ket_hien_hanh"] or context_sach["danh_sach_van_ban_thay_the"]
+    )
+    if show_van_ban_thay_the:
         final_context_string += "\n--- VĂN BẢN THAY THẾ ---\n"
-        for idx, item in enumerate(context_sach["danh_sach_van_ban_thay_the"]):
-            final_context_string += f"{idx+1}. {item}\n"
+        lien_ket_hh_line = _format_lien_ket_hien_hanh(context_sach["lien_ket_hien_hanh"])
+        if lien_ket_hh_line:
+            final_context_string += f"{lien_ket_hh_line}\n"
+        elif context_sach["danh_sach_van_ban_thay_the"]:
+            for idx, item in enumerate(context_sach["danh_sach_van_ban_thay_the"]):
+                final_context_string += f"{idx+1}. {item}\n"
 
     if context_sach["danh_sach_mau_thuan"]:
         final_context_string += "\n--- THÔNG TIN MÂU THUẪN PHÁP LÝ ---\n"
@@ -551,7 +689,18 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
                 f"[{item['id_dich']}]: {item['noidung_dich']}\n"
             )
 
-    bang_link = _format_bang_link_trich_dan(_fetch_tvpl_links(_collect_dieu_ids_from_context(data)))
+    link_dieu_ids = _collect_dieu_ids_for_bang_link(
+        can_cu_chinh_kept=can_cu_chinh_kept,
+        can_cu_huong_dan_kept=can_cu_huong_dan_kept,
+        can_cu_bo_tro_kept=can_cu_bo_tro_kept,
+        mau_thuan_kept=context_sach["danh_sach_mau_thuan"],
+        sap_hieu_luc_kept=can_cu_sap_kept,
+        lien_ket_hien_hanh_kept=context_sach["lien_ket_hien_hanh"] if show_van_ban_thay_the else [],
+        van_ban_thay_the_ids=(
+            context_sach["danh_sach_van_ban_thay_the"] if show_van_ban_thay_the else []
+        ),
+    )
+    bang_link = _format_bang_link_trich_dan(_fetch_tvpl_links(link_dieu_ids))
     if bang_link:
         final_context_string += f"\n{bang_link}"
 
