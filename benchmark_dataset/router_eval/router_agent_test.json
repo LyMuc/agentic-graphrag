@@ -299,27 +299,31 @@
     ],
     "passed": false,
     "final_tools": [
-      "che_do_tai_san_cua_vo_chong"
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
     ],
     "policy_retrievers": [
-      "che_do_tai_san_cua_vo_chong"
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
     ],
-    "policy_intervened": true,
-    "rejected_tools": {
-      "chia_tai_san_sau_ly_hon": "No required/support trigger match."
-    },
-    "policy_precision": 1.0,
+    "policy_intervened": false,
+    "rejected_tools": {},
+    "policy_precision": 0.5,
     "policy_recall": 0.5,
-    "policy_f1": 0.6667,
+    "policy_f1": 0.5,
     "policy_error_types": [
-      "Thiếu"
+      "Thiếu",
+      "Thừa"
     ],
     "policy_missing": [
       "quy_dinh_chung_khai_niem_phap_ly"
     ],
-    "policy_extra": [],
+    "policy_extra": [
+      "chia_tai_san_sau_ly_hon"
+    ],
     "policy_actual_topic_keys": [
-      "che_do_tai_san_cua_vo_chong"
+      "che_do_tai_san_cua_vo_chong",
+      "chia_tai_san_sau_ly_hon"
     ],
     "policy_passed": false
   },

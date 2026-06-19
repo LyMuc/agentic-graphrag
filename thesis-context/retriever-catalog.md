@@ -3,7 +3,7 @@
 Map tool name (Router) → file Python. Phần bảng dưới **tự sinh** từ code khi chạy `scripts/sync-thesis-context.ps1`.
 
 <!-- BEGIN AUTO-GENERATED:sync_thesis_context.py -->
-_Cập nhật lúc 2026-06-15 16:10 UTC_
+_Cập nhật lúc 2026-06-17 14:54 UTC_
 
 | Tool | topic_label | domain_group | File retriever | Templates |
 |---|---|---|---|---|

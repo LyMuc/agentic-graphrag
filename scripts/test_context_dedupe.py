@@ -135,13 +135,13 @@ def test_sap_hieu_luc_content_deduped_link_kept() -> None:
             "can_cu_sap_hieu_luc": [{
                 "id": DIEU_SAP,
                 "noidung": "Điều 16 sắp HL",
-                "loai_tac_dong": "THAY_THE",
+                "loai_tac_dong": "THAY_THE_BOI",
                 "cap_bac": 1,
             }],
             "lien_ket_sap_hieu_luc": [{
                 "id_van_ban": DIEU_SAP,
                 "id_duoc_tac_dong": DIEU_X,
-                "loai_tac_dong": "THAY_THE",
+                "loai_tac_dong": "THAY_THE_BOI",
             }],
         },
         [

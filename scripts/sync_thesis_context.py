@@ -73,7 +73,7 @@ def _extract_relationships() -> list[str]:
     for path in source_files:
         text = path.read_text(encoding="utf-8")
         relationship_exprs = re.findall(
-            r"\[:([A-Z][A-Z0-9_|]*)(?:\*[^\]]*)?\]",
+            r"\[(?::|[A-Za-z_][A-Za-z0-9_]*:)([A-Z][A-Z0-9_|]*)(?:\*[^\]]*)?\]",
             text,
         )
         for expression in relationship_exprs:

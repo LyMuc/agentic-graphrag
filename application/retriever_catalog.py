@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib
 from dataclasses import dataclass, replace
 from typing import Any, Iterable
 
@@ -12,6 +13,85 @@ DIRECT_TOOLS = {"respond", "text2cypher"}
 EXTRA_ALIASES: dict[str, tuple[str, ...]] = {
     "cap_duong": ("nghia_vu_cap_duong",),
 }
+
+TERM_MAPPING_TRIGGER_SOURCES: dict[str, tuple[str, tuple[str, ...]]] = {
+    "cap_duong": (
+        "adapter.cypher_templates.cap_duong.term_mapping",
+        (
+            "quan_he",
+            "boi_canh",
+            "tinh_trang_nguoi_duoc_cap_duong",
+            "khia_canh",
+            "khia_canh_muc",
+            "ly_do_cham_dut",
+            "tinh_trang_thuc_hien",
+            "doi_tuong_nhan",
+            "doi_tuong_duoc_cap_duong",
+        ),
+    ),
+    "chia_tai_san_sau_ly_hon": (
+        "adapter.cypher_templates.chia_tai_san_sau_ly_hon.term_mapping",
+        (
+            "khia_canh",
+            "loai_tai_san",
+            "nguon_goc",
+            "loai_nghia_vu",
+            "nguoi_thu_ba",
+            "muc_dich_no",
+            "thoi_diem_no",
+            "loai_dat",
+            "loai_truong_hop",
+            "hanh_vi_context",
+        ),
+    ),
+    "che_do_tai_san_cua_vo_chong": (
+        "adapter.cypher_templates.tai_san.term_mapping",
+        (
+            "loai_tai_san",
+            "loai_giao_dich",
+            "loai_nghia_vu",
+        ),
+    ),
+    "dai_dien_trach_nhiem_vo_chong": (
+        "adapter.cypher_templates.dai_dien_trach_nhiem_vo_chong.term_mapping",
+        (
+            "loai_giao_dich",
+            "loai_tai_san",
+            "loai_nghia_vu",
+            "boi_canh",
+            "muc_dich_giao_dich",
+        ),
+    ),
+    "cha_me_con_sau_ly_hon": (
+        "adapter.cypher_templates.cha_me_con_sau_ly_hon.term_mapping",
+        (
+            "khia_canh",
+            "doi_tuong_con",
+            "nguoi_truc_tiep_nuoi",
+            "nguyen_vong_con",
+            "hanh_vi_cha_me",
+            "thay_doi_nguoi_nuoi",
+        ),
+    ),
+}
+
+BROAD_TERM_MAPPING_PHRASES = frozenset(
+    {
+        "bán",
+        "bệnh",
+        "chia",
+        "cho",
+        "chết",
+        "đất",
+        "lỗi",
+        "nhà",
+        "nuôi",
+        "sử dụng",
+        "tặng",
+    }
+)
+
+MAX_TERM_MAPPING_PHRASES_PER_RETRIEVER = 80
 
 
 @dataclass(frozen=True)
@@ -384,7 +464,7 @@ _RAW_RETRIEVER_SPECS: dict[str, RetrieverSpec] = {
                         "ở với bố", 
                         "ở với mẹ", 
                     ),
-                    ("ly hôn", "sau ly hôn", "khi ly hôn", "cha mẹ", "cha đã chết", "cha đã mất", "mẹ đã mất", "mẹ đã chết", "hạn chế quyền cha mẹ", "hạn chế quyền cha", "hạn chế quyền mẹ", "hạn chế quyền cha mẹ đối với con", "nuôi"),
+                    ("ly hôn", "sau ly hôn", "khi ly hôn", "cha mẹ", "cha đã chết", "cha đã mất", "mẹ đã mất", "mẹ đã chết"),
                 ),
                 "Cau hoi ve nuoi duong/cham soc/tham nom con sau ly hon.",
             ),
@@ -704,15 +784,103 @@ _RAW_RETRIEVER_SPECS: dict[str, RetrieverSpec] = {
 }
 
 
-def _enrich_primary_specs() -> dict[str, RetrieverSpec]:
-    """Gắn router schema từ adapter vào spec gốc (key = spec.name).
+def _term_mapping_phrase_is_specific(phrase: str) -> bool:
+    """Kiểm tra một phrase term_mapping có đủ cụ thể để làm support trigger.
+
+    Args:
+        phrase: Cụm từ phổ thông lấy từ COMMON_TO_LEGAL_TERMS.
 
     Returns:
-        Dict keyed by tên retriever chính.
+        True nếu phrase có thể dùng làm trigger bổ sung; False nếu phrase quá ngắn,
+        quá rộng hoặc rỗng sau chuẩn hóa.
+    """
+    prepared_phrase = prepare_question(phrase)
+    if not prepared_phrase or prepared_phrase in BROAD_TERM_MAPPING_PHRASES:
+        return False
+    words = prepared_phrase.split()
+    return len(words) >= 2
+
+
+def _load_term_mapping_phrases(module_path: str, fields: tuple[str, ...]) -> tuple[str, ...]:
+    """Nạp phrase đủ cụ thể từ COMMON_TO_LEGAL_TERMS của một module mapping.
+
+    Args:
+        module_path: Python import path tới module term_mapping.
+        fields: Các field mapping được phép lấy phrase cho retriever tương ứng.
+
+    Returns:
+        Tuple phrase không trùng, đã lọc độ cụ thể và giới hạn số lượng; trả tuple
+        rỗng nếu module/COMMON_TO_LEGAL_TERMS không tồn tại hoặc field không phù hợp.
+    """
+    try:
+        module = importlib.import_module(module_path)
+    except Exception:
+        return ()
+
+    mapping = getattr(module, "COMMON_TO_LEGAL_TERMS", None)
+    if not isinstance(mapping, dict):
+        return ()
+
+    phrases: list[str] = []
+    seen: set[str] = set()
+    for field in fields:
+        field_mapping = mapping.get(field)
+        if not isinstance(field_mapping, dict):
+            continue
+        for raw_phrase in field_mapping:
+            phrase = str(raw_phrase or "").strip()
+            normalized = prepare_question(phrase)
+            if normalized in seen or not _term_mapping_phrase_is_specific(phrase):
+                continue
+            seen.add(normalized)
+            phrases.append(phrase)
+
+    phrases.sort(key=lambda item: (-len(prepare_question(item).split()), prepare_question(item)))
+    return tuple(phrases[:MAX_TERM_MAPPING_PHRASES_PER_RETRIEVER])
+
+
+def _enrich_specs_with_term_mapping_triggers(
+    specs: dict[str, RetrieverSpec],
+) -> dict[str, RetrieverSpec]:
+    """Bổ sung support trigger từ term_mapping cho các retriever được whitelist.
+
+    Args:
+        specs: Dict RetrieverSpec đã có router_description_schema nếu có.
+
+    Returns:
+        Dict RetrieverSpec mới, trong đó một số retriever có thêm support trigger
+        term_mapping; retriever không có source hoặc không có phrase hợp lệ giữ nguyên.
+    """
+    enriched: dict[str, RetrieverSpec] = dict(specs)
+    for spec_name, (module_path, fields) in TERM_MAPPING_TRIGGER_SOURCES.items():
+        spec = enriched.get(spec_name)
+        if spec is None:
+            continue
+        phrases = _load_term_mapping_phrases(module_path, fields)
+        if not phrases:
+            continue
+        trigger = _tr(
+            "term_mapping_support",
+            (phrases,),
+            "Matched curated term_mapping phrase for retriever.",
+        )
+        enriched[spec_name] = replace(
+            spec,
+            support_triggers=spec.support_triggers + (trigger,),
+        )
+    return enriched
+
+
+def _enrich_primary_specs() -> dict[str, RetrieverSpec]:
+    """Gắn router schema và support trigger bổ sung vào spec gốc.
+
+    Returns:
+        Dict keyed by tên retriever chính, đã enrich description và term_mapping.
     """
     from application.adapter_router_descriptions import enrich_specs_with_adapter_descriptions
 
-    return enrich_specs_with_adapter_descriptions(_RAW_RETRIEVER_SPECS)
+    specs = enrich_specs_with_adapter_descriptions(_RAW_RETRIEVER_SPECS)
+    return _enrich_specs_with_term_mapping_triggers(specs)
 
 
 def _build_spec_index(primary_specs: dict[str, RetrieverSpec]) -> dict[str, RetrieverSpec]:

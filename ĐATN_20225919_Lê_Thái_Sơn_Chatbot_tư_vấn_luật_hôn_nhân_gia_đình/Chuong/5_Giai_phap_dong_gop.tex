@@ -8,15 +8,60 @@ Chương này trình bày các đóng góp trọng tâm và các giải pháp k�
 
 \subsection{Dẫn dắt và giới thiệu bài toán}
 \label{subsection:5.2.1}
-Để một hệ thống chatbot có thể đưa ra câu trả lời đúng đắn cho câu hỏi của người dùng thì cần phải cung cấp cho chatbot ngữ cảnh là các điều luật, căn cứ pháp lý chính xác. Hơn nữa, trong lĩnh vực tư vấn pháp luật Việt Nam, một thách thức lớn là tính thay đổi, cập nhật và thứ bậc của văn bản quy phạm pháp luật. Một văn bản luật có thể đúng tại thời điểm ban hành nhưng lại trở nên vô hiệu hoặc bị sửa đổi tại thời điểm người dùng đặt câu hỏi. Hơn nữa, một sự kiện pháp lý xảy ra trong quá khứ (ví dụ: một vụ việc ly hôn năm 2018) đòi hỏi phải áp dụng đúng văn bản có hiệu lực tại thời điểm đó, chứ không phải văn bản hiện hành. Ngoài ra, với cùng một vấn đề pháp lý, thực tế có thể tồn tại nhiều văn bản cùng điều chỉnh; khi đó cần áp dụng nguyên tắc hiệu lực và thứ bậc của các văn bản quy phạm pháp luật.
+Để một hệ thống chatbot có thể đưa ra câu trả lời đúng đắn cho câu hỏi của người dùng thì cần phải cung cấp cho chatbot ngữ cảnh là các điều luật, căn cứ pháp lý chính xác. Vì vậy, vấn đề đầu tiên hệ thống phải giải quyết là phải có cơ chế suy luận pháp lý (legal reasoning) để tìm ra căn cứ pháp lý chính xác nhằm trả lời cho câu hỏi của người dùng.
 
-Vì vậy, đồ án đề xuất triển khai cơ chế xây dựng một Đồ thị tri thức nhằm mô hình hóa mối quan hệ giữa các thực thể pháp lý và thiết kế các truy vấn Cypher định sẵn (Cypher Templates) cho từng dạng câu hỏi để lấy về chính xác ngữ cảnh (context) là các căn cứ pháp lý để trả lời cho câu hỏi của người dùng. Không chỉ vậy, đồ thị tri thức còn giúp mô hình hóa mối quan hệ giữa các văn bản quy phạm pháp luật, như quan hệ hướng dẫn, sửa đổi bổ sung, thay thế hay bác bỏ. Từ đó giúp xây dựng cơ chế tự động kiểm tra hiệu lực theo thời gian, truy vấn các văn bản sửa đổi, hướng dẫn bổ sung và tham chiếu, đồng thời cảnh báo khi ngữ cảnh truy xuất gồm các quy định đã bị thay thế, hết hiệu lực hoặc có xung đột pháp lý. 
+Trong hệ thống văn bản pháp luật Việt Nam, một vấn đề quan trọng khác là các văn bản pháp luật có thể liên tục được thay đổi, cập nhật; giữa cán văn bản pháp luật có thể tồn tại quan hệ sửa đổi, bổ sung, thay thế, hướng dẫn, bãi bỏ hoặc thậm chí có khả năng mâu thuẫn, chồng chéo trong một số tình huống áp dụng cụ thể. Vì vậy, vấn đề thứ hai mà hệ thống cần giải quyết đó là thiết kế cơ chế kiểm tra hiệu lực và mối quan hệ giữa các văn bản viện dẫn, xử lý khả năng xung đột căn cứ pháp lý (nếu có) và cảnh báo cho người dùng về hiệu lực các căn cứ pháp lý và các căn cứ mâu thuẫn, chồng chéo (nếu có).
 
-\subsection{Giải pháp kỹ thuật: Xây dựng đồ thị tri thức cho Luật Hôn nhân và Gia đình năm 2014 và mẫu truy vấn Cypher (Cypher template) cho từng dạng câu hỏi}
+Bên cạnh đó, các cá nhân hoặc tổ chức triển khai và giám sát hệ thống chatbot (Provider) cần quan sát được luồng xử lý để kiểm chứng vì sao hệ thống chọn một nhóm căn cứ nhất định trước khi đưa ra câu trả lời cuối cùng, để từ đó thực hiện các sửa đổi, cải tiến để đảm bảo chất lượng câu trả lời của chatbot trước khi đưa ra sử dụng rộng rãi trong công chúng. Vì vậy, vấn đề thứ ba hệ thống cần giải quyết đó là phải minh bạch hóa được luồng suy luận pháp lý.
+
+Để giải quyết cho vấn đề thứ nhất và thứ hai, ĐATN đề xuất xây dựng một ứng dụng tư vấn pháp luật về hôn nhân và gia đình dựa trên mô hình ngôn ngữ lớn (LLM) kết hợp 2 công nghệ: Đó là Đồ thị Tri thức (Knowledge Graph) và Agentic AI. 
+
+Thứ nhất, Đồ thị tri thức nhằm mô hình hóa mối quan hệ giữa các thực thể pháp lý và thiết kế tập các truy vấn Cypher định sẵn (Cypher Templates) cho từng dạng câu hỏi để lấy về chính xác ngữ cảnh (context) là các căn cứ pháp lý để trả lời cho câu hỏi của người dùng. Không chỉ vậy, đồ thị tri thức còn giúp mô hình hóa mối quan hệ giữa các văn bản quy phạm pháp luật, như quan hệ hướng dẫn, sửa đổi bổ sung, thay thế, bác bỏ hay mâu thuẫn. Từ đó giúp xây dựng cơ chế tự động kiểm tra hiệu lực theo thời gian, truy vấn các văn bản sửa đổi, hướng dẫn bổ sung và tham chiếu, đồng thời cảnh báo khi ngữ cảnh truy xuất gồm các quy định đã bị thay thế, hết hiệu lực hoặc có xung đột pháp lý. 
+
+Thứ hai là Agentic AI để tối ưu việc truy vấn trên đồ thị tri thức bằng cách phân tách các retriever tương ứng với các dạng câu hỏi và sử dụng agent để quyết định sẽ sử dụng (những) retriever nào để lấy về dữ liệu phục vụ cho việc sinh câu trả lời. Mỗi Retriever agent sẽ có nhiệm vụ xác định ý định (intent) của câu hỏi, trích xuất các tham số cần thiết để điền vào mẫu truy vấn Cypher (Cypher templates) và thực thi truy vấn để lấy về ngữ cảnh pháp lý (context) bao gồm các căn cứ páp lý cần thiết để trả lời câu hỏi. 
+
+Để giải quyết cho vấn đề thứ ba, ĐATN giải quyết vấn đề này bằng cách sử dụng thư viện Chainlit để trực quan hóa luồng xử lý, input/output của từng bước trong quá trình suy luận pháp lý và chèn thêm một đường URL ở cuối mỗi câu trả lời của chatbot dẫn tới một trang web giúp trực quan hóa phần đồ thị tri thức đã được truy xuất.
+
+Tiếp theo, chương này sẽ trình bày chi tiết về các giải pháp kỹ thuật nêu trên. Trước hết là giải pháp giải pháp xây dựng đồ thị tri thức và Cypher template, trình bày cấu trúc KG, các quan hệ pháp lý và cơ chế truy xuất đúng căn cứ cho từng dạng câu hỏi. Sau đó là giải pháp kiểm tra hiệu lực, phân loại căn cứ và cơ chế cảnh báo về hiệu lực, chồng chéo, xung đột pháp ý cho người dùng. Tiếp theo là giải pháp phân loại dạng câu hỏi của người dùng và điều phối các retriever. Cuối cùng là giải pháp minh bạch hóa luồng xử lý và trực quan hóa đồ thị tri thức được truy xuất.
+
+\subsection{Giải pháp kỹ thuật: Xây dựng đồ thị tri thức cho Luật Hôn nhân và Gia đình năm 2014 và tập mẫu truy vấn Cypher (Cypher templates) cho từng dạng câu hỏi}
 \label{subsection:5.2.2}
-Đồ thị tri thức được xây dựng theo hai lớp liên kết. Lớp pháp lý mô hình hóa cấu trúc văn bản quy phạm pháp luật và các quan hệ tham chiếu, sửa đổi, hướng dẫn, thay thế, bãi bỏ. Lớp ngữ nghĩa mô hình hóa các thực thể như hành vi, nghĩa vụ, điều kiện, hậu quả và chủ thể pháp lý theo từng dạng câu hỏi. Lớp pháp lý dùng một schema thống nhất để kiểm tra hiệu lực và phân loại căn cứ; lớp ngữ nghĩa dùng schema chuyên biệt theo từng dạng câu hỏi, vì các thực thể và mối quan hệ giữa chúng là khác nhau đối với các dạng câu hỏi khác nhau (ví dụ: câu hỏi về chế độ tài sản của vợ chồng sẽ có các thực thể như loại tài sản, hành vi tác động lên tài sản, quyền và nghĩa vụ liên quan đến tài sản; trong khi câu hỏi về điều kiện kết hôn sẽ có các thực thể như điều kiện về độ tuổi, tình trạng hôn nhân, mối quan hệ huyết thống...).
+Đồ thị tri thức được xây dựng theo hai lớp liên kết. Lớp pháp lý mô hình hóa cấu trúc văn bản quy phạm pháp luật và các quan hệ tham chiếu, sửa đổi, hướng dẫn, thay thế, bãi bỏ. Lớp ngữ nghĩa mô hình hóa các thực thể như hành vi, nghĩa vụ, điều kiện, hậu quả và chủ thể pháp lý theo từng dạng câu hỏi. Lớp pháp lý dùng một schema thống nhất để kiểm tra hiệu lực và phân loại căn cứ; lớp ngữ nghĩa dùng schema chuyên biệt theo từng dạng câu hỏi, vì các thực thể và mối quan hệ giữa chúng là khác nhau đối với các dạng câu hỏi khác nhau (ví dụ: câu hỏi về chế độ tài sản của vợ chồng sẽ có các thực thể như loại tài sản, hành vi tác động lên tài sản, quyền và nghĩa vụ liên quan đến tài sản; trong khi câu hỏi về điều kiện kết hôn sẽ có các thực thể như điều kiện về độ tuổi, tình trạng hôn nhân, mối quan hệhuyết thống...).
 
-Trên cơ sở đó, hệ thống sử dụng các Cypher template định sẵn để chọn nút ngữ nghĩa phù hợp với ý định câu hỏi, đi qua quan hệ \texttt{CAN\_CU\_TAI} tới điều, khoản hoặc điểm làm căn cứ, rồi áp dụng khối truy vấn dùng chung để lọc hiệu lực và bổ sung văn bản liên quan. Phần này lần lượt trình bày schema lớp pháp lý, cơ chế xử lý hiệu lực và cấu trúc retriever--template hiện đang được đăng ký trong codebase.
+Hệ thống tổ chức thành các retriever theo miền câu hỏi; mỗi retriever có một hoặc nhiều \texttt{TemplateRegistry} chứa các Cypher template đã được thiết kế trước. Router Agent chọn retriever phù hợp với câu hỏi, lớp \texttt{RetrieverPolicy} kiểm tra lại lựa chọn này để hạn chế gọi thừa công cụ, sau đó retriever mới phân loại template, trích xuất tham số và thực thi truy vấn trên Neo4j.
+
+Đồ thị tri thức vì vậy được thiết kế theo hai lớp có vai trò khác nhau. Lớp pháp lý biểu diễn cấu trúc văn bản quy phạm pháp luật bằng các nút văn bản và nút Điều--Khoản--Điểm. Nhóm quan hệ cấu trúc gồm \texttt{CO\_DIEU}, \texttt{CO\_KHOAN}, \texttt{CO\_DIEM}; nhóm quan hệ pháp lý gồm \texttt{THAM\_CHIEU\_DEN}, \texttt{DUOC\_SUA\_DOI\_BOI}, \texttt{HUONG\_DAN\_BOI}, \texttt{THAY\_THE\_BOI}, \texttt{BAI\_BO\_BOI} và \texttt{MAU\_THUAN\_VOI}. Lớp này là nền tảng chung để kiểm tra hiệu lực, mở rộng văn bản hướng dẫn, phát hiện văn bản sửa đổi hoặc thay thế và phân loại căn cứ trước khi đưa cho LLM.
+
+Lớp ngữ nghĩa được xây dựng riêng cho từng miền câu hỏi, ví dụ chế độ tài sản, điều kiện kết hôn, cấp dưỡng hoặc quan hệ cha mẹ con. Các nút ngữ nghĩa như hành vi, loại tài sản, điều kiện, chủ thể hoặc hậu quả pháp lý được nối tới Điều/Khoản/Điểm bằng quan hệ \texttt{CAN\_CU\_TAI}. Nhờ tách lớp như vậy, template của từng miền chỉ cần xác định đúng seed ngữ nghĩa theo ý định câu hỏi; phần mở rộng cấu trúc, lọc thời gian, lấy sửa đổi, hướng dẫn, tham chiếu, thay thế và chuẩn hóa \nolinkurl{Context_Tho} được dùng chung.
+
+Phần này lần lượt trình bày: cơ chế \texttt{RetrieverPolicy} kiểm soát công cụ truy xuất; schema lớp pháp lý; thuật toán kiểm tra hiệu lực và phân loại căn cứ; sau đó là cách thiết kế schema ngữ nghĩa và Cypher template theo từng dạng câu hỏi đang được đăng ký trong codebase.
+
+\subsubsection{Cơ chế RetrieverPolicy kiểm soát công cụ truy xuất ngữ cảnh}
+
+Trong kiến trúc của hệ thống, Router Agent có nhiệm vụ đọc câu hỏi và lựa chọn một hoặc nhiều retriever phù hợp. Tuy nhiên, nếu chỉ dựa vào quyết định của Router Agent, hệ thống có thể gọi thừa retriever và đưa vào mô hình ngôn ngữ lớn các ngữ cảnh không liên quan. Ngược lại, nếu chỉ kiểm tra bằng danh sách cụm từ khóa cố định, hệ thống có thể loại nhầm retriever đúng vì người dùng có rất nhiều cách diễn đạt khác nhau cho cùng một vấn đề pháp lý. Do đó, đồ án bổ sung module \texttt{retriever\_policy} như một lớp kiểm soát giữa Router Agent và các retriever thực thi.
+
+Mục tiêu của \texttt{retriever\_policy} là cân bằng giữa hai yêu cầu: giảm số retriever thừa để tăng độ chính xác của ngữ cảnh, đồng thời tránh trường hợp toàn bộ retriever bị loại khiến mô hình ngôn ngữ lớn không có căn cứ pháp lý để trả lời. Cơ chế này không thay thế Router Agent, mà kiểm tra lại các retriever do Router Agent đề xuất dựa trên catalog trigger của từng retriever và chỉ kích hoạt fallback khi policy lọc rỗng.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{|p{3.2cm}|X|}
+\hline
+\textbf{Thành phần} & \textbf{Mô tả} \\ \hline
+Đầu vào & Câu hỏi người dùng; danh sách retriever candidate do Router Agent trả về; điểm \texttt{confidence\_score} nếu Router Agent cung cấp; catalog trigger gồm \texttt{required\_triggers} và \texttt{support\_triggers} của từng retriever. \\ \hline
+Đầu ra & Danh sách tool cuối cùng được phép chạy; danh sách tool bị loại và lý do loại; thông tin audit gồm candidate ban đầu, điểm tự tin, retriever được fallback nếu có. \\ \hline
+Phạm vi & Chỉ đánh giá các retriever đã được Router Agent gọi; không tự thêm retriever mới ngoài candidate; không fallback cho tool không tồn tại trong catalog. Hai direct tool \texttt{respond} và \texttt{text2cypher} được giữ theo logic riêng vì không thuộc nhóm retriever miền. \\ \hline
+\end{tabularx}
+\caption{Đầu vào, đầu ra và phạm vi áp dụng của RetrieverPolicy}
+\label{tab:retriever_policy_io}
+\end{table}
+
+Luồng xử lý của \texttt{retriever\_policy} gồm năm bước chính. Thứ nhất, câu hỏi người dùng được chuẩn hóa về chữ thường, loại bỏ ký tự phân tách và giữ dấu tiếng Việt để phục vụ so khớp cụm từ. Thứ hai, danh sách candidate từ Router Agent được loại trùng theo thứ tự xuất hiện đầu tiên. Thứ ba, với mỗi candidate, policy giữ lại direct tool, loại tool không có trong catalog, và với retriever hợp lệ thì kiểm tra xem câu hỏi có khớp ít nhất một \texttt{required\_trigger} hoặc \texttt{support\_trigger} hay không. Thứ tư, các retriever khớp trigger được đưa vào danh sách cuối cùng, còn retriever không khớp bị ghi nhận lý do loại. Thứ năm, nếu sau khi lọc không còn retriever hợp lệ nào, policy kích hoạt fallback có kiểm soát.
+
+Ngưỡng chấp nhận của policy được thiết kế theo hướng dễ audit: một retriever được chấp nhận khi câu hỏi khớp tối thiểu một rule trong \texttt{required\_triggers} hoặc \texttt{support\_triggers}. Một retriever bị loại khi không có rule nào khớp và trong danh sách cuối cùng đã tồn tại ít nhất một retriever hợp lệ khác. Trường hợp đặc biệt xảy ra khi toàn bộ retriever hợp lệ do Router Agent đề xuất đều bị loại; lúc đó policy giữ lại retriever có \texttt{confidence\_score} cao nhất. Nếu Router Agent không cung cấp điểm tự tin hợp lệ, policy giữ retriever hợp lệ đầu tiên theo thứ tự Router Agent trả về. Tool không tồn tại trong catalog không được dùng làm fallback.
+
+Cơ sở của ngưỡng trên xuất phát từ vai trò khác nhau của hai lớp quyết định. Các trigger trong catalog là điều kiện có độ chính xác cao, giúp loại các retriever thừa khi câu hỏi chứa dấu hiệu pháp lý rõ ràng. Tuy nhiên, danh sách phrase không thể bao phủ toàn bộ cách diễn đạt tự nhiên của người dùng, nên việc áp dụng hard filter tuyệt đối có thể tạo ra lỗi false negative. Vì vậy, fallback chỉ được kích hoạt trong tình huống rủi ro nhất là hệ thống không còn retriever nào để truy xuất context. Điểm \texttt{confidence\_score} của Router Agent chỉ dùng để xếp hạng fallback, không thay thế ngưỡng phrase-based validation và không làm cho retriever được chấp nhận nếu đã có retriever khác khớp trigger tốt hơn.
+
 \subsubsection{Thiết kế, xây dựng phần đồ thị thể hiện mối quan hệ giữa các văn bản quy phạm pháp luật}
 Tiếp theo sẽ trình bày về thiết kế đồ thị tri thức được dùng để lưu trữ thông tin, mối quan hệ của luật hôn nhân gia đình 2014 và các văn bản liên quan.
 Đồ thị tri thức đóng vai trò lưu trữ và biểu diễn mạng lưới các quy định pháp luật. Khác với cơ sở dữ liệu quan hệ truyền thống, mô hình đồ thị cho phép thể hiện trực quan các quan hệ đa chiều như sự dẫn chiếu, hướng dẫn hoặc thay thế giữa các văn bản quy phạm pháp luật.
@@ -85,54 +130,62 @@ cap\_bac\_phap\_ly & INTEGER & Giá trị dùng để so sánh ưu tiên khi có
 
 \subsubsection{Cơ chế kiểm tra tình trạng hiệu lực, xử lý phân loại các văn bản pháp luật (căn cứ chính, căn cứ bổ trợ, căn cứ hướng dẫn, sửa đổi, thay thế) và các căn cứ chồng chéo, xung đột}
 
-Quá trình truy vấn gồm hai giai đoạn chính: Truy vết các căn cứ thỏa mãn điều kiện hiệu lực trên đồ thị; Sau đó phân loại các căn cứ và chuẩn hóa ngữ cảnh phục vụ mô hình ngôn ngữ lớn (LLM).
+Trong codebase hiện tại, cơ chế kiểm tra hiệu lực không được cài đặt như một retriever độc lập, mà là khối Cypher dùng chung được ghép vào các template miền. Mỗi template trước hết xác định các nút pháp lý gốc \nolinkurl{n_goc} từ đồ thị ngữ nghĩa qua quan hệ \texttt{CAN\_CU\_TAI}; sau đó khối \nolinkurl{EXPAND_AND_TIMEFILTER_CYPHER} mở rộng cấu trúc Điều--Khoản--Điểm, truy vết thay thế, lọc hiệu lực và trả về một bản ghi thô \nolinkurl{Context_Tho}. Mốc thời gian áp dụng luật là \nolinkurl{target_date}, được chuẩn hóa từ \nolinkurl{thoi_diem_su_kien} nếu người dùng nêu thời điểm, hoặc lấy ngày đặt câu hỏi nếu người dùng không nêu. Bên cạnh đó, truy vấn vẫn giữ \nolinkurl{query_date} là ngày hiện tại để phát hiện quy định hiện hành đối chiếu và văn bản đã ban hành nhưng chưa có hiệu lực.
 
 \begin{algorithm}[H]
 \footnotesize
-\textbf{Input:} Danh sách điều luật dùng làm căn cứ trả lời $IDs$; mốc thời gian sự kiện $T_{event}$.
+\textbf{Input:} Tập nút pháp lý gốc $S$; mốc áp dụng $T_{target}$; ngày đặt câu hỏi $T_{query}$; biến $UserProvidedDate$.
 
-\textbf{Output:} Ngữ cảnh pháp lý chuẩn hóa $C$ phục vụ sinh câu trả lời.
+\textbf{Output:} Chuỗi ngữ cảnh pháp lý chuẩn hóa $C$ phục vụ LLM sinh câu trả lời.
 
-\textbf{Giai đoạn 1: Truy xuất căn cứ còn hiệu lực trên đồ thị tri thức}
+\textbf{Giai đoạn 1: Mở rộng đồ thị và tạo \nolinkurl{Context_Tho}}
 
 \begin{enumerate}[label=\textbf{Bước \arabic*.}, leftmargin=1.6cm]
-    \item Tìm các nút điều luật gốc có mã định danh thuộc $IDs$.
-    \item Mở rộng xuống các nút chi tiết (khoản, điểm) gắn với điều luật gốc.
-    \item Duyệt quan hệ thay thế theo cả hai chiều để thu toàn bộ phiên bản trên cùng dòng thay thế.
-    \item Lọc phiên bản $V$ thỏa mãn hiệu lực tại $T_{event}$:
-    \quad $V.ngay\_co\_hieu\_luc \leq T_{event}$ và
-    \quad ($V.ngay\_het\_hieu\_luc = \text{null}$ hoặc $V.ngay\_het\_hieu\_luc > T_{event}$).
-    \item Với mỗi $V$, truy xuất văn bản sửa đổi, bổ sung $M$ qua quan hệ DUOC\_SUA\_DOI\_BOI và chỉ giữ $M$ còn hiệu lực tại $T_{event}$.
-    \item Truy xuất văn bản hướng dẫn $G$ qua quan hệ HUONG\_DAN\_BOI; mở rộng chi tiết hướng dẫn; kiểm tra sửa đổi đối với chi tiết hướng dẫn nếu có.
-    \item Truy vết theo chiều \texttt{THAY\_THE\_BOI} để lấy phiên bản thay thế đang có hiệu lực tại $T_{event}$; các phiên bản chỉ có hiệu lực sau $T_{event}$ được tách sang nhóm cảnh báo.
-    \item Truy xuất các quy định tham chiếu bổ trợ liên quan, có lọc hiệu lực tại $T_{event}$.
-    \item Truy xuất các văn bản đã ban hành nhưng có ngày hiệu lực sau $T_{event}$ qua các quan hệ sửa đổi, hướng dẫn, thay thế và bãi bỏ; lưu vào \texttt{can\_cu\_sap\_hieu\_luc}.
-    \item Nếu retriever cung cấp trường \texttt{can\_cu\_mau\_thuan}, đưa các cặp căn cứ mâu thuẫn vào dữ liệu thô để module chuẩn hóa xử lý.
-    \item Gói kết quả thô thành tập dữ liệu $D = \{\text{căn cứ chính}, \text{hướng dẫn}, \text{tham chiếu}, \text{quy định đối chiếu}, \text{mâu thuẫn}, \text{căn cứ sắp hiệu lực}\}$.
+    \item Từ các seed pháp lý $S$, mở rộng Điều--Khoản--Điểm theo cấp seed và truy vết \texttt{THAY\_THE\_BOI} theo hai chiều để thu các phiên bản có thể áp dụng.
+    \item Lọc các phiên bản còn hiệu lực tại $T_{target}$; đây là tập căn cứ pháp lý được phép dùng cho sự kiện người dùng hỏi.
+    \item Từ tập đã lọc, lấy sửa đổi \texttt{DUOC\_SUA\_DOI\_BOI}, hướng dẫn \texttt{HUONG\_DAN\_BOI}, tham chiếu \texttt{THAM\_CHIEU\_DEN} và mâu thuẫn \texttt{MAU\_THUAN\_VOI} còn hiệu lực tại $T_{target}$.
+    \item Dùng $T_{query}$ để lấy quy định hiện hành thay thế và văn bản sắp hiệu lực; sau đó khử trùng lặp, ưu tiên seed chi tiết hơn và trả về \nolinkurl{Context_Tho}.
 \end{enumerate}
 
-\textbf{Giai đoạn 2: Chuẩn hóa và gán nhãn ngữ cảnh cho LLM}
+\textbf{Giai đoạn 2: Chuẩn hóa \nolinkurl{Context_Tho} thành prompt context}
 
 \begin{enumerate}[label=\textbf{Bước \arabic*.}, leftmargin=1.6cm, resume]
-    \item Duyệt căn cứ chính: nếu tồn tại $M$, thay nội dung hiển thị bằng nội dung sửa đổi nhưng giữ nhãn văn bản gốc; kích hoạt cờ \texttt{FLAG\_CANH\_BAO\_SUA\_DOI}.
-    \item Phân loại căn cứ hướng dẫn và căn cứ tham chiếu bổ trợ; xử lý sửa đổi đối với hướng dẫn tương tự căn cứ chính.
-    \item Chuẩn hóa các cặp mâu thuẫn; nếu danh sách không rỗng, kích hoạt cờ \texttt{FLAG\_MAU\_THUAN}.
-    \item Kích hoạt cờ \texttt{FLAG\_CANH\_BAO\_THU\_TU\_UU\_TIEN} nếu trong $D$ xuất hiện nhiều hơn một giá trị cấp bậc pháp lý.
-    \item Kích hoạt cờ \texttt{FLAG\_CANH\_BAO\_LICH\_SU} khi $UserProvided = \text{true}$, căn cứ tại $T_{event}$ đã hết hiệu lực và tồn tại $V_{current}$.
-    \item Khi $UserProvided = \text{false}$ và có \texttt{can\_cu\_sap\_hieu\_luc}, kích hoạt cờ \texttt{FLAG\_VAN\_BAN\_SAP\_HIEU\_LUC}; các văn bản này chỉ dùng để cảnh báo, không làm căn cứ trả lời chính.
-    \item Tổng hợp thông tin hiệu lực theo tên văn bản, gồm ngày có hiệu lực và ngày hết hiệu lực.
-    \item Sắp xếp căn cứ chính và hướng dẫn theo cấp bậc tăng dần, trong đó số càng nhỏ thì cấp càng cao.
-    \item Đóng gói $C$ thành chuỗi có cấu trúc gồm thông tin cảnh báo, hiệu lực, căn cứ chính, căn cứ tham chiếu bổ trợ, căn cứ hướng dẫn, căn cứ mâu thuẫn, văn bản thay thế và văn bản sắp hiệu lực.
+    \item Chuẩn hóa căn cứ chính, hướng dẫn và bổ trợ; nếu có \nolinkurl{id_sua_doi} thì hiển thị nội dung sửa đổi nhưng giữ định danh căn cứ gốc.
+    \item Bật các cờ cảnh báo về sửa đổi, mâu thuẫn, thứ tự ưu tiên, lịch sử hiệu lực và văn bản sắp hiệu lực theo dữ liệu trong \nolinkurl{Context_Tho}.
+    \item Thu thập thông tin hiệu lực theo văn bản, khử trùng lặp xuyên các nhóm và sắp xếp căn cứ theo \nolinkurl{cap_bac_phap_ly}.
+    \item Xuất $C$ thành các khối ổn định: cảnh báo, hiệu lực, căn cứ chính, căn cứ bổ trợ, hướng dẫn, văn bản thay thế, văn bản sắp hiệu lực, mâu thuẫn và link trích dẫn TVPL.
 \end{enumerate}
-\caption{Mô tả giải thuật truy xuất và phân loại các văn bản pháp lý}
+\caption{Giải thuật truy xuất, lọc hiệu lực và phân loại căn cứ pháp lý trong codebase hiện tại}
 \label{table:algo_temporal}
 \end{algorithm}
 
-Dựa trên Bảng~\ref{table:algo_temporal}, ở Giai đoạn 1 hệ thống không chỉ truy xuất nút điều luật ban đầu mà còn mở rộng có hướng theo cấp của nút seed: từ Điều xuống Khoản, Điểm; từ Khoản xuống Điểm và lên Điều cha; từ Điểm lên Khoản, Điều cha. Sau đó, truy vấn duyệt quan hệ \texttt{THAY\_THE\_BOI} theo hai chiều để xác định đúng phiên bản áp dụng tại $T_{event}$. Điều kiện hiệu lực được áp dụng cho căn cứ chính, văn bản sửa đổi, hướng dẫn và tham chiếu. Các văn bản đã ban hành nhưng chỉ có hiệu lực sau mốc truy vấn được tách riêng vào \texttt{can\_cu\_sap\_hieu\_luc}, không được dùng làm căn cứ trả lời chính.
+\begin{table}[htbp]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.08}
+\begin{tabularx}{\textwidth}{|p{4cm}|X|}
+\hline
+\textbf{Nhóm trong \nolinkurl{Context_Tho}} & \textbf{Cách sinh và vai trò khi chuẩn hóa cho LLM} \\ \hline
+\nolinkurl{can_cu_chinh} &
+Sinh từ seed pháp lý sau khi mở rộng \texttt{CO\_KHOAN}, \texttt{CO\_DIEM}, \texttt{THAY\_THE\_BOI} và lọc tại $T_{target}$. Đây là căn cứ trả lời trực tiếp; nếu có \nolinkurl{id_sua_doi} thì dùng nội dung sửa đổi nhưng vẫn giữ định danh căn cứ gốc. \\ \hline
+\nolinkurl{can_cu_huong_dan}, \nolinkurl{lien_ket_huong_dan} &
+\texttt{HUONG\_DAN\_BOI} từ căn cứ chính, kèm Khoản/Điểm hướng dẫn còn hiệu lực. Dòng liên kết được gom về cấp Điều để LLM nêu rõ văn bản nào hướng dẫn căn cứ nào. \\ \hline
+\nolinkurl{can_cu_bo_tro} &
+\texttt{THAM\_CHIEU\_DEN} từ căn cứ chính hoặc hướng dẫn, kèm heading Điều/Khoản cha. Nhóm này bổ sung quy định được viện dẫn chéo. \\ \hline
+\nolinkurl{quy_dinh_hien_hanh_doi_chieu}, \nolinkurl{lien_ket_hien_hanh} &
+\texttt{THAY\_THE\_BOI*1..} còn hiệu lực tại $T_{query}$. Nhóm này chỉ dùng để cảnh báo lịch sử, không làm thay đổi căn cứ chính tại $T_{target}$. \\ \hline
+\nolinkurl{can_cu_mau_thuan} &
+\texttt{MAU\_THUAN\_VOI} còn hiệu lực tại $T_{target}$; tạo khối mâu thuẫn pháp lý và bật \nolinkurl{FLAG_MAU_THUAN}. \\ \hline
+\nolinkurl{can_cu_sap_hieu_luc}, \nolinkurl{lien_ket_sap_hieu_luc} &
+Văn bản có ngày hiệu lực sau $T_{query}$ qua \texttt{DUOC\_SUA\_DOI\_BOI}, \texttt{HUONG\_DAN\_BOI}, \texttt{THAY\_THE\_BOI}, \texttt{BAI\_BO\_BOI}. Chỉ xuất hiện khi người dùng không nêu mốc thời gian và chỉ dùng cho phần lưu ý. \\ \hline
+\end{tabularx}
+\caption{Các nhóm dữ liệu thô được trả về trong \nolinkurl{Context_Tho} và cách dùng khi chuẩn hóa ngữ cảnh}
+\label{tab:context_tho_temporal_fields}
+\end{table}
 
-Ở Giai đoạn~2, module chuẩn hóa ngữ cảnh phân loại dữ liệu thô thành: (i)~\textbf{căn cứ chính}: các điều khoản trực tiếp áp dụng; (ii)~\textbf{căn cứ tham chiếu bổ trợ}: quy định được tham chiếu từ căn cứ chính, hoặc được tham chiếu từ các căn cứ hướng dẫn hoặc sửa đổi; (iii)~\textbf{căn cứ hướng dẫn}: văn bản hướng dẫn thi hành; (iv)~\textbf{căn cứ mâu thuẫn}: các cặp căn cứ cần cảnh báo; (v)~\textbf{văn bản thay thế}: các điều luật hiện hành thay thế; (vi)~\textbf{văn bản sắp hiệu lực}: văn bản đã ban hành nhưng chưa dùng làm căn cứ trả lời chính; và (vii)~\textbf{thông tin cảnh báo}: năm cờ \nolinkurl{FLAG_CANH_BAO_LICH_SU}, \nolinkurl{FLAG_CANH_BAO_THU_TU_UU_TIEN}, \nolinkurl{FLAG_CANH_BAO_SUA_DOI}, \nolinkurl{FLAG_MAU_THUAN}, \nolinkurl{FLAG_VAN_BAN_SAP_HIEU_LUC} cùng khối thông tin hiệu lực văn bản. Cờ ưu tiên chỉ kích hoạt khi ngữ cảnh chứa nhiều cấp bậc pháp lý khác nhau; đây là cảnh báo thứ bậc nhắc LLM cân nhắc nguyên tắc ưu tiên khi trình bày. Cờ lịch sử được kích hoạt khi người dùng nêu mốc thời gian quá khứ, căn cứ truy xuất đã hết hiệu lực tại mốc đó và tồn tại quy định thay thế hiện hành, giúp LLM thông báo cho người dùng về sự thay đổi pháp luật.
+Điểm quan trọng của thiết kế này là tách rõ hai mốc thời gian. \nolinkurl{target_date} quyết định văn bản nào được coi là căn cứ áp dụng cho sự kiện pháp lý mà người dùng hỏi; mọi căn cứ chính, sửa đổi, hướng dẫn, tham chiếu bổ trợ và mâu thuẫn đều phải qua điều kiện hiệu lực tại mốc này. Ngược lại, \nolinkurl{query_date} phản ánh thời điểm hệ thống trả lời, nên chỉ dùng cho hai mục cảnh báo: quy định hiện hành đang thay thế căn cứ lịch sử và văn bản đã ban hành nhưng chưa có hiệu lực. Nhờ vậy, với câu hỏi có mốc quá khứ, hệ thống vẫn trả lời theo luật áp dụng tại quá khứ nhưng có thể nhắc rằng hiện nay đã có văn bản thay thế; với câu hỏi không có mốc thời gian, hệ thống trả lời theo luật hiện hành và chỉ đưa văn bản sắp hiệu lực vào phần lưu ý.
 
-Về chuẩn hóa nội dung cho LLM: thay vì đồng thời đưa cả nội dung gốc và nội dung sửa đổi gây nhiễu, thuật toán ưu tiên hiển thị nội dung từ văn bản sửa đổi nhưng vẫn giữ tên căn cứ gốc, theo dạng ``Theo quy định tại [văn bản gốc], được sửa đổi, bổ sung bởi [văn bản mới]\ldots''. Danh sách căn cứ chính và hướng dẫn được sắp xếp theo cấp bậc tăng dần (Luật trước Nghị định, Thông tư) nhằm hướng dẫn LLM trích dẫn các văn bản pháp lý theo đúng thứ tự. Cuối cùng, ngữ cảnh được đóng gói thành các mục có tiêu đề rõ ràng, bao gồm thông tin cảnh báo, thông tin hiệu lực các văn bản, căn cứ chính, căn cứ tham chiếu bổ trợ, căn cứ hướng dẫn, căn cứ mâu thuẫn, văn bản thay thế và văn bản sắp hiệu lực, trước khi đưa vào prompt sinh câu trả lời.
+Hàm \nolinkurl{chuan_hoa_Context_cho_LLM} tiếp tục làm sạch dữ liệu trước khi đưa vào prompt: khử trùng lặp xuyên các nhóm căn cứ, gom thông tin hiệu lực theo tên văn bản, định dạng lại ngày tháng, sắp xếp căn cứ theo \nolinkurl{cap_bac_phap_ly}, và tạo các cờ cảnh báo \nolinkurl{FLAG_CANH_BAO_LICH_SU}, \nolinkurl{FLAG_CANH_BAO_THU_TU_UU_TIEN}, \nolinkurl{FLAG_CANH_BAO_SUA_DOI}, \nolinkurl{FLAG_MAU_THUAN}, \nolinkurl{FLAG_VAN_BAN_SAP_HIEU_LUC}. Chuỗi ngữ cảnh cuối cùng được chia thành các khối có tiêu đề ổn định như \texttt{THÔNG TIN CẢNH BÁO}, \texttt{CĂN CỨ CHÍNH}, \texttt{CĂN CỨ HƯỚNG DẪN}, \texttt{VĂN BẢN THAY THẾ} và \texttt{THÔNG TIN MÂU THUẪN PHÁP LÝ}; đây là lớp trung gian giúp LLM vừa có đủ căn cứ pháp lý, vừa nhận được chỉ dẫn rõ ràng về thứ tự ưu tiên, lịch sử hiệu lực và phạm vi sử dụng của từng loại căn cứ.
 
 \subsubsection{Thiết kế schema đồ thị tri thức và Cypher template theo từng dạng câu hỏi pháp lý}
 

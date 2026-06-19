@@ -14,6 +14,50 @@ _HIEN_HANH_OLD_KG = """OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(h
   WHERE hien_hanh.ngay_het_hieu_luc IS NULL
     AND hien_hanh.id <> chi_tiet_ap_dung.id"""
 
+ANCESTOR_REPLACEMENT_EXPAND_KG = """
+// 2b. Ancestors: dung heading de di quan he thay the, roi bung xuong toan bo Dieu dich
+WITH n_goc, dieu_seed_ids, expanded_desc, chi_tiet_anc, size(chi_tiet_anc) AS n_anc
+UNWIND range(0, CASE WHEN n_anc > 0 THEN n_anc - 1 ELSE 0 END) AS anc_idx
+WITH n_goc, dieu_seed_ids, expanded_desc, n_anc,
+     CASE WHEN n_anc > 0 THEN chi_tiet_anc[anc_idx] ELSE null END AS heading_node
+WHERE n_anc = 0 OR heading_node IS NOT NULL
+OPTIONAL MATCH (heading_node)-[:THAY_THE_BOI*1..]->(heading_moi)
+  WHERE heading_node IS NOT NULL
+OPTIONAL MATCH (heading_node)<-[:THAY_THE_BOI*1..]-(heading_cu)
+  WHERE heading_node IS NOT NULL
+OPTIONAL MATCH (heading_moi)-[:CO_KHOAN]->(heading_khoan_moi)
+  WHERE heading_moi IS NOT NULL AND 'DieuLuat' IN labels(heading_moi)
+OPTIONAL MATCH (heading_khoan_moi)-[:CO_DIEM]->(heading_diem_moi)
+  WHERE heading_moi IS NOT NULL AND 'DieuLuat' IN labels(heading_moi)
+OPTIONAL MATCH (heading_moi)-[:CO_DIEM]->(heading_diem_k_moi)
+  WHERE heading_moi IS NOT NULL AND 'DieuKhoanLuat' IN labels(heading_moi)
+OPTIONAL MATCH (heading_cu)-[:CO_KHOAN]->(heading_khoan_cu)
+  WHERE heading_cu IS NOT NULL AND 'DieuLuat' IN labels(heading_cu)
+OPTIONAL MATCH (heading_khoan_cu)-[:CO_DIEM]->(heading_diem_cu)
+  WHERE heading_cu IS NOT NULL AND 'DieuLuat' IN labels(heading_cu)
+OPTIONAL MATCH (heading_cu)-[:CO_DIEM]->(heading_diem_k_cu)
+  WHERE heading_cu IS NOT NULL AND 'DieuKhoanLuat' IN labels(heading_cu)
+WITH n_goc, dieu_seed_ids, expanded_desc,
+     [x IN collect(DISTINCT heading_node)
+       + collect(DISTINCT heading_moi)
+       + collect(DISTINCT heading_cu)
+       + collect(DISTINCT heading_khoan_moi)
+       + collect(DISTINCT heading_diem_moi)
+       + collect(DISTINCT heading_diem_k_moi)
+       + collect(DISTINCT heading_khoan_cu)
+       + collect(DISTINCT heading_diem_cu)
+       + collect(DISTINCT heading_diem_k_cu)
+      WHERE x IS NOT NULL] AS expanded_anc
+"""
+
+MAU_THUAN_MATCH_KG = """
+// 7c. Mau thuan phap ly neu KG co quan he MAU_THUAN_VOI
+OPTIONAL MATCH (chi_tiet_ap_dung)-[mau_thuan_rel:MAU_THUAN_VOI]-(mau_thuan)
+  WHERE mau_thuan.ngay_co_hieu_luc <= $target_date
+    AND (mau_thuan.ngay_het_hieu_luc IS NULL
+         OR mau_thuan.ngay_het_hieu_luc > $target_date)
+"""
+
 _HIEN_HANH_NEW_KG = """OPTIONAL MATCH (chi_tiet_ap_dung)-[:THAY_THE_BOI*1..]->(hien_hanh)
   WHERE hien_hanh.ngay_co_hieu_luc <= $query_date
     AND hien_hanh.ngay_het_hieu_luc IS NULL
@@ -122,7 +166,7 @@ RETURN_SAP_HIEU_LUC_FIELDS = """,
     ngay_ban_hanh_expr="thay_the_sap.ngay_ban_hanh",
     ngay_hieu_luc_expr="thay_the_sap.ngay_co_hieu_luc",
     ngay_het_hieu_luc_expr="thay_the_sap.ngay_het_hieu_luc",
-    loai_tac_dong="THAY_THE",
+    loai_tac_dong="THAY_THE_BOI",
     id_duoc_tac_dong_expr="chi_tiet_ap_dung.id",
 ) + """
             })
@@ -133,7 +177,7 @@ RETURN_SAP_HIEU_LUC_FIELDS = """,
                 ngay_ban_hanh: chi_tiet_thay_the_sap.ngay_ban_hanh,
                 ngay_hieu_luc: chi_tiet_thay_the_sap.ngay_co_hieu_luc,
                 ngay_het_hieu_luc: chi_tiet_thay_the_sap.ngay_het_hieu_luc,
-                loai_tac_dong: 'THAY_THE',
+                loai_tac_dong: 'THAY_THE_BOI',
                 id_duoc_tac_dong: chi_tiet_ap_dung.id
             } END)
             + collect(DISTINCT {
@@ -163,7 +207,7 @@ RETURN_SAP_HIEU_LUC_FIELDS = """,
             collect(DISTINCT {id_van_ban: sua_doi_sap.id, id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'SUA_DOI_BOI'})
             + collect(DISTINCT {id_van_ban: coalesce(chi_tiet_hd_sap.id, hd_sap.id), id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'HUONG_DAN_BOI'})
             + collect(DISTINCT {id_van_ban: sua_hd_sap.id, id_duoc_tac_dong: coalesce(chi_tiet_huong_dan.id, huong_dan.id), loai_tac_dong: 'SUA_DOI_HUONG_DAN'})
-            + collect(DISTINCT {id_van_ban: thay_the_sap.id, id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'THAY_THE'})
+            + collect(DISTINCT {id_van_ban: thay_the_sap.id, id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'THAY_THE_BOI'})
             + collect(DISTINCT {id_van_ban: bai_bo_sap.id, id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'BAI_BO'})
             + collect(DISTINCT CASE WHEN chi_tiet_ap_dung.ngay_het_hieu_luc > $query_date THEN {
                 id_van_ban: chi_tiet_ap_dung.id, id_duoc_tac_dong: chi_tiet_ap_dung.id, loai_tac_dong: 'HET_HIEU_LUC'

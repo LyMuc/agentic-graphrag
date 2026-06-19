@@ -1,11 +1,19 @@
 from __future__ import annotations
 
 import asyncio
+import copy
 from typing import Any, Optional
 
 from adapter.config import ROUTER_LLM, build_router_llm
 from application.retriever_catalog import DIRECT_TOOLS
-from application.retriever_policy import PolicyDecision, evaluate_retriever_policy
+from application.retriever_policy import (
+    PolicyCandidate,
+    PolicyDecision,
+    evaluate_retriever_policy,
+)
+
+
+ROUTER_ONLY_ARGS = {"confidence_score"}
 
 
 tool_picker_prompt = """
@@ -19,6 +27,7 @@ QUY TẮC BẮT BUỘC (CRITICAL RULES):
    - Công cụ cho NỘI DUNG CHÍNH mà người dùng muốn biết (ví dụ: quyền, nghĩa vụ, hậu quả pháp lý).
 3. KHÔNG gọi cùng 1 tool nhiều lần.
 4. ĐIỀN ĐỦ THAM SỐ: Đảm bảo tham số `query` chứa nguyên văn ý hỏi của người dùng cho công cụ đó.
+5. ĐIỂM TỰ TIN: Với mỗi tool retriever được gọi, điền thêm `confidence_score` là một số từ 0.0 đến 1.0 thể hiện mức chắc chắn tool đó cần thiết để trả lời câu hỏi. Đây chỉ là metadata định tuyến, không phải nội dung pháp lý.
 
 Ví dụ tư duy:
 
@@ -60,6 +69,115 @@ def _tool_accepts_query(tools: dict[str, Any], tool_name: str) -> bool:
 
 def _tool_call_name(tool_call: dict[str, Any]) -> str:
     return str(tool_call.get("name", ""))
+
+
+def _tool_schema_name(schema: dict[str, Any]) -> str:
+    """Lấy tên function tool từ schema truyền cho Router LLM.
+
+    Args:
+        schema: OpenAI/LangChain tool schema dạng dict.
+
+    Returns:
+        Tên function trong schema, hoặc chuỗi rỗng nếu schema thiếu/không hợp lệ.
+    """
+    return str(schema.get("function", {}).get("name", ""))
+
+
+def _with_router_confidence_schema(schema: dict[str, Any]) -> dict[str, Any]:
+    """Thêm optional confidence_score vào schema retriever gửi cho Router LLM.
+
+    Args:
+        schema: Tool schema gốc từ retriever hoặc direct tool.
+
+    Returns:
+        Bản copy của schema. Với retriever known, bản copy có thêm property
+        confidence_score trong parameters; direct tool hoặc schema không hợp lệ
+        được trả về dưới dạng copy không đổi.
+    """
+    out = copy.deepcopy(schema)
+    tool_name = _tool_schema_name(out)
+    if not tool_name or tool_name in DIRECT_TOOLS:
+        return out
+
+    function_schema = out.get("function")
+    if not isinstance(function_schema, dict):
+        return out
+
+    parameters = function_schema.setdefault("parameters", {})
+    if not isinstance(parameters, dict):
+        return out
+    parameters.setdefault("type", "object")
+
+    properties = parameters.setdefault("properties", {})
+    if not isinstance(properties, dict):
+        return out
+    properties["confidence_score"] = {
+        "type": "number",
+        "minimum": 0.0,
+        "maximum": 1.0,
+        "description": (
+            "Điểm tự tin từ 0.0 đến 1.0 cho biết mức chắc chắn retriever này "
+            "cần thiết để trả lời câu hỏi. Đây là metadata định tuyến."
+        ),
+    }
+    return out
+
+
+def _coerce_confidence_score(value: Any) -> float | None:
+    """Chuẩn hóa confidence_score trong tool call args về khoảng 0.0-1.0.
+
+    Args:
+        value: Giá trị thô do Router LLM trả về.
+
+    Returns:
+        Float đã clamp trong [0.0, 1.0], hoặc None nếu thiếu/không parse được.
+    """
+    if value is None:
+        return None
+    try:
+        score = float(value)
+    except (TypeError, ValueError):
+        return None
+    if score < 0.0:
+        return 0.0
+    if score > 1.0:
+        return 1.0
+    return score
+
+
+def _policy_candidates_from_tool_calls(tool_calls: list[dict[str, Any]]) -> list[PolicyCandidate]:
+    """Chuyển tool_calls thô của Router LLM thành PolicyCandidate.
+
+    Args:
+        tool_calls: Danh sách tool call do Router LLM trả về.
+
+    Returns:
+        Danh sách PolicyCandidate đã loại trùng tên tool, giữ thứ tự đầu tiên và
+        mang theo confidence_score hợp lệ nếu có.
+    """
+    candidates: list[PolicyCandidate] = []
+    for call in _unique_tool_calls(tool_calls):
+        name = _tool_call_name(call)
+        if not name:
+            continue
+        args = call.get("args", {})
+        confidence = None
+        if isinstance(args, dict):
+            confidence = _coerce_confidence_score(args.get("confidence_score"))
+        candidates.append(PolicyCandidate(name=name, confidence_score=confidence))
+    return candidates
+
+
+def _strip_router_only_args(args: dict[str, Any]) -> dict[str, Any]:
+    """Loại metadata chỉ dùng cho router trước khi gọi function thật.
+
+    Args:
+        args: Dict tham số lấy từ tool call của Router LLM.
+
+    Returns:
+        Dict mới không chứa các khóa router-only như confidence_score.
+    """
+    return {key: value for key, value in args.items() if key not in ROUTER_ONLY_ARGS}
 
 
 def _unique_tool_calls(tool_calls: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -118,17 +236,26 @@ def _router_tool_descriptions(tools: dict[str, Any] | None = None) -> list[dict[
     When ``tools`` is provided (e.g. from presentation/main.py), only those
     registered retrievers are exposed — commenting one out in ``main.py`` takes
     effect immediately. Otherwise fall back to the full catalog registry.
+
+    Args:
+        tools: Registry runtime dạng {tool_name: {description, function}} hoặc None.
+
+    Returns:
+        Danh sách schema đã copy và gắn optional confidence_score cho retriever.
     """
     if tools:
         return [
-            entry["description"]
+            _with_router_confidence_schema(entry["description"])
             for entry in tools.values()
             if isinstance(entry, dict) and "description" in entry
         ]
 
     from application.router_tool_registry import router_tools_for_llm
 
-    return router_tools_for_llm()
+    return [
+        _with_router_confidence_schema(description)
+        for description in router_tools_for_llm()
+    ]
 
 
 async def _execute_tool_call(
@@ -136,6 +263,16 @@ async def _execute_tool_call(
     tool_call: dict[str, Any],
     updated_question: str,
 ) -> Any:
+    """Thực thi một tool call đã qua RetrieverPolicy.
+
+    Args:
+        tools: Registry runtime chứa function và schema của từng tool.
+        tool_call: Tool call đã được policy giữ lại, có thể còn router-only args.
+        updated_question: Câu hỏi cuối cùng sẽ truyền vào tham số query nếu tool hỗ trợ.
+
+    Returns:
+        Kết quả thô của function retriever/direct tool sau khi đã strip metadata router.
+    """
     import chainlit as cl
 
     tool_name = _tool_call_name(tool_call)
@@ -146,7 +283,7 @@ async def _execute_tool_call(
 
     async with cl.Step(name=f"Retriever: {tool_name}") as step:
         function_to_call = tools[tool_name]["function"]
-        function_args = dict(tool_call.get("args", {}))
+        function_args = _strip_router_only_args(dict(tool_call.get("args", {})))
         if updated_question and _tool_accepts_query(tools, tool_name):
             function_args["query"] = updated_question
 
@@ -226,7 +363,21 @@ async def llm_retriever_candidates(
     *,
     tools_for_llm: Optional[list[dict[str, Any]]] = None,
 ) -> list[dict[str, Any]]:
-    """Return raw tool_calls from Router LLM only — no policy, no retriever execution."""
+    """Lấy tool_calls thô từ Router LLM mà không chạy policy hay retriever.
+
+    Args:
+        question: Câu hỏi cần định tuyến.
+        tools_for_llm: Danh sách tool schema tùy chọn; nếu có sẽ được gắn thêm
+            confidence_score cho retriever trước khi bind.
+
+    Returns:
+        Danh sách tool_calls thô do Router LLM trả về.
+    """
+    bound_tools = (
+        [_with_router_confidence_schema(tool) for tool in tools_for_llm]
+        if tools_for_llm is not None
+        else None
+    )
     return await tool_choice(
         [
             {"role": "system", "content": tool_picker_prompt},
@@ -238,7 +389,7 @@ async def llm_retriever_candidates(
                 ),
             },
         ],
-        tools=tools_for_llm,
+        tools=bound_tools,
     )
 
 
@@ -249,10 +400,23 @@ async def tool_choice(
     config: Optional[dict[str, Any]] = None,
     model: Optional[str] = None,
 ) -> list[dict[str, Any]]:
+    """Gọi Router LLM để chọn tool theo danh sách schema đã cung cấp.
+
+    Args:
+        messages: System/user messages truyền vào Router LLM.
+        temperature: Tham số tương thích cũ, hiện không dùng.
+        tools: Danh sách tool schema được expose cho Router LLM.
+        config: Tham số tương thích cũ, hiện không dùng.
+        model: Tham số tương thích cũ, hiện không dùng.
+
+    Returns:
+        Danh sách tool_calls do LLM trả về; nếu không có tool call thì trả list rỗng.
+    """
     # temperature/config/model are kept for compatibility with existing scripts.
     _ = (temperature, config, model)
     llm = build_router_llm()
-    llm_with_tools = llm.bind_tools(tools or [], tool_choice="any")
+    bound_tools = [_with_router_confidence_schema(tool) for tool in (tools or [])]
+    llm_with_tools = llm.bind_tools(bound_tools, tool_choice="any")
     res = await llm_with_tools.ainvoke(messages)
     if not res.tool_calls:
         print(f"[Router] No tool_calls returned. model={ROUTER_LLM} content={res.content}")
@@ -264,6 +428,16 @@ async def route_question_with_audit(
     tools: dict[str, Any],
     answers: list[dict[str, str]],
 ) -> tuple[list[Any], PolicyDecision]:
+    """Định tuyến câu hỏi, áp dụng RetrieverPolicy và trả kèm audit.
+
+    Args:
+        question: Câu hỏi người dùng sau bước cập nhật/nguyên văn.
+        tools: Registry runtime chứa schema và function của các retriever/direct tool.
+        answers: Lịch sử hội thoại dạng messages để Router LLM có thêm ngữ cảnh.
+
+    Returns:
+        Tuple gồm danh sách kết quả tool đã chạy và PolicyDecision để log/debug.
+    """
     llm_tool_calls = await tool_choice(
         [
             {
@@ -282,8 +456,8 @@ async def route_question_with_audit(
         tools=_router_tool_descriptions(tools),
     )
 
-    llm_candidate_names = [_tool_call_name(call) for call in llm_tool_calls]
-    policy_decision = evaluate_retriever_policy(question, llm_candidate_names)
+    policy_candidates = _policy_candidates_from_tool_calls(llm_tool_calls)
+    policy_decision = evaluate_retriever_policy(question, policy_candidates)
     policy_tool_calls = _build_policy_tool_calls(
         llm_tool_calls,
         policy_decision.final_tools,

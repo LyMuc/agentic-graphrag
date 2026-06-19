@@ -123,7 +123,7 @@ _LOAI_TAC_DONG_LABEL = {
     "SUA_DOI_BOI": "sửa đổi, bổ sung",
     "HUONG_DAN_BOI": "hướng dẫn",
     "SUA_DOI_HUONG_DAN": "sửa đổi, bổ sung (văn bản hướng dẫn)",
-    "THAY_THE": "thay thế",
+    "THAY_THE_BOI": "thay thế",
     "BAI_BO": "bãi bỏ",
     "HET_HIEU_LUC": "hết hiệu lực theo lịch",
 }
@@ -354,7 +354,7 @@ def _seen_node_ids(seen_provisions: set) -> set[str]:
 
 
 _LOAI_TAC_DONG_VAN_BAN_MOI = frozenset({
-    "SUA_DOI_BOI", "HUONG_DAN_BOI", "SUA_DOI_HUONG_DAN", "THAY_THE", "BAI_BO",
+    "SUA_DOI_BOI", "HUONG_DAN_BOI", "SUA_DOI_HUONG_DAN", "THAY_THE_BOI", "BAI_BO",
 })
 
 

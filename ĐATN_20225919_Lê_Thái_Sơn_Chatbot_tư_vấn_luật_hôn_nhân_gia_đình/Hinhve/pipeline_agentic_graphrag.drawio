@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net" agent="Codex">
+  <diagram id="pipeline-agentic-graphrag" name="Pipeline Agentic GraphRAG">
+    <mxGraphModel dx="2202" dy="1091" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=32;fontStyle=1;fontColor=#000000;" value="Pipeline 5 bước xử lý câu hỏi Agentic GraphRAG" vertex="1">
+          <mxGeometry height="55" width="1240" x="80" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="step1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=22;fontColor=#000000;align=left;verticalAlign=middle;spacing=18;" value="&lt;b&gt;1. Định tuyến retriever&lt;/b&gt;&lt;br&gt;&lt;b&gt;Input:&lt;/b&gt; Câu hỏi gốc + lịch sử hội thoại&lt;br&gt;&lt;b&gt;Output:&lt;/b&gt; Danh sách retriever đề xuất" vertex="1">
+          <mxGeometry height="120" width="1200" x="100" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="gate1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=1;fontSize=20;fontColor=#000000;align=center;verticalAlign=middle;spacing=10;" value="&lt;b&gt;Quality gate 1:&lt;/b&gt; Retriever hợp lệ, không trùng; Loại bỏ retriever thừa bằng retriever policy; fallback retriever có confidence cao nhất" vertex="1">
+          <mxGeometry height="62" width="960" x="220" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="step2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=22;fontColor=#000000;align=left;verticalAlign=middle;spacing=18;" value="&lt;b&gt;2. Chọn template và tham số&lt;/b&gt;&lt;br&gt;&lt;b&gt;Input:&lt;/b&gt; Câu hỏi + retriever hợp lệ&lt;br&gt;&lt;b&gt;Output:&lt;/b&gt; Cypher template + tham số Pydantic" vertex="1">
+          <mxGeometry height="120" width="1200" x="100" y="347" as="geometry" />
+        </mxCell>
+        <mxCell id="gate2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=1;fontSize=20;fontColor=#000000;align=center;verticalAlign=middle;spacing=10;" value="&lt;b&gt;Quality gate 2:&lt;/b&gt; Template tồn tại; output tham số parse theo schema; fallback template tổng quát hoặc giá trị tham số mặc định" vertex="1">
+          <mxGeometry height="62" width="960" x="220" y="497" as="geometry" />
+        </mxCell>
+        <mxCell id="step3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=22;fontColor=#000000;align=left;verticalAlign=middle;spacing=18;" value="&lt;b&gt;3. Truy xuất căn cứ pháp lý&lt;/b&gt;&lt;br&gt;&lt;b&gt;Input:&lt;/b&gt; Cypher template + tham số truy vấn&lt;br&gt;&lt;b&gt;Output:&lt;/b&gt; Context gồm điều luật và quan hệ văn bản" vertex="1">
+          <mxGeometry height="120" width="1200" x="100" y="589" as="geometry" />
+        </mxCell>
+        <mxCell id="step4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=22;fontColor=#000000;align=left;verticalAlign=middle;spacing=18;" value="&lt;b&gt;4. Chuẩn hóa context&lt;/b&gt;&lt;br&gt;&lt;b&gt;Input:&lt;/b&gt; Context từ KG&lt;br&gt;&lt;b&gt;Output:&lt;/b&gt; Context được chuẩn hóa + cờ cảnh báo hiệu lực/mâu thuẫn" vertex="1">
+          <mxGeometry height="120" width="1200" x="100" y="739" as="geometry" />
+        </mxCell>
+        <mxCell id="gate4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;dashed=1;fontSize=20;fontColor=#000000;align=center;verticalAlign=middle;spacing=10;" value="&lt;b&gt;Quality gate 3:&lt;/b&gt; Deduplicate (khử trùng) căn cứ" vertex="1">
+          <mxGeometry height="62" width="960" x="220" y="889" as="geometry" />
+        </mxCell>
+        <mxCell id="step5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontSize=22;fontColor=#000000;align=left;verticalAlign=middle;spacing=18;" value="&lt;b&gt;5. Sinh và hiển thị đáp án&lt;/b&gt;&lt;br&gt;&lt;b&gt;Input:&lt;/b&gt; Câu hỏi + lịch sử + context được chuẩn hóa&lt;br&gt;&lt;b&gt;Output:&lt;/b&gt; Câu trả lời có trích dẫn, cảnh báo, agent trace và URL đồ thị" vertex="1">
+          <mxGeometry height="120" width="1200" x="100" y="981" as="geometry" />
+        </mxCell>
+        <mxCell id="e1a" edge="1" parent="1" source="step1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#000000;" target="gate1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1b" edge="1" parent="1" source="gate1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#000000;" target="step2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2a" edge="1" parent="1" source="step2" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#000000;" target="gate2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2b" edge="1" parent="1" source="gate2" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#000000;" target="step3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3b" edge="1" parent="1" source="step3" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#000000;" target="step4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4a" edge="1" parent="1" source="step4" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#000000;" target="gate4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4b" edge="1" parent="1" source="gate4" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#000000;" target="step5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

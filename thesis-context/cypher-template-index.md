@@ -9,7 +9,7 @@ Phần registry dưới **tự sinh** từ `registry_index.py`. Ghi chú narrati
 - `*.py` từng template: hàm build Cypher + metadata
 
 <!-- BEGIN AUTO-GENERATED:sync_thesis_context.py -->
-_Cập nhật lúc 2026-06-15 16:10 UTC_
+_Cập nhật lúc 2026-06-17 14:54 UTC_
 
 Registry: `adapter/cypher_templates/registry_index.py` → `ALL_TEMPLATE_REGISTRIES`.
 
@@ -36,7 +36,7 @@ Registry: `adapter/cypher_templates/registry_index.py` → `ALL_TEMPLATE_REGISTR
 | `tai_san` | `adapter/cypher_templates/tai_san/` | `che_do_tai_san_cua_vo_chong` | 8 |
 | `tai_san_rieng_cua_con` | `adapter/cypher_templates/tai_san_rieng_cua_con/` | `tai_san_rieng_cua_con` | 8 |
 | `xac_dinh_cha_me_con` | `adapter/cypher_templates/xac_dinh_cha_me_con/` | `xac_dinh_cha_me_con` | 8 |
-| `xu_phat_vi_pham` | `adapter/cypher_templates/xu_phat_vi_pham/` | `xu_phat_vi_pham` | 28 |
+| `xu_phat_vi_pham` | `adapter/cypher_templates/xu_phat_vi_pham/` | `xu_phat_vi_pham` | 29 |
 
 Tổng domain có `_common.py`: **20**; đã đăng ký registry: **20**.
 <!-- END AUTO-GENERATED:sync_thesis_context.py -->
