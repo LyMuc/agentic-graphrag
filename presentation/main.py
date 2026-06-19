@@ -6,6 +6,11 @@ import chainlit as cl
 from adapter import data_layer 
 from chainlit import data as cl_data
 import presentation.projects_api  # noqa: F401
+import presentation.compare_actions  # noqa: F401 — registers action callback
+from presentation.compare_actions import (
+    attach_compare_to_message,
+    restore_compare_actions_from_thread,
+)
 from adapter.config import chat_stream
 from application.query_updater import query_update
 from application.router import route_question_with_audit
@@ -469,6 +474,7 @@ async def on_chat_resume(thread: ThreadDict):
                  
     cl.user_session.set("session_history", session_history)
     cl.user_session.set("expert_mode", False)
+    await restore_compare_actions_from_thread(steps)
     await _send_chat_settings()
 
 
@@ -576,6 +582,7 @@ async def main(message: cl.Message):
         viz_extra = _viz_footer(tool_response)
         msg = cl.Message(content=direct_answer + viz_extra)
         await msg.send()
+        await attach_compare_to_message(msg, input_text, direct_answer + viz_extra)
         session_history.append({"role": "user", "content": input_text})
         session_history.append({"role": "assistant", "content": direct_answer + viz_extra})
         cl.user_session.set("session_history", session_history)
@@ -604,6 +611,8 @@ async def main(message: cl.Message):
         await msg.stream_token(viz_extra)
 
     await msg.update()
+
+    await attach_compare_to_message(msg, input_text, llm_response)
 
     session_history.append({"role": "user", "content": input_text})
     session_history.append({"role": "assistant", "content": llm_response})
