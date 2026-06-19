@@ -38,7 +38,8 @@ quyen_nghia_vu_vo_chong_description = {
         "description": (
             "Tra cứu quyền và nghĩa vụ nhân thân giữa vợ và chồng theo Điều 17-23 Luật HNGD 2014: "
             "bình đẳng, quyền nhân thân, tình nghĩa, sống chung, nơi cư trú, danh dự, "
-            "tín ngưỡng/tôn giáo, nghề nghiệp, học tập và hoạt động xã hội."
+            "tín ngưỡng/tôn giáo, nghề nghiệp, học tập và hoạt động xã hội. Không dùng để tra cứu"
+            "các vấn đề liên quan đến chế độ tài sản"
         ),
         "parameters": {
             "type": "object",
