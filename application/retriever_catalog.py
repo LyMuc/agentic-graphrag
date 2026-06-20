@@ -7,7 +7,7 @@ from typing import Any, Iterable
 from application.vi_phrase_match import match_phrase_groups, prepare_question
 
 
-DIRECT_TOOLS = {"respond", "text2cypher"}
+DIRECT_TOOLS = {"respond", "text2cypher", "clarify"}
 
 # Alias legacy khác topic_label
 EXTRA_ALIASES: dict[str, tuple[str, ...]] = {

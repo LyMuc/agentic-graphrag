@@ -109,7 +109,9 @@ async def attach_compare_to_message(
         await msg.update()
     compare_id = str(msg.id)
     stash_comparison_data(compare_id, question, app_answer)
-    msg.metadata = {"compare_available": True, "compare_id": compare_id}
+    metadata = dict(msg.metadata or {})
+    metadata.update({"compare_available": True, "compare_id": compare_id})
+    msg.metadata = metadata
     msg.actions = [build_compare_action(compare_id)]
     await msg.update()
 

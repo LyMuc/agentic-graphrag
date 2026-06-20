@@ -444,7 +444,26 @@ def _collect_hieu_luc(items, doc_hieu_luc_map):
             )
 
 
-def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
+def chuan_hoa_Context_cho_LLM(
+    neo4j_record,
+    target_date,
+    is_user_provide_date,
+    citation_links=None,
+):
+    """Chuẩn hóa ``Context_Tho`` thành văn bản căn cứ pháp lý cho LLM.
+
+    Args:
+        neo4j_record: Mapping chứa khóa ``Context_Tho`` từ kết quả Neo4j.
+        target_date: Ngày áp dụng pháp luật theo định dạng ``YYYY-MM-DD``.
+        is_user_provide_date: ``True`` khi người dùng nêu rõ mốc thời gian;
+            dùng để bật cảnh báo lịch sử và tắt cảnh báo luật sắp hiệu lực.
+        citation_links: Mapping tùy chọn từ ID cấp Điều tới URL TVPL. Nếu
+            không truyền, hàm tự tải link từ Neo4j như hành vi cũ.
+
+    Returns:
+        Chuỗi context đã định dạng gồm cảnh báo, hiệu lực, căn cứ chính,
+        hướng dẫn, bổ trợ, mâu thuẫn, luật sắp hiệu lực và link trích dẫn.
+    """
     data = neo4j_record['Context_Tho']
 
     context_sach = {
@@ -689,18 +708,22 @@ def chuan_hoa_Context_cho_LLM(neo4j_record, target_date, is_user_provide_date):
                 f"[{item['id_dich']}]: {item['noidung_dich']}\n"
             )
 
-    link_dieu_ids = _collect_dieu_ids_for_bang_link(
-        can_cu_chinh_kept=can_cu_chinh_kept,
-        can_cu_huong_dan_kept=can_cu_huong_dan_kept,
-        can_cu_bo_tro_kept=can_cu_bo_tro_kept,
-        mau_thuan_kept=context_sach["danh_sach_mau_thuan"],
-        sap_hieu_luc_kept=can_cu_sap_kept,
-        lien_ket_hien_hanh_kept=context_sach["lien_ket_hien_hanh"] if show_van_ban_thay_the else [],
-        van_ban_thay_the_ids=(
-            context_sach["danh_sach_van_ban_thay_the"] if show_van_ban_thay_the else []
-        ),
-    )
-    bang_link = _format_bang_link_trich_dan(_fetch_tvpl_links(link_dieu_ids))
+    if citation_links is not None:
+        link_map = dict(citation_links)
+    else:
+        link_dieu_ids = _collect_dieu_ids_for_bang_link(
+            can_cu_chinh_kept=can_cu_chinh_kept,
+            can_cu_huong_dan_kept=can_cu_huong_dan_kept,
+            can_cu_bo_tro_kept=can_cu_bo_tro_kept,
+            mau_thuan_kept=context_sach["danh_sach_mau_thuan"],
+            sap_hieu_luc_kept=can_cu_sap_kept,
+            lien_ket_hien_hanh_kept=context_sach["lien_ket_hien_hanh"] if show_van_ban_thay_the else [],
+            van_ban_thay_the_ids=(
+                context_sach["danh_sach_van_ban_thay_the"] if show_van_ban_thay_the else []
+            ),
+        )
+        link_map = _fetch_tvpl_links(link_dieu_ids)
+    bang_link = _format_bang_link_trich_dan(link_map)
     if bang_link:
         final_context_string += f"\n{bang_link}"
 

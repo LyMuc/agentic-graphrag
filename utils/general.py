@@ -20,8 +20,55 @@ answer_given_description = {
 }
 
 async def answer_given(answer: str, **kwargs):
-    """Trích xuất câu trả lời từ đoạn văn bản đã cho."""
+    """Trả trực tiếp câu trả lời Router đã lấy được từ lịch sử.
+
+    Args:
+        answer: Nội dung phản hồi hoàn chỉnh do Router cung cấp.
+        **kwargs: Tham số điều khiển tùy chọn từ Router; bị bỏ qua để giữ tương
+            thích với tool schema mở rộng.
+
+    Returns:
+        Chính chuỗi ``answer`` mà không gọi thêm LLM hoặc retriever.
+    """
     return answer
+
+
+clarify_description = {
+    "type": "function",
+    "function": {
+        "name": "clarify",
+        "description": (
+            "Hỏi lại người dùng khi câu follow-up có từ hai cách hiểu hợp lý trở lên "
+            "và lịch sử gần cùng chỉ mục lượt cũ không đủ để xác định chắc chắn. "
+            "Không dùng nếu câu hỏi tự nó đã đầy đủ hoặc có thể trả lời theo các trường hợp."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "question": {
+                    "type": "string",
+                    "description": "Một câu hỏi làm rõ ngắn, nêu cụ thể các cách hiểu cần chọn.",
+                }
+            },
+            "required": ["question"],
+        },
+    },
+}
+
+
+async def clarify_question(question: str, **kwargs):
+    """Trả trực tiếp câu hỏi làm rõ mà không gọi retriever hay Response LLM.
+
+    Args:
+        question: Câu hỏi ngắn yêu cầu người dùng xác định đối tượng, mốc thời
+            gian hoặc ý hỏi đang mơ hồ.
+        **kwargs: Tham số điều khiển tùy chọn từ Router; bị bỏ qua.
+
+    Returns:
+        Chính chuỗi ``question`` để Chainlit gửi trực tiếp cho người dùng.
+    """
+
+    return question
 
 text2cypher_description = {
     "type": "function",
@@ -42,7 +89,16 @@ text2cypher_description = {
 }
 
 async def text2cypher(query: str, **kwargs):
-    """Truy vấn cơ sở dữ liệu bằng câu hỏi của người dùng."""
+    """Sinh và thực thi Cypher fallback cho câu hỏi ngoài retriever chuyên biệt.
+
+    Args:
+        query: Câu hỏi độc lập đã được Router giải nghĩa.
+        **kwargs: Tham số điều khiển tùy chọn từ Router; bị bỏ qua.
+
+    Returns:
+        Danh sách record Neo4j dưới dạng dictionary, hoặc một phần tử chuỗi mô
+        tả lỗi Cypher khi truy vấn thất bại.
+    """
     t2c = Text2Cypher(driver)
     t2c.set_prompt_section("question", query)
     cypher = await t2c.generate_cypher()

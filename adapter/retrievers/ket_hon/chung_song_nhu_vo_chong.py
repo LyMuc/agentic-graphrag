@@ -3,7 +3,7 @@
 Pipeline 3 bước:
     1. CLASSIFY  -> LLM chọn 1+ template (registry topic 'chung_song_nhu_vo_chong').
     2. EXTRACT   -> 1 LLM call mỗi template (params + thời điểm sự kiện).
-    3. EXECUTE   -> chạy Cypher qua asyncio.to_thread → chuan_hoa_Context_cho_LLM.
+    3. EXECUTE   -> chạy Cypher và encode ``LegalContextBundle``.
 
 Output: dict ``{"contexts": list[str], "debug": str}``.
 """
@@ -27,7 +27,7 @@ from adapter.cypher_templates.chung_song_nhu_vo_chong import (
 )
 from adapter.cypher_templates.chung_song_nhu_vo_chong.term_mapping import resolve_term
 from adapter.graph_viz import save_lazy_viz_stub
-from utils.utils import chuan_hoa_Context_cho_LLM
+from application.legal_context import encode_context_record
 
 
 chung_song_nhu_vo_chong_description = {
@@ -250,7 +250,16 @@ def _format_retrieval_debug(
 
 
 async def chung_song_nhu_vo_chong(query: str) -> dict[str, Any]:
-    """3 bước: classify → extract → execute → normalize."""
+    """Truy xuất căn cứ về chung sống như vợ chồng không đăng ký.
+
+    Args:
+        query: Câu hỏi pháp lý đã được Router giải nghĩa đầy đủ ngữ cảnh.
+
+    Returns:
+        Dictionary gồm các LegalContextBundle trong ``contexts``, thông tin
+        chẩn đoán trong ``debug`` và ``graph_viz_id`` tùy chọn. Context lỗi
+        vẫn được trả dưới dạng text để không làm hỏng toàn bộ lượt hỏi.
+    """
     print(f"[Agent chung_song_nhu_vo_chong] Đang xử lý: '{query}'...")
 
     choices = await _classify_templates(query)
@@ -299,9 +308,13 @@ async def chung_song_nhu_vo_chong(query: str) -> dict[str, Any]:
 
         try:
             contexts.append(
-                chuan_hoa_Context_cho_LLM(
-                    record, target_date, is_user_provide_date
-                ).rstrip()
+                encode_context_record(
+                    record,
+                    target_date,
+                    is_user_provide_date,
+                    retriever_name="chung_song_nhu_vo_chong",
+                    template_name=template.name,
+                )
             )
         except Exception as exc:
             print(f"[Template:{template.name}] Normalize error: {exc}")

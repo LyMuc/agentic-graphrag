@@ -66,7 +66,9 @@ logs/
 frontend/node_modules/
 
 # --- Project-specific ---
-docs
+docs/*
+!docs/legal_context_bundle.md
+!docs/conversation_context.md
 ĐATN_*/build/
 
 # Benchmark pipeline: keep manifest, exclude rolling backups & pre-recovery dumps

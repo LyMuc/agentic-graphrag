@@ -1,5 +1,6 @@
 import sys
 import os
+import uuid
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import chainlit as cl
 # Gọi data_layer để Chainlit thiết lập PostgreSQL connection lúc khởi động
@@ -14,8 +15,17 @@ from presentation.compare_actions import (
 )
 from presentation.guest_auth import guest_management_guard, router as guest_router
 from adapter.config import chat_stream
-from application.query_updater import query_update
 from application.router import route_question_with_audit
+from application.legal_context import process_context_strings
+from application.conversation_context import (
+    RESPONSE_HISTORY_MAX_TOKENS,
+    ROUTER_HISTORY_MAX_TOKENS,
+    build_turn_anchor,
+    build_working_history,
+    create_retrieval_memory_entries,
+    current_kg_version,
+    restore_conversation_state,
+)
 from adapter.graph_viz import collect_viz_links
 
 from adapter.retrievers.cap_duong import cap_duong, cap_duong_description
@@ -68,7 +78,14 @@ from adapter.retrievers.quyen_nghia_vu_cha_me_con import (
 from adapter.retrievers.tai_san_rieng_cua_con import tai_san_rieng_cua_con, tai_san_rieng_cua_con_description
 from adapter.retrievers.xac_dinh_cha_me_con import xac_dinh_cha_me_con, xac_dinh_cha_me_con_description
 from adapter.retrievers.vi_pham.xu_phat_vi_pham import xu_phat_vi_pham, xu_phat_vi_pham_description
-from utils.general import text2cypher, text2cypher_description, answer_given, answer_given_description
+from utils.general import (
+    answer_given,
+    answer_given_description,
+    clarify_description,
+    clarify_question,
+    text2cypher,
+    text2cypher_description,
+)
 from chainlit.input_widget import Switch
 from chainlit.types import ThreadDict
 from typing import Any, Dict, Optional
@@ -190,6 +207,10 @@ tools = {
     "respond": {
         "description": answer_given_description,
         "function": answer_given
+    },
+    "clarify": {
+        "description": clarify_description,
+        "function": clarify_question
     }
 }
 
@@ -446,7 +467,16 @@ def oauth_callback(
 # =================================================================
 @cl.on_chat_start
 async def on_chat_start():
+    """Initialize empty conversation and retrieval-memory state for a new chat.
+
+    Returns:
+        ``None``. Session keys are initialized and a greeting message is sent
+        to the authenticated user.
+    """
+
     cl.user_session.set("session_history", [])
+    cl.user_session.set("retrieval_memory", {})
+    cl.user_session.set("conversation_anchors", [])
     await _send_chat_settings()
 
     user = cl.user_session.get("user")
@@ -463,29 +493,37 @@ async def on_settings_update(settings: dict[str, Any]):
 
 @cl.on_chat_resume
 async def on_chat_resume(thread: ThreadDict):
+    """Restore messages, retrieval memory, and old-turn anchors for a thread.
+
+    Args:
+        thread: Chainlit thread dictionary containing persisted steps and their
+            metadata.
+
+    Returns:
+        ``None``. Restored state is written to ``cl.user_session``. Legacy
+        threads without retrieval metadata still restore their messages.
     """
-    Hook này chạy khi User bấm vào một đoạn chat cũ trên Sidebar.
-    Kéo các steps đã lưu từ PostgreSQL lên và ép lại thành `session_history`.
-    """
-    # Trên Chainlit 2.x, thread được truyền vào đã có sẵn mảng "steps" (chứa danh sách dict của các steps)
     steps = thread.get("steps", [])
-    
-    session_history = []
-    for step in steps:
-        step_type = step.get("type", "")
-        # Thông thường tin nhắn chat của người dùng có type là user_message, của bot là assistant_message
-        if step_type == "user_message":
-             session_history.append({"role": "user", "content": step.get("output", "")})
-        elif step_type == "assistant_message":
-             session_history.append({"role": "assistant", "content": step.get("output", "")})
-                 
+    session_history, retrieval_memory, anchors = restore_conversation_state(steps)
     cl.user_session.set("session_history", session_history)
+    cl.user_session.set("retrieval_memory", retrieval_memory)
+    cl.user_session.set("conversation_anchors", anchors)
     cl.user_session.set("expert_mode", False)
     await restore_compare_actions_from_thread(steps)
     await _send_chat_settings()
 
 
 def _viz_footer(tool_response: list) -> str:
+    """Build Markdown visualization links from retriever results.
+
+    Args:
+        tool_response: Results returned by Router/retriever execution.
+
+    Returns:
+        Markdown footer containing graph links, or an empty string when no
+        visualization snapshot is available.
+    """
+
     if not _is_expert_mode():
         return ""
     base = os.environ.get("VIZ_BASE_URL", "http://localhost:8501").rstrip("/")
@@ -501,26 +539,64 @@ def _viz_footer(tool_response: list) -> str:
 
 async def _route_with_optional_steps(
     updated_question: str,
-    session_history: list[dict[str, str]],
-) -> tuple[list[Any], Any]:
+    router_history: list[dict[str, str]],
+    retrieval_memory: dict[str, dict[str, Any]],
+    conversation_anchors: list[dict[str, Any]],
+    *,
+    turn_id: str,
+    thread_id: str,
+    kg_version: str,
+) -> tuple[list[Any], Any, dict[str, Any]]:
+    async def _route_and_update_memory() -> tuple[list[Any], Any, dict[str, Any]]:
+        tool_response, router_policy = await route_question_with_audit(
+            updated_question,
+            tools,
+            router_history,
+            retrieval_memory=retrieval_memory,
+            thread_id=thread_id,
+            kg_version=kg_version,
+        )
+        new_memory_entries = create_retrieval_memory_entries(
+            tool_response,
+            turn_id=turn_id,
+            thread_id=thread_id,
+            kg_version=kg_version,
+        )
+        for entry in new_memory_entries:
+            retrieval_memory[entry["context_ref"]] = entry
+        turn_anchor = build_turn_anchor(
+            turn_id=turn_id,
+            tool_response=tool_response,
+            new_memory_entries=new_memory_entries,
+        )
+        if turn_anchor:
+            conversation_anchors.append(turn_anchor)
+        cl.user_session.set("retrieval_memory", retrieval_memory)
+        cl.user_session.set("conversation_anchors", conversation_anchors)
+        metadata = {
+            "retrieval_memory_entries": new_memory_entries,
+            "turn_anchor": turn_anchor,
+            "kg_version": kg_version,
+        }
+        return tool_response, router_policy, metadata
+
     if not _is_expert_mode():
-        return await route_question_with_audit(updated_question, tools, session_history)
+        return await _route_and_update_memory()
 
     async with cl.Step(name="Luồng truy xuất ngữ cảnh") as p_step:
         async with cl.Step(name="Router Agent", type="tool") as step2:
             step2.input = f'Router Input: "{updated_question}"'
-            tool_response, router_policy = await route_question_with_audit(
-                updated_question, tools, session_history
-            )
+            tool_response, router_policy, metadata = await _route_and_update_memory()
             step2.metadata = {
                 "tool_response": tool_response,
                 "router_policy": router_policy.to_dict(),
+                **metadata,
             }
             step2.output = (
                 router_policy.audit_text() + "\n\nRetriever cuối cùng đã chạy xong."
             )
         p_step.output = "Hoàn tất truy xuất ngữ cảnh pháp lý."
-    return tool_response, router_policy
+    return tool_response, router_policy, {}
 
 
 async def _stream_answer(
@@ -561,12 +637,38 @@ async def _stream_answer(
 
 @cl.on_message
 async def main(message: cl.Message):
+    """Handle one user message through routing, retrieval, and answer synthesis.
+
+    Args:
+        message: Chainlit message containing the user's raw text.
+
+    Returns:
+        ``None``. The function streams or sends a Chainlit assistant message,
+        persists trace steps, and updates the in-memory conversation history.
+    """
     input_text = message.content
-    session_history = cl.user_session.get("session_history")
+    session_history = cl.user_session.get("session_history") or []
+    retrieval_memory = cl.user_session.get("retrieval_memory") or {}
+    conversation_anchors = cl.user_session.get("conversation_anchors") or []
+    turn_id = uuid.uuid4().hex
+    thread_id = str(getattr(message, "thread_id", "") or "")
+    kg_version = current_kg_version()
+    router_history = build_working_history(
+        session_history,
+        conversation_anchors,
+        current_query=input_text,
+        max_tokens=ROUTER_HISTORY_MAX_TOKENS,
+    )
 
     updated_question = input_text
-    tool_response, router_policy = await _route_with_optional_steps(
-        updated_question, session_history
+    tool_response, router_policy, routing_metadata = await _route_with_optional_steps(
+        updated_question,
+        router_history,
+        retrieval_memory,
+        conversation_anchors,
+        turn_id=turn_id,
+        thread_id=thread_id,
+        kg_version=kg_version,
     )
 
     contexts_for_llm = []
@@ -588,6 +690,8 @@ async def main(message: cl.Message):
         direct_answer = tool_response[0]
         viz_extra = _viz_footer(tool_response)
         msg = cl.Message(content=direct_answer + viz_extra)
+        if routing_metadata.get("retrieval_memory_entries") or routing_metadata.get("turn_anchor"):
+            msg.metadata = routing_metadata
         await msg.send()
         await attach_compare_to_message(msg, input_text, direct_answer + viz_extra)
         session_history.append({"role": "user", "content": input_text})
@@ -595,19 +699,41 @@ async def main(message: cl.Message):
         cl.user_session.set("session_history", session_history)
         return
 
-    contexts_text_for_llm = "\n\n".join(str(ctx) for ctx in contexts_for_llm)
+    context_pipeline = process_context_strings(contexts_for_llm)
+    contexts_text_for_llm = context_pipeline.rendered_text
+    resolved_queries = [
+        str(res.get("resolved_query"))
+        for res in tool_response
+        if isinstance(res, dict) and res.get("resolved_query")
+    ]
+    resolved_question = " | ".join(dict.fromkeys(resolved_queries)) or input_text
 
-    current_context = list(session_history)
+    response_history = build_working_history(
+        session_history,
+        conversation_anchors,
+        current_query=resolved_question,
+        max_tokens=RESPONSE_HISTORY_MAX_TOKENS,
+    )
+    current_context = list(response_history)
     current_context.append({
         "role": "system",
-        "content": f"Dữ liệu lấy được từ hệ thống cho câu hỏi '{updated_question}':\n{contexts_text_for_llm}"
+        "content": (
+            f"Dữ liệu lấy được từ hệ thống cho câu hỏi đã giải nghĩa "
+            f"'{resolved_question}':\n{contexts_text_for_llm}"
+        )
     })
 
     # Sinh câu trả lời cuối cùng (streaming)
     llm_messages = [
         {"role": "system", "content": main_prompt},
         *current_context,
-        {"role": "user", "content": f"Câu hỏi của người dùng: {input_text}"},
+        {
+            "role": "user",
+            "content": (
+                f"Câu hỏi nguyên văn của người dùng: {input_text}\n"
+                f"Câu hỏi đã giải nghĩa: {resolved_question}"
+            ),
+        },
     ]
     msg = cl.Message(content="")
     llm_response = await _stream_answer(llm_messages, contexts_text_for_llm, msg)
@@ -617,6 +743,8 @@ async def main(message: cl.Message):
         llm_response += viz_extra
         await msg.stream_token(viz_extra)
 
+    if routing_metadata.get("retrieval_memory_entries") or routing_metadata.get("turn_anchor"):
+        msg.metadata = routing_metadata
     await msg.update()
 
     await attach_compare_to_message(msg, input_text, llm_response)
