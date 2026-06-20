@@ -1,5 +1,5 @@
 import capitalize from 'lodash/capitalize';
-import { LogOut } from 'lucide-react';
+import { LogIn, LogOut } from 'lucide-react';
 
 import { useAuth } from '@chainlit/react-client';
 
@@ -14,11 +14,28 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Translator } from 'components/i18n';
+import { isGuestUser } from '@/lib/auth';
+import getRouterBasename from '@/lib/router';
 
 export default function UserNav() {
   const { user, logout } = useAuth();
 
-  if (!user) return null;
+  if (!user || isGuestUser(user)) {
+    return (
+      <Button
+        id="login-button"
+        variant="outline"
+        size="sm"
+        asChild
+      >
+        <a href={getRouterBasename() + '/login'}>
+          <LogIn className="mr-2 !size-4" />
+          Login
+        </a>
+      </Button>
+    );
+  }
+
   const displayName = user?.display_name || user?.identifier;
 
   return (

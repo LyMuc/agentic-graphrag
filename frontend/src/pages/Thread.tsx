@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 
 import Page from 'pages/Page';
 
 import {
   threadHistoryState,
+  useAuth,
   useChatMessages,
   useConfig
 } from '@chainlit/react-client';
@@ -14,11 +15,13 @@ import AutoResumeThread from '@/components/AutoResumeThread';
 import { Loader } from '@/components/Loader';
 import { ReadOnlyThread } from '@/components/ReadOnlyThread';
 import Chat from '@/components/chat';
+import { isGuestUser } from '@/lib/auth';
 
 export default function ThreadPage() {
   const { id } = useParams();
   const location = useLocation();
   const { config } = useConfig();
+  const { user } = useAuth();
 
   const setThreadHistory = useSetRecoilState(threadHistoryState);
 
@@ -34,6 +37,10 @@ export default function ThreadPage() {
   }, [id]);
 
   const isSharedRoute = location.pathname.startsWith('/share/');
+
+  if (!isSharedRoute && isGuestUser(user)) {
+    return <Navigate replace to="/" />;
+  }
 
   return (
     <Page>

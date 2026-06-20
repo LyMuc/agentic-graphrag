@@ -22,6 +22,7 @@ import {
 import { Translator } from 'components/i18n';
 
 import { chatSettingsSidebarOpenState } from '@/state/project';
+import { canManageConversations } from '@/lib/auth';
 
 import ApiKeys from './ApiKeys';
 import ChatProfiles from './ChatProfiles';
@@ -35,7 +36,7 @@ import UserNav from './UserNav';
 const Header = memo(() => {
   const { audioConnection } = useAudio();
   const navigate = useNavigate();
-  const { data } = useAuth();
+  const { user } = useAuth();
   const { config } = useConfig();
   const { chatSettingsInputs } = useChatData();
   const { open, openMobile, isMobile } = useSidebar();
@@ -45,7 +46,7 @@ const Header = memo(() => {
 
   const sidebarOpen = isMobile ? openMobile : open;
 
-  const historyEnabled = data?.requireLogin && config?.dataPersistence;
+  const historyEnabled = canManageConversations(config, user);
   const sidebarHidden = config?.ui?.default_sidebar_state === 'hidden';
 
   const links = config?.ui?.header_links || [];

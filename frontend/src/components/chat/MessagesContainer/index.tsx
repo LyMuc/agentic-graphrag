@@ -15,11 +15,13 @@ import {
   useChatData,
   useChatInteract,
   useChatMessages,
-  useConfig
+  useConfig,
+  useAuth
 } from '@chainlit/react-client';
 
 import { Messages } from '@/components/chat/Messages';
 import { useTranslation } from 'components/i18n/Translator';
+import { canManageConversations } from '@/lib/auth';
 
 interface Props {
   navigate?: (to: string) => void;
@@ -28,6 +30,7 @@ interface Props {
 const MessagesContainer = ({ navigate }: Props) => {
   const apiClient = useContext(ChainlitContext);
   const { config } = useConfig();
+  const { user } = useAuth();
   const { elements, askUser, loading, actions } = useChatData();
   const { messages } = useChatMessages();
   const { uploadFile: _uploadFile } = useChatInteract();
@@ -148,7 +151,7 @@ const MessagesContainer = ({ navigate }: Props) => {
 
   const onError = useCallback((error: string) => toast.error(error), [toast]);
 
-  const enableFeedback = !!config?.dataPersistence;
+  const enableFeedback = canManageConversations(config, user);
 
   // Memoize the context object since it's created on each render.
   // This prevents unnecessary re-renders of children components when no props have changed.

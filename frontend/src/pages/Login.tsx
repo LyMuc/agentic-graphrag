@@ -8,6 +8,7 @@ import { useTheme } from '@/components/ThemeProvider';
 import { useQuery } from 'hooks/query';
 
 import { ChainlitContext, useAuth } from '@chainlit/react-client';
+import { isGuestUser } from '@/lib/auth';
 
 export const LoginError = new Error(
   'Error logging in. Please try again later.'
@@ -73,10 +74,10 @@ export default function Login() {
     if (!config.requireLogin) {
       navigate('/');
     }
-    if (config.headerAuth && !user) {
+    if (config.headerAuth && (!user || isGuestUser(user))) {
       handleHeaderAuth();
     }
-    if (user) {
+    if (user && !isGuestUser(user)) {
       navigate('/');
     }
   }, [config, user]);

@@ -27,6 +27,11 @@ const onError = (error: ClientError) => {
 };
 
 export class ExtendedChainlitAPI extends ChainlitAPI {
+  async guestAuth(): Promise<{ success: boolean }> {
+    const res = await this.post("/auth/guest", {});
+    return res.json();
+  }
+
   async shareThread(
     threadId: string,
     isShared: boolean,

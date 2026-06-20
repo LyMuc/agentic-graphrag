@@ -12,6 +12,7 @@ import { ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
 import { userEnvState } from 'state/user';
+import { canManageConversations } from '@/lib/auth';
 
 type Props = {
   children: JSX.Element;
@@ -19,7 +20,7 @@ type Props = {
 
 const Page = ({ children }: Props) => {
   const { config } = useConfig();
-  const { data } = useAuth();
+  const { user } = useAuth();
   const userEnv = useRecoilValue(userEnvState);
   const sideView = useRecoilValue(sideViewState);
 
@@ -53,7 +54,7 @@ const Page = ({ children }: Props) => {
     </div>
   );
 
-  const historyEnabled = config?.dataPersistence && data?.requireLogin;
+  const historyEnabled = canManageConversations(config, user);
   const sidebarHidden = config?.ui?.default_sidebar_state === 'hidden';
 
   return (

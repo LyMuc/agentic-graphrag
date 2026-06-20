@@ -6,6 +6,7 @@ import Page from 'pages/Page';
 import {
   IMessageElement,
   useApi,
+  useAuth,
   useChatData,
   useConfig
 } from '@chainlit/react-client';
@@ -13,6 +14,7 @@ import {
 import Alert from '@/components/Alert';
 import { ElementView } from '@/components/ElementView';
 import { Loader } from '@/components/Loader';
+import { canManageConversations } from '@/lib/auth';
 
 import { useQuery } from 'hooks/query';
 
@@ -21,13 +23,14 @@ export default function Element() {
   const query = useQuery();
   const { elements } = useChatData();
   const { config } = useConfig();
+  const { user } = useAuth();
 
   const [element, setElement] = useState<IMessageElement | null>(null);
   const navigate = useNavigate();
 
   const threadId = query.get('thread');
 
-  const dataPersistence = config?.dataPersistence;
+  const dataPersistence = canManageConversations(config, user);
 
   const { data, isLoading, error } = useApi<IMessageElement>(
     id && threadId && dataPersistence

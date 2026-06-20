@@ -249,13 +249,14 @@ Khi thêm server mới trong pgAdmin:
 postgresql+asyncpg://postgres:123456@localhost:5432/chainlit_db
 ```
 
-### 6.4. OAuth (tùy chọn, chưa bật mặc định)
+### 6.4. Guest và OAuth
 
-OAuth Google và GitHub đã được khai báo trong `.chainlit/config.toml`. Để bật:
+Khách chưa đăng nhập có thể chat nhưng dữ liệu hội thoại chỉ tồn tại trong
+phiên và không được ghi vào PostgreSQL. OAuth Google và GitHub đã được khai báo
+trong `.chainlit/config.toml`. Để cấu hình đăng nhập:
 
 1. Điền `OAUTH_GOOGLE_*` hoặc `OAUTH_GITHUB_*` trong `.env`
-2. Đặt `auth.enabled = true` trong `.chainlit/config.toml`
-3. Cấu hình redirect URI tương ứng trên Google Cloud Console / GitHub OAuth App
+2. Cấu hình redirect URI tương ứng trên Google Cloud Console / GitHub OAuth App
 
 ---
 
@@ -267,7 +268,8 @@ OAuth Google và GitHub đã được khai báo trong `.chainlit/config.toml`. �
 | pgAdmin | Mở http://localhost:5050 | Đăng nhập thành công |
 | Chainlit | Mở http://localhost:8000 | Giao diện chat hiển thị |
 | Neo4j | Gửi câu hỏi pháp luật trên UI | Retriever trả về context, có câu trả lời trích dẫn |
-| Lưu hội thoại | Refresh trang, mở lại thread cũ | Thread được persist trong PostgreSQL |
+| Guest chat | Mở UI khi chưa đăng nhập | Chat được, không có lịch sử/Projects |
+| Lưu hội thoại | Đăng nhập, chat, refresh và mở thread cũ | Thread được persist trong PostgreSQL |
 
 ---
 
