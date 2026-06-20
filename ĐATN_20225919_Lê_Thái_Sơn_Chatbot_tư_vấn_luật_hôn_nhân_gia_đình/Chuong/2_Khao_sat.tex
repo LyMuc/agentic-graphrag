@@ -41,27 +41,29 @@ Chatlaw (Mỹ) & Có & Không & Không \\ \hline
 
 Tóm lại trong các hệ thống chatbot tư vấn pháp luật hiện hành đang tồn tại các vấn đề chính, đó là vấn đề độ tin cậy trong các căn cứ pháp lý được dùng để làm cơ sở cho câu trả lời của người dùng, thiếu cơ chế để cảnh báo cho người dùng về thời hạn hiệu lực, hoặc sự xung đột, mâu thuẫn (nếu có) giữa của các căn cứ pháp lý được nêu ra hoặc là hạn chế về khả năng tiếp cận với người dân. 
 
-Từ những phân tích đã nêu ở trên, ĐATN hướng tới việc xây dựng một hệ thống hỏi đáp pháp luật hôn nhân gia đình 2014 có khả năng đưa ra các căn cứ trích dẫn chi tiết tới từng điều, khoản. Các căn cứ đưa ra được cập nhật mới nhất tới dữ liệu vào tháng 06/2026. Trong các câu trả lời đưa ra có khả năng mô tả ngắn gọn mối quan hệ giữa các căn cứ pháp lý, với mỗi căn cứ pháp lý nêu rõ thời hạn hiệu lực và có thể có các cảnh báo khi tình huống phải áp dụng các văn bản đã hết hiệu lực hoặc sắp bị sửa đổi, thay thế. Hệ thống hướng tới việc mọi người đều có thể tiếp cận được miễn phí.
+Từ những phân tích đã nêu ở trên, ĐATN hướng tới việc xây dựng một hệ thống Hỏi đáp luật hôn nhân gia đình hôn nhân gia đình 2014 có khả năng đưa ra các căn cứ trích dẫn chi tiết tới từng điều, khoản. Các căn cứ đưa ra được cập nhật mới nhất tới dữ liệu vào tháng 06/2026. Trong các câu trả lời đưa ra có khả năng mô tả ngắn gọn mối quan hệ giữa các căn cứ pháp lý, với mỗi căn cứ pháp lý nêu rõ thời hạn hiệu lực và có thể có các cảnh báo khi tình huống phải áp dụng các văn bản đã hết hiệu lực hoặc sắp bị sửa đổi, thay thế. Hệ thống hướng tới việc mọi người đều có thể tiếp cận được miễn phí.
 
 \section{Tổng quan chức năng}
 \label{section:2.2}
 \subsection{Biểu đồ use case tổng quan}
 \label{subsection:2.2.1}
 
-Hình \ref{fig:use_case_tong_quan} minh họa biểu đồ use case tổng quan gồm các chức năng mà ĐATN phát triển. Cụ thể các tác nhân gồm có Guest (Khách vãng lai), Registered User (Người dùng đã đăng nhập) và LLM (Mô hình ngôn ngữ lớn). Guest là người dùng mới truy cập hệ thống và chưa thực hiện xác thực có thể thực hiện các chức năng gồm: (i) Đăng nhập vào hệ thống để sử dụng các chức năng liên quan đến quản lý lịch sử hội thoại (ii) các chức năng liên quan đến hỏi đáp pháp luật (Bao gồm có việc hỏi đáp pháp luật, xem luồng hoạt động của các agent trong quá trình đưa ra câu trả lời, xem cảnh báo hiệu lực văn bản và xem cảnh báo xung đột pháp luật) . Registered User (Người dùng đã đăng nhập) ngoài tất cả các chức năng có thể thực hiện với vai trò là một khách vãng lai thì còn có thể (i) Đăng xuất khỏi hệ thống và (ii) sử dụng các chức năng liên quan đến quản lý lịch sử hội thoại. LLM (mô hình ngôn ngữ lớn) đại diện cho nền tảng trí tuệ nhân tạo bên ngoài được hệ thống kết nối qua giao diện lập trình ứng dụng (API). LLM hỗ trợ hệ thống phân tích ý định câu hỏi, định tuyến các công cụ truy xuất và tổng hợp lập luận pháp lý để sinh câu trả lời cuối cùng.
+Hình \ref{fig:use_case_tong_quan} minh họa biểu đồ use case tổng quan gồm các chức năng mà ĐATN phát triển. Cụ thể các tác nhân gồm có Guest (Khách vãng lai), Registered User (Người dùng đã đăng nhập) và LLM (Mô hình ngôn ngữ lớn). Guest là người dùng mới truy cập hệ thống và chưa thực hiện xác thực có thể thực hiện các chức năng gồm: (i) Đăng nhập vào hệ thống để sử dụng các chức năng liên quan đến quản lý lịch sử hội thoại (ii) các chức năng liên quan đến Hỏi đáp luật hôn nhân gia đình (Bao gồm có việc Hỏi đáp luật hôn nhân gia đình, xem luồng hoạt động của các agent trong quá trình đưa ra câu trả lời, xem cảnh báo hiệu lực văn bản và xem cảnh báo xung đột pháp luật) . Registered User (Người dùng đã đăng nhập) ngoài tất cả các chức năng có thể thực hiện với vai trò là một khách vãng lai thì còn có thể (i) Đăng xuất khỏi hệ thống và (ii) sử dụng các chức năng liên quan đến quản lý lịch sử hội thoại. LLM (mô hình ngôn ngữ lớn) đại diện cho nền tảng trí tuệ nhân tạo bên ngoài được hệ thống kết nối qua giao diện lập trình ứng dụng (API). LLM hỗ trợ hệ thống phân tích ý định câu hỏi, định tuyến các công cụ truy xuất và tổng hợp lập luận pháp lý để sinh câu trả lời cuối cùng.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{Hinhve/Biểu đồ use case tổng quan.png}
     \caption{Biểu đồ Use Case tổng quan của hệ thống}
     \label{fig:use_case_tong_quan}
 \end{figure}
-\subsection{Biểu đồ use case phân rã Hỏi đáp pháp luật}
+\subsection{Biểu đồ use case phân rã Hỏi đáp luật hôn nhân gia đình}
 \label{subsection:2.2.3}
-Hình \ref{fig:uc_phan_ra_hoi_dap} mô tả biển đồ phân rã use case hỏi đáp pháp luật. Guest (Khách vãng lai) có thể (i) thực hiện hỏi đáp pháp luật với chatbot, (ii) truy vấn nhanh bằng cách chọn một mẫu câu hỏi đã được hệ thống định nghĩa sẵn và nhận được câu trả lời từ chatbot (iii) xem luồng hoạt động, input và output của các agent trung gian trong quá trình sinh câu trả lời. (iv) Xem cảnh báo hiệu lực văn bản (Nếu trong câu trả lời có sử dụng các căn cứ pháp lý là các điều luật đã hết hiệu lực hoặc sắp hết hiệu lực) (v) Xem cảnh báo xung đột pháp luật (Nếu trong ngữ cảnh có những căn cứ pháp lý có mối quan hệ chồng chéo, mâu thuẫn với nhau thì sẽ có cảnh báo xung đột pháp lý và giải thích lí do áp dụng các căn cứ). Registered User (người dùng đã đăng nhập vào hệ thống) thì ngoài có thể thực hiện các chức năng của Guest thì còn có thể thực hiện đánh giá (Thích hoặc không thích) và để lại góp ý chi tiết về câu trả lời của chatbot. 
+Hình \ref{fig:uc_phan_ra_hoi_dap} mô tả biểu đồ phân rã use case Hỏi đáp luật hôn nhân gia đình. Guest (Khách vãng lai) có thể (i) thực hiện Hỏi đáp luật hôn nhân gia đình với chatbot, (ii) xem luồng hoạt động, input và output của các agent trung gian trong quá trình sinh câu trả lời, (iii) xem cảnh báo hiệu lực văn bản nếu trong câu trả lời có sử dụng các căn cứ pháp lý đã hết hiệu lực hoặc sắp hết hiệu lực, và (iv) xem cảnh báo xung đột pháp luật nếu trong ngữ cảnh có những căn cứ pháp lý chồng chéo hoặc mâu thuẫn với nhau.
+
+Registered User (người dùng đã đăng nhập vào hệ thống) ngoài các chức năng của Guest còn có thể thực hiện use case (v) So sánh, bình luận và đánh giá câu trả lời. Use case cho phép người dùng yêu cầu hệ thống gọi các chatbot như Gemini và ChatGPT/OpenAI để sinh câu trả lời cho cùng câu hỏi, sau đó hiển thị kết quả so sánh giữa câu trả lời của chatbot Agentic GraphRAG và các baseline này. Dựa trên kết quả so sánh, người dùng có thể đánh giá nhanh hoặc để lại bình luận chi tiết về mức độ chính xác, độ đầy đủ của căn cứ pháp lý và chất lượng lập luận của câu trả lời.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{Hinhve/Phân rã use case hỏi đáp pháp luật.png}
-    \caption{Biểu đồ Use Case phân rã chức năng Hỏi đáp pháp luật}
+    \includegraphics[width=0.95\textwidth]{Hinhve/Phân rã use case hỏi đáp luật hôn nhân gia đình.png}
+    \caption{Biểu đồ Use Case phân rã chức năng Hỏi đáp luật hôn nhân gia đình}
     \label{fig:uc_phan_ra_hoi_dap}
 \end{figure}
 
@@ -79,26 +81,28 @@ Hình \ref{fig:uc_phan_ra_lich_su} mô tả biểu đồ phân rã use case qu�
 
 Nhóm chức năng này chỉ dành cho Registered User (người dùng đã đăng nhập vào hệ thống). Cụ thể, registered User có thể (i) Tạo mới phiên hỏi đáp: Khởi tạo và bắt đầu một phiên hỏi đáp mới với chatbot (ii) Đổi tên phiên hỏi đáp: Người dùng có thể đổi tên phiên hỏi đáp theo ý muốn (mặc định tên phiên hỏi đáp là câu hỏi đầu tiên của người dùng thuộc phiên này) (iii) Xem lại phiên hỏi đáp cũ: Người dùng đăng nhập hệ thống có thể xem lại phiên hỏi đáp cũ của mình (Bao gồm cả lịch sử hoạt động của các agent) và tiếp tục hỏi đáp (iv) Tìm kiếm phiên hỏi đáp: Người dùng có thể tìm kiếm nhanh phiên hỏi đáp theo tên phiên hỏi đáp (v) Xóa phiên hỏi đáp: Người dùng có thể xóa một phiên hỏi đáp bất kỳ khỏi lịch sử hỏi đáp của mình. 
 
-\subsection{Quy trình nghiệp vụ Hỏi đáp pháp luật}
+\subsection{Quy trình nghiệp vụ Hỏi đáp luật hôn nhân gia đình}
 \label{subsection:2.2.5}
-% Đối với hệ thống chatbot tư vấn pháp luật ứng dụng kiến trúc Agentic GraphRAG, quy trình nghiệp vụ quan trọng nhất không dừng lại ở một lượt tương tác gửi nhận tin nhắn đơn thuần, mà là \textbf{Quy trình Tư vấn, Kiểm chứng và Đóng góp Tri thức Pháp lý khép kín}. Quy trình này là sự phối hợp và kết hợp của chuỗi các Use Case bao gồm: Xác thực tài khoản, Quản lý phiên, Hỏi đáp pháp luật, Kiểm chứng luồng tác nhân và Đánh giá phản hồi nhằm giải quyết trọn vẹn nhu cầu tra cứu và tối ưu hóa hệ thống.
+Đối với hệ thống chatbot tư vấn pháp luật ứng dụng kiến trúc Agentic GraphRAG, quy trình nghiệp vụ Hỏi đáp luật hôn nhân gia đình không chỉ là một lượt tương tác gửi--nhận tin nhắn, mà là một quy trình tư vấn có khả năng kiểm chứng. Vì vậy, Hình \ref{fig:activity_business_process} cần được hiểu như một luồng nghiệp vụ có các điểm kiểm soát rõ ràng để trả lời câu hỏi: làm thế nào để biết quy trình đang đi đúng hướng và câu trả lời có cơ sở kiểm chứng.
+
+Trong phạm vi đồ án, tính đúng đắn của quy trình được xác lập theo ba lớp căn cứ. Thứ nhất, về nghiệp vụ, quy trình phải bao phủ các use case đã xác định, bao gồm đặt câu hỏi, nhận câu trả lời, xem Agent Trace, xem cảnh báo hiệu lực hoặc mâu thuẫn pháp lý và phản hồi chất lượng câu trả lời. Thứ hai, về pháp lý, câu trả lời phải được sinh từ các căn cứ truy xuất trong đồ thị tri thức, có trích dẫn đến điều, khoản, điểm khi có dữ liệu tương ứng, có thông tin hiệu lực văn bản và có cảnh báo đối với các căn cứ hết hiệu lực, sắp có hiệu lực, bị thay thế hoặc có khả năng mâu thuẫn. Thứ ba, về kỹ thuật, mỗi bước xử lý trung gian phải tạo ra dữ liệu có thể đối chiếu lại, gồm danh sách retriever đã được kiểm tra, template và tham số truy vấn, context thô từ đồ thị tri thức, context đã chuẩn hóa, câu trả lời cuối cùng và vết thực thi của các agent. Các căn cứ này kế thừa trực tiếp pipeline xử lý 5 bước đã trình bày tại Mục \ref{section:1.3}.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{Hinhve/Biểu đồ hoạt động quy trình nghiệp vụ Hỏi đáp pháp luật.png}
-    \caption{Biểu đồ hoạt động (Activity Diagram) minh họa quy trình nghiệp vụ hỏi đáp pháp luật}
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]{Hinhve/Biểu đồ hoạt động quy trình nghiệp vụ Hỏi đáp pháp luật.png}
+    \caption{Biểu đồ hoạt động (Activity Diagram) minh họa quy trình nghiệp vụ Hỏi đáp luật hôn nhân gia đình}
     \label{fig:activity_business_process}
 \end{figure}
 
-Hình \ref{fig:activity_business_process} Mô tả chi tiết luồng hoạt động tổng thể của quy trình nghiệp vụ bao gồm các giai đoạn tuần tự như sau (i) Người dùng truy cập vào ứng dụng dưới quyền Guest (khách vãng lai) và tiến hành Đăng nhập thông qua giao thức Google OAuth. (ii) Sau khi xác thực thành công, phía Backend kiểm tra lịch sử hội thoại trong cơ sở dữ liệu PostgreSQL để load lại các phiên hội thoại cũ lên thanh điều hướng (Sidebar),  khởi tạo một mã định danh phiên hoàn toàn mới và điều hướng người dùng đến trang hội thoại chính. (iii) Sau đó người dùng lựa chọn một trong hai hình thức đặt câu hỏi: hoặc nhấp chuột vào các biểu mẫu tình huống định sẵn trên giao diện để truy vấn nhanh, hoặc tự nhập một câu hỏi tình huống thực tế bằng ngôn ngữ tự nhiên. Câu hỏi được gửi tới backend có nhiệm vụ điều phối luồng xử lý tác nhân (Agentic Workflow). (iv) Tại đây, hệ thống sẽ điều phối các tác nhân (bao gồm có các tác nhân router agent và các retriever agents) để lấy về context từ đồ thị tri thức (v) Sau đó, hệ thống sẽ chuẩn hóa context cho LLM trả lời (vi) Hệ thống kết hợp context với câu prompt đã được định nghĩa sẵn rồi gọi tới API LLM để sinh câu trả lời theo đúng format mong muốn. (vii) Kết quả trả về được hiển thị trên giao diện người dùng. Tại thời điểm này, người dùng không chỉ đọc đáp án cuối cùng mà còn có quyền nhấp mở rộng để xem luồng hoạt động của các agent. (viii) Sau khi tiếp nhận câu trả lời và đối chiếu luồng hoạt động, người dùng thực hiện quyền tương tác phản hồi chất lượng. Người dùng gán nhãn đánh giá nhanh thông qua hai nút biểu cảm (Like hoặc Dislike) và có thể nhập thêm một đoạn văn bản nhận xét chi tiết về mức độ hài lòng hoặc tính chính xác của căn cứ pháp lý. (ix) Dữ liệu phản hồi này cùng toàn bộ "vết" thực thi của Agent sẽ được lưu trữ vào PostgreSQL, làm cơ sở để tiến hành kiểm thử hồi quy và tối ưu hóa bộ dữ liệu benchmark trong tương lai.
+Luồng hoạt động chính của quy trình gồm các giai đoạn sau. (i) Người dùng truy cập vào ứng dụng và được điều hướng tới giao diện hội thoại. Nếu người dùng đăng nhập bằng Google OAuth, hệ thống xác thực tài khoản, tải lại lịch sử hội thoại từ PostgreSQL và gắn phiên hỏi đáp với tài khoản; nếu không đăng nhập, người dùng vẫn có thể thực hiện hỏi đáp trong phạm vi phiên hiện tại. (ii) Người dùng nhập câu hỏi bằng ngôn ngữ tự nhiên hoặc chọn một câu hỏi mẫu từ giao diện. Câu hỏi được gửi tới backend để khởi tạo luồng xử lý tác nhân. (iii) Router Agent phân tích câu hỏi và đề xuất danh sách retriever cần gọi. Danh sách này không được thực thi ngay mà phải đi qua bước kiểm tra với registry và chính sách retriever để loại bỏ công cụ không tồn tại, công cụ trùng lặp hoặc công cụ không phù hợp; nếu không có retriever chuyên biệt hợp lệ, hệ thống chuyển sang nhánh dự phòng. (iv) Các retriever hợp lệ lựa chọn template Cypher, trích xuất tham số có cấu trúc và truy vấn đồ thị tri thức để lấy context pháp lý. (v) Context thô được lọc theo hiệu lực, loại bỏ trùng lặp, phân loại căn cứ chính, căn cứ bổ trợ, căn cứ hướng dẫn, căn cứ thay thế và gán các cờ cảnh báo về hiệu lực hoặc mâu thuẫn. (vi) Trước khi gọi LLM, hệ thống kiểm tra context đã chuẩn hóa có đủ căn cứ để sinh câu trả lời hay không. Nếu context không đủ tin cậy, hệ thống cần thông báo không đủ căn cứ hoặc yêu cầu người dùng bổ sung thông tin thay vì sinh câu trả lời thiếu cơ sở. (vii) Khi context đạt điều kiện, hệ thống kết hợp câu hỏi, lịch sử hội thoại và context đã chuẩn hóa vào prompt để gọi API LLM sinh câu trả lời. Câu trả lời chỉ được lập luận dựa trên context đã truy xuất và phải trình bày các căn cứ pháp lý, thông tin hiệu lực và cảnh báo tương ứng. (viii) Hệ thống hiển thị câu trả lời, Agent Trace và đường dẫn trực quan hóa phần đồ thị tri thức đã truy xuất để người dùng hoặc Provider có thể đối chiếu ngược từ kết luận tới căn cứ. (ix) Sau khi xem câu trả lời và luồng xử lý, người dùng có thể đánh giá nhanh hoặc nhập nhận xét chi tiết. Với người dùng đã đăng nhập, dữ liệu phản hồi cùng vết thực thi của agent được lưu vào PostgreSQL, làm cơ sở cho kiểm thử hồi quy và cải thiện bộ benchmark ở các vòng phát triển sau.
 
 \section{Đặc tả chức năng}
-\subsection{Đặc tả use case Hỏi đáp pháp luật}
-Bảng \ref{table:uc_specs_qa} là bảng đặc tả use case hỏi đáp pháp luật.
+\subsection{Đặc tả use case Hỏi đáp luật hôn nhân gia đình}
+Bảng \ref{table:uc_specs_qa} là bảng đặc tả use case Hỏi đáp luật hôn nhân gia đình.
 \begin{table}[H]
 \centering
 \begin{tabular}{|p{3.5cm}|p{11.5cm}|}
 \hline
-\textbf{Mã usecase:} UC01 & \textbf{Tên usecase:} Hỏi đáp pháp luật\\ \hline
+\textbf{Mã usecase:} UC01 & \textbf{Tên usecase:} Hỏi đáp luật hôn nhân gia đình\\ \hline
 \textbf{Tác nhân} & Guest (Khách vãng lai) hoặc Registered User (Người dùng hệ thống), LLM (Mô hình ngôn ngữ lớn được gọi thông qua API) \\ \hline
 \textbf{Mô tả vắn tắt} & Tiếp nhận câu hỏi của người dùng và sinh câu trả lời \\ \hline
 \textbf{Tiền điều kiện} & Người dùng đã truy cập vào giao diện hội thoại chính của ứng dụng Chatbot. \\ \hline
@@ -121,7 +125,7 @@ Bảng \ref{table:uc_specs_qa} là bảng đặc tả use case hỏi đáp pháp
 2.2. Hệ thống ngay lập tức ngắt kết nối API và dừng việc hiển thị dữ liệu. Use case kết thúc tại đây. \\ \hline
 \textbf{Hậu điều kiện} & Hệ thống hiển thị thành công câu trả lời tư vấn pháp lý và các bước xử lý trung gian (Agent Trace) trên màn hình. Nếu tác nhân thực hiện là Registered User, toàn bộ phiên hội thoại và vết của Agent sẽ được ghi nhận vào cơ sở dữ liệu PostgreSQL. \\ \hline
 \end{tabular}
-\caption{Bảng đặc tả chi tiết Use Case Hỏi đáp pháp luật}
+\caption{Bảng đặc tả chi tiết Use Case Hỏi đáp luật hôn nhân gia đình}
 \label{table:uc_specs_qa}
 \end{table}
 \subsection{Đặc tả use case Xem luồng hoạt động của các agent}
@@ -171,29 +175,31 @@ Bảng \ref{table:uc_specs_resume} mô tả đặc tả use case Xem lại phiê
 \caption{Bảng đặc tả chi tiết Use Case Xem lại phiên hỏi đáp cũ}
 \label{table:uc_specs_resume}
 \end{table}
-\subsection{Đặc tả use case Bình luận và đánh giá câu trả lời}
-Bảng \ref{table:uc_specs_feedback} mô tả đặc tả use case bình luận và đánh giá câu trả lời.
+\subsection{Đặc tả use case So sánh, bình luận và đánh giá câu trả lời}
+Bảng \ref{table:uc_specs_feedback} mô tả đặc tả use case so sánh, bình luận và đánh giá câu trả lời.
 \begin{table}[H]
 \centering
 \begin{tabular}{|p{3.5cm}|p{11.5cm}|}
 \hline
-\textbf{Mã usecase:} UC04 & \textbf{Tên usecase:} Bình luận và đánh giá câu trả lời \\ \hline
-\textbf{Tác nhân} & Người dùng đã đăng nhập vào hệ thống (Registered User) \\ \hline
-\textbf{Mô tả vắn tắt} & Cho phép người dùng đã xác thực thực hiện đánh giá câu trả lời từ chatbot thông qua hai hình thức: tương tác nhanh (Like/Dislike) và để lại bình luận chi tiết. \\ \hline
+\textbf{Mã usecase:} UC04 & \textbf{Tên usecase:} So sánh, bình luận và đánh giá câu trả lời \\ \hline
+\textbf{Tác nhân} & Người dùng đã đăng nhập vào hệ thống (Registered User), LLM (Mô hình ngôn ngữ lớn được gọi thông qua API) \\ \hline
+\textbf{Mô tả vắn tắt} & Cho phép người dùng đã xác thực đối chiếu câu trả lời của chatbot Agentic GraphRAG với câu trả lời từ các chatbot khác, sau đó thực hiện đánh giá nhanh (Like/Dislike) hoặc để lại bình luận chi tiết về chất lượng câu trả lời. \\ \hline
 \textbf{Tiền điều kiện} & Người dùng đã đăng nhập thành công và chatbot đã hoàn tất việc sinh câu trả lời, hoặc người dùng đang ở 1 phiên hội thoại cũ đã có ít nhất 1 câu trả lời hoàn chỉnh được chatbot sinh ra. \\ \hline
 \textbf{Luồng chính} & 
-1. Người dùng nhấp chuột lựa chọn vào một trong hai nút biểu cảm: Thích (Like) hoặc Không thích (Dislike) ở vùng phía dưới câu trả lời của chabot để đánh giá chất lượng đáp án. \newline
-2. Giao diện hiển thị thêm một modal có một ô nhập liệu tùy chọn cho phép để lại bình luận chi tiết. \newline
-3. Người dùng nhập văn bản góp ý, nhận xét về câu trả lời. \newline
-4. Người dùng nhấp chuột vào nút "Send feedback". \newline
-5. Hệ thống ghi nhận sự kiện, thực hiện đổi màu biểu tượng nút biểu cảm được chọn. \newline
-6. Hệ thống lưu lại phản hồi của người dùng. \newline
-7. Hệ thống thu gọn ô nhập liệu và hiển thị thông báo xác nhận: "Feedback saved". \\ \hline
+1. Người dùng nhấp chuột vào nút so sánh được hiển thị dưới câu trả lời của chatbot. \newline
+2. Hệ thống gửi cùng câu hỏi tới các chatbot Gemini và ChatGPT/OpenAI để lấy câu trả lời độc lập. \newline
+3. Hệ thống sử dụng tác nhân đánh giá (Sử dụng LLM) để so sánh câu trả lời của chatbot Agentic GraphRAG với các câu trả lời từ các chatbot khác theo các tiêu chí như độ chi tiết căn cứ pháp lý, cảnh báo hiệu lực và mức độ trả lời đúng trọng tâm câu hỏi. \newline
+4. Giao diện hiển thị kết quả so sánh cho người dùng, bao gồm nhận xét tổng quan và kết luận câu trả lời nào phù hợp hơn trong từng tiêu chí. \newline
+5. Dựa trên kết quả đối chiếu, người dùng nhấp chuột lựa chọn vào một trong hai nút biểu cảm: Thích (Like) hoặc Không thích (Dislike) ở vùng phía dưới câu trả lời của chatbot để đánh giá chất lượng đáp án. \newline
+6. Giao diện hiển thị thêm một modal có một ô nhập liệu tùy chọn cho phép để lại bình luận chi tiết. \newline
+7. Người dùng nhập văn bản góp ý, nhận xét về câu trả lời và nhấp chuột vào nút "Send feedback". \newline
+8. Hệ thống ghi nhận phản hồi của người dùng, lưu lại kết quả đánh giá và hiển thị thông báo xác nhận: "Feedback saved". \\ \hline
 \textbf{Luồng thay thế 1} & 
-2.1. Người dùng sau khi nhấn chọn nút Like hoặc Dislike không có nhu cầu nhập thêm văn bản góp ý chi tiết và ấn nút "Send feedback". Tiếp tục bước 4 ở luồng chính \\ \hline
-\textbf{Hậu điều kiện} & Hệ thống ghi nhận thành công dữ liệu đánh giá, đóng góp ý kiến của người dùng vào cơ sở dữ liệu PostgreSQL. \\ \hline
+1.1. Người dùng không nhấp vào nút so sánh mà trực tiếp nhấn chọn nút Like hoặc Dislike để đánh giá nhanh. \newline
+6.1. Người dùng sau khi nhấn chọn nút Like hoặc Dislike không có nhu cầu nhập thêm văn bản góp ý chi tiết và ấn nút "Send feedback". Tiếp tục bước 8 ở luồng chính \\ \hline
+\textbf{Hậu điều kiện} & Hệ thống ghi nhận thành công kết quả so sánh baseline, dữ liệu đánh giá và đóng góp ý kiến của người dùng vào cơ sở dữ liệu PostgreSQL. \\ \hline
 \end{tabular}
-\caption{Bảng đặc tả chi tiết Use Case Bình luận và đánh giá câu trả lời}
+\caption{Bảng đặc tả chi tiết Use Case So sánh, bình luận và đánh giá câu trả lời}
 \label{table:uc_specs_feedback}
 \end{table}
 
