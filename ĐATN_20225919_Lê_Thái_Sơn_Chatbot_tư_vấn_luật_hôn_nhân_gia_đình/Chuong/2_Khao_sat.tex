@@ -48,44 +48,32 @@ Từ những phân tích đã nêu ở trên, ĐATN hướng tới việc xây d
 \subsection{Biểu đồ use case tổng quan}
 \label{subsection:2.2.1}
 
-Hình \ref{fig:use_case_tong_quan} minh họa biểu đồ use case tổng quan gồm các chức năng mà ĐATN phát triển. Cụ thể các tác nhân gồm có Guest (Khách vãng lai), Registered User (Người dùng đã đăng nhập) và LLM (Mô hình ngôn ngữ lớn). Guest là người dùng mới truy cập hệ thống và chưa thực hiện xác thực có thể thực hiện các chức năng gồm: (i) Đăng nhập vào hệ thống để sử dụng các chức năng liên quan đến quản lý lịch sử hội thoại (ii) các chức năng liên quan đến Hỏi đáp luật hôn nhân gia đình (Bao gồm có việc Hỏi đáp luật hôn nhân gia đình, xem luồng hoạt động của các agent trong quá trình đưa ra câu trả lời, xem cảnh báo hiệu lực văn bản và xem cảnh báo xung đột pháp luật) . Registered User (Người dùng đã đăng nhập) ngoài tất cả các chức năng có thể thực hiện với vai trò là một khách vãng lai thì còn có thể (i) Đăng xuất khỏi hệ thống và (ii) sử dụng các chức năng liên quan đến quản lý lịch sử hội thoại. LLM (mô hình ngôn ngữ lớn) đại diện cho nền tảng trí tuệ nhân tạo bên ngoài được hệ thống kết nối qua giao diện lập trình ứng dụng (API). LLM hỗ trợ hệ thống phân tích ý định câu hỏi, định tuyến các công cụ truy xuất và tổng hợp lập luận pháp lý để sinh câu trả lời cuối cùng.
+Hình \ref{fig:use_case_tong_quan} minh họa biểu đồ use case tổng quan gồm các chức năng mà ĐATN phát triển. Các tác nhân gồm Guest (Khách vãng lai), Registered User (Người dùng đã đăng nhập) và LLM (Mô hình ngôn ngữ lớn). Guest có thể thực hiện: (i) Đăng nhập; (ii) Hỏi đáp luật hôn nhân gia đình; (iii) Xem chi tiết luồng xử lý của các tác nhân; (iv) Xem chi tiết cảnh báo hiệu lực văn bản; (v) Xem chi tiết cảnh báo xung đột pháp lý; (vi) Xem trực quan đồ thị tri thức căn cứ pháp lý. Registered User kế thừa toàn bộ quyền của Guest và bổ sung: (i) Đăng xuất; (ii) Quản lý lịch sử hội thoại; (iii) So sánh, bình luận và đánh giá câu trả lời. LLM đại diện nền tảng trí tuệ nhân tạo bên ngoài, được hệ thống gọi qua API.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{Hinhve/Biểu đồ use case tổng quan.png}
-    \caption{Biểu đồ Use Case tổng quan của hệ thống}
+    \caption{Biểu đồ use case tổng quan của hệ thống}
     \label{fig:use_case_tong_quan}
 \end{figure}
-\subsection{Biểu đồ use case phân rã Hỏi đáp luật hôn nhân gia đình}
+\subsection{Biểu đồ phân rã use case quản lý lịch sử hội thoại}
 \label{subsection:2.2.3}
-Hình \ref{fig:uc_phan_ra_hoi_dap} mô tả biểu đồ phân rã use case Hỏi đáp luật hôn nhân gia đình. Guest (Khách vãng lai) có thể (i) thực hiện Hỏi đáp luật hôn nhân gia đình với chatbot, (ii) xem luồng hoạt động, input và output của các agent trung gian trong quá trình sinh câu trả lời, (iii) xem cảnh báo hiệu lực văn bản nếu trong câu trả lời có sử dụng các căn cứ pháp lý đã hết hiệu lực hoặc sắp hết hiệu lực, và (iv) xem cảnh báo xung đột pháp luật nếu trong ngữ cảnh có những căn cứ pháp lý chồng chéo hoặc mâu thuẫn với nhau.
 
-Registered User (người dùng đã đăng nhập vào hệ thống) ngoài các chức năng của Guest còn có thể thực hiện use case (v) So sánh, bình luận và đánh giá câu trả lời. Use case cho phép người dùng yêu cầu hệ thống gọi các chatbot như Gemini và ChatGPT/OpenAI để sinh câu trả lời cho cùng câu hỏi, sau đó hiển thị kết quả so sánh giữa câu trả lời của chatbot Agentic GraphRAG và các baseline này. Dựa trên kết quả so sánh, người dùng có thể đánh giá nhanh hoặc để lại bình luận chi tiết về mức độ chính xác, độ đầy đủ của căn cứ pháp lý và chất lượng lập luận của câu trả lời.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.95\textwidth]{Hinhve/Phân rã use case hỏi đáp luật hôn nhân gia đình.png}
-    \caption{Biểu đồ Use Case phân rã chức năng Hỏi đáp luật hôn nhân gia đình}
-    \label{fig:uc_phan_ra_hoi_dap}
-\end{figure}
-
-\subsection{Biểu đồ use case phân rã use case Quản lý lịch sử hội thoại}
-\label{subsection:2.2.4}
-
-Hình \ref{fig:uc_phan_ra_lich_su} mô tả biểu đồ phân rã use case quản lý lịch sử hội thoại.  Nhóm chức năng này được thiết kế dành riêng cho người dùng đã đăng nhập nhằm quản lý, lưu trữ và tái sử dụng các cuộc đối thoại trong quá khứ.
-
+Hình \ref{fig:uc_phan_ra_lich_su} mô tả biểu đồ phân rã use case Quản lý lịch sử hội thoại. Nhóm chức năng này dành riêng cho Registered User nhằm quản lý, lưu trữ và tiếp tục các cuộc hội thoại trong quá khứ.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{Hinhve/Phân rã use case quản lý lịch sử hội thoại.png}
-    \caption{Biểu đồ Use Case phân rã chức năng Quản lý lịch sử hội thoại}
+    \caption{Biểu đồ use case phân rã chức năng Quản lý lịch sử hội thoại}
     \label{fig:uc_phan_ra_lich_su}
 \end{figure}
 
 Nhóm chức năng này chỉ dành cho Registered User (người dùng đã đăng nhập vào hệ thống). Cụ thể, registered User có thể (i) Tạo mới phiên hỏi đáp: Khởi tạo và bắt đầu một phiên hỏi đáp mới với chatbot (ii) Đổi tên phiên hỏi đáp: Người dùng có thể đổi tên phiên hỏi đáp theo ý muốn (mặc định tên phiên hỏi đáp là câu hỏi đầu tiên của người dùng thuộc phiên này) (iii) Xem lại phiên hỏi đáp cũ: Người dùng đăng nhập hệ thống có thể xem lại phiên hỏi đáp cũ của mình (Bao gồm cả lịch sử hoạt động của các agent) và tiếp tục hỏi đáp (iv) Tìm kiếm phiên hỏi đáp: Người dùng có thể tìm kiếm nhanh phiên hỏi đáp theo tên phiên hỏi đáp (v) Xóa phiên hỏi đáp: Người dùng có thể xóa một phiên hỏi đáp bất kỳ khỏi lịch sử hỏi đáp của mình. 
 
 \subsection{Quy trình nghiệp vụ Hỏi đáp luật hôn nhân gia đình}
-\label{subsection:2.2.5}
+\label{subsection:2.2.4}
 Đối với hệ thống chatbot tư vấn pháp luật ứng dụng kiến trúc Agentic GraphRAG, quy trình nghiệp vụ Hỏi đáp luật hôn nhân gia đình không chỉ là một lượt tương tác gửi--nhận tin nhắn, mà là một quy trình tư vấn có khả năng kiểm chứng. Vì vậy, Hình \ref{fig:activity_business_process} cần được hiểu như một luồng nghiệp vụ có các điểm kiểm soát rõ ràng để trả lời câu hỏi: làm thế nào để biết quy trình đang đi đúng hướng và câu trả lời có cơ sở kiểm chứng.
 
-Trong phạm vi đồ án, tính đúng đắn của quy trình được xác lập theo ba lớp căn cứ. Thứ nhất, về nghiệp vụ, quy trình phải bao phủ các use case đã xác định, bao gồm đặt câu hỏi, nhận câu trả lời, xem Agent Trace, xem cảnh báo hiệu lực hoặc mâu thuẫn pháp lý và phản hồi chất lượng câu trả lời. Thứ hai, về pháp lý, câu trả lời phải được sinh từ các căn cứ truy xuất trong đồ thị tri thức, có trích dẫn đến điều, khoản, điểm khi có dữ liệu tương ứng, có thông tin hiệu lực văn bản và có cảnh báo đối với các căn cứ hết hiệu lực, sắp có hiệu lực, bị thay thế hoặc có khả năng mâu thuẫn. Thứ ba, về kỹ thuật, mỗi bước xử lý trung gian phải tạo ra dữ liệu có thể đối chiếu lại, gồm danh sách retriever đã được kiểm tra, template và tham số truy vấn, context thô từ đồ thị tri thức, context đã chuẩn hóa, câu trả lời cuối cùng và vết thực thi của các agent. Các căn cứ này kế thừa trực tiếp pipeline xử lý 5 bước đã trình bày tại Mục \ref{section:1.3}.
+Trong phạm vi đồ án, tính đúng đắn của quy trình được xác lập theo ba lớp căn cứ. Thứ nhất, về nghiệp vụ, quy trình phải bao phủ các use case đã xác định, bao gồm đặt câu hỏi và nhận câu trả lời (UC03), các use case xem chi tiết độc lập (UC04--UC07) và phản hồi chất lượng câu trả lời (UC09). Thứ hai, về pháp lý, câu trả lời phải được sinh từ các căn cứ truy xuất trong đồ thị tri thức, có trích dẫn đến điều, khoản, điểm khi có dữ liệu tương ứng, có thông tin hiệu lực văn bản và có cảnh báo đối với các căn cứ hết hiệu lực, sắp có hiệu lực, bị thay thế hoặc có khả năng mâu thuẫn. Thứ ba, về kỹ thuật, mỗi bước xử lý trung gian phải tạo ra dữ liệu có thể đối chiếu lại, gồm danh sách retriever đã được kiểm tra, template và tham số truy vấn, context thô từ đồ thị tri thức, context đã chuẩn hóa, câu trả lời cuối cùng và vết thực thi của các agent. Các căn cứ này kế thừa trực tiếp pipeline xử lý 5 bước đã trình bày tại Mục \ref{section:1.3}.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]{Hinhve/Biểu đồ hoạt động quy trình nghiệp vụ Hỏi đáp pháp luật.png}
@@ -102,7 +90,7 @@ Bảng \ref{table:uc_specs_qa} là bảng đặc tả use case Hỏi đáp luậ
 \centering
 \begin{tabular}{|p{3.5cm}|p{11.5cm}|}
 \hline
-\textbf{Mã usecase:} UC01 & \textbf{Tên usecase:} Hỏi đáp luật hôn nhân gia đình\\ \hline
+\textbf{Mã usecase:} UC03 & \textbf{Tên usecase:} Hỏi đáp luật hôn nhân gia đình\\ \hline
 \textbf{Tác nhân} & Guest (Khách vãng lai) hoặc Registered User (Người dùng hệ thống), LLM (Mô hình ngôn ngữ lớn được gọi thông qua API) \\ \hline
 \textbf{Mô tả vắn tắt} & Tiếp nhận câu hỏi của người dùng và sinh câu trả lời \\ \hline
 \textbf{Tiền điều kiện} & Người dùng đã truy cập vào giao diện hội thoại chính của ứng dụng Chatbot. \\ \hline
@@ -122,19 +110,19 @@ Bảng \ref{table:uc_specs_qa} là bảng đặc tả use case Hỏi đáp luậ
 4.3. Quay lại bước 5 của luồng chính\\ \hline
 \textbf{Luồng thay thế 2} & 
 2.1. Người dùng nhấn nút dừng tiến trình ("Stop") trên giao diện ô chat khi chatbot đang trong quá trình suy luận hoặc sinh text. \newline
-2.2. Hệ thống ngay lập tức ngắt kết nối API và dừng việc hiển thị dữ liệu. Use case kết thúc tại đây. \\ \hline
-\textbf{Hậu điều kiện} & Hệ thống hiển thị thành công câu trả lời tư vấn pháp lý và các bước xử lý trung gian (Agent Trace) trên màn hình. Nếu tác nhân thực hiện là Registered User, toàn bộ phiên hội thoại và vết của Agent sẽ được ghi nhận vào cơ sở dữ liệu PostgreSQL. \\ \hline
+2.2. Hệ thống ngay lập tức ngắt kết nối API và dừng việc hiển thị dữ liệu. use case kết thúc tại đây. \\ \hline
+\textbf{Hậu điều kiện} & Hệ thống hiển thị thành công câu trả lời tư vấn pháp lý kèm các căn cứ trích dẫn, tóm tắt cảnh báo hiệu lực và xung đột pháp lý (nếu có), khối Agent Trace ở trạng thái thu gọn và liên kết truy cập đồ thị căn cứ pháp lý. Các use case xem chi tiết (UC04--UC07) không được kích hoạt tự động; người dùng chủ động thao tác khi cần làm rõ thêm. Nếu tác nhân thực hiện là Registered User, toàn bộ phiên hội thoại và vết của Agent sẽ được ghi nhận vào cơ sở dữ liệu PostgreSQL. \\ \hline
 \end{tabular}
-\caption{Bảng đặc tả chi tiết Use Case Hỏi đáp luật hôn nhân gia đình}
+\caption{Bảng đặc tả chi tiết use case Hỏi đáp luật hôn nhân gia đình}
 \label{table:uc_specs_qa}
 \end{table}
-\subsection{Đặc tả use case Xem luồng hoạt động của các agent}
-Bảng \ref{table:uc_specs_trace} đặc tả chi tiết cho Use Case Xem luồng hoạt động của các agent. 
+\subsection{Đặc tả use case Xem chi tiết luồng xử lý của các tác nhân}
+Bảng \ref{table:uc_specs_trace} đặc tả chi tiết cho use case Xem chi tiết luồng xử lý của các tác nhân (Agent Trace). 
 \begin{table}[H]
 \centering
 \begin{tabular}{|p{3.5cm}|p{11.5cm}|}
 \hline
-\textbf{Mã usecase:} UC02 & \textbf{Tên usecase:} Xem luồng hoạt động của các agent \\ \hline
+\textbf{Mã usecase:} UC04 & \textbf{Tên usecase:} Xem chi tiết luồng xử lý của các tác nhân \\ \hline
 \textbf{Tác nhân} & Khách vãng lai (Guest), Người dùng hệ thống (Registered User) \\ \hline
 \textbf{Mô tả vắn tắt} & Cho phép người dùng chủ động mở rộng giao diện tiến trình trung gian để kiểm tra chi tiết các agent được kích hoạt và dữ liệu ngữ cảnh thô trích xuất từ đồ thị tri thức. \\ \hline
 \textbf{Tiền điều kiện} & Người dùng đã thực hiện gửi câu hỏi và chatbot đã hoàn tất việc trả lời câu hỏi. \\ \hline
@@ -148,19 +136,96 @@ Bảng \ref{table:uc_specs_trace} đặc tả chi tiết cho Use Case Xem luồn
 \textbf{Luồng thay thế 1} & 
 3.1. Người dùng yêu cầu mở rộng tiến trình nhưng có lỗi từ hệ thống. \newline
 3.2. Giao diện hiển thị thông báo lỗi: "Không tìm thấy dữ liệu luồng xử lý của phiên hội thoại này". \newline
-3.3. Người dùng nhấp đóng thông báo lỗi. Use case kết thúc tại đây. \\ \hline
+3.3. Người dùng nhấp đóng thông báo lỗi. use case kết thúc tại đây. \\ \hline
 \textbf{Hậu điều kiện} & Hệ thống hiển thị chính xác, đầy đủ và trực quan toàn bộ các tham số đầu vào/đầu ra của tác nhân thông minh. \\ \hline
 \end{tabular}
-\caption{Bảng đặc tả chi tiết Use Case Xem luồng hoạt động của các agent}
+\caption{Bảng đặc tả chi tiết use case Xem chi tiết luồng xử lý của các tác nhân}
 \label{table:uc_specs_trace}
 \end{table}
-\subsection{Đặc tả use case Xem lại phiên hỏi đáp cũ}
-Bảng \ref{table:uc_specs_resume} mô tả đặc tả use case Xem lại phiên hỏi đáp cũ.
+\subsection{Đặc tả use case Xem chi tiết cảnh báo hiệu lực văn bản}
+Bảng \ref{table:uc_specs_validity} đặc tả chi tiết use case Xem chi tiết cảnh báo hiệu lực văn bản.
 \begin{table}[H]
 \centering
 \begin{tabular}{|p{3.5cm}|p{11.5cm}|}
 \hline
-\textbf{Mã usecase:} UC03 & \textbf{Tên usecase:} Xem lại phiên hỏi đáp cũ \\ \hline
+\textbf{Mã usecase:} UC05 & \textbf{Tên usecase:} Xem chi tiết cảnh báo hiệu lực văn bản \\ \hline
+\textbf{Tác nhân} & Khách vãng lai (Guest), Người dùng hệ thống (Registered User) \\ \hline
+\textbf{Mô tả vắn tắt} & Cho phép người dùng chủ động mở panel chi tiết về tình trạng hiệu lực của văn bản pháp luật được trích dẫn trong câu trả lời. \\ \hline
+\textbf{Tiền điều kiện} & Trong phiên hội thoại hiện tại, chatbot đã hoàn tất sinh ít nhất một câu trả lời có chứa ít nhất một cảnh báo hiệu lực văn bản. \\ \hline
+\textbf{Luồng chính} & 
+1. Tại câu trả lời của chatbot, người dùng xác định chip hoặc biểu tượng cảnh báo hiệu lực gắn kèm một căn cứ pháp lý. \newline
+2. Người dùng nhấp chuột vào chip cảnh báo hiệu lực. \newline
+3. Hệ thống truy vấn metadata hiệu lực của văn bản tương ứng và mở panel chi tiết. \newline
+4. Panel hiển thị tên văn bản, trạng thái hiệu lực (còn hiệu lực, sắp hết hiệu lực, đã hết hiệu lực hoặc bị thay thế), mốc thời gian liên quan và văn bản thay thế (nếu có). \newline
+5. Người dùng đọc thông tin, có thể nhấp liên kết tới điều khoản căn cứ chính của văn bản. \newline
+6. Người dùng đóng panel sau khi hoàn tất việc đối chiếu. \\ \hline
+\textbf{Luồng thay thế 1} & 
+3.1. Hệ thống không truy xuất được metadata hiệu lực. \newline
+3.2. Giao diện hiển thị thông báo: ``Không tìm thấy thông tin hiệu lực cho văn bản này''. \newline
+3.3. Người dùng đóng thông báo. use case kết thúc tại đây. \\ \hline
+\textbf{Hậu điều kiện} & Người dùng nắm được chi tiết tình trạng hiệu lực của văn bản pháp luật liên quan tới câu trả lời. \\ \hline
+\end{tabular}
+\caption{Bảng đặc tả chi tiết use case Xem chi tiết cảnh báo hiệu lực văn bản}
+\label{table:uc_specs_validity}
+\end{table}
+\subsection{Đặc tả use case Xem chi tiết cảnh báo xung đột pháp lý}
+Bảng \ref{table:uc_specs_conflict} đặc tả chi tiết use case Xem chi tiết cảnh báo xung đột pháp lý.
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+\hline
+\textbf{Mã usecase:} UC06 & \textbf{Tên usecase:} Xem chi tiết cảnh báo xung đột pháp lý \\ \hline
+\textbf{Tác nhân} & Khách vãng lai (Guest), Người dùng hệ thống (Registered User) \\ \hline
+\textbf{Mô tả vắn tắt} & Cho phép người dùng chủ động mở panel chi tiết về mâu thuẫn hoặc chồng chéo giữa các căn cứ pháp lý trong câu trả lời. \\ \hline
+\textbf{Tiền điều kiện} & Trong phiên hội thoại hiện tại, chatbot đã hoàn tất sinh ít nhất một câu trả lời có chứa ít nhất một cảnh báo xung đột pháp lý. \\ \hline
+\textbf{Luồng chính} & 
+1. Tại câu trả lời của chatbot, người dùng xác định chip hoặc biểu tượng cảnh báo xung đột pháp lý. \newline
+2. Người dùng nhấp chuột vào chip cảnh báo xung đột. \newline
+3. Hệ thống truy vấn các quan hệ mâu thuẫn hoặc chồng chéo giữa các điều khoản liên quan và mở panel chi tiết. \newline
+4. Panel liệt kê các điều khoản xung đột, mô tả ngắn về nội dung mâu thuẫn và gợi ý nguyên tắc ưu tiên áp dụng (ví dụ: luật chuyên ngành, luật ban hành sau, luật cấp cao hơn). \newline
+5. Người dùng đọc thông tin, có thể nhấp liên kết tới từng điều khoản liên quan. \newline
+6. Người dùng đóng panel sau khi hoàn tất việc đối chiếu. \\ \hline
+\textbf{Luồng thay thế 1} & 
+3.1. Hệ thống không truy xuất được dữ liệu xung đột chi tiết. \newline
+3.2. Giao diện hiển thị thông báo: ``Không tìm thấy thông tin xung đột pháp lý cho cảnh báo này''. \newline
+3.3. Người dùng đóng thông báo. use case kết thúc tại đây. \\ \hline
+\textbf{Hậu điều kiện} & Người dùng nắm được chi tiết các điều khoản xung đột và hướng xử lý ưu tiên trong ngữ cảnh câu trả lời. \\ \hline
+\end{tabular}
+\caption{Bảng đặc tả chi tiết use case Xem chi tiết cảnh báo xung đột pháp lý}
+\label{table:uc_specs_conflict}
+\end{table}
+\subsection{Đặc tả use case Xem trực quan đồ thị căn cứ pháp lý của câu trả lời}
+Bảng \ref{table:uc_specs_kg} đặc tả chi tiết use case Xem trực quan đồ thị căn cứ pháp lý của câu trả lời.
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+\hline
+\textbf{Mã usecase:} UC07 & \textbf{Tên usecase:} Xem trực quan đồ thị căn cứ pháp lý của câu trả lời \\ \hline
+\textbf{Tác nhân} & Khách vãng lai (Guest), Người dùng hệ thống (Registered User) \\ \hline
+\textbf{Mô tả vắn tắt} & Cho phép người dùng mở giao diện trực quan hoá phần đồ thị tri thức đã được truy xuất cho câu trả lời, nhằm đối chiếu ngược từ kết luận tới căn cứ. \\ \hline
+\textbf{Tiền điều kiện} & Trong phiên hội thoại hiện tại, chatbot đã hoàn tất sinh ít nhất một câu trả lời có liên kết truy cập đồ thị căn cứ pháp lý. \\ \hline
+\textbf{Luồng chính} & 
+1. Tại câu trả lời của chatbot, người dùng nhấp chuột vào liên kết ``Xem đồ thị căn cứ pháp lý'' (hoặc tương đương). \newline
+2. Hệ thống tải dữ liệu đồ thị tri thức tương ứng với lượt hỏi đáp và mở giao diện trực quan hoá (tab mới hoặc panel nhúng). \newline
+3. Giao diện hiển thị các nút văn bản, điều khoản và quan hệ giữa chúng đã được truy xuất. \newline
+4. Người dùng tương tác với đồ thị (phóng to, thu nhỏ, di chuyển, rê chuột để xem thuộc tính nút). \newline
+5. Người dùng đóng tab/panel sau khi hoàn tất việc kiểm chứng. \\ \hline
+\textbf{Luồng thay thế 1} & 
+2.1. Hệ thống không tải được dữ liệu đồ thị tri thức. \newline
+2.2. Giao diện hiển thị thông báo: ``Không tìm thấy dữ liệu đồ thị cho câu trả lời này''. \newline
+2.3. Người dùng đóng thông báo. use case kết thúc tại đây. \\ \hline
+\textbf{Hậu điều kiện} & Người dùng quan sát được cấu trúc quan hệ giữa các căn cứ pháp lý phục vụ câu trả lời. \\ \hline
+\end{tabular}
+\caption{Bảng đặc tả chi tiết use case Xem trực quan đồ thị căn cứ pháp lý của câu trả lời}
+\label{table:uc_specs_kg}
+\end{table}
+\subsection{Đặc tả use case Xem lại phiên hỏi đáp cũ}
+Bảng \ref{table:uc_specs_resume} mô tả đặc tả use case con Xem lại phiên hỏi đáp cũ thuộc nhóm Quản lý lịch sử hội thoại (UC08).
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+\hline
+\textbf{Mã usecase:} UC08.3 & \textbf{Tên usecase:} Xem lại phiên hỏi đáp cũ \\ \hline
 \textbf{Tác nhân} & Người dùng hệ thống (Registered User) \\ \hline
 \textbf{Mô tả vắn tắt} & Cho phép người dùng đã đăng nhập truy cập vào danh mục lịch sử trò chuyện ở thanh điều hướng (sidebar) để khôi phục toàn bộ nội dung tin nhắn và vết thực thi của các tác nhân. \\ \hline
 \textbf{Tiền điều kiện} & Người dùng đã đăng nhập thành công vào hệ thống dưới quyền Registered User và có ít nhất một phiên hội thoại cũ. \\ \hline
@@ -172,7 +237,7 @@ Bảng \ref{table:uc_specs_resume} mô tả đặc tả use case Xem lại phiê
 5. Hệ thống khôi phục và hiển thị chính xác toàn bộ lịch sử trò chuyện kèm theo các khối vết tác nhân (\textit{Agent Trace}) quá khứ lên màn hình cho người dùng. \\ \hline
 \textbf{Hậu điều kiện} & Hệ thống hiển thị thành công phiên hội thoại cũ cùng các vết thực thi của tác nhân. Cửa sổ chat sẵn sàng tiếp nhận các câu hỏi tiếp theo của người dùng cho phiên hội thoại này. \\ \hline
 \end{tabular}
-\caption{Bảng đặc tả chi tiết Use Case Xem lại phiên hỏi đáp cũ}
+\caption{Bảng đặc tả chi tiết use case Xem lại phiên hỏi đáp cũ}
 \label{table:uc_specs_resume}
 \end{table}
 \subsection{Đặc tả use case So sánh, bình luận và đánh giá câu trả lời}
@@ -181,7 +246,7 @@ Bảng \ref{table:uc_specs_feedback} mô tả đặc tả use case so sánh, bì
 \centering
 \begin{tabular}{|p{3.5cm}|p{11.5cm}|}
 \hline
-\textbf{Mã usecase:} UC04 & \textbf{Tên usecase:} So sánh, bình luận và đánh giá câu trả lời \\ \hline
+\textbf{Mã usecase:} UC09 & \textbf{Tên usecase:} So sánh, bình luận và đánh giá câu trả lời \\ \hline
 \textbf{Tác nhân} & Người dùng đã đăng nhập vào hệ thống (Registered User), LLM (Mô hình ngôn ngữ lớn được gọi thông qua API) \\ \hline
 \textbf{Mô tả vắn tắt} & Cho phép người dùng đã xác thực đối chiếu câu trả lời của chatbot Agentic GraphRAG với câu trả lời từ các chatbot khác, sau đó thực hiện đánh giá nhanh (Like/Dislike) hoặc để lại bình luận chi tiết về chất lượng câu trả lời. \\ \hline
 \textbf{Tiền điều kiện} & Người dùng đã đăng nhập thành công và chatbot đã hoàn tất việc sinh câu trả lời, hoặc người dùng đang ở 1 phiên hội thoại cũ đã có ít nhất 1 câu trả lời hoàn chỉnh được chatbot sinh ra. \\ \hline
@@ -199,7 +264,7 @@ Bảng \ref{table:uc_specs_feedback} mô tả đặc tả use case so sánh, bì
 6.1. Người dùng sau khi nhấn chọn nút Like hoặc Dislike không có nhu cầu nhập thêm văn bản góp ý chi tiết và ấn nút "Send feedback". Tiếp tục bước 8 ở luồng chính \\ \hline
 \textbf{Hậu điều kiện} & Hệ thống ghi nhận thành công kết quả so sánh baseline, dữ liệu đánh giá và đóng góp ý kiến của người dùng vào cơ sở dữ liệu PostgreSQL. \\ \hline
 \end{tabular}
-\caption{Bảng đặc tả chi tiết Use Case So sánh, bình luận và đánh giá câu trả lời}
+\caption{Bảng đặc tả chi tiết use case So sánh, bình luận và đánh giá câu trả lời}
 \label{table:uc_specs_feedback}
 \end{table}
 
