@@ -2,9 +2,16 @@
 
 ## Mục đích
 
-Các template retriever không còn gửi thẳng chuỗi pháp lý đã render. Mỗi template
-trả một `LegalContextBundle` được encode trong `contexts`. Presentation layer
-decode, hợp nhất và chỉ render một lần trước khi gọi Response LLM.
+Các template retriever đã migrate sang bundle không gửi thẳng chuỗi pháp lý đã
+render. Mỗi template kiểu này trả một `LegalContextBundle` được encode trong
+`contexts`. Presentation layer decode, hợp nhất và chỉ render một lần trước khi
+gọi Response LLM.
+
+Trạng thái code hiện tại là mixed-compatible: retriever import
+`encode_context_record` trả `LEGAL_CONTEXT_BUNDLE_V1`, còn retriever legacy vẫn
+gọi trực tiếp `chuan_hoa_Context_cho_LLM` và trả text đã render. Pipeline vẫn
+giữ legacy text để không làm lỗi câu trả lời, nhưng dedupe căn cứ pháp lý chỉ
+được đảm bảo cho bundle.
 
 Luồng:
 

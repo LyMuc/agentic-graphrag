@@ -12,9 +12,16 @@ User query
        • trích xuất params + thoi_diem_su_kien (optional)
   → Retriever thực thi Cypher template đã chọn
   → Neo4j → record Context_Tho
-  → chuan_hoa_Context_cho_LLM (utils/utils.py)
+  → LegalContextBundle nếu retriever đã migrate, hoặc legacy rendered text
+  → process_context_strings (application/legal_context.py)
+       • merge/dedupe bundle theo temporal scope
+       • nối legacy text nguyên văn
+  → chuan_hoa_Context_cho_LLM (utils/utils.py) khi render bundle
   → Response LLM (presentation/main.py main_prompt)
 ```
+
+Chi tiết flow chat, retrieval cache và trạng thái mixed-compatible nằm trong
+`thesis-context/chat-flow.md`.
 
 ## Giai đoạn 1 — Truy xuất trên đồ thị (Cypher)
 

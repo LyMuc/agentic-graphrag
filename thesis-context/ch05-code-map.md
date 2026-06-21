@@ -64,6 +64,42 @@ File đồ án: `ĐATN_20225919_Lê_Thái_Sơn_Chatbot_tư_vấn_luật_hôn_nh�
 
 Danh sách tool ↔ file ↔ template: **`retriever-catalog.md`** (auto).
 
+## Chat guest, memory và context dedupe (Chương 4/5)
+
+Nguồn tóm tắt bắt buộc khi viết phần flow mới: `thesis-context/chat-flow.md`.
+
+### Guest chat
+
+| Đồ án | Code |
+|---|---|
+| Guest không cần login để hỏi đáp | `frontend/src/AppWrapper.tsx`, `presentation/guest_auth.py`, `adapter/guest.py` |
+| Guest không persist lịch sử/project/feedback | `adapter/data_layer.py`, `presentation/projects_api.py`, `presentation/guest_auth.py` |
+| UI ẩn quản lý hội thoại cho guest | `frontend/src/lib/auth.ts`, `frontend/src/pages/Page.tsx`, `frontend/src/pages/Thread.tsx`, `frontend/src/components/header/UserNav.tsx` |
+| Test | `tests/test_guest_access.py`, `frontend/tests/auth.spec.ts`, `frontend/tests/UserNav.spec.tsx` |
+
+### Conversation memory và Router cache reuse
+
+| Đồ án | Code |
+|---|---|
+| `session_history`, `retrieval_memory`, `conversation_anchors` | `presentation/main.py`, `application/conversation_context.py` |
+| Router control fields `context_action/context_refs/time_scope/target_date` | `application/router.py` |
+| Reuse validation theo thread, retriever, KG version, temporal scope | `application/conversation_context.py` |
+| Persist/restore memory qua Chainlit step metadata | `presentation/main.py`, `application/conversation_context.py` |
+| Test | `tests/test_conversation_context.py`, `tests/test_router_conversation.py` |
+
+### LegalContextBundle và dedupe context
+
+| Đồ án | Code |
+|---|---|
+| Encode/decode `LEGAL_CONTEXT_BUNDLE_V1` | `application/legal_context.py` |
+| Merge theo temporal scope và dedupe provision | `application/legal_context.py` |
+| Render lại qua `chuan_hoa_Context_cho_LLM` | `application/legal_context.py`, `utils/utils.py` |
+| Retriever đã migrate sang bundle | kiểm tra bằng `rg "encode_context_record" adapter/retrievers` |
+| Retriever legacy còn trả text | kiểm tra bằng `rg "chuan_hoa_Context_cho_LLM" adapter/retrievers` |
+| Test | `tests/test_legal_context.py`, `scripts/test_context_dedupe.py` |
+
+Lưu ý khi viết: không nói toàn bộ retriever đã trả bundle nếu code còn import trực tiếp `chuan_hoa_Context_cho_LLM`; luồng hiện tại là mixed-compatible.
+
 ## Retriever đang sử dụng + Cypher templates
 
 Toàn bộ retriever đang sử dụng nằm trong `adapter/retrievers/`. Mọi retriever chính đều có thư mục `adapter/cypher_templates/<topic>/` và đăng ký trong `ALL_TEMPLATE_REGISTRIES` — **trừ mapping đặc biệt**:

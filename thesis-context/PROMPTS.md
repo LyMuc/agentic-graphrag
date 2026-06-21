@@ -21,6 +21,14 @@ Liệt kê từng bước: khớp / lệch / thiếu. Không sửa file.
 
 Xem bảng prompt chi tiết trong [SYNC_SESSIONS.md](SYNC_SESSIONS.md).
 
+### Session chat guest / memory / dedupe
+
+```
+@thesis-context/AGENT_WORKFLOW.md @thesis-context/chat-flow.md @thesis-context/ch05-code-map.md
+Đồng bộ phần mô tả luồng chat hiện tại với code: guest auth, retrieval_memory, Router context_action/context_refs và LegalContextBundle.
+Chỉ sửa tài liệu được yêu cầu. Không mô tả toàn bộ retriever đã migrate sang bundle nếu code còn trả legacy context.
+```
+
 ---
 
 ## Codex (VS Code)
@@ -59,6 +67,16 @@ Chỉ sửa .tex. Output checklist khớp/không khớp từng bước thuật t
 ```
 So sánh algorithm env (label table:algo_temporal) với implementation trong utils/utils.py.
 Chỉ liệt kê: khớp / lệch / thiếu. Không sửa file.
+```
+
+### Kiểm tra chat flow không sửa
+
+```
+Đọc thesis-context/chat-flow.md, presentation/main.py, application/router.py,
+application/conversation_context.py, application/legal_context.py,
+presentation/guest_auth.py và adapter/data_layer.py.
+Liệt kê flow guest chat + retrieval_memory + LegalContextBundle hiện tại.
+Không sửa file.
 ```
 
 ### Verify Codex đọc instructions (một lần sau setup)

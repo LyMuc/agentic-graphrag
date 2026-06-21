@@ -12,6 +12,8 @@ Mỗi session = **một** subsection. Dùng prompt từ [PROMPTS.md](PROMPTS.md)
 | 4 | Template phan_loai_tai_san | `alg:phan-loai-seed` | Done | Khớp params, runtime date và quy tắc đối chiếu chung--riêng |
 | 5 | Benchmark | `subsection:benchmark` | Done | Giữ nguyên claim phát hiện mâu thuẫn trên 80% |
 | 6 | Router | — | Optional | `router.py` + `retriever_catalog.py` |
+| 7 | Chat guest + memory | — | Optional | `chat-flow.md`, `presentation/main.py`, `presentation/guest_auth.py` |
+| 8 | Context merge/dedupe | — | Optional | `application/legal_context.py`, `application/conversation_context.py` |
 
 ## Session 1 — Algorithm hiệu lực
 
@@ -61,6 +63,42 @@ Sửa .tex nếu thiếu BAI_BO_BOI hoặc sai tên quan hệ.
 ## Session 6 — Router (tuỳ chọn)
 
 **Files:** `application/router.py`, `application/retriever_catalog.py`, `presentation/main.py`
+
+## Session 7 — Chat guest + conversation memory (tuỳ chọn)
+
+**Files code (tối đa 5):**
+
+- `presentation/main.py`
+- `presentation/guest_auth.py`
+- `adapter/guest.py`
+- `adapter/data_layer.py`
+- `application/conversation_context.py`
+
+**Prompt Cursor/Codex:**
+
+```
+@thesis-context/chat-flow.md @thesis-context/ch05-code-map.md
+Đối chiếu mô tả guest chat và conversation memory với code hiện tại.
+Chỉ sửa tài liệu được yêu cầu. Xác nhận guest không persist thread/step/element.
+```
+
+## Session 8 — LegalContextBundle và context dedupe (tuỳ chọn)
+
+**Files code (tối đa 5):**
+
+- `application/legal_context.py`
+- `application/router.py`
+- `application/conversation_context.py`
+- `presentation/main.py`
+- Một retriever đang import `encode_context_record` nếu cần trích ví dụ.
+
+**Prompt Cursor/Codex:**
+
+```
+@thesis-context/chat-flow.md @docs/legal_context_bundle.md
+Đối chiếu mô tả LegalContextBundle, process_context_strings và mixed legacy context với code.
+Không nói toàn bộ retriever đã migrate sang bundle nếu `rg` còn thấy retriever gọi trực tiếp chuan_hoa_Context_cho_LLM.
+```
 
 ## Sau mỗi session
 
