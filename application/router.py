@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 from copy import deepcopy
-from typing import Any, Optional
+from typing import Any, Iterable, Optional
 
 from adapter.config import ROUTER_LLM, build_router_llm
 from application.conversation_context import (
@@ -21,6 +21,13 @@ from application.retriever_policy import (
 
 
 ROUTER_ONLY_ARGS = {"confidence_score"}
+
+
+def _render_retriever_contexts_for_ui(contexts: Iterable[Any]) -> str:
+    """Render encoded bundles / legacy context strings for Chainlit retriever steps."""
+
+    pipeline = process_context_strings(contexts)
+    return pipeline.rendered_text or "Khong tim thay context phu hop."
 
 
 _EXCLUSIVE_DIRECT_TOOLS = {"clarify", "respond"}
@@ -520,8 +527,8 @@ async def _execute_tool_call(
 
     Returns:
         Raw tool result. Dictionary results are annotated with
-        ``retriever_name``. Encoded LegalContextBundles are rendered only for
-        the UI step; the returned result remains structured for later merging.
+        ``retriever_name``. Retriever steps show rendered legal context for
+        the UI; template debug text is kept in step metadata when present.
 
     Raises:
         RuntimeError: If the selected tool is not registered.
@@ -560,12 +567,7 @@ async def _execute_tool_call(
         step.input = f"Tool Input: {function_args}"
         res = await _run()
         if isinstance(res, dict) and "contexts" in res:
-            debug = (res.get("debug") or "").strip()
-            if debug:
-                step.output = debug
-            else:
-                pipeline = process_context_strings(res["contexts"])
-                step.output = pipeline.rendered_text or "Khong tim thay context phu hop."
+            step.output = _render_retriever_contexts_for_ui(res["contexts"])
         elif isinstance(res, list):
             parts = [str(item) for item in res if item is not None]
             step.output = (
@@ -575,7 +577,12 @@ async def _execute_tool_call(
             )
         else:
             step.output = str(res)
-        step.metadata = {"raw_result": res}
+        metadata: dict[str, Any] = {"raw_result": res}
+        if isinstance(res, dict):
+            debug = (res.get("debug") or "").strip()
+            if debug:
+                metadata["retrieval_debug"] = debug
+        step.metadata = metadata
         return res
 
 
@@ -622,8 +629,11 @@ async def _reuse_tool_call(
             "resolved_query": resolved_query,
             "context_refs": context_refs,
         }
-        step.output = result["debug"]
-        step.metadata = {"raw_result": result}
+        step.output = _render_retriever_contexts_for_ui(validation_contexts)
+        step.metadata = {
+            "raw_result": result,
+            "retrieval_debug": result["debug"],
+        }
     return result
 
 
