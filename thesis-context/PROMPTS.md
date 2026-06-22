@@ -25,7 +25,7 @@ Xem bảng prompt chi tiết trong [SYNC_SESSIONS.md](SYNC_SESSIONS.md).
 
 ```
 @thesis-context/AGENT_WORKFLOW.md @thesis-context/chat-flow.md @thesis-context/ch05-code-map.md
-Đồng bộ phần mô tả luồng chat hiện tại với code: guest auth, retrieval_memory, Router context_action/context_refs và LegalContextBundle.
+Đồng bộ phần mô tả luồng chat hiện tại với code: guest auth, retrieval_memory, Router confidence_score/context_action/context_refs và LegalContextBundle.
 Chỉ sửa tài liệu được yêu cầu. Không mô tả toàn bộ retriever đã migrate sang bundle nếu code còn trả legacy context.
 ```
 
@@ -75,7 +75,7 @@ Chỉ liệt kê: khớp / lệch / thiếu. Không sửa file.
 Đọc thesis-context/chat-flow.md, presentation/main.py, application/router.py,
 application/conversation_context.py, application/legal_context.py,
 presentation/guest_auth.py và adapter/data_layer.py.
-Liệt kê flow guest chat + retrieval_memory + LegalContextBundle hiện tại.
+Liệt kê flow guest chat + retrieval_memory + Router direct tools + LegalContextBundle hiện tại.
 Không sửa file.
 ```
 

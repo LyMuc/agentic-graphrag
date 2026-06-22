@@ -138,7 +138,17 @@ async def execute_tool_call(tool_call: dict[str, Any], question: str) -> Any:
         raise KeyError(f"Router returned unknown tool: {tool_name}")
 
     function_to_call = tools[tool_name]["function"]
-    function_args = tool_call.get("args", {}) if tool_name == "respond" else {"query": question}
+    router_args = dict(tool_call.get("args") or {})
+    if tool_name == "respond":
+        function_args = router_args
+    elif tool_name == "clarify":
+        function_args = {
+            "question": str(
+                router_args.get("question") or router_args.get("query") or question
+            )
+        }
+    else:
+        function_args = {"query": str(router_args.get("query") or question)}
     return await function_to_call(**function_args)
 
 

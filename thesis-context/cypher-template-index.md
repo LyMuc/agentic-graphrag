@@ -9,7 +9,7 @@ Phần registry dưới **tự sinh** từ `registry_index.py`. Ghi chú narrati
 - `*.py` từng template: hàm build Cypher + metadata
 
 <!-- BEGIN AUTO-GENERATED:sync_thesis_context.py -->
-_Cập nhật lúc 2026-06-17 14:54 UTC_
+_Cập nhật lúc 2026-06-22 19:03 UTC_
 
 Registry: `adapter/cypher_templates/registry_index.py` → `ALL_TEMPLATE_REGISTRIES`.
 

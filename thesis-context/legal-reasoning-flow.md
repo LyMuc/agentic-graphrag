@@ -53,7 +53,7 @@ File: `utils/utils.py` (hàm `chuan_hoa_Context_cho_LLM`).
 ## Flags trong code (auto)
 
 <!-- BEGIN AUTO-GENERATED:sync_thesis_context.py -->
-_Cập nhật lúc 2026-06-17 14:54 UTC_
+_Cập nhật lúc 2026-06-22 19:03 UTC_
 
 Trích từ `utils/utils.py` → `chuan_hoa_Context_cho_LLM`:
 

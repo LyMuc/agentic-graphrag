@@ -2,7 +2,7 @@
 
 File đồ án: `ĐATN_20225919_Lê_Thái_Sơn_Chatbot_tư_vấn_luật_hôn_nhân_gia_đình/Chuong/5_Giai_phap_dong_gop.tex`
 
-**Quy mô hiện tại (2026-06):** **20 retriever** + 2 direct tool (`respond`, `text2cypher`); **20** `TemplateRegistry` trong `registry_index.py`. Bảng đầy đủ: `retriever-catalog.md`, `cypher-template-index.md` (chạy `sync-thesis-context.ps1` trước khi đối chiếu).
+**Quy mô hiện tại (2026-06):** **20 retriever** + 3 direct tool (`clarify`, `respond`, `text2cypher`); **20** `TemplateRegistry` trong `registry_index.py`. Bảng đầy đủ: `retriever-catalog.md`, `cypher-template-index.md` (chạy `sync-thesis-context.ps1` trước khi đối chiếu).
 
 ## §5.2 Legal reasoning (`section:5.2`)
 
@@ -58,7 +58,7 @@ File đồ án: `ĐATN_20225919_Lê_Thái_Sơn_Chatbot_tư_vấn_luật_hôn_nh�
 
 - `application/router.py` — `route_question`, `tool_picker_prompt`
 - `application/retriever_catalog.py` — `RETRIEVER_SPECS` (**20** tool)
-- `application/retriever_policy.py` — policy bổ sung
+- `application/retriever_policy.py` — policy helper/benchmark; luồng chính hiện bỏ qua policy filter trong `route_question_with_audit`
 - `application/router_tool_registry.py` — schema tool cho LLM
 - Registry UI: `presentation/main.py`
 
@@ -82,7 +82,7 @@ Nguồn tóm tắt bắt buộc khi viết phần flow mới: `thesis-context/ch
 | Đồ án | Code |
 |---|---|
 | `session_history`, `retrieval_memory`, `conversation_anchors` | `presentation/main.py`, `application/conversation_context.py` |
-| Router control fields `context_action/context_refs/time_scope/target_date` | `application/router.py` |
+| Router control fields `confidence_score/context_action/context_refs/time_scope/target_date` | `application/router.py` |
 | Reuse validation theo thread, retriever, KG version, temporal scope | `application/conversation_context.py` |
 | Persist/restore memory qua Chainlit step metadata | `presentation/main.py`, `application/conversation_context.py` |
 | Test | `tests/test_conversation_context.py`, `tests/test_router_conversation.py` |

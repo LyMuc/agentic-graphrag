@@ -113,10 +113,11 @@ Nếu `KG_VERSION` không được cấu hình, `current_kg_version()` dùng ver
 
 ## Router cache reuse
 
-`application/router.py` thêm control fields cho mọi retriever không phải direct tool:
+`application/router.py` thêm metadata/field điều khiển cho mọi retriever không phải direct tool:
 
 ```json
 {
+  "confidence_score": 0.86,
   "context_action": "retrieve | reuse",
   "context_refs": ["..."],
   "time_scope": "current | explicit | ambiguous",
@@ -125,6 +126,10 @@ Nếu `KG_VERSION` không được cấu hình, `current_kg_version()` dùng ver
 ```
 
 Các field này bị loại khỏi args trước khi gọi retriever. Router chỉ nên đặt `context_action="reuse"` khi context cũ cùng retriever, cùng mốc thời gian và câu follow-up không mở thêm vấn đề pháp lý mới.
+
+Direct tool hiện tại: `clarify`, `respond`, `text2cypher`. Trong đó `clarify` và `respond` là phản hồi trực tiếp/exclusive: nếu Router chọn một trong hai thì không chạy thêm retriever; `clarify` chỉ dùng khi follow-up còn từ hai cách hiểu hợp lý trở lên sau khi xét lịch sử gần và anchor.
+
+Lưu ý trạng thái code hiện tại: `application/retriever_policy.py` và `_evaluate_tool_calls_policy` vẫn tồn tại cho helper/test/benchmark, nhưng `route_question_with_audit` trong luồng chính đang bỏ qua policy filter và chấp nhận các tool call đã loại trùng từ Router LLM. Vì vậy khi viết đồ án, không mô tả `RetrieverPolicy` là cổng lọc bắt buộc của production flow nếu chưa bật lại trong code.
 
 `validate_reuse_request` kiểm tra quyết định reuse bằng luật deterministic:
 
@@ -176,9 +181,9 @@ Trạng thái migration hiện tại là mixed-compatible:
 
 ## Metadata và quan sát trong UI
 
-Router/assistant step metadata có thể chứa:
+Router/assistant step metadata hiện đáng chú ý:
 
-- `router_policy`
+- Không có `router_policy` trong production path vì policy filter đang bị comment và `route_question_with_audit` trả `None`.
 - `tool_response[*].cache_status`: `retrieved` hoặc `reused`
 - `tool_response[*].cache_fallback_reason`
 - `retrieval_memory_entries`
@@ -206,4 +211,3 @@ Frontend:
 
 - `frontend/tests/auth.spec.ts`
 - `frontend/tests/UserNav.spec.tsx`
-

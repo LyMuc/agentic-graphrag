@@ -11,7 +11,7 @@ Mỗi session = **một** subsection. Dùng prompt từ [PROMPTS.md](PROMPTS.md)
 | 3 | Schema che_do_tai_san | `tab:nodes_che_do_tai_san` | Done | Khớp label và relationship trong template tài sản đang dùng |
 | 4 | Template phan_loai_tai_san | `alg:phan-loai-seed` | Done | Khớp params, runtime date và quy tắc đối chiếu chung--riêng |
 | 5 | Benchmark | `subsection:benchmark` | Done | Giữ nguyên claim phát hiện mâu thuẫn trên 80% |
-| 6 | Router | — | Optional | `router.py` + `retriever_catalog.py` |
+| 6 | Router | — | Optional | `router.py` + `retriever_catalog.py`; direct tools `clarify/respond/text2cypher`, policy filter đang bypass |
 | 7 | Chat guest + memory | — | Optional | `chat-flow.md`, `presentation/main.py`, `presentation/guest_auth.py` |
 | 8 | Context merge/dedupe | — | Optional | `application/legal_context.py`, `application/conversation_context.py` |
 
@@ -62,7 +62,7 @@ Sửa .tex nếu thiếu BAI_BO_BOI hoặc sai tên quan hệ.
 
 ## Session 6 — Router (tuỳ chọn)
 
-**Files:** `application/router.py`, `application/retriever_catalog.py`, `presentation/main.py`
+**Files:** `application/router.py`, `application/retriever_catalog.py`, `application/router_tool_registry.py`, `presentation/main.py`
 
 ## Session 7 — Chat guest + conversation memory (tuỳ chọn)
 
