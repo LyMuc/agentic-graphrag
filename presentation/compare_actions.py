@@ -177,7 +177,7 @@ async def _run_comparison_with_steps(data: ComparisonInput) -> ComparisonResult:
 
 
 async def restore_compare_actions_from_thread(steps: list[dict[str, Any]]) -> None:
-    """Re-stash data and offer compare button for assistant messages after resume."""
+    """Re-stash comparison data for assistant messages after resume."""
     if not comparison_is_enabled():
         return
 
@@ -201,11 +201,6 @@ async def restore_compare_actions_from_thread(steps: list[dict[str, Any]]) -> No
 
         if question and app_answer:
             stash_comparison_data(compare_id, question, app_answer)
-
-        await cl.Message(
-            content="Bạn có thể so sánh lại câu trả lời trên với baseline LLM:",
-            actions=[build_compare_action(compare_id)],
-        ).send()
 
 
 @cl.action_callback(COMPARE_ACTION_NAME)

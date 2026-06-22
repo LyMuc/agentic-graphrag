@@ -16,6 +16,7 @@ import { AskFileButton } from './AskFileButton';
 import { MessageAvatar } from './Avatar';
 import { MessageButtons } from './Buttons';
 import { MessageContent } from './Content';
+import { LegalWarningButtons } from './LegalWarningButtons';
 import Step from './Step';
 import UserMessage from './UserMessage';
 
@@ -167,6 +168,8 @@ const Message = memo(
                         latex={latex}
                         renderMarkdown={true}
                       />
+
+                      <LegalWarningButtons message={message} />
 
                       <AskFileButton messageId={message.id} onError={onError} />
                       <AskActionButtons

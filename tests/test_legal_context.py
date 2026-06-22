@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from unittest.mock import patch
+
 from application.legal_context import (
     build_legal_context_bundle,
     decode_legal_context_bundle,
@@ -19,6 +21,7 @@ def _context(
     future_relations: list[dict] | None = None,
     conflicts: list[dict] | None = None,
     replacements: list[str] | None = None,
+    replacement_relations: list[dict] | None = None,
 ) -> dict:
     """Build a minimal renderer-compatible Context_Tho test fixture.
 
@@ -45,6 +48,7 @@ def _context(
         "lien_ket_sap_hieu_luc": future_relations or [],
         "can_cu_mau_thuan": conflicts or [],
         "quy_dinh_hien_hanh_doi_chieu": replacements or [],
+        "lien_ket_hien_hanh": replacement_relations or [],
     }
 
 
@@ -251,6 +255,62 @@ def test_relations_conflicts_future_and_replacements_are_deduplicated():
     assert merged["future_relations"][0]["provision"]["content"] == "Nội dung tương lai"
     assert len(merged["conflicts"]) == 1
     assert merged["replacement_ids"] == ["Luat_Moi_Dieu_1"]
+
+
+def test_replacement_relations_encode_and_merge():
+    """Verify lien_ket_hien_hanh survives bundle encode/merge."""
+
+    relation = {
+        "id_hien_hanh": "NghiDinh_109_2026_ND_CP_Dieu_61",
+        "id_duoc_thay_the": "NghiDinh_82_2020_ND_CP_Dieu_58",
+    }
+    context = _context(replacement_relations=[relation])
+    bundle = _bundle(context, "replacement_template")
+
+    assert bundle["replacement_relations"] == [relation]
+
+    merged = merge_legal_context_bundles([bundle, bundle])
+    assert merged["replacement_relations"] == [relation]
+
+
+@patch("application.legal_context._fetch_provision_effective_dates")
+def test_build_bundle_attaches_replacement_provisions(mock_fetch):
+    mock_fetch.return_value = {"NghiDinh_109_2026_ND_CP_Dieu_61": "2026-05-18"}
+    context = _context(
+        main=[
+            {
+                "id_goc_tu_router": "NghiDinh_82_2020_ND_CP_Dieu_58",
+                "id_thuc_te_ap_dung": "NghiDinh_82_2020_ND_CP_Dieu_58",
+                "noidung": "Cũ",
+                "cap_bac": 5,
+                "het_hieu_luc": True,
+                "ngay_hieu_luc": "2020-09-01",
+                "ngay_het_hieu_luc": "2026-05-18",
+            }
+        ],
+        replacements=["NghiDinh_109_2026_ND_CP_Dieu_61"],
+        replacement_relations=[
+            {
+                "id_hien_hanh": "NghiDinh_109_2026_ND_CP_Dieu_61",
+                "id_duoc_thay_the": "NghiDinh_82_2020_ND_CP_Dieu_58",
+            }
+        ],
+    )
+    bundle = build_legal_context_bundle(
+        context,
+        "2021-12-31",
+        True,
+        retriever_name="xu_phat_vi_pham",
+        template_name="tao_hon",
+        citation_links={},
+    )
+    replacement = [
+        p for p in bundle["provisions"] if p.get("role") == "replacement"
+    ]
+    assert len(replacement) == 1
+    assert replacement[0]["id"] == "NghiDinh_109_2026_ND_CP_Dieu_61"
+    assert replacement[0]["effective_from"] == "2026-05-18"
+    mock_fetch.assert_called_once()
 
 
 def test_pipeline_renders_bundle_and_keeps_legacy_context():

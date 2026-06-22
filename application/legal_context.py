@@ -13,6 +13,7 @@ from typing import Any, Iterable
 
 from utils.utils import (
     _collect_dieu_ids_from_context,
+    _fetch_provision_effective_dates,
     _fetch_tvpl_links,
     chuan_hoa_Context_cho_LLM,
 )
@@ -93,6 +94,65 @@ def _provenance_entry(retriever_name: str, template_name: str) -> dict[str, str]
         "retriever": str(retriever_name or ""),
         "template": str(template_name or ""),
     }
+
+
+def _attach_replacement_provisions(
+    provisions: list[dict[str, Any]],
+    replacement_ids: list[str],
+    replacement_relations: list[dict[str, Any]],
+    future_relations: list[dict[str, Any]],
+    provenance: dict[str, str],
+) -> list[dict[str, Any]]:
+    """Add lightweight replacement provisions so modal can show effective dates.
+
+    ``lien_ket_hien_hanh`` / ``quy_dinh_hien_hanh_doi_chieu`` reference
+    replacements already effective at ``query_date``. Those nodes are absent
+    from ``can_cu_chinh`` (``target_date`` scope) and ``can_cu_sap_hieu_luc``.
+    """
+    known_ids = {str(p.get("id")) for p in provisions if p.get("id")}
+    for relation in future_relations:
+        provision = relation.get("provision")
+        if isinstance(provision, dict) and provision.get("id") and provision.get("effective_from"):
+            known_ids.add(str(provision["id"]))
+
+    needed: set[str] = set()
+    for replacement_id in replacement_ids:
+        value = str(replacement_id or "")
+        if value and value not in known_ids:
+            needed.add(value)
+    for relation in replacement_relations:
+        replacement_id = str(relation.get("id_hien_hanh") or "")
+        if replacement_id and replacement_id not in known_ids:
+            needed.add(replacement_id)
+    if not needed:
+        return provisions
+
+    effective_dates = _fetch_provision_effective_dates(needed)
+    if not effective_dates:
+        return provisions
+
+    attached = list(provisions)
+    for replacement_id in sorted(needed):
+        effective_from = effective_dates.get(replacement_id)
+        if not effective_from:
+            continue
+        attached.append(
+            {
+                "id": replacement_id,
+                "content": None,
+                "role": "replacement",
+                "legal_rank": None,
+                "effective_from": effective_from,
+                "effective_until": None,
+                "amendment_id": None,
+                "amended_content": None,
+                "amendment_effective_from": None,
+                "amendment_effective_until": None,
+                "source_id": None,
+                "provenance": [dict(provenance)],
+            }
+        )
+    return attached
 
 
 def _provision_from_item(
@@ -226,6 +286,23 @@ def build_legal_context_bundle(
     if citation_links is None:
         citation_links = _fetch_tvpl_links(_collect_dieu_ids_from_context(context_tho))
 
+    replacement_ids = [
+        str(item)
+        for item in (context_tho.get("quy_dinh_hien_hanh_doi_chieu") or [])
+        if item
+    ]
+    replacement_relations = _unique_dicts(
+        _as_dict_list(context_tho.get("lien_ket_hien_hanh")),
+        ("id_hien_hanh", "id_duoc_thay_the"),
+    )
+    provisions = _attach_replacement_provisions(
+        provisions,
+        replacement_ids,
+        replacement_relations,
+        future_relations,
+        provenance,
+    )
+
     return {
         "schema_version": LEGAL_CONTEXT_SCHEMA_VERSION,
         "target_date": str(target_date),
@@ -235,11 +312,8 @@ def build_legal_context_bundle(
         "guidance_relations": _as_dict_list(context_tho.get("lien_ket_huong_dan")),
         "future_relations": future_relations,
         "conflicts": _as_dict_list(context_tho.get("can_cu_mau_thuan")),
-        "replacement_ids": [
-            str(item)
-            for item in (context_tho.get("quy_dinh_hien_hanh_doi_chieu") or [])
-            if item
-        ],
+        "replacement_ids": replacement_ids,
+        "replacement_relations": replacement_relations,
         "citation_links": dict(citation_links or {}),
     }
 
@@ -479,6 +553,7 @@ def merge_legal_context_bundles(
     future_relations: list[dict[str, Any]] = []
     conflicts: list[dict[str, Any]] = []
     replacement_ids: list[str] = []
+    replacement_relations: list[dict[str, Any]] = []
     citation_links: dict[str, str] = {}
 
     for bundle in bundles:
@@ -501,6 +576,7 @@ def merge_legal_context_bundles(
             value = str(replacement_id or "")
             if value and value not in replacement_ids:
                 replacement_ids.append(value)
+        replacement_relations.extend(_as_dict_list(bundle.get("replacement_relations")))
         citation_links.update(
             {
                 str(key): str(value)
@@ -522,6 +598,10 @@ def merge_legal_context_bundles(
         "future_relations": _merge_future_relations(future_relations),
         "conflicts": _unique_dicts(conflicts, ("id_nguon", "id_dich")),
         "replacement_ids": replacement_ids,
+        "replacement_relations": _unique_dicts(
+            replacement_relations,
+            ("id_hien_hanh", "id_duoc_thay_the"),
+        ),
         "citation_links": citation_links,
     }
 
@@ -546,6 +626,7 @@ def legal_context_bundle_to_context_tho(
         "can_cu_bo_tro": [],
         "lien_ket_huong_dan": _as_dict_list(bundle.get("guidance_relations")),
         "quy_dinh_hien_hanh_doi_chieu": list(bundle.get("replacement_ids") or []),
+        "lien_ket_hien_hanh": _as_dict_list(bundle.get("replacement_relations")),
         "can_cu_sap_hieu_luc": [],
         "lien_ket_sap_hieu_luc": [],
         "can_cu_mau_thuan": _as_dict_list(bundle.get("conflicts")),

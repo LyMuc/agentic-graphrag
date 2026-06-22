@@ -18,6 +18,7 @@ from presentation.guest_auth import guest_management_guard, router as guest_rout
 from adapter.config import chat_stream
 from application.router import route_question_with_audit
 from application.legal_context import process_context_strings
+from application.warning_payload import build_legal_warning_metadata
 from application.conversation_context import (
     RESPONSE_HISTORY_MAX_TOKENS,
     ROUTER_HISTORY_MAX_TOKENS,
@@ -598,7 +599,7 @@ async def _route_with_optional_steps(
                 router_policy.audit_text() + "\n\nRetriever cuối cùng đã chạy xong."
             )
         p_step.output = "Hoàn tất truy xuất ngữ cảnh pháp lý."
-    return tool_response, router_policy, {}
+    return tool_response, router_policy, metadata
 
 
 async def _stream_answer(
@@ -703,6 +704,7 @@ async def main(message: cl.Message):
 
     context_pipeline = process_context_strings(contexts_for_llm)
     contexts_text_for_llm = context_pipeline.rendered_text
+    legal_warnings = build_legal_warning_metadata(context_pipeline.bundles)
     resolved_queries = [
         str(res.get("resolved_query"))
         for res in tool_response
@@ -745,8 +747,10 @@ async def main(message: cl.Message):
         llm_response += viz_extra
         await msg.stream_token(viz_extra)
 
-    if routing_metadata.get("retrieval_memory_entries") or routing_metadata.get("turn_anchor"):
-        msg.metadata = routing_metadata
+    if routing_metadata.get("retrieval_memory_entries") or routing_metadata.get("turn_anchor") or legal_warnings:
+        msg.metadata = dict(routing_metadata or {})
+        if legal_warnings:
+            msg.metadata["legal_warnings"] = legal_warnings
     await msg.update()
 
     await attach_compare_to_message(msg, input_text, llm_response)

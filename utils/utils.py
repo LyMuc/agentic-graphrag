@@ -326,6 +326,32 @@ def _fetch_tvpl_links(dieu_ids: set[str]) -> dict[str, str]:
         return {}
 
 
+def _fetch_provision_effective_dates(provision_ids: set[str]) -> dict[str, str]:
+    """Batch-fetch ``ngay_co_hieu_luc`` for replacement provisions missing from Context_Tho."""
+    if not provision_ids:
+        return {}
+    try:
+        from adapter.config import driver
+    except ImportError:
+        return {}
+    cypher = """
+    MATCH (n)
+    WHERE (n:DieuLuat OR n:DieuKhoanLuat OR n:DieuKhoanDiemLuat)
+      AND n.id IN $ids
+      AND n.ngay_co_hieu_luc IS NOT NULL
+    RETURN n.id AS id, n.ngay_co_hieu_luc AS effective_from
+    """
+    try:
+        records, _, _ = driver.execute_query(cypher, ids=list(provision_ids))
+        return {
+            str(r["id"]): str(r["effective_from"])
+            for r in records
+            if r.get("id") and r.get("effective_from")
+        }
+    except Exception:
+        return {}
+
+
 def _format_bang_link_trich_dan(link_map: dict[str, str]) -> str:
     if not link_map:
         return ""
