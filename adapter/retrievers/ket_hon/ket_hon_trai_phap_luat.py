@@ -3,7 +3,7 @@
 Pipeline 3 bước:
     1. CLASSIFY  -> LLM chọn 1+ template (registry topic 'ket_hon_trai_phap_luat').
     2. EXTRACT   -> 1 LLM call mỗi template (params + thời điểm sự kiện).
-    3. EXECUTE   -> chạy Cypher qua asyncio.to_thread → chuan_hoa_Context_cho_LLM.
+    3. EXECUTE   -> chạy Cypher qua asyncio.to_thread → encode_context_record.
 
 Output: dict ``{"contexts": list[str], "debug": str}``.
 """
@@ -25,7 +25,7 @@ from adapter.cypher_templates.extract_schema import (
 from adapter.cypher_templates.ket_hon_trai_phap_luat import KET_HON_TRAI_PHAP_LUAT_REGISTRY
 from adapter.cypher_templates.ket_hon_trai_phap_luat.term_mapping import resolve_term
 from adapter.graph_viz import save_lazy_viz_stub
-from utils.utils import chuan_hoa_Context_cho_LLM
+from application.legal_context import encode_context_record
 
 
 ket_hon_trai_phap_luat_description = {
@@ -313,9 +313,13 @@ async def ket_hon_trai_phap_luat(query: str) -> dict[str, Any]:
 
         try:
             contexts.append(
-                chuan_hoa_Context_cho_LLM(
-                    record, target_date, is_user_provide_date
-                ).rstrip()
+                encode_context_record(
+                    record,
+                    target_date,
+                    is_user_provide_date,
+                    retriever_name="ket_hon_trai_phap_luat",
+                    template_name=template.name,
+                )
             )
         except Exception as exc:
             print(f"[Template:{template.name}] Normalize error: {exc}")
