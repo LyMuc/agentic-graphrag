@@ -8,6 +8,7 @@ from adapter import data_layer
 from chainlit import data as cl_data
 from chainlit.server import app
 import presentation.projects_api  # noqa: F401
+from presentation.viz_routes import register_viz_routes
 import presentation.compare_actions  # noqa: F401 — registers action callback
 from presentation.compare_actions import (
     attach_compare_to_message,
@@ -118,6 +119,7 @@ async def _send_chat_settings() -> None:
 
 app.middleware("http")(guest_management_guard)
 app.include_router(guest_router)
+register_viz_routes(app)
 
 tools = {
     "quy_dinh_chung_khai_niem_phap_ly": {
@@ -526,14 +528,14 @@ def _viz_footer(tool_response: list) -> str:
 
     if not _is_expert_mode():
         return ""
-    base = os.environ.get("VIZ_BASE_URL", "http://localhost:8501").rstrip("/")
+    base = os.environ.get("VIZ_BASE_URL", "").rstrip("/")
     links = collect_viz_links(tool_response)
     if not links:
         return ""
-    parts = [
-        f"[Link visualize đồ thị tri thức — {retriever_name}]({base}/viz/{viz_id})"
-        for viz_id, retriever_name, _ in links
-    ]
+    parts = []
+    for viz_id, retriever_name, _ in links:
+        href = f"{base}/viz/{viz_id}" if base else f"/viz/{viz_id}"
+        parts.append(f"[Link visualize đồ thị tri thức — {retriever_name}]({href})")
     return "\n\n" + "\n".join(parts)
 
 

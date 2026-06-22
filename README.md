@@ -170,18 +170,18 @@ npx.cmd pnpm@9.15.9 build
 ```
 
 - `-w`: auto-reload khi sửa code
-- UI: **http://localhost:8000**
+- UI chat: **http://localhost:8000**
+- Link visualize (chế độ chuyên gia): **http://localhost:8000/viz/{viz_id}** — cùng process Chainlit
+- Snapshot JSON lưu tại `data/viz_snapshots/` (TTL 7 ngày)
 - Lần chạy đầu, Chainlit tạo schema PostgreSQL tự động nếu `DATABASE_URL` hợp lệ
 
-**Terminal 2 — Viz server (tùy chọn, cho link “Xem đồ thị tri thức”):**
+**Viz server riêng (tùy chọn — dev hoặc tách tải materialize):**
 
 ```bash
 uvicorn presentation.viz_server:app --host 0.0.0.0 --port 8501
 ```
 
-- UI visualize: **http://localhost:8501/viz/{viz_id}**
-- Trong `.env`: `VIZ_BASE_URL=http://localhost:8501`
-- Snapshot JSON lưu tại `data/viz_snapshots/` (TTL 7 ngày)
+Khi dùng port riêng, set `.env`: `VIZ_BASE_URL=http://localhost:8501`
 
 **Guest và OAuth:** Người dùng chưa đăng nhập vẫn chat được nhưng hội thoại
 không được lưu và không có lịch sử/Projects. Nút **Login** mở trang OAuth mặc
