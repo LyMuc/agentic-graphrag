@@ -823,8 +823,8 @@ async def route_question_with_audit(
     retrieval_memory: dict[str, dict[str, Any]] | None = None,
     thread_id: str = "",
     kg_version: str | None = None,
-) -> tuple[list[Any], PolicyDecision]:
-    """Route one question, filter each resolved query, and execute or reuse tools.
+) -> tuple[list[Any], PolicyDecision | None]:
+    """Route one question and execute or reuse router-selected tools.
 
     Args:
         question: Raw current user question.
@@ -835,7 +835,8 @@ async def route_question_with_audit(
         kg_version: Current KG version used by deterministic cache validation.
 
     Returns:
-        Tuple of tool results and a combined auditable policy decision.
+        Tuple of tool results and optional policy decision (``None`` when
+        RetrieverPolicy is disabled).
     """
 
     memory = retrieval_memory or {}
@@ -864,11 +865,21 @@ async def route_question_with_audit(
         tools=_router_tool_descriptions(tools),
     )
 
-    policy_decision = _evaluate_tool_calls_policy(question, llm_tool_calls)
-    policy_tool_calls = _build_policy_tool_calls(
-        llm_tool_calls,
-        policy_decision.final_tools,
-    )
+    # Không dùng RetrieverPolicy nữa — chấp nhận toàn bộ retriever router đề xuất.
+    # policy_decision = _evaluate_tool_calls_policy(question, llm_tool_calls)
+    # policy_tool_calls = _build_policy_tool_calls(
+    #     llm_tool_calls,
+    #     policy_decision.final_tools,
+    # )
+    policy_tool_calls = _unique_tool_calls(llm_tool_calls)
+    # policy_decision = PolicyDecision(
+    #     question=question,
+    #     prepared_question="",
+    #     llm_candidates=router_tool_names,
+    #     final_tools=router_tool_names,
+    #     rejected_tools={},
+    #     audit=[...],
+    # )
     tool_response = await handle_tool_calls(
         tools,
         policy_tool_calls,
@@ -877,7 +888,8 @@ async def route_question_with_audit(
         thread_id=thread_id,
         kg_version=kg_version or current_kg_version(),
     )
-    return tool_response, policy_decision
+    return tool_response, None
+    # return tool_response, policy_decision
 
 
 async def route_question(

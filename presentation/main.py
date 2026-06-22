@@ -592,12 +592,13 @@ async def _route_with_optional_steps(
             tool_response, router_policy, metadata = await _route_and_update_memory()
             step2.metadata = {
                 "tool_response": tool_response,
-                "router_policy": router_policy.to_dict(),
+                # "router_policy": router_policy.to_dict(),
                 **metadata,
             }
-            step2.output = (
-                router_policy.audit_text() + "\n\nRetriever cuối cùng đã chạy xong."
-            )
+            step2.output = "Retriever cuối cùng đã chạy xong."
+            # step2.output = (
+            #     router_policy.audit_text() + "\n\nRetriever cuối cùng đã chạy xong."
+            # )
         p_step.output = "Hoàn tất truy xuất ngữ cảnh pháp lý."
     return tool_response, router_policy, metadata
 
