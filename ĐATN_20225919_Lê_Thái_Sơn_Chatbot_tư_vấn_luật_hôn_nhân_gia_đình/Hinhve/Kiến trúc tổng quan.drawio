@@ -1,0 +1,187 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Architecture Overview" id="arch-overview-v2">
+    <mxGraphModel dx="2714" dy="750" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1050" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="fe-box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;dashed=1;fontSize=19;" value="" vertex="1">
+          <mxGeometry height="280" width="590" x="120" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="fe-label" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=19;" value="Frontend" vertex="1">
+          <mxGeometry height="40" width="120" x="300" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="chat-ui" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=19;" value="Chatbot UI&lt;br&gt;(Chainlit UI custom)" vertex="1">
+          <mxGeometry height="60" width="200" x="170" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="viz-ui" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=19;" value="Knowledge Graph visualization" vertex="1">
+          <mxGeometry height="60" width="180" x="450" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="be-box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;dashed=1;fontSize=19;" value="" vertex="1">
+          <mxGeometry height="590" width="1020" x="-10" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="be-label" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=19;" value="Backend" vertex="1">
+          <mxGeometry height="40" width="120" x="500" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontSize=19;" value="User (Actor)" vertex="1">
+          <mxGeometry height="110" width="55" x="-120" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="server" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=19;" value="Chainlit Server" vertex="1">
+          <mxGeometry height="65" width="220" x="250" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="-yWZSAr1A5z32NUfFhQO-4" edge="1" parent="1" source="orchestrator" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.664;entryY=1.013;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=19;" target="server">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-yWZSAr1A5z32NUfFhQO-5" connectable="0" parent="-yWZSAr1A5z32NUfFhQO-4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=19;" value="Answer" vertex="1">
+          <mxGeometry relative="1" x="-0.0354" y="4" as="geometry">
+            <mxPoint x="17" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-yWZSAr1A5z32NUfFhQO-8" edge="1" parent="1" source="orchestrator" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;fontSize=19;" target="router">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-yWZSAr1A5z32NUfFhQO-9" connectable="0" parent="-yWZSAr1A5z32NUfFhQO-8" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=19;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Question +&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;Chat History&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.5869" y="2" as="geometry">
+            <mxPoint x="49" y="-4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="orchestrator" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=19;" value="Chat Orchestrator" vertex="1">
+          <mxGeometry height="65" width="240" x="120" y="655" as="geometry" />
+        </mxCell>
+        <mxCell id="router" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=19;" value="Router Agent" vertex="1">
+          <mxGeometry height="65" width="230" x="510" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="retriever" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=19;" value="Retriever Agents" vertex="1">
+          <mxGeometry height="65" width="240" x="470" y="890" as="geometry" />
+        </mxCell>
+        <mxCell id="session-db" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fontSize=19;" value="Session Storage" vertex="1">
+          <mxGeometry height="85" width="220" x="710" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="kg" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fontSize=19;" value="Knowledge Graph&lt;br&gt;(Neo4j)" vertex="1">
+          <mxGeometry height="85" width="220" x="20" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="-yWZSAr1A5z32NUfFhQO-10" edge="1" parent="1" source="llm-response" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=52.5;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=19;" target="orchestrator">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-yWZSAr1A5z32NUfFhQO-12" connectable="0" parent="-yWZSAr1A5z32NUfFhQO-10" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=19;" value="Answer" vertex="1">
+          <mxGeometry relative="1" x="-0.2983" y="-1" as="geometry">
+            <mxPoint x="24" y="10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="llm-response" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fontSize=19;" value="API LLM&lt;div&gt;(gpt-4.1)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="180" x="-250" y="545" as="geometry" />
+        </mxCell>
+        <mxCell id="llm-router" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fontSize=19;" value="API LLM&lt;br&gt;(gpt-4o)" vertex="1">
+          <mxGeometry height="75" width="160" x="1020" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="llm-retriever" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fontSize=19;" value="API LLM&amp;nbsp;&lt;div&gt;(gpt-4o)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75" width="160" x="1030" y="885" as="geometry" />
+        </mxCell>
+        <mxCell id="e-user-chat" edge="1" parent="1" source="user" style="endArrow=block;html=1;fontSize=19;" target="chat-ui">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl-user-chat" connectable="0" parent="e-user-chat" style="edgeLabel;html=1;fontSize=19;" value="Request" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint x="-11" y="-21" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-chat-server" edge="1" parent="1" source="chat-ui" style="endArrow=block;html=1;fontSize=19;startArrow=block;startFill=1;" target="server">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl-chat-server" connectable="0" parent="e-chat-server" style="edgeLabel;html=1;fontSize=19;" value="HTTP/WebSocket" vertex="1">
+          <mxGeometry relative="1" x="-0.05" as="geometry">
+            <mxPoint x="-56" y="-29" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-viz-server" edge="1" parent="1" source="viz-ui" style="endArrow=block;html=1;fontSize=19;" target="server">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl-viz-server" connectable="0" parent="e-viz-server" style="edgeLabel;html=1;fontSize=19;" value="HTTP/Get" vertex="1">
+          <mxGeometry relative="1" x="0.1" as="geometry">
+            <mxPoint x="-20" y="-47" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-server-orch" edge="1" parent="1" source="server" style="endArrow=block;html=1;fontSize=19;" target="orchestrator">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl-server-orch" connectable="0" parent="e-server-orch" style="edgeLabel;html=1;fontSize=19;" value="Question" vertex="1">
+          <mxGeometry relative="1" x="-0.05" as="geometry">
+            <mxPoint x="-72" y="-18" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-orch-router" edge="1" parent="1" source="orchestrator" style="endArrow=block;html=1;fontSize=19;entryX=1;entryY=0;entryDx=0;entryDy=27.5;entryPerimeter=0;" target="llm-response">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-yWZSAr1A5z32NUfFhQO-11" connectable="0" parent="e-orch-router" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=19;" value="Prompt + context" vertex="1">
+          <mxGeometry relative="1" x="0.4904" y="-3" as="geometry">
+            <mxPoint x="62" y="9" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-router-orch" edge="1" parent="1" style="endArrow=block;html=1;fontSize=19;exitX=0;exitY=0.5;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" target="orchestrator">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="510" y="730" as="sourcePoint" />
+            <mxPoint x="390" y="705" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl-router-orch" connectable="0" parent="e-router-orch" style="edgeLabel;html=1;fontSize=19;" value="Context&amp;nbsp;" vertex="1">
+          <mxGeometry relative="1" x="0.1" y="-1" as="geometry">
+            <mxPoint x="-13" y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-router-ret" edge="1" parent="1" style="endArrow=block;html=1;fontSize=19;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="675" y="745" as="sourcePoint" />
+            <mxPoint x="670" y="890" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl-router-ret" connectable="0" parent="e-router-ret" style="edgeLabel;html=1;fontSize=19;" value="Rewrited Question" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-52" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-ret-router" edge="1" parent="1" style="endArrow=block;html=1;fontSize=19;entryX=0.304;entryY=0.949;entryDx=0;entryDy=0;entryPerimeter=0;" target="router">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="575" y="890" as="sourcePoint" />
+            <mxPoint x="585" y="750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl-ret-router" connectable="0" parent="e-ret-router" style="edgeLabel;html=1;fontSize=19;" value="Context" vertex="1">
+          <mxGeometry relative="1" x="0.05" as="geometry">
+            <mxPoint x="-38" y="-3" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-router-llm-out" edge="1" parent="1" source="router" style="endArrow=block;html=1;fontSize=19;startArrow=block;startFill=1;" target="llm-router">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl-router-llm" connectable="0" parent="e-router-llm-out" style="edgeLabel;html=1;fontSize=19;" value="Tool calling" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-31" y="-18" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-ret-llm-out" edge="1" parent="1" source="retriever" style="endArrow=block;html=1;fontSize=19;startArrow=block;startFill=1;" target="llm-retriever">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl-ret-llm" connectable="0" parent="e-ret-llm-out" style="edgeLabel;html=1;fontSize=18;" value="Template classify+&lt;br&gt;Structured extract" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-100" y="-32" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-ret-kg" edge="1" parent="1" source="retriever" style="endArrow=block;html=1;fontSize=19;startArrow=block;startFill=1;" target="kg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl-ret-kg" connectable="0" parent="e-ret-kg" style="edgeLabel;html=1;fontSize=19;" value="Cypher query" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-40" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-server-session" edge="1" parent="1" source="server" style="endArrow=block;html=1;fontSize=19;startArrow=block;startFill=1;" target="session-db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl-server-session" connectable="0" parent="e-server-session" style="edgeLabel;html=1;fontSize=19;" value="Session read/write" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-80" y="-23" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
