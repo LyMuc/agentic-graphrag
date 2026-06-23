@@ -3,41 +3,44 @@ name: §4.2 Thiết kế tổng quan — 2 pha (refactor + tài liệu)
 overview: Đồng bộ §4.2 "Thiết kế tổng quan" với codebase. Pha 1 (Composer 2.5) thực hiện refactor tối thiểu (Phương án A) để code khớp với sơ đồ 4 gói layered. STOP sau pha 1 để sinh viên test. Pha 2 (Opus 4.7) vẽ lại 2 sơ đồ gói (server + client) và viết lại §4.2 trong LaTeX.
 todos:
   - id: phase1-rename-direct-tools
-    content: "P1.1 — Tạo adapter/direct_tools.py (chuyển nội dung từ utils/general.py); cập nhật import ở presentation/main.py (line 83-90), application/retriever_catalog.py (nếu có), tests"
-    status: pending
+    content: P1.1 — Tạo adapter/direct_tools.py (chuyển nội dung từ utils/general.py); cập nhật import ở presentation/main.py (line 83-90), application/retriever_catalog.py (nếu có), tests
+    status: completed
   - id: phase1-extract-codec
-    content: "P1.2 — Tạo utils/legal_context_codec.py (hoặc domain/legal_context_codec.py) thuần dữ liệu chứa encode_context_record/decode_context_record; application/legal_context.py re-export để giữ tương thích; sửa import ở 20 file adapter/retrievers/*"
-    status: pending
+    content: P1.2 — Tạo utils/legal_context_codec.py (hoặc domain/legal_context_codec.py) thuần dữ liệu chứa encode_context_record/decode_context_record; application/legal_context.py re-export để giữ tương thích; sửa import ở 20 file adapter/retrievers/*
+    status: completed
   - id: phase1-retriever-registry
-    content: "P1.3 — Đảm bảo application/retriever_catalog.RETRIEVER_SPECS export đủ (name, fn, description); cập nhật presentation/main.py để import 1 list duy nhất thay vì 20+ retriever rời"
-    status: pending
+    content: P1.3 — Đảm bảo application/retriever_catalog.RETRIEVER_SPECS export đủ (name, fn, description); cập nhật presentation/main.py để import 1 list duy nhất thay vì 20+ retriever rời
+    status: completed
   - id: phase1-delete-old
-    content: "P1.4 — Xóa utils/general.py sau khi không còn nơi nào import; xác nhận utils/ chỉ còn utils.py thuần (pydantic, re, datetime)"
-    status: pending
+    content: P1.4 — Xóa utils/general.py sau khi không còn nơi nào import; xác nhận utils/ chỉ còn utils.py thuần (pydantic, re, datetime)
+    status: completed
   - id: phase1-verify
-    content: "P1.5 — Chạy pytest -q; smoke test 1–2 câu hỏi end-to-end qua Chainlit; xác nhận luồng router/retriever/response không gãy"
-    status: pending
+    content: P1.5 — Chạy pytest -q; smoke test 1–2 câu hỏi end-to-end qua Chainlit; xác nhận luồng router/retriever/response không gãy
+    status: completed
   - id: phase1-stop
-    content: "🛑 STOP — Sinh viên test thủ công. Composer 2.5 dừng ở đây. Pha 2 do Opus 4.7 thực hiện."
-    status: pending
+    content: 🛑 STOP — Sinh viên test thủ công. Composer 2.5 dừng ở đây. Pha 2 do Opus 4.7 thực hiện.
+    status: completed
   - id: phase2-confirm
     content: "P2.0 — Opus xác nhận lại với sinh viên: (a) client diagram tách 4.2.1/4.2.2 hay inline?; (b) drawio template style (giống Kiến trúc tổng quan.drawio hay Hình 4.2 mẫu phân màu)"
-    status: pending
+    status: completed
   - id: phase2-server-drawio
     content: "P2.1 — Tạo Hinhve/Sơ đồ gói server.drawio: 4 gói (presentation top → application → adapter → utils bottom); mũi tên dashed cho dependency, dotted cho usage; chú thích legend"
-    status: pending
+    status: completed
   - id: phase2-client-drawio
     content: "P2.2 — Tạo Hinhve/Sơ đồ gói client.drawio: 9 gói chính trong frontend/src; phân màu xanh (LeftSidebar) / vàng (api, components/{header, share}, lib, pages, types, AppWrapper) / trắng (state, contexts, hooks, i18n, components/{chat, Elements, ChatSettings, Tasklist, ui})"
-    status: pending
+    status: completed
   - id: phase2-export-png
-    content: "P2.3 — Sinh viên export 2 drawio → PNG (Hinhve/Sơ đồ gói.png ghi đè; Hinhve/Sơ đồ gói client.png mới)"
-    status: pending
+    content: P2.3 — Sinh viên export 2 drawio → PNG (Hinhve/Sơ đồ gói.png ghi đè; Hinhve/Sơ đồ gói client.png mới)
+    status: completed
   - id: phase2-rewrite-tex
     content: "P2.4 — Viết lại §4.2 trong ĐATN_.../Chuong/4_Ket_qua_thuc_nghiem.tex dòng 21–35: tách 4.2.1 (server) + 4.2.2 (client); fix lỗi 'chức→chứa', 'adapters→adapter'; mô tả trách nhiệm chi tiết theo file map"
-    status: pending
+    status: completed
+  - id: phase2-kg-viz-paragraph
+    content: P2.4b — Thêm đoạn 'Pipeline trực quan đồ thị tri thức' (vis-network) vào cuối §4.2.1 sau 4 đoạn (i)–(iv), và 1 câu phân biệt React SPA vs trang viz độc lập ở §4.2.2
+    status: completed
   - id: phase2-build
-    content: "P2.5 — Chạy scripts/build-thesis.ps1; kiểm tra label \\ref{fig:Fig1} và label client mới resolve được; PDF khớp layout"
-    status: pending
+    content: P2.5 — Chạy scripts/build-thesis.ps1; kiểm tra label \ref{fig:Fig1} và label client mới resolve được; PDF khớp layout
+    status: completed
 isProject: false
 ---
 
@@ -206,9 +209,9 @@ Hỏi 2 việc còn lỏng:
 
 | Gói | Module chính | Trách nhiệm |
 |---|---|---|
-| `presentation` | `main.py`, `guest_auth.py`, `projects_api.py`, `viz_routes.py`, `compare_actions.py` | Entry Chainlit (`on_chat_start`, `on_message`, `on_chat_resume`, `oauth_callback`), REST endpoint cho project/viz/guest, action so sánh. |
-| `application` | `router.py`, `router_tool_registry.py`, `retriever_catalog.py`, `retriever_policy.py`, `conversation_context.py`, `legal_context.py`, `warning_payload.py`, `vi_phrase_match.py`, `comparison/*` | Router Agent điều phối retriever, bộ nhớ hội thoại + cache reuse, hợp nhất context pháp lý, build cảnh báo legal warning, baseline so sánh. |
-| `adapter` | `config.py`, `comparison_llm.py`, `data_layer.py`, `init_db.py`, `projects.py`, `graph_viz.py`, `viz_store.py`, `guest.py`, `text2cypher.py`, `direct_tools.py`, `retrievers/*`, `cypher_templates/*` | Kết nối LLM (OpenAI/Gemini), Neo4j retriever theo template Cypher, lưu trữ phiên Postgres (Chainlit Data Layer), trực quan KG, helper guest, Chainlit direct tool. |
+| `presentation` | `main.py`, `guest_auth.py`, `projects_api.py`, `viz_routes.py`, `compare_actions.py` | Entry Chainlit (`on_chat_start`, `on_message`, `on_chat_resume`, `oauth_callback`), REST endpoint cho project/guest/**trang trực quan đồ thị tri thức (`/viz/{id}` và `/api/viz/{id}`, mount static `viz/` tại `/viz-assets`)**, action so sánh. |
+| `application` | `router.py`, `router_tool_registry.py`, `retriever_catalog.py`, `retriever_policy.py`, `retriever_tools.py`, `conversation_context.py`, `legal_context.py`, `warning_payload.py`, `vi_phrase_match.py`, `comparison/*` | Router Agent điều phối retriever, bộ nhớ hội thoại + cache reuse, hợp nhất context pháp lý, build cảnh báo legal warning, baseline so sánh. |
+| `adapter` | `config.py`, `comparison_llm.py`, `data_layer.py`, `init_db.py`, `projects.py`, `graph_viz.py`, `viz_store.py`, `guest.py`, `text2cypher.py`, `direct_tools.py`, `retrievers/*`, `cypher_templates/*` | Kết nối LLM (OpenAI/Gemini), Neo4j retriever theo template Cypher, lưu trữ phiên Postgres (Chainlit Data Layer), **xây payload trực quan đồ thị tri thức từ `Context_Tho` + `viz_cypher` và lưu snapshot JSON TTL 7 ngày** (`graph_viz.py`, `viz_store.py`), helper guest, Chainlit direct tool. |
 | `utils` | `utils.py`, `legal_context_codec.py` | Chuẩn hóa context cho LLM (`chuan_hoa_Context_cho_LLM`), parse/format ngày sự kiện, dedupe provision, codec `LEGAL_CONTEXT_BUNDLE_V1`. |
 
 ### P2.2 — Tạo `Hinhve/Sơ đồ gói client.drawio`
@@ -303,6 +306,29 @@ gian, cùng codec mã hóa/giải mã định dạng \texttt{LEGAL\_CONTEXT\_BUN
 dùng chung giữa tầng \texttt{adapter} và \texttt{application}
 (\texttt{legal\_context\_codec.py}).
 
+\textbf{Pipeline trực quan đồ thị tri thức.} Hệ thống cung cấp tính năng
+trực quan hóa đồ thị con được retriever truy xuất, cho phép người dùng kiểm
+tra trực tiếp căn cứ pháp lý ngữ cảnh được sử dụng cho câu trả lời. Pipeline
+này tổ chức xuyên qua ba tầng theo đúng kiến trúc phân tầng: tại tầng
+\texttt{adapter}, module \texttt{graph\_viz.py} xây dựng payload đồ thị từ
+\texttt{Context\_Tho} (kết quả retriever), \texttt{viz\_cypher} của
+template tương ứng và truy vấn bổ sung cạnh giữa các nút pháp lý từ Neo4j;
+module \texttt{viz\_store.py} lưu payload dưới dạng snapshot JSON với
+TTL 7 ngày, định danh bằng UUID. Để tránh tính toán không cần thiết, mỗi
+retriever ghi ra một stub trễ (\texttt{save\_lazy\_viz\_stub}) chứa
+\texttt{Context\_Tho} và tham số template; pipeline chỉ thực thi
+\texttt{viz\_cypher} khi người dùng thực sự mở trang trực quan
+(\texttt{materialize\_viz\_payload}), sau đó cache lại snapshot đã
+materialize. Tại tầng \texttt{presentation}, module \texttt{viz\_routes.py}
+đăng ký hai endpoint \texttt{GET /viz/\{id\}} (trả về trang HTML) và
+\texttt{GET /api/viz/\{id\}} (trả về payload JSON), đồng thời mount thư
+mục \texttt{viz/} làm static asset tại \texttt{/viz-assets}. Trang trực
+quan là một single-page web tĩnh nằm trong thư mục \texttt{viz/}
+(\texttt{index.html}, \texttt{viz.css}, \texttt{viz.js}), sử dụng thư viện
+\texttt{vis-network} 9.1.9 nạp từ CDN để render đồ thị tương tác với
+physics layout, tìm kiếm theo node id, và ba tab Graph/Table/Raw để xem dữ
+liệu ở các góc nhìn khác nhau.
+
 Quan hệ phụ thuộc giữa các gói được thể hiện trong sơ đồ gồm: phụ thuộc trực
 tiếp (mũi tên nét đứt) \texttt{presentation} $\to$ \texttt{application} $\to$
 \texttt{adapter}, và phụ thuộc tiện ích (mũi tên chấm) từ cả ba gói trên đến
@@ -313,9 +339,14 @@ nhà cung cấp LLM hoặc cơ sở dữ liệu — mà không ảnh hưởng đ
 \subsubsection{Thiết kế gói phía client}
 \label{subsubsection:4.2.2}
 Phía client được xây dựng trên nền frontend của Chainlit phiên bản 2.11.1,
-được fork và tùy biến phục vụ cho hệ thống. Hình \ref{fig:Fig1_client} mô tả
-biểu đồ gói tổng quan phía client cùng phân loại gói được thêm mới, kế thừa
-tái cấu trúc và kế thừa nguyên gốc từ thư viện.
+được fork và tùy biến phục vụ cho hệ thống. Ngoài React SPA chính, hệ thống
+còn có một trang web tĩnh độc lập trong thư mục \texttt{viz/} dùng thư viện
+\texttt{vis-network} để trực quan đồ thị tri thức; trang này được mount như
+static asset bởi \texttt{presentation/viz\_routes.py} và người dùng mở qua
+liên kết trong câu trả lời của chatbot, không phải một phần của bundle
+React SPA. Hình \ref{fig:Fig1_client} mô tả biểu đồ gói tổng quan phía
+client cùng phân loại gói được thêm mới, kế thừa tái cấu trúc và kế thừa
+nguyên gốc từ thư viện.
 
 \begin{figure}[H]
     \centering
@@ -350,7 +381,7 @@ Lưu ý khi viết:
 |---|---|---|---|
 | 1 | Composer 2.5 | Refactor `utils/general.py` → `adapter/direct_tools.py`, tách codec ra `utils/legal_context_codec.py`, gom retriever vào `RETRIEVER_SPECS` | Code khớp 4 gói layered, test pass |
 | — | Sinh viên | Review + test thủ công Chainlit | Xác nhận không gãy luồng |
-| 2 | Opus 4.7 | Vẽ 2 drawio (server + client), viết lại §4.2 LaTeX | 2 PNG + LaTeX subsection cập nhật |
+| 2 | Opus 4.7 | Vẽ 2 drawio (server + client), viết lại §4.2 LaTeX (bao gồm đoạn pipeline trực quan KG bằng vis-network) | 2 PNG + LaTeX subsection cập nhật |
 
 ---
 

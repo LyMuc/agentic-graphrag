@@ -16,39 +16,48 @@ Hình \ref{fig:Fig0} mô tả kiến trúc tổng quan của ứng dụng, dựa
 
 Phía frontend gồm giao diện chat được custom từ giao diện chat của thư viện Chainlit, cho phép đặt câu hỏi, xem câu trả lời và theo dõi Agent trace. Giao diện visualize đồ thị tri thức là trang web riêng dùng thư viện vis-network; người dùng mở qua link trong câu trả lời để xem phần đồ thị tri thức được retriever truy xuất. Frontend duy trì HTTP/WebSocket với server; trang viz gọi HTTP GET tới server để lấy dữ liệu vẽ đồ thị tri thức.
 
-Phía backend có nhiệm vụ điều phối Agentic Workflow, quản lý session hỏi đáp, xử lý truy vấn của người dùng, gọi API LLM, truy vấn đồ thị tri thức và sinh câu trả lời có căn cứ pháp lý. Các thành phần chính: (i) Chat Orchestrator (Luồng điều phối chat) nhận câu hỏi từ người dùng, duy trì lịch sử hội thoại của đoạn chat, gọi Router Agent, xử lý và hợp nhất context nhận được từ các retriever, stream câu trả lời từ Response LLM; (ii) Router Agent gọi API LLM (gpt-4o) theo cơ chế tool-calling để chọn (các) retriever; (iii) Retriever Agents — 20 retrievers theo dạng câu hỏi pháp lý, mỗi retriever phân loại template cần dùng để trả lời cho câu hỏi, trích xuất tham số bằng LLM (gpt-4o) rồi thực hiện truy vấn Cypher; (iv) Neo4j Knowledge Graph — đồ thị tri thức Luật Hôn nhân và Gia đình 2014; (v) Session Storage bao gồm bộ nhớ Chainlit in-memory storage để lưu trữ các dữ liệu gắn liền với phiên chat hiện tại; PostgreSQL (Chainlit Data Layer) lưu trữ lịch sử hỏi đáp, input/output của agent, context truy xuất, câu trả lời cuối cùng và các thông tin cảnh báo nhằm khôi phục lại đoạn hội thoại cũ, kiểm thử, truy vết và đánh giá hệ thống.
+Phía backend có nhiệm vụ điều phối Agentic Workflow, quản lý session hỏi đáp, xử lý truy vấn của người dùng, gọi API LLM, truy vấn đồ thị tri thức và sinh câu trả lời có căn cứ pháp lý. Các thành phần chính: (i) Chat Orchestrator (Luồng điều phối chat) nhận câu hỏi từ người dùng, duy trì lịch sử hội thoại của đoạn chat, gọi Router Agent, xử lý và hợp nhất context nhận được từ các retriever, stream câu trả lời từ LLM (gpt-4.1); (ii) Router Agent gọi API LLM (gpt-4o) theo cơ chế tool-calling để chọn (các) retriever; (iii) Retriever Agents gồm 20 retrievers được chia theo dạng câu hỏi pháp lý, mỗi retriever phân loại template cần dùng để trả lời cho câu hỏi, trích xuất tham số bằng LLM (gpt-4o) rồi thực hiện truy vấn Cypher; (iv) Neo4j Knowledge Graph để lưu đồ thị tri thức Luật Hôn nhân và Gia đình 2014; (v) Session Storage bao gồm bộ nhớ Chainlit in-memory storage để lưu trữ các dữ liệu gắn liền với phiên chat hiện tại; PostgreSQL (Chainlit Data Layer) lưu trữ lịch sử hỏi đáp, input/output của agent, context truy xuất, câu trả lời cuối cùng và các thông tin cảnh báo nhằm khôi phục lại đoạn hội thoại cũ, kiểm thử, truy vết và đánh giá hệ thống.
 
 \subsection{Thiết kế tổng quan}
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.8\textwidth]{figures/package_diagram.png}
-%     \caption{Sơ đồ phụ thuộc các gói phía server}
-%     \label{fig:package_diagram}
-% \end{figure}
+\label{subsection:4.2}
 
-Hình \ref{fig:Fig1} Server được chia thành bốn gói cụ thể như sau: (i) Gói presentation chứa các thành phần thực hiện chức năng bắt sự kiện hội thoại như khởi tạo phiên chat xử lý tin nhắn đến, tiếp tục phiên chat cũ và đăng nhập. (ii) Gói application chứa các thành phần đóng vai trò điều phối luồng làm việc chính của chatbot và luồng Agentic. Các nhiệm vụ chính bao gồm phân tích câu hỏi người dùng và lựa chọn retriever phù hợp lấy về thông tin trả lời cho câu hỏi của người dùng. (iii) Gói adapters chức các thành phần chịu trách nhiệm tương tác với cơ sở dữ liệu và API của mô hình ngôn ngữ lớn. Các thành phần tại đây thực hiện kết nối với Neo4j để truy xuất đồ thị tri thức, đồng thời quản lý lịch sử hội thoại trên PostgreSQL. (iv) Gói utils đóng vai trò là mô-đun dùng chung cho toàn bộ hệ thống, cung cấp các hàm xử lý chuỗi và các hằng số cấu hình hệ thống.
+\subsubsection{Thiết kế gói phía server}
+\label{subsubsection:4.2.1}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.72\textwidth]{Hinhve/Sơ đồ gói.png}
+    \includegraphics[width=0.72\textwidth]{Hinhve/Sơ đồ gói server.png}
     \caption{Biểu đồ phụ thuộc gói phía server}
     \label{fig:Fig1}
 \end{figure}
-\subsection{Thiết kế chi tiết gói}
-Sinh viên thiết kế và lần lượt vẽ biểu đồ thiết kế cho từng package, hoặc một nhóm các package liên quan để giải quyết một vấn đề gì đó. Khi vẽ thiết kế gói, sinh viên chỉ cần đưa tên lớp, không cần chỉ ra các thành viên phương thức và thuộc tính. SV tham khảo ví dụ minh họa trong Hình \ref{fig:Fig2}.
+Phía server được tổ chức thành bốn gói được thể hiện ở Hình \ref{fig:Fig1} bao gồm (i) Gói presentation để xây dựng các chức năng xử lý sự kiện hội thoại, xác thực OAuth và phiên đăng nhập guest, quản lý projects hội thoại. (ii) Gói application đảm nhiệm xử lý logic và điều phối Agentic Workflow. (iii) Gói adapter chịu trách nhiệm tương tác với cơ sở dữ liệu Neo4j để truy truy xuất đồ thị tri thức, quản lý lịch sử hội thoại trên cơ sở dữ liệu PostgreSQL, cấu hình API LLM, trực quan hóa đồ thị tri thức , nhận diện người dùng guest. (iv) Gói utils là gói dùng chung cho toàn hệ thống, cung cấp các hàm chuẩn hóa context pháp lý cho LLM, các hàm xử lý chuỗi và thời gian.
 
-Sinh viên cần vẽ rõ ràng quan hệ giữa các lớp trong biểu đồ. Các quan hệ bao gồm: phụ thuộc (dependency), kết hợp (association), kết tập (aggregation), hợp thành (composition), kế thừa (inheritance), và thực thi (implementation). Các quan hệ này đều đã được minh họa trong \ref{fig:Fig2}.
-
-Sau khi vẽ hình minh họa, sinh viên cần giải thích ngắn gọn về thiết kế của mình. 
-
+\subsubsection{Thiết kế gói phía client}
+\label{subsubsection:4.2.2}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.72\textwidth]{Hinhve/Picture2.png}
-    \caption{Ví dụ thiết kế gói}
-    \label{fig:Fig2}
+    \includegraphics[width=\textwidth]{Hinhve/Sơ đồ gói client.png}
+    \caption{Biểu đồ phụ thuộc gói phía client}
+    \label{fig:Fig1_client}
 \end{figure}
 
-\subsection{Thiết kế chi tiết luồng Agentic Workflow}
-\label{subsection:4.4}
+Phía client được xây dựng dựa trên frontend của Chainlit phiên bản 2.11.1 có tùy chỉnh lại. Ngoài giao diện chatbot chính dựa trên frontend của Chainlit, hệ thống còn có một trang web tĩnh độc lập dùng thư viện vis-network để trực quan hóa đồ thị tri thức và người dùng có thể mở liên kết tới trang web tĩnh tĩnh này trong câu trả lời của chatbot. Hình \ref{fig:Fig1_client} mô tả biểu đồ gói tổng quan phía client cùng phân loại các gói được tùy chỉnh/giữ nguyên từ frontend Chainlit. Các gói bao gồm (i) Gói pages chứa các màn hình định tuyến chính. (ii) Gói components gom các thành phần UI tái sử dụng, ở đây tùy chỉnh lại LeftSidebar, thêm xử lý cho projects hỏi đáp (iii) Gói api cung cấp api và WebSocket giao tiếp với Chainlit server. (iv) Gói lib chứa các tiện ích chia sẻ giữa pages và components, gồm các formatter và auth.ts cung cấp hàm canManageConversations dùng để ẩn quản lý hội thoại đối với guest. (v) Gói types định nghĩa các kiểu TypeScript dùng chung trong toàn ứng dụng, gói này được mở rộng bằng types/projects.ts cho chức năng project. (vi) Các gói hạ tầng state, contexts, hooks và i18n được giữ nguyên từ Chainlit frontend, phục vụ quản lý trạng thái, context react, custom hooks và đa ngôn ngữ.
+
+% % \subsection{Thiết kế chi tiết gói}
+% % Sinh viên thiết kế và lần lượt vẽ biểu đồ thiết kế cho từng package, hoặc một nhóm các package liên quan để giải quyết một vấn đề gì đó. Khi vẽ thiết kế gói, sinh viên chỉ cần đưa tên lớp, không cần chỉ ra các thành viên phương thức và thuộc tính. SV tham khảo ví dụ minh họa trong Hình \ref{fig:Fig2}.
+
+% % Sinh viên cần vẽ rõ ràng quan hệ giữa các lớp trong biểu đồ. Các quan hệ bao gồm: phụ thuộc (dependency), kết hợp (association), kết tập (aggregation), hợp thành (composition), kế thừa (inheritance), và thực thi (implementation). Các quan hệ này đều đã được minh họa trong \ref{fig:Fig2}.
+
+% % Sau khi vẽ hình minh họa, sinh viên cần giải thích ngắn gọn về thiết kế của mình. 
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.72\textwidth]{Hinhve/Picture2.png}
+%     \caption{Ví dụ thiết kế gói}
+%     \label{fig:Fig2}
+% \end{figure}
+
+% \subsection{Thiết kế chi tiết luồng Agentic Workflow}
+% \label{subsection:4.4}
 
 Để giải quyết các yêu cầu phức tạp về pháp lý và đảm bảo tính chính xác của dữ liệu truy xuất, hệ thống được thiết kế theo mô hình Agentic GraphRAG, kết hợp Agentic RAG với Knowlede Graph. Đây là một quy trình điều phối giữa các tác nhân thông minh (Agents) để phân tích ý định, lựa chọn công cụ truy xuất và tổng hợp câu trả lời dựa trên Đồ thị tri thức (Knowledge Graph).
 
@@ -156,92 +165,92 @@ Một trong những yêu cầu thiết kế cốt lõi của công cụ là kh�
     \caption{Thiết kế giao diện hiển thị luồng xử lý và truy xuất dữ liệu của Agent}
     \label{fig:ui_agent_trace}
 \end{figure}
-\subsection{Thiết kế lớp}
-Trong phần này, ĐATN sẽ trình bày thiết kế chi tiết một số module chủ đạo. 
+% \subsection{Thiết kế lớp}
+% Trong phần này, ĐATN sẽ trình bày thiết kế chi tiết một số module chủ đạo. 
 
-Đầu tiên là module main thuộc package Presentation. Module này đóng vai trò tiếp nhận câu hỏi từ người dùng và điều phối các agent. Hình \ref{fig:main_detail}, Bảng \ref{table:main_attributes}
-và Bảng \ref{table:main_functions} mô tả chi tiết các biến và các hàm thuộc module này.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{Hinhve/thiết kế chi tiết cho module main.png}
-    \caption{Thiết kế chi tiết module main}
-    \label{fig:main_detail}
-\end{figure}
+% Đầu tiên là module main thuộc package Presentation. Module này đóng vai trò tiếp nhận câu hỏi từ người dùng và điều phối các agent. Hình \ref{fig:main_detail}, Bảng \ref{table:main_attributes}
+% và Bảng \ref{table:main_functions} mô tả chi tiết các biến và các hàm thuộc module này.
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{Hinhve/thiết kế chi tiết cho module main.png}
+%     \caption{Thiết kế chi tiết module main}
+%     \label{fig:main_detail}
+% \end{figure}
 
-\begin{table}[H]
-\centering
-\caption{Đặc tả các biến của module main}
-\begin{tabular}{|l|p{10cm}|}
-\hline
-\textbf{Biến} & \textbf{Ý nghĩa} \\ \hline
-tools & Lưu trữ danh sách các retriever của hệ thống, bao gồm tên, mô tả chức năng (description) và hàm thực thi tương ứng. \\ \hline
-main\_prompt & Chứa prompt định nghĩa các quy tắc lập luận cho LLM khi đưa ra câu trả lời  \\ \hline
-session\_history & Quản lý và lưu trữ dữ liệu hội thoại trong phiên làm việc hiện tại để cung cấp ngữ cảnh đầy đủ cho LLM khi đưa ra câu trả lời. \\ \hline
-\end{tabular}
-\label{table:main_attributes}
-\end{table}
+% \begin{table}[H]
+% \centering
+% \caption{Đặc tả các biến của module main}
+% \begin{tabular}{|l|p{10cm}|}
+% \hline
+% \textbf{Biến} & \textbf{Ý nghĩa} \\ \hline
+% tools & Lưu trữ danh sách các retriever của hệ thống, bao gồm tên, mô tả chức năng (description) và hàm thực thi tương ứng. \\ \hline
+% main\_prompt & Chứa prompt định nghĩa các quy tắc lập luận cho LLM khi đưa ra câu trả lời  \\ \hline
+% session\_history & Quản lý và lưu trữ dữ liệu hội thoại trong phiên làm việc hiện tại để cung cấp ngữ cảnh đầy đủ cho LLM khi đưa ra câu trả lời. \\ \hline
+% \end{tabular}
+% \label{table:main_attributes}
+% \end{table}
 
-\begin{table}[H]
-\centering
-\caption{Đặc tả các hàm của module main}
-\begin{tabular}{|l|p{10cm}|}
-\hline
-\textbf{Hàm} & \textbf{Ý nghĩa} \\ \hline
-oauth\_callback() & Xử lý xác thực qua Google/Github và ánh xạ dữ liệu vào hệ thống lưu trữ PostgreSQL. \\ \hline
-on\_chat\_start() & Khởi tạo phiên làm việc, thiết lập lịch sử hội thoại mới và gửi thông điệp chào mừng. \\ \hline
-on\_chat\_resume() & Khôi phục trạng thái hội thoại từ cơ sở dữ liệu khi người dùng truy cập lại phiên cũ. \\ \hline
-main() & Phương thức điều phối thực hiện toàn bộ quy trình từ phân tích đến sinh câu trả lời. \\ \hline
-\end{tabular}
-\label{table:main_functions}
-\end{table}
+% \begin{table}[H]
+% \centering
+% \caption{Đặc tả các hàm của module main}
+% \begin{tabular}{|l|p{10cm}|}
+% \hline
+% \textbf{Hàm} & \textbf{Ý nghĩa} \\ \hline
+% oauth\_callback() & Xử lý xác thực qua Google/Github và ánh xạ dữ liệu vào hệ thống lưu trữ PostgreSQL. \\ \hline
+% on\_chat\_start() & Khởi tạo phiên làm việc, thiết lập lịch sử hội thoại mới và gửi thông điệp chào mừng. \\ \hline
+% on\_chat\_resume() & Khôi phục trạng thái hội thoại từ cơ sở dữ liệu khi người dùng truy cập lại phiên cũ. \\ \hline
+% main() & Phương thức điều phối thực hiện toàn bộ quy trình từ phân tích đến sinh câu trả lời. \\ \hline
+% \end{tabular}
+% \label{table:main_functions}
+% \end{table}
 
-Tiếp theo sẽ trình bày về Module Router.
+% Tiếp theo sẽ trình bày về Module Router.
 
-Mô-đun router thuộc gói application đảm nhận vai trò của một Tác nhân định tuyến (Router Agent) thông minh. Chức năng cốt lõi của thành phần này là bóc tách các câu hỏi đa ý của người dùng và kích hoạt chính xác các retrievers cần thiết để lấy về ngữ cảnh pháp lý từ đồ thị tri thức nhằm trả lời cho câu hỏi của người dùng. Hình \ref{fig:router_detail}, Bảng  \ref{table:router_attributes} và bảng \ref{table:router_methods} mô tả chi tiết các biến và hàm trong module.
+% Mô-đun router thuộc gói application đảm nhận vai trò của một Tác nhân định tuyến (Router Agent) thông minh. Chức năng cốt lõi của thành phần này là bóc tách các câu hỏi đa ý của người dùng và kích hoạt chính xác các retrievers cần thiết để lấy về ngữ cảnh pháp lý từ đồ thị tri thức nhằm trả lời cho câu hỏi của người dùng. Hình \ref{fig:router_detail}, Bảng  \ref{table:router_attributes} và bảng \ref{table:router_methods} mô tả chi tiết các biến và hàm trong module.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{Hinhve/thiết kế chi tiết cho module router.png}
-    \caption{Thiết kế chi tiết module router}
-    \label{fig:router_detail}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{Hinhve/thiết kế chi tiết cho module router.png}
+%     \caption{Thiết kế chi tiết module router}
+%     \label{fig:router_detail}
+% \end{figure}
 
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|p{10cm}|}
-\hline
-\textbf{Biến} & \textbf{Ý nghĩa} \\ \hline
-tool\_picker\_prompt & Chứa hệ thống các quy tắc bắt buộc để LLM thực hiện như việc phân tích đa ý và lựa chọn công cụ, đảm bảo không gọi lặp lại một công cụ nhiều lần. \\ \hline
-\end{tabular}
-\caption{Đặc tả thuộc tính của mô-đun Router}
-\label{table:router_attributes}
-\end{table}
+% \begin{table}[H]
+% \centering
+% \begin{tabular}{|l|p{10cm}|}
+% \hline
+% \textbf{Biến} & \textbf{Ý nghĩa} \\ \hline
+% tool\_picker\_prompt & Chứa hệ thống các quy tắc bắt buộc để LLM thực hiện như việc phân tích đa ý và lựa chọn công cụ, đảm bảo không gọi lặp lại một công cụ nhiều lần. \\ \hline
+% \end{tabular}
+% \caption{Đặc tả thuộc tính của mô-đun Router}
+% \label{table:router_attributes}
+% \end{table}
 
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|p{10cm}|}
-\hline
-\textbf{Hàm} & \textbf{Ý nghĩa} \\ \hline
-handle\_tool\_calls() & Phương thức bất đồng bộ thực hiện việc gọi các hàm chức năng của công cụ, truyền tham số là câu truy vấn của người dùng và ghi lại kết quả truy vấn của từng công cụ nhờ hook của Chainlit\\ \hline
-tool\_choice() & Thực hiện việc liên kết (binding) danh sách công cụ với mô hình ngôn ngữ lớn và gọi mô hình để nhận về danh sách các công cụ cần kích hoạt. \\ \hline
-route\_question() & Hàm đầu vào chính của mô-đun, chịu trách nhiệm tổng hợp lịch sử hội thoại, câu hỏi đã chuẩn hóa để điều phối quy trình định tuyến và truy xuất dữ liệu. \\ \hline
-\end{tabular}
-\caption{Đặc tả các phương thức của mô-đun Router}
-\label{table:router_methods}
-\end{table}
+% \begin{table}[H]
+% \centering
+% \begin{tabular}{|l|p{10cm}|}
+% \hline
+% \textbf{Hàm} & \textbf{Ý nghĩa} \\ \hline
+% handle\_tool\_calls() & Phương thức bất đồng bộ thực hiện việc gọi các hàm chức năng của công cụ, truyền tham số là câu truy vấn của người dùng và ghi lại kết quả truy vấn của từng công cụ nhờ hook của Chainlit\\ \hline
+% tool\_choice() & Thực hiện việc liên kết (binding) danh sách công cụ với mô hình ngôn ngữ lớn và gọi mô hình để nhận về danh sách các công cụ cần kích hoạt. \\ \hline
+% route\_question() & Hàm đầu vào chính của mô-đun, chịu trách nhiệm tổng hợp lịch sử hội thoại, câu hỏi đã chuẩn hóa để điều phối quy trình định tuyến và truy xuất dữ liệu. \\ \hline
+% \end{tabular}
+% \caption{Đặc tả các phương thức của mô-đun Router}
+% \label{table:router_methods}
+% \end{table}
 
-Đồ án thực hiện vẽ biểu đồ trình tự cho hai Use Case quan trọng nhất là Tư vấn pháp lý và Khôi phục phiên hội thoại nhằm minh họa luồng truyền thông điệp giữa các đối tượng.
+% Đồ án thực hiện vẽ biểu đồ trình tự cho hai Use Case quan trọng nhất là Tư vấn pháp lý và Khôi phục phiên hội thoại nhằm minh họa luồng truyền thông điệp giữa các đối tượng.
 
-Sơ đồ trình tự mô tả cách thức hệ thống tiếp nhận một câu hỏi tự nhiên và trải qua các bước phân tích tác nhân để đưa ra câu trả lời.
+% Sơ đồ trình tự mô tả cách thức hệ thống tiếp nhận một câu hỏi tự nhiên và trải qua các bước phân tích tác nhân để đưa ra câu trả lời.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{Hinhve/biểu đồ trình tự use case tư vấn pháp lý.png}
-    \caption{Biểu đồ trình tự luồng tư vấn pháp lý}
-    \label{fig:seq_consultation}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=1\textwidth]{Hinhve/biểu đồ trình tự use case tư vấn pháp lý.png}
+%     \caption{Biểu đồ trình tự luồng tư vấn pháp lý}
+%     \label{fig:seq_consultation}
+% \end{figure}
 
-Luồng thông điệp được thực hiện qua các bước: Người dùng gửi tin nhắn, sau đó Router Agent chọn retriever phù hợp với ý định câu hỏi của người dùng. Retriever truy xuất dữ liệu từ Neo4j, trả lại cho router agent. Router agent trả lại cho hàm main, tại đây main kết hợp context dữ liệu pháp lý truy vấn được với prompt rồi gửi cho LLM tổng hợp đáp án cuối cùng \ref{fig:seq_consultation}.
+% Luồng thông điệp được thực hiện qua các bước: Người dùng gửi tin nhắn, sau đó Router Agent chọn retriever phù hợp với ý định câu hỏi của người dùng. Retriever truy xuất dữ liệu từ Neo4j, trả lại cho router agent. Router agent trả lại cho hàm main, tại đây main kết hợp context dữ liệu pháp lý truy vấn được với prompt rồi gửi cho LLM tổng hợp đáp án cuối cùng \ref{fig:seq_consultation}.
 
 % \subsubsection{Use Case: Khôi phục phiên hội thoại (Resume Session)}
 % Sơ đồ trình tự thể hiện sự tương tác giữa lớp trình diễn và lớp hạ tầng để đảm bảo tính liên tục của dữ liệu khi người dùng truy cập lại các hội thoại cũ.

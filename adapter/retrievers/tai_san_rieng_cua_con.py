@@ -26,7 +26,7 @@ from adapter.cypher_templates.extract_schema import (
 from adapter.cypher_templates.tai_san_rieng_cua_con import TAI_SAN_RIENG_CUA_CON_REGISTRY
 from adapter.cypher_templates.tai_san_rieng_cua_con.term_mapping import resolve_term
 from adapter.graph_viz import save_lazy_viz_stub
-from application.legal_context import encode_context_record
+from utils.legal_context_codec import encode_context_record
 
 
 tai_san_rieng_cua_con_description = {

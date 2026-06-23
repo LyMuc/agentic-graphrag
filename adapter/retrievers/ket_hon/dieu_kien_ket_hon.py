@@ -26,7 +26,7 @@ from adapter.cypher_templates.extract_schema import (
 from adapter.cypher_templates.dieu_kien_ket_hon import DIEU_KIEN_KET_HON_REGISTRY
 from adapter.cypher_templates.dieu_kien_ket_hon.term_mapping import resolve_term
 from adapter.graph_viz import save_lazy_viz_stub
-from application.legal_context import encode_context_record
+from utils.legal_context_codec import encode_context_record
 
 
 dieu_kien_ket_hon_description = {

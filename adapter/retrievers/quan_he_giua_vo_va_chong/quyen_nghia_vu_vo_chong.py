@@ -28,7 +28,7 @@ from adapter.cypher_templates.quyen_nghia_vu_vo_chong import (
 )
 from adapter.cypher_templates.quyen_nghia_vu_vo_chong.term_mapping import resolve_term
 from adapter.graph_viz import save_lazy_viz_stub
-from application.legal_context import encode_context_record
+from utils.legal_context_codec import encode_context_record
 
 
 quyen_nghia_vu_vo_chong_description = {

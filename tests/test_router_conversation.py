@@ -7,7 +7,7 @@ from application.router import (
     _router_tool_descriptions,
     _tool_function_args,
 )
-from utils.general import clarify_question
+from adapter.direct_tools import clarify_question
 
 
 def _tool_schema(name: str) -> dict:

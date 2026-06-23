@@ -43,7 +43,7 @@ from adapter.cypher_templates.tai_san.term_mapping import (
     COMMON_TO_LEGAL_TERMS,
     resolve_term,
 )
-from application.legal_context import encode_context_record
+from utils.legal_context_codec import encode_context_record
 from adapter.graph_viz import save_lazy_viz_stub
 
 

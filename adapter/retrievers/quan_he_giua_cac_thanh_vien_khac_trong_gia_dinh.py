@@ -30,7 +30,7 @@ from adapter.cypher_templates.quan_he_giua_cac_thanh_vien_khac_trong_gia_dinh.te
     resolve_term,
 )
 from adapter.graph_viz import save_lazy_viz_stub
-from application.legal_context import encode_context_record
+from utils.legal_context_codec import encode_context_record
 
 
 quan_he_giua_cac_thanh_vien_khac_trong_gia_dinh_description = {

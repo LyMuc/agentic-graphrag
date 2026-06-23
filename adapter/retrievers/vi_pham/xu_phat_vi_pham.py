@@ -26,7 +26,7 @@ from adapter.cypher_templates.extract_schema import (
 from adapter.cypher_templates.xu_phat_vi_pham import XU_PHAT_VI_PHAM_REGISTRY
 from adapter.cypher_templates.xu_phat_vi_pham.term_mapping import resolve_term
 from adapter.graph_viz import save_lazy_viz_stub
-from application.legal_context import encode_context_record
+from utils.legal_context_codec import encode_context_record
 
 
 xu_phat_vi_pham_description = {

@@ -30,7 +30,7 @@ from adapter.cypher_templates.quy_dinh_chung_khai_niem_phap_ly.term_mapping impo
     resolve_term,
 )
 from adapter.graph_viz import save_lazy_viz_stub
-from application.legal_context import encode_context_record
+from utils.legal_context_codec import encode_context_record
 
 
 quy_dinh_chung_khai_niem_phap_ly_description = {

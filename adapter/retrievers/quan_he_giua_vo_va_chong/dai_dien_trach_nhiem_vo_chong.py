@@ -30,7 +30,7 @@ from adapter.cypher_templates.extract_schema import (
     split_params_and_date,
 )
 from adapter.graph_viz import save_lazy_viz_stub
-from application.legal_context import encode_context_record
+from utils.legal_context_codec import encode_context_record
 
 
 dai_dien_trach_nhiem_vo_chong_description = {

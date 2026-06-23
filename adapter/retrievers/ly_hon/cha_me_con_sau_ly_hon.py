@@ -25,7 +25,7 @@ from adapter.cypher_templates.extract_schema import (
 from adapter.cypher_templates.cha_me_con_sau_ly_hon import CHA_ME_CON_SAU_LY_HON_REGISTRY
 from adapter.cypher_templates.cha_me_con_sau_ly_hon.term_mapping import resolve_term
 from adapter.graph_viz import save_lazy_viz_stub
-from application.legal_context import encode_context_record
+from utils.legal_context_codec import encode_context_record
 
 
 cha_me_con_sau_ly_hon_description = {

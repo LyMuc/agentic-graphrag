@@ -30,7 +30,7 @@ from adapter.cypher_templates.han_che_quyen_cha_me_con_chua_thanh_nien.term_mapp
     resolve_term,
 )
 from adapter.graph_viz import save_lazy_viz_stub
-from application.legal_context import encode_context_record
+from utils.legal_context_codec import encode_context_record
 
 
 han_che_quyen_cha_me_con_chua_thanh_nien_description = {

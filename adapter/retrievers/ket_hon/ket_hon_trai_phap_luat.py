@@ -25,7 +25,7 @@ from adapter.cypher_templates.extract_schema import (
 from adapter.cypher_templates.ket_hon_trai_phap_luat import KET_HON_TRAI_PHAP_LUAT_REGISTRY
 from adapter.cypher_templates.ket_hon_trai_phap_luat.term_mapping import resolve_term
 from adapter.graph_viz import save_lazy_viz_stub
-from application.legal_context import encode_context_record
+from utils.legal_context_codec import encode_context_record
 
 
 ket_hon_trai_phap_luat_description = {

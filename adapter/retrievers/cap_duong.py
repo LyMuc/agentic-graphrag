@@ -25,7 +25,7 @@ from adapter.cypher_templates.extract_schema import (
 from adapter.cypher_templates.cap_duong import CAP_DUONG_REGISTRY
 from adapter.cypher_templates.cap_duong.term_mapping import resolve_term
 from adapter.graph_viz import save_lazy_viz_stub
-from application.legal_context import encode_context_record
+from utils.legal_context_codec import encode_context_record
 
 
 cap_duong_description = {

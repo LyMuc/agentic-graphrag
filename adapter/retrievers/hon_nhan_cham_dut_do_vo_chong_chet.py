@@ -29,7 +29,7 @@ from adapter.cypher_templates.hon_nhan_cham_dut_do_vo_chong_chet.term_mapping im
     resolve_term,
 )
 from adapter.graph_viz import save_lazy_viz_stub
-from application.legal_context import encode_context_record
+from utils.legal_context_codec import encode_context_record
 
 
 hon_nhan_cham_dut_do_vo_chong_chet_description = {
