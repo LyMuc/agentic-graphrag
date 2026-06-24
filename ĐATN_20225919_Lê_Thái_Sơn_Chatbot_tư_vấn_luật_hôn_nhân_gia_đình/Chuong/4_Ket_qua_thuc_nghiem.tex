@@ -9,7 +9,7 @@ Phần mềm được xây dựng dựa trên kiến trúc client–server. Tron
 Hình \ref{fig:Fig0} mô tả kiến trúc tổng quan của ứng dụng, dựa trên kiến trúc client-server. Cụ thể gồm 2 phần frontend (client) với các thành phần giao diện, hiển thị và backend (server) xử lý các yêu cầu.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1.1\textwidth]{Hinhve/Kiến trúc tổng quan.png}
+    \includegraphics[width=\textwidth]{Hinhve/Kiến trúc tổng quan.png}
     \caption{Kiến trúc tổng quan của hệ thống}
     \label{fig:Fig0}
 \end{figure}
@@ -21,8 +21,8 @@ Phía backend có nhiệm vụ điều phối Agentic Workflow, quản lý sessi
 \subsection{Thiết kế tổng quan}
 \label{subsection:4.2}
 
-\subsubsection{Thiết kế gói phía server}
-\label{subsubsection:4.2.1}
+% \subsubsection{Thiết kế gói phía server}
+% \label{subsubsection:4.2.1}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.72\textwidth]{Hinhve/Sơ đồ gói server.png}
@@ -31,8 +31,8 @@ Phía backend có nhiệm vụ điều phối Agentic Workflow, quản lý sessi
 \end{figure}
 Phía server được tổ chức thành bốn gói được thể hiện ở Hình \ref{fig:Fig1} bao gồm (i) Gói presentation để xây dựng các chức năng xử lý sự kiện hội thoại, xác thực OAuth và phiên đăng nhập guest, quản lý projects hội thoại. (ii) Gói application đảm nhiệm xử lý logic và điều phối Agentic Workflow. (iii) Gói adapter chịu trách nhiệm tương tác với cơ sở dữ liệu Neo4j để truy truy xuất đồ thị tri thức, quản lý lịch sử hội thoại trên cơ sở dữ liệu PostgreSQL, cấu hình API LLM, trực quan hóa đồ thị tri thức , nhận diện người dùng guest. (iv) Gói utils là gói dùng chung cho toàn hệ thống, cung cấp các hàm chuẩn hóa context pháp lý cho LLM, các hàm xử lý chuỗi và thời gian.
 
-\subsubsection{Thiết kế gói phía client}
-\label{subsubsection:4.2.2}
+% \subsubsection{Thiết kế gói phía client}
+% \label{subsubsection:4.2.2}
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{Hinhve/Sơ đồ gói client.png}
@@ -56,99 +56,50 @@ Phía client được xây dựng dựa trên frontend của Chainlit phiên b�
 %     \label{fig:Fig2}
 % \end{figure}
 
-% \subsection{Thiết kế chi tiết luồng Agentic Workflow}
-% \label{subsection:4.4}
+\section{Thiết kế chi tiết}
+\subsection{Thiết kế giao diện}
 
-Để giải quyết các yêu cầu phức tạp về pháp lý và đảm bảo tính chính xác của dữ liệu truy xuất, hệ thống được thiết kế theo mô hình Agentic GraphRAG, kết hợp Agentic RAG với Knowlede Graph. Đây là một quy trình điều phối giữa các tác nhân thông minh (Agents) để phân tích ý định, lựa chọn công cụ truy xuất và tổng hợp câu trả lời dựa trên Đồ thị tri thức (Knowledge Graph).
+Giao diện ứng dụng được xây dựng nhờ thư viện chainlit, hỗ trợ responsive trên các màn hình thiết bị khác nhau. Ngoài ra ứng dụng cũng xây dựng giao diện hiển thị đồ thị tri thức. Màu sắc được sử dụng trong giao diện chatbot và trang visualize đồ thị tri thức được thể hiện trong Bảng \ref{table:ui_color_palette}.
 
-\subsubsection{Sơ đồ luồng tổng quan}
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}p{3.0cm}|X|}
+\hline
+\textbf{Thành phần} & \textbf{Mã màu (Hex)} & \textbf{Mô tả} \\ \hline
+Nền vùng hội thoại & \#212121 & Nền chính của màn hình trao đổi. \\ \hline
+Thanh điều hướng (sidebar) & \#171717 & Nền tối hơn của khu vực quản lý dự án, lịch sử hội thoại và các chức năng điều hướng. \\ \hline
+Thẻ và hộp nhập liệu & \#2E2E2E & Nền của thẻ nội dung, hộp nhập câu hỏi và các vùng nổi trên nền hội thoại chính. \\ \hline
+Chữ chatbot và trang visualize đồ thị & \#EDEDED, \#B5B5B5 & Màu chữ chính và phụ dùng cho mô tả, gợi ý nhập liệu và thông tin ít quan trọng hơn. \\ \hline
+Đường viền & \#434242 & Phân tách các hộp nhập, thẻ, đường biên. \\ \hline
+Các nút hành động chính của chatbot & \#F5145F & Màu cho logo, ảnh đại diện, nút gửi và link đến trang visualize đồ thị tri thức. \\ \hline
+Nền trang visualize đồ thị & \#121212, \#161616 & Lần lượt là nền tổng thể và nền vùng vẽ đồ thị. \\ \hline
+Nút căn cứ pháp lý & \#4C8BF5, \#2E8B57, \#FFD700, \#FF0000 & Màu xanh lam cho căn cứ pháp lý chính, màu xanh lá cây cho căn cứ pháp lý bổ trợ, màu vàng cho căn cứ pháp lý thay thế hoặc bãi bỏ, màu đỏ cho căn cứ pháp lý mâu thuẫn. \\ \hline
+Nút ngữ nghĩa & \#9013FE & Màu tím cho các nút ngữ nghĩa liên kết với căn cứ pháp lý. \\ \hline
+Cạnh liên kết đồ thị & \#555555 & Màu xám cho đường nối và mũi tên quan hệ. \\ \hline
+\end{tabularx}
+\caption{Bảng màu chính của giao diện chatbot và trang visualize đồ thị tri thức}
+\label{table:ui_color_palette}
+\end{table}
 
-Luồng hoạt động của hệ thống được chia thành 5 bước chính, mô tả sự tương tác giữa người dùng và các tác nhân nội bộ, được minh họa trong Hình \ref{fig:overview_flow}.
+Hình \ref{fig:user_flow_chatbot} mô tả user flow template của ứng dụng chatbot.
 
 \begin{figure}[H]
     \centering
-    % Sinh viên thay đường dẫn ảnh luồng tổng quan vào đây
-    \includegraphics[width=1.2\textwidth]{Hinhve/Luồng Agentic GraphRAG.png}
-    \caption{Sơ đồ luồng hoạt động Agentic GraphRAG}
-    \label{fig:overview_flow}
+    \includegraphics[width=\textwidth]{Hinhve/User flow template chatbot.png}
+    \caption{User flow template của ứng dụng chatbot}
+    \label{fig:user_flow_chatbot}
 \end{figure}
-
-Agentic Workflow gồm 5 bước, như sau: (i) \textbf{Bước 1 (User Query)}: Người dùng gửi câu hỏi dưới dạng ngôn ngữ tự nhiên vào hệ thống. (ii)\textbf{Bước 2 (Analyze Intent)}: Main Agent nhận câu hỏi và gọi Router Agent để phân loại ý định người dùng. (iii) \textbf{Bước 3 (Tool Selection)}: Router Agent xác định các công cụ (Retrieval Agents) cần thiết để xử lý câu hỏi. (iv)\textbf{Bước 4 (Knowledge Retrieval)}: Các Retrieval Agents thực hiện truy vấn Cypher vào Đồ thị tri thức để lấy dữ liệu luật pháp. (v)\textbf{Bước 5 (Response Generation)}: Main Agent tổng hợp dữ liệu từ các bộ truy xuất, áp dụng các quy tắc lập luận pháp lý và trả về kết quả cho người dùng.
-
-\subsubsection{Đặc tả chi tiết các Tác nhân (Agents)}
-
-Hệ thống được vận hành bởi sự phối hợp của ba loại tác nhân chuyên biệt, được đặc tả thiết kế chi tiết ở bảng \ref{table: main_agent}, \ref{table: router_agent}, \ref{table: retriever_agent}
-
-Trước tiên sẽ trình bày về main agent \ref{table: main_agent}. Đóng vai trò là trung tâm điều phối toàn bộ quy trình Agentic Workflow.
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|p{10cm}|}
-\hline
-\textbf{Thành phần} & \textbf{Mô tả chi tiết} \\ \hline
-\textbf{Chức năng} & Điều phối quy trình xử lý từ lúc nhận câu hỏi đến khi trả về kết quả cuối cùng. \\ \hline
-\textbf{Đầu vào} & Câu truy vấn từ người dùng; Ngữ cảnh (Context) được tổng hợp từ các Retrieval Agents. \\ \hline
-\textbf{Chỉ dẫn (Prompt)} & Định nghĩa quy tắc trả lời: Xử lý trường hợp áp dụng luật cũ, văn bản sửa đổi, hướng dẫn và giải quyết mâu thuẫn khi có nhiều văn bản cùng quy định một vấn đề. \\ \hline
-\textbf{Quy trình} & Nhận query $\rightarrow$ Gọi Router Agent $\rightarrow$ Nhận context $\rightarrow$ Gọi API LLM với prompt chuyên biệt $\rightarrow$ Trả về đáp án. \\ \hline
-\textbf{Đầu ra} & Câu trả lời hoàn chỉnh mang tính tư vấn pháp lý cho người dùng. \\ \hline
-\end{tabular}
-\caption{Đặc tả Tác nhân Điều phối (Main Agent)}
-\label{table: main_agent}
-\end{table}
-
-Tiếp theo là Tác nhân Định tuyến (Router Agent) \ref{table: router_agent}
-Chịu trách nhiệm phân loại ý định và lựa chọn retriever phù hợp để giải quyết câu hỏi.
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|p{10cm}|}
-\hline
-\textbf{Thành phần} & \textbf{Mô tả chi tiết} \\ \hline
-\textbf{Chức năng} & Phân loại ý định người dùng để gọi đúng các công cụ (tools) chứa schema từ Knowledge Graph chuyên biệt. \\ \hline
-\textbf{Đầu vào} & Lịch sử hội thoại (session\_history); Câu truy vấn; Danh sách các công cụ có sẵn (tên, mô tả, tham số). \\ \hline
-\textbf{Chỉ dẫn (Prompt)} & Chỉ định nhiệm vụ lựa chọn công cụ dựa trên mô tả của chúng. \\ \hline
-\textbf{Quy trình} & Gửi prompt + updated\_query + list\_tools tới LLM $\rightarrow$ Lấy về danh sách các công cụ cần kích hoạt. \\ \hline
-\textbf{Kiểm tra (Validation)} & Nếu LLM không chọn được tool hoặc chọn tool không tồn tại, hệ thống tự động trả về FallBack Tool.  \\ \hline
-\textbf{Đầu ra} & Một mảng \texttt{tool\_calls} chứa tên công cụ và tham số tương ứng. \\ \hline
-\end{tabular}
-\caption{Đặc tả Tác nhân Định tuyến (Router Agent)}
-\label{table: router_agent}
-\end{table}
-
-Cuối cùng là tác nhân Truy xuất (Retrieval Agents) \ref{table: retriever_agent}
-Truy xuất đồ thị tri thức để lấy về context pháp lý.
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|p{10cm}|}
-\hline
-\textbf{Thành phần} & \textbf{Mô tả chi tiết} \\ \hline
-\textbf{Chức năng} & Phân tích câu hỏi để quyết định các điều luật cần thiết, sau đó thực hiện truy vấn Cypher lấy dữ liệu từ Đồ thị tri thức. \\ \hline
-\textbf{Đầu vào} & Câu truy vấn từ người dùng. \\ \hline
-\textbf{Chỉ dẫn (Prompt)} & Yêu cầu LLM trích xuất intent từ câu hỏi của người dùng và chọn (những) template cypher query cần thiết để trả lời câu hỏi người dùng. Sau đó yêu cầu trích xuất các tham số cần thiết để điền vào câu cypher query và trích xuất mốc thời gian sự kiện. \\ \hline
-\textbf{Quy trình} & Thực hiện truy vấn vào Knowledge Graph bằng câu lệnh Cypher Query template với các tham số đã trích xuất. \\ \hline
-\textbf{Đầu ra} & Danh sách các nút (Nodes) và thuộc tính (Properties) pháp lý dưới dạng \texttt{List[Dict]}. \\ \hline
-\end{tabular}
-\caption{Đặc tả Tác nhân Truy xuất (Retrieval Agents)}
-\label{table: retriever_agent}
-\end{table}
-
-\section{Thiết kế chi tiết}
-\subsection{Thiết kế giao diện}
-Định hướng thiết kế giao diện của hệ thống là tính dễ tiếp cận của chức năng chat và đảm bảo khả năng hiển thị luồng xử lý của các agent, bao gồm có các agent được gọi, input/output của các agent, context trả lời cuối cùng. Giao diện ứng dụng được xây dựng nhờ thư viện chainlit, hỗ trợ responsive để tự động thu phóng và sắp xếp lại bố cục trên các màn hình thiết bị di động. 
-
-Giao diện mặc định của chainlit sử dụng tông màu tối (Dark Theme) làm chủ đạo với nền xám đen và chữ trắng. Bố cục không gian được chia thành ba khu vực chính: thanh điều hướng và quản lý lịch sử hội thoại nằm bên trái, vùng hiển thị nội dung trao đổi chiếm vị trí trung tâm, và thanh nhập liệu được cố định ở cạnh dưới màn hình. Các agent được gọi được hiển thị ngay phía trên vùng chứa tin nhắn trả lời, khi nhấn vào biểu tượng dropdown sẽ hiển thị chi tiết input, output của các agent. Vùng hiển thị các agent sẽ luôn tồn tại ngay cả khi câu trả lời cuối cùng của chatbot đã được đưa ra hoặc người dùng chuyển sang phiên hội thoại khác.
 
 Màn hình đăng nhập được thiết kế đơn giản, với logo chính của ứng dụng chiếm nửa màn hình bên tay phải và khu vực xác thực ở vị trí bên tay trái và người dùng có thể đăng nhập thông qua các dịch vụ xác thực của bên thứ 3 mà Chainlit hỗ trợ (Ví dụ: Google OAuth). Thiết kế giao diện màn hình đăng nhập được minh họa trong Hình \ref{fig:ui_login}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{Hinhve/Login mockup screen.png}
-    \caption{Thiết kế giao diện màn hình đăng nhập hệ thống}
+    \caption{Thiết kế giao diện màn hình đăng nhập}
     \label{fig:ui_login}
 \end{figure}
 
-Sau khi tiến hành xác thực thành công, người dùng được chuyển hướng đến màn hình giao tiếp chính của ứng dụng. Giao diện này cung cấp một không gian trò chuyện trực quan, cho phép người dùng đặt câu hỏi bằng ngôn ngữ tự nhiên tiếng Việt về lĩnh vực Luật Hôn nhân và gia đình. Thanh chức năng bên trái hỗ trợ lưu trữ và hiển thị danh sách các phiên tư vấn trước đó, giúp người dùng dễ dàng theo dõi và duy trì tính liền mạch trong quá trình tra cứu thông tin. Màn hình trao đổi chính được trình bày trong Hình \ref{fig:ui_main_chat}.
+Sau khi tiến hành xác thực thành công, người dùng được chuyển hướng đến màn hình giao tiếp chính của ứng dụng. Bố cục không gian được chia thành ba khu vực chính: thanh điều hướng (sidebar) và quản lý lịch sử hội thoại nằm bên trái, vùng hiển thị nội dung chat chiếm vị trí trung tâm, và thanh nhập liệu được cố định ở cạnh dưới màn hình. Các agent được gọi được hiển thị ngay phía trên vùng chứa tin nhắn trả lời, khi nhấn vào biểu tượng dropdown sẽ hiển thị chi tiết input, output của các agent. Vùng hiển thị các agent sẽ luôn tồn tại ngay cả khi câu trả lời cuối cùng của chatbot đã được đưa ra hoặc người dùng chuyển sang phiên hội thoại khác. Đường link đến trang visualize đồ thị tri tri thức và nút bấm xem cảnh báo hiệu lực hiển thị phía dưới cùng của câu trả lời. Màn hình trao đổi chính được trình bày trong Hình \ref{fig:ui_main_chat}.
 
 \begin{figure}[H]
     \centering
@@ -157,13 +108,20 @@ Sau khi tiến hành xác thực thành công, người dùng được chuyển 
     \label{fig:ui_main_chat}
 \end{figure}
 
-Một trong những yêu cầu thiết kế cốt lõi của công cụ là khả năng hiển thị minh bạch luồng hoạt động của các hệ thống đa tác nhân (multi-agent) và các bộ truy xuất (retriever). Để giải quyết bài toán này, giao diện được tích hợp các khối thông tin có thể thu gọn ngay bên dưới mỗi câu trả lời của hệ thống. Thiết kế này cho phép người dùng quan sát chi tiết quá trình tác nhân phân tích câu hỏi, kiểm tra ngữ cảnh pháp lý được truy xuất từ đồ thị tri thức, và theo dõi dữ liệu đầu ra mà không làm ảnh hưởng đến trải nghiệm đọc câu trả lời cuối cùng. Giao diện hiển thị luồng xử lý của Agent được minh họa trong Hình \ref{fig:ui_agent_trace}.
+Một trong những yêu cầu thiết kế cốt lõi của công cụ là khả năng hiển thị minh bạch luồng hoạt động của các hệ thống đa tác nhân (multi-agent) và đồ thị tri thức. Để giải quyết bài toán này, giao diện được tích hợp các khối thông tin có thể thu gọn ngay bên dưới mỗi câu trả lời của hệ thống. Thiết kế này cho phép người dùng quan sát chi tiết quá trình tác nhân phân tích câu hỏi, kiểm tra ngữ cảnh pháp lý được truy xuất từ đồ thị tri thức, và theo dõi dữ liệu đầu ra mà không làm ảnh hưởng đến trải nghiệm đọc câu trả lời cuối cùng. Giao diện hiển thị luồng xử lý của Agent được minh họa trong Hình \ref{fig:ui_agent_trace} và giao diện visualize đồ thị tri thức được minh họa trong Hình \ref{fig:ui_visualize_graph}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{Hinhve/Luồng Agentic GraphRAG.png}
+    \includegraphics[width=\textwidth]{Hinhve/Màn hình hiển thị luồng xử lý agent và câu trả lời.png}
     \caption{Thiết kế giao diện hiển thị luồng xử lý và truy xuất dữ liệu của Agent}
     \label{fig:ui_agent_trace}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Hinhve/Màn hình hiển thị đồ thị tri thức.png}
+    \caption{Thiết kế giao diện hiển thị đồ thị tri thức}
+    \label{fig:ui_visualize_graph}
 \end{figure}
 % \subsection{Thiết kế lớp}
 % Trong phần này, ĐATN sẽ trình bày thiết kế chi tiết một số module chủ đạo. 
@@ -241,7 +199,7 @@ Một trong những yêu cầu thiết kế cốt lõi của công cụ là kh�
 
 % Đồ án thực hiện vẽ biểu đồ trình tự cho hai Use Case quan trọng nhất là Tư vấn pháp lý và Khôi phục phiên hội thoại nhằm minh họa luồng truyền thông điệp giữa các đối tượng.
 
-% Sơ đồ trình tự mô tả cách thức hệ thống tiếp nhận một câu hỏi tự nhiên và trải qua các bước phân tích tác nhân để đưa ra câu trả lời.
+% Sơ đồ trình tự mô tả cách thức hệ thống tiếp nhận một câu hỏi và trải qua các bước phân tích tác nhân để đưa ra câu trả lời.
 
 % \begin{figure}[H]
 %     \centering
@@ -262,7 +220,87 @@ Một trong những yêu cầu thiết kế cốt lõi của công cụ là kh�
 %     \label{fig:seq_resume}
 % \end{figure}
 
-% Quy trình khôi phục bao gồm: Người dùng chọn phiên cũ $\rightarrow$ Hook \texttt{on\_chat\_resume()} kích hoạt $\rightarrow$ Adapter truy xuất lịch sử từ PostgreSQL $\rightarrow$ Presentation tái cấu trúc \texttt{session\_history} và hiển thị lại nội dung cho người dùng.
+% Quy trình khôi phục bao gồm: Người dùng chọn phiên cũ $\rightarrow$ Hook on\_chat\_resume() kích hoạt $\rightarrow$ Adapter truy xuất lịch sử từ PostgreSQL $\rightarrow$ Presentation tái cấu trúc session\_history và hiển thị lại nội dung cho người dùng.
+
+\subsection{Thiết kế chi tiết luồng Agentic Workflow}
+\label{subsection:agentic-workflow}
+
+Để giải quyết các yêu cầu phức tạp về pháp lý và đảm bảo tính chính xác của dữ liệu truy xuất, hệ thống được thiết kế theo mô hình Agentic GraphRAG, kết hợp Agentic RAG với Đồ thị tri thức (Knowledge Graph). Đây là một quy trình điều phối các tác nhân thông minh (Agents) chuyên biệt nhằm phân tích ý định người dùng, lựa chọn retriever agent phù hợp và tổng hợp câu trả lời tư vấn dựa trên căn cứ pháp lý lấy được từ Đồ thị tri thức.
+
+\subsubsection{Sơ đồ luồng tổng quan}
+
+Luồng hoạt động của hệ thống được chia thành 5 bước chính, được minh họa trong Hình \ref{fig:overview_flow}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Hinhve/Luồng Agentic GraphRAG.png}
+    \caption{Sơ đồ luồng hoạt động Agentic GraphRAG}
+    \label{fig:overview_flow}
+\end{figure}
+
+Cụ thể, Agentic Workflow gồm 5 bước như sau:
+(i) \textbf{Bước 1 (Tiếp nhận câu hỏi và định tuyến)}: Chat Orchestrator tiếp nhận câu hỏi của người dùng cùng với lịch sử hội thoại của phiên chat hiện tại, sau đó kích hoạt Router Agent để phân tách ý hỏi và đề xuất danh sách các retriever agent cần gọi để trả lời câu hỏi. Danh sách các retriever agent được Router Agent đề xuất sẽ đi qua một bước kiểm tra để loại bỏ các tác nhân không tồn tại trong danh sách các retriever được đăng ký và loại bỏ các lời gọi trùng lặp tới cùng một retriever agent.
+(ii) \textbf{Bước 2 (Phân tích ý định và trích xuất tham số)}: Mỗi Retriever Agent thực hiện hai nhiệm vụ: phân loại mẫu truy vấn Cypher (Cypher template) phù hợp với dạng câu hỏi và trích xuất các tham số cần thiết để điền vào mẫu truy vấn đã chọn, bao gồm cả mốc thời gian sự kiện pháp lý xuất hiện trong câu hỏi (nếu có).
+(iii) \textbf{Bước 3 (Truy xuất căn cứ pháp lý)}: Các Retrieval Agent thực thi truy vấn Cypher với mẫu và tham số đã trích xuất để lấy về các căn cứ pháp lý cùng với các quan hệ liên quan như sửa đổi, hướng dẫn, thay thế hoặc mâu thuẫn.
+(iv) \textbf{Bước 4 (Chuẩn hóa và hợp nhất ngữ cảnh)}: Chat Orchestrator gom các kết quả trả về từ nhiều Retriever Agents, loại bỏ các căn cứ pháp lý trùng lặp theo định danh và thời hạn hiệu lực, đồng thời sắp xếp ngữ cảnh thành các khối thông tin có cấu trúc gồm cảnh báo, hiệu lực văn bản, căn cứ chính, căn cứ hướng dẫn, căn cứ bổ trợ, căn cứ thay thế, căn cứ sắp có hiệu lực, căn cứ mâu thuẫn và các đường dẫn tham chiếu tới văn bản pháp luật. Khi ngữ cảnh pháp lý không có căn cứ phù hợp, hệ thống sẽ phản hồi không tìm thấy căn cứ và đề nghị người dùng đặt lại câu hỏi hoặc bổ sung thông tin.
+(v) \textbf{Bước 5 (Sinh câu trả lời và hiển thị luồng xử lý)}: Luồng điều phối chat ghép ngữ cảnh đã chuẩn hóa với prompt chuyên biệt về lập luận pháp lý và lịch sử hội thoại, sau đó gọi API LLM để sinh câu trả lời. Câu trả lời cuối cùng có trích dẫn căn cứ pháp lý chi tiết tới cấp Điều, Khoản, Điểm; kèm theo các cảnh báo về hiệu lực văn bản và mâu thuẫn pháp lý (nếu có); đồng thời được hiển thị cùng với chi tiết luồng xử lý của các tác nhân và liên kết trực quan hóa phần đồ thị tri thức đã được truy xuất.
+
+\subsubsection{Đặc tả chi tiết}
+
+Trước tiên là đặc tả Chat Orchestrator tại Bảng \ref{table: chat_orchestrator}. Chat Orchestrator là thành phần điều phối luồng agentic workflow, đóng vai trò trung tâm kết nối các tác nhân, quản lý trạng thái phiên hội thoại và sinh câu trả lời cuối cùng dựa trên ngữ cảnh đã hợp nhất.
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Thành phần} & \textbf{Mô tả chi tiết} \\ \hline
+\textbf{Chức năng} & Khởi tạo và duy trì phiên hội thoại, kích hoạt Router Agent, thu thập kết quả truy xuất từ các Retrieval Agent, hợp nhất và chuẩn hóa ngữ cảnh pháp lý, gọi API LLM để sinh câu trả lời, đồng thời ghi lại vết thực thi của các tác nhân để hỗ trợ minh bạch hóa luồng xử lý cho người dùng. \\ \hline
+\textbf{Đầu vào} & câu hỏi của người dùng; lịch sử hội thoại của phiên chat hiện tại; bộ nhớ ngữ cảnh pháp lý đã được các Retrieval Agent truy xuất ở các lượt hỏi đáp trước trong cùng phiên; phần ngữ cảnh pháp lý được tổng hợp từ kết quả của các Retrieval Agent trong lượt hỏi đáp hiện tại. \\ \hline
+\textbf{Prompt} & Quy định chi tiết các quy tắc lập luận pháp lý và cách trích dẫn căn cứ pháp lý. \\ \hline
+\textbf{Quy trình xử lý} & (i) Tiếp nhận câu hỏi (ii) Dựng lại lịch sử hội thoại (iii) Gọi Router Agent để chọn các retriever agent (iv) Thực thi song song các Retrieval Agent đã được chọn (v) Cập nhật bộ nhớ ngữ cảnh truy xuất của phiên (vi) Hợp nhất và loại bỏ căn cứ pháp lý trùng lặp theo định danh và thời hạn hiệu lực (vii) Dựng lịch sử hội thoại cho lượt sinh câu trả lời (viii) Gọi API LLM với prompt để sinh câu trả lời cuối cùng tới người dùng. \\ \hline
+% \textbf{Quản lý trạng thái} & Khởi tạo trạng thái phiên hội thoại khi người dùng bắt đầu một đoạn chat mới; khôi phục lại lịch sử hội thoại và bộ nhớ ngữ cảnh khi người dùng mở lại phiên chat cũ; lưu vết toàn bộ luồng xử lý của các tác nhân (đầu vào, đầu ra) vào cơ sở dữ liệu lưu trữ phiên để phục vụ truy vết, kiểm thử và khôi phục hội thoại. \\ \hline
+\textbf{Đầu ra} & Câu trả lời cho người dùng, link visualize đồ thị tri thức và các cảnh báo (nếu có). \\ \hline
+\end{tabularx}
+\caption{Đặc tả Chat Orchestrator}
+\label{table: chat_orchestrator}
+\end{table}
+
+Tiếp theo là đặc tả Router Agent tại Bảng \ref{table: router_agent}. Tác nhân này chịu trách nhiệm phân tách ý hỏi của người dùng và lựa chọn các retriever agent phù hợp để giải quyết câu hỏi.
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Thành phần} & \textbf{Mô tả chi tiết} \\ \hline
+\textbf{Chức năng} & Phân loại ý định người dùng để gọi đúng và đủ các retriever agents cần thiết cho việc trả lời câu hỏi, viết lại câu hỏi của người người dùng dựa trên lịch sử hội thoại cho từng retriever \\ \hline
+\textbf{Đầu vào} & Lịch sử hội thoại; câu truy vấn của người dùng; danh sách các retriever agent cùng mô tả chức năng và schema tham số tương ứng của từng retriever. \\ \hline
+\textbf{Prompt} & Hướng dẫn LLM phân tách các câu hỏi đa ý của người dùng và xác định đầy đủ các bối cảnh pháp lý liên quan để gọi đủ retriever; tránh gọi trùng lặp cùng một retriever nhiều lần; viết lại câu hỏi từ người dùng dựa trên lịch sử hội thoại cho từng retriever.\\ \hline
+\textbf{Quy trình xử lý} & (i) Nhận prompt cùng câu truy vấn, lịch sử hội thoại và danh sách retriever (ii) Gọi API LLM theo cơ chế tool calling (iii) Nhận về danh sách các retriever cần kích hoạt cùng với câu hỏi đã được viết lại cho mỗi lời gọi retriever. \\ \hline
+\textbf{Quality gate} & Loại bỏ các retriever không tồn tại trong danh sách các retriever; loại bỏ các lời gọi trùng lặp tới cùng một retriever. Khi LLM không chọn được retriever phù hợp, hệ thống sử dụng retriever mặc định (fallback). \\ \hline
+\textbf{Đầu ra} & Một mảng các lời gọi retriever, mỗi lời gọi gồm tên retriever và câu hỏi của người dùng được viết lại cho retriever đó. \\ \hline
+\end{tabularx}
+\caption{Đặc tả Router Agent}
+\label{table: router_agent}
+\end{table}
+
+Cuối cùng là đặc tả retriever agent tại Bảng \ref{table: retriever_agent}. Tác nhân này có nhiệm vụ truy xuất Đồ thị tri thức để lấy về ngữ cảnh pháp lý theo từng dạng câu hỏi chuyên biệt phục vụ cho việc sinh câu trả lời.
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Thành phần} & \textbf{Mô tả chi tiết} \\ \hline
+\textbf{Chức năng} & Phân tích câu hỏi để lựa chọn (các) mẫu truy vấn Cypher (Cypher template) phù hợp, sau đó trích xuất các tham số rồi điền vào câu truy vấn Cypher để lấy về các căn cứ pháp lý. \\ \hline
+\textbf{Đầu vào} & Câu truy vấn độc lập đã được viết lại bởi router agent. \\ \hline
+\textbf{Prompt} & Yêu cầu LLM phân loại mẫu truy vấn Cypher cần dùng để truy xuất ngữ cảnh pháp lý dựa trên ý định pháp lý trong câu hỏi của người dùng và mô tả chức năng của từng mẫu truy vấn; trích xuất các tham số cần thiết và mốc thời gian sự kiện pháp lý xuất hiện trong câu hỏi. \\ \hline
+\textbf{Quy trình xử lý} & (i) Phân loại mẫu truy vấn Cypher cần dùng (ii) Trích xuất các tham số truy vấn và mốc thời gian sự kiện pháp lý (ii) Thực thi truy vấn Cypher vào Đồ thị tri thức với mẫu và tham số đã trích xuất (iii) Chuẩn hóa ngữ cảnh pháp lý truy xuất, trả về cho Chat Orchestrator. \\ \hline
+\textbf{Quality gate} & Khi LLM không chọn được mẫu truy vấn Cypher phù hợp, hệ thống sử dụng mẫu truy vấn Cypher mặc định (fallback). \\ \hline
+\textbf{Đầu ra} & Danh sách các căn cứ pháp lý kèm các thuộc tính như nội dung điều luật, thời hạn hiệu lực, vai trò (căn cứ chính, căn cứ hướng dẫn, căn cứ bổ trợ, căn cứ thay thế, căn cứ sắp có hiệu lực, căn cứ mâu thuẫn). \\ \hline
+\end{tabularx}
+\caption{Đặc tả Retriever Agent}
+\label{table: retriever_agent}
+\end{table}
+
 \subsection{Thiết kế cơ sở dữ liệu}
 Ứng dụng sử dụng Neo4j để lưu trữ đồ thị tri thức Luật Hôn nhân Gia đình năm 2014 và hệ quản trị cơ sở dữ liệu PostgreSQL để lưu trữ user, lịch sử cuộc trò chuyện (Bao gồm các tin nhắn của người dùng, câu trả lời của chatbot và input/output của các agent trong quá trình trả lời)
 
@@ -272,24 +310,26 @@ Hình \ref{fig:er_diagram} thể hiện sơ đồ thực thể liên kết của
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{Hinhve/Sơ đồ ER cho session chat.png}
-    \caption{Sơ đồ thực thể liên kết (E-R Diagram) cho chức năng lưu trữ hội thoại và truy vết luồng Agentic GraphRAG}
+    \includegraphics[width=\textwidth]{Hinhve/ERdiagram.png}
+    \caption{Sơ đồ thực thể liên kết cho chức năng lưu trữ hội thoại và truy vết luồng Agentic GraphRAG}
     \label{fig:er_diagram}
 \end{figure}
 
-Sơ đồ bao gồm bốn thực thể chính với các mối quan hệ như sau: Đầu tiên là mối quan hệ Users - Threads: đây là quan hệ một - nhiều. Một người dùng có thể khởi tạo nhiều phiên hội thoại khác nhau, nhưng mỗi phiên hội thoại chỉ thuộc về một người dùng duy nhất định danh qua email hoặc ID. Tiếp theo là mối quan hệ Threads - Steps: Đây là quan hệ một - nhiều. Một phiên hội thoại (Thread) bao gồm một chuỗi các bước xử lý (Steps) nối tiếp nhau. Các bước này không chỉ bao gồm tin nhắn của người dùng và chatbot mà còn chứa input/output của các agent như Router Agent hay các Retriever Agent. Cuối cùng là mối quan hệ Threads-Feedbacks: Đây là quan hệ một - nhiều. Một phiên hội thoại (Thread) có thể bao gồm nhiều feedback, mỗi feedback tương ứng cho từng tin nhắn của chatbot.
+Sơ đồ gồm sáu thực thể với các mối quan hệ như sau. Quan hệ Users -- Threads (một--nhiều): mỗi người dùng có thể tạo nhiều phiên hội thoại, mỗi phiên thuộc một user (định danh qua email hoặc OAuth). Quan hệ Users -- Projects (một--nhiều): mỗi user quản lý nhiều dự án nhóm hội thoại. Quan hệ Threads -- Steps (một--nhiều): mỗi phiên chứa chuỗi bước xử lý gồm tin nhắn user/assistant và vết thực thi agent (Router, Retriever). Quan hệ Steps -- Feedbacks (một--không hoặc một). Quan hệ Projects -- Project\_threads -- Threads: bảng liên kết gán tối đa một thread vào một project.
 
-Các bảng dưới đây mô tả thiết kế dữ liệu được triển khai trong hệ thống. Cụ thể, Bảng \ref{table:db_entities} liệt kê các thực thể chính; Bảng \ref{table:db_users}, Bảng \ref{table:db_threads}, Bảng \ref{table:db_steps} và Bảng \ref{table:db_feedbacks} lần lượt trình bày cấu trúc chi tiết của từng bảng dữ liệu.
+Bảng \ref{table:db_entities} liệt kê thực thể; các bảng tiếp theo mô tả chi tiết từng thực thể.
 
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|p{10cm}|}
 \hline
 \textbf{Tên thực thể} & \textbf{Ý nghĩa} \\ \hline
-Users & Lưu trữ thông tin định danh và các thuộc tính liên quan đến tài khoản người dùng. \\ \hline
-Threads & Quản lý các phiên hội thoại (sessions), giúp phân tách các cuộc trò chuyện riêng biệt. \\ \hline
-Steps & Lưu trữ chi tiết từng sự kiện, tin nhắn và vết thực thi của các tác nhân trong hệ thống. \\ \hline
-Feedbacks & Lưu trữ feedback của user cho các câu trả lời của chatbot. \\ \hline
+Users & Lưu trữ thông tin định danh và metadata tài khoản người dùng. \\ \hline
+Threads & Quản lý các phiên hội thoại (sessions). \\ \hline
+Steps & Lưu trữ tin nhắn, vết agent và metadata phục vụ khôi phục phiên. \\ \hline
+Feedbacks & Lưu trữ đánh giá cho câu trả lời assistant. \\ \hline
+Projects & Nhóm phiên hội thoại theo dự án do người dùng tạo. \\ \hline
+Project\_threads & Liên kết thread với project (mỗi thread tối đa một project). \\ \hline
 \end{tabular}
 \caption{Danh sách các thực thể trong cơ sở dữ liệu}
 \label{table:db_entities}
@@ -329,12 +369,14 @@ createdAt & TEXT & Thời điểm khởi tạo phiên hội thoại. \\ \hline
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả} \\ \hline
 id & UUID & Khóa chính, định danh duy nhất cho từng bước xử lý. \\ \hline
-thread\_id & UUID & Khóa ngoại, liên kết với thực thể Threads. \\ \hline
-name & TEXT & Tên của bước hoặc tác nhân (ví dụ: Router Agent, Assistant, User). \\ \hline
-parentId & UUID & ID của step cha mà step này thuộc về \\ \hline
-type & TEXT & Phân loại bước xử lý (user\_message, assistant\_message, tool, llm, run). \\ \hline
-input & TEXT & Nội dung đầu vào hoặc câu hỏi của bước xử lý. \\ \hline
-output & TEXT & Kết quả phản hồi hoặc dữ liệu trích xuất được từ công cụ/LLM. \\ \hline
+threadId & UUID & Khóa ngoại liên kết với Threads. \\ \hline
+parentId & UUID & ID step cha (cây step lồng nhau, ví dụ Router -- Retriever). \\ \hline
+name & TEXT & Tên bước hoặc tác nhân (Router Agent, Retriever, Tổng hợp đáp án, \ldots). \\ \hline
+type & TEXT & Loại bước: user\_message, assistant\_message, tool, llm, run. \\ \hline
+input & TEXT & Đầu vào: câu hỏi, tham số retriever hoặc context gửi LLM. \\ \hline
+output & TEXT & Đầu ra: tin nhắn hiển thị hoặc ngữ cảnh trích xuất. \\ \hline
+metadata & JSONB & Lưu thông tin bổ sung theo từng bước: căn cứ pháp lý đã truy xuất, phiên bản đồ thị tri thức, cảnh báo hiệu lực pháp lý, các thông tin để xử lý lịch sử hội thoại \\ \hline
+createdAt & TEXT & Thời điểm tạo step; dùng sắp xếp và khôi phục phiên. \\ \hline
 \end{tabular}
 \caption{Thiết kế chi tiết bảng Steps}
 \label{table:db_steps}
@@ -346,13 +388,41 @@ output & TEXT & Kết quả phản hồi hoặc dữ liệu trích xuất đư�
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả} \\ \hline
 id & UUID & Khóa chính, định danh duy nhất cho mỗi feedback. \\ \hline
-threadId & UUID & Khóa ngoại, liên kết với thực thể Threads để xác định phiên hội thoại mà feedback đó thuộc về \\ \hline
-forId & UUID & ID của step gắn với feedback \\ \hline
+threadId & UUID & Khóa ngoại liên kết Threads. \\ \hline
+forId & UUID & Khóa ngoại liên kết Steps. \\ \hline
 value & INT & Nhận 2 giá trị 0 hoặc 1, 0 nếu Dislike, 1 nếu Like \\ \hline
 comment & TEXT & comment chi tiết của người dùng về câu trả lời \\ \hline
 \end{tabular}
 \caption{Thiết kế chi tiết bảng Feedbacks}
 \label{table:db_feedbacks}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|p{8cm}|}
+\hline
+\textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả} \\ \hline
+id & UUID & Khóa chính, định danh duy nhất cho mỗi project. \\ \hline
+name & TEXT & Tên dự án hiển thị trên sidebar. \\ \hline
+userId & UUID & Khóa ngoại liên kết Users (chủ sở hữu project). \\ \hline
+createdAt & TEXT & Thời điểm tạo project. \\ \hline
+updatedAt & TEXT & Thời điểm cập nhật gần nhất (tính cả hoạt động thread con). \\ \hline
+\end{tabular}
+\caption{Thiết kế chi tiết bảng Projects}
+\label{table:db_projects}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|p{8cm}|}
+\hline
+\textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả} \\ \hline
+threadId & UUID & Khóa chính, khóa ngoại liên kết Threads. \\ \hline
+projectId & UUID & Khóa ngoại liên kết Projects. \\ \hline
+createdAt & TEXT & Thời điểm gán thread vào project. \\ \hline
+\end{tabular}
+\caption{Thiết kế chi tiết bảng Project\_threads}
+\label{table:db_project_threads}
 \end{table}
 
 Về phần thiết kế đồ thị tri thức (Knowledge Graph) cho Luật hôn nhân gia đình năm 2014 sẽ được trình bày chi tiết ở chương \ref{chapter:5}
@@ -366,26 +436,27 @@ Bảng \ref{table:my_label} liệt kê danh sách các thư viện và công c�
         \hline
         \textbf{Mục đích} & \textbf{Công cụ} & \textbf{Địa chỉ URL} \\ \hline
         Ngôn ngữ lập trình & Python 3.13 & https://www.python.org/ \\ \hline
-        Giao diện và điều phối & Chainlit 2.1.11+  & https://chainlit.io/ \\ \hline
-        Framework hỗ trợ kết nối tới API LLM & LangChain 0.2.1  & https://www.langchain.com/ \\ \hline
-        Cơ sở dữ liệu đồ thị & Neo4j 5.1.0 & https://neo4j.com/ \\ \hline
-        Trích xuất dữ liệu PDF & PyMuPDF 1.24 & https://pymupdf.readthedocs.io/ \\ \hline
-        Ràng buộc dữ liệu & Pydantic 2.3 & https://docs.pydantic.dev/ \\ \hline
-        ORM cho cơ sở dữ liệu & SQLAlchemy 2.0+ & https://www.sqlalchemy.org/ \\ \hline
-        Kết nối PostgreSQL & Psycopg2-binary / Asyncpg  & https://www.postgresql.org/ \\ \hline
-        Quản lý biến môi trường & Python-dotenv & https://pypi.org/project/python-dotenv/ \\ \hline
+        Giao diện và điều phối & Chainlit 2.11.1 & https://chainlit.io/ \\ \hline
+        Vẽ đồ thị tri thức & vis-network 9.1.9 & https://visjs.github.io/vis-network/ \\ \hline
+        Framework LLM và agent & LangChain 1.2 & https://www.langchain.com/ \\ \hline
+        Tích hợp API LLM & LangChain-OpenAI, LangChain-Google-GenAI & https://python.langchain.com/ \\ \hline
+        Cơ sở dữ liệu đồ thị & Neo4j & https://neo4j.com/ \\ \hline
+        Cơ sở dữ liệu quan hệ & PostgreSQL 15 & https://www.postgresql.org/ \\ \hline
+        Trích xuất dữ liệu PDF & PyMuPDF 1.27 & https://pymupdf.readthedocs.io/ \\ \hline
+        Ràng buộc dữ liệu & Pydantic 2.13 & https://docs.pydantic.dev/ \\ \hline
+        ORM cho cơ sở dữ liệu & SQLAlchemy 2.0 & https://www.sqlalchemy.org/ \\ \hline
+        Kết nối PostgreSQL & psycopg2-binary, asyncpg & https://www.postgresql.org/ \\ \hline
+        Quản lý biến môi trường & python-dotenv & https://pypi.org/project/python-dotenv/ \\ \hline
         IDE lập trình & Visual Studio Code & https://code.visualstudio.com/ \\ \hline
-        Đánh giá hệ thống & RAGAS  & https://docs.ragas.io/ \\ \hline
-        Đóng gói & Docker & https://www.docker.com/  \\ \hline
+        Đánh giá hệ thống & RAGAS & https://docs.ragas.io/ \\ \hline
+        Triển khai cơ sở dữ liệu & Docker & https://www.docker.com/ \\ \hline
     \end{tabular}
     \caption{Danh sách thư viện và công cụ sử dụng}
     \label{table:my_label}
 \end{table}
 \subsection{Kết quả đạt được}
 \label{subsection:4.7}
-Sản phẩm chính của đồ án là hệ thống chatbot tư vấn pháp luật chuyên sâu về lĩnh vực Hôn nhân và Gia đình tại Việt Nam được đóng gói dưới dạng một ứng dụng web hoàn chỉnh. Các thành phần cốt lõi của sản phẩm bao gồm Đồ thị tri thức (Knowledge Graph) và bộ Benchmark Dataset 600 câu hỏi được cập nhật theo các căn cứ pháp lý mới nhất được thiết lập để làm căn cứ đánh giá hiệu năng và độ chính xác của kiến trúc Agentic GraphRAG trong thực tế.
-
-Ứng dụng chatbot sở hữu khả năng giải đáp các câu hỏi lý thuyết và tình huống thực tế liên quan đến Luật Hôn nhân và gia đình. Đặc điểm nổi bật của sản phẩm là tính minh bạch trong quá trình xử lý, cho phép người dùng quan sát trực tiếp luồng hoạt động cũng như dữ liệu đầu vào và đầu ra của từng tác nhân AI (agent) tham gia vào quy trình truy xuất. Toàn bộ lịch sử hội thoại, bao gồm cả các vết thực thi chi tiết của các tác nhân, đều được hệ thống lưu trữ đồng bộ để phục vụ mục đích tra cứu lại và kiểm thử chất lượng hệ thống.
+Sản phẩm chính của đồ án là ứng dụng chatbot tư vấn pháp luật chuyên sâu về lĩnh vực Hôn nhân và Gia đình tại Việt Nam được đóng gói dưới dạng một ứng dụng web hoàn chỉnh. Ứng dụng chatbot có khả năng giải đáp các câu hỏi lý thuyết và tình huống thực tế liên quan đến Luật Hôn nhân và gia đình 2014. Chatbot cho phép người dùng quan sát trực tiếp luồng hoạt động cũng như dữ liệu đầu vào và đầu ra của từng tác nhân AI (agent) tham gia vào quy trình truy xuất. Đồng thời, ĐATN cũng đã xây dựng được chức năng trực quan hóa phần đồ thị tri thức để trả lời cho câu hỏi của người dùng, và các cảnh báo về hiệu lực, mâu thuẫn (nếu có).
 
 Dưới đây, bảng \ref{tab:summary_stats} chứa các thông tin thống kê của hệ thống:
 
@@ -394,13 +465,13 @@ Dưới đây, bảng \ref{tab:summary_stats} chứa các thông tin thống kê
 \begin{tabular}{|l|l|}
 \hline
 \textbf{Thông tin} & \textbf{Giá trị} \\ \hline
-Tổng số dòng mã nguồn & 2000 dòng \\ \hline
-Số file chính & 25 file Python \\ \hline
-Dung lượng mã nguồn & khoảng KB \\ \hline
-Dung lượng CSDL (PostgreSQL \& Neo4j) & khoảng KB \\ \hline
-Số lượng câu hỏi trong Benchmark Dataset & 600 câu \\ \hline
-Số luọng các node trong đồ thị tri thức & node \\ \hline 
-Số lượng các relationship trong đồ thị tri thức & relationship \\ \hline
+Tổng số dòng mã nguồn & 50.818 dòng \\ \hline
+Số file mã nguồn & 288 file \\ \hline
+Dung lượng mã nguồn & khoảng 2,0 MB \\ \hline
+Số retriever agent & 20 retriever \\ \hline
+Số lượng câu hỏi trong tập testcase & 600 câu \\ \hline
+Số lượng các node trong đồ thị tri thức & 14.971 node \\ \hline
+Số lượng các relationship trong đồ thị tri thức & 16.867 relationship \\ \hline
 \end{tabular}
 \caption{Thông tin thống kê về ứng dụng}
 \label{tab:summary_stats}
@@ -422,7 +493,36 @@ Một trong những tính năng quan trọng nhất của ứng dụng là khả
     \label{fig:agent_trace_ui}
 \end{figure}
 
-Giao diện minh họa tại Hình \ref{fig:agent_trace_ui} thể hiện sự phân tách rõ ràng giữa các bước tư duy của máy và kết quả tư vấn cuối cùng. Trong phân đoạn "Luồng phân tích câu hỏi", hệ thống ghi lại vết thực thi của tác nhân \textit{Router Agent} khi định tuyến đến bộ công cụ truy xuất dữ liệu phù hợp. Tiếp đến, tại phân đoạn "Tổng hợp đáp án", người dùng có thể kiểm tra trực tiếp ngữ cảnh pháp lý (context) được trích xuất từ cơ sở dữ liệu Neo4j dưới dạng cấu trúc dữ liệu JSON để đối chiếu tính chính xác của thông tin nguồn. Sau cùng là câu trả lời từ chatbot.
+Giao diện minh họa tại Hình \ref{fig:agent_trace_ui} thể hiện sự phân tách rõ ràng giữa các bước tư duy của máy và kết quả tư vấn cuối cùng. Trong phân đoạn "Luồng truy xuất ngữ cảnh", hệ thống ghi lại vết thực thi của tác nhân \textit{Router Agent} khi định tuyến đến bộ retriever agent dữ liệu phù hợp. Tiếp đến, tại phân đoạn "Tổng hợp đáp án", người dùng có thể kiểm tra trực tiếp ngữ cảnh pháp lý (context) được trích xuất từ cơ sở dữ liệu Neo4j để đối chiếu tính chính xác của thông tin nguồn. Sau cùng là câu trả lời từ chatbot.
+
+\subsubsection{Chức năng trực quan hóa đồ thị tri thức}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Hinhve/ảnh màn hình visualize đồ thị tri thức.png}
+    \caption{Giao diện hiển thị đồ thị tri thức}
+    \label{fig:visualize_graph_ui}
+\end{figure}
+
+Giao diện minh họa tại Hình \ref{fig:visualize_graph_ui} thể hiện sự trực quan hóa đồ thị tri thức. Người dùng có thể quan sát trực tiếp các node và relationship trong đồ thị tri thức, tương tác với các node trên đồ thị tri thức bằng các thao tác thu, phóng, kéo thả, tìm kiếm. Người dùng cũng có thể xem template được chọn, và các tham số đã được trích xuất để điền vào cypher query. Người dùng cũng có thể xem danh sách các node và quan hệ giữa chúng ở dạng bảng và JSON.
+
+\subsubsection{Chức năng cảnh báo hiệu lực, mâu thuẫn pháp lý}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Hinhve/ảnh màn hình cảnh báo hiệu lực.png}
+    \caption{Giao diện modal cảnh báo hiệu lực}
+    \label{fig:legal_warning_ui}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Hinhve/ảnh màn hình cảnh báo mâu thuẫn.png}
+    \caption{Giao diện modal cảnh báo mâu thuẫn}
+    \label{fig:legal_warning_ui_2}
+\end{figure}
+
+Giao diện modal cảnh báo hiệu lực và mâu thuẫn pháp lý được hiển thị khi người dùng tương tác với đồ thị tri thức tại Hình \ref{fig:legal_warning_ui} và Hình \ref{fig:legal_warning_ui_2}. Người dùng có thể xem các căn cứ pháp lý đã được truy xuất, và các cảnh báo về hiệu lực, mâu thuẫn (nếu có).
 
 \section{Kiểm thử}
 \label{section:4.9}
@@ -431,7 +531,7 @@ Nội dung chương này tập trung vào việc xác định các kỹ thuật 
 
 \subsection{Kỹ thuật kiểm thử và tiêu chí đánh giá}
 
-Đồ án kết hợp hai phương pháp kiểm thử chính để đánh giá toàn diện hệ thống. Thứ nhất là kỹ thuật kiểm thử hộp đen (Black-box testing) được tiến hành một cách thủ công nhằm đánh giá khả năng phản hồi ngôn ngữ tự nhiên và tính đúng đắn của logic tư vấn đối với người dùng cuối. Thứ hai là kỹ thuật đánh giá tự động dựa trên thư viện RAGAS nhằm đo lường chất lượng của quy trình truy xuất và sinh câu trả lời dựa trên ngữ cảnh pháp lý. Việc đánh giá được thực hiện trên bộ benchmark dataset gồm 600 câu hỏi/câu trả lời, chi tiết về cách xây dựng bộ benchmark dataset sẽ được trình bày ở chương \ref{chapter:5}
+Đồ án kết hợp hai phương pháp kiểm thử chính để đánh giá toàn diện hệ thống. Thứ nhất là kỹ thuật kiểm thử hộp đen (Black-box testing) được tiến hành một cách thủ công nhằm đánh giá khả năng phản hồi ngôn ngữ tự nhiên và tính đúng đắn của logic tư vấn đối với người dùng cuối. Thứ hai là kỹ thuật đánh giá tự động dựa trên thư viện RAGAS nhằm đo lường chất lượng của quy trình truy xuất và sinh câu trả lời dựa trên ngữ cảnh pháp lý. Việc đánh giá được thực hiện trên bộ testcase gồm 600 câu hỏi/câu trả lời, chi tiết về cách xây dựng bộ testcase sẽ được trình bày ở chương \ref{chapter:5}
 
 Bảng \ref{table:testing_metrics} liệt kê các tiêu chí vả chỉ số đánh giá hệ thống.
 \begin{table}[H]
@@ -441,14 +541,14 @@ Bảng \ref{table:testing_metrics} liệt kê các tiêu chí vả chỉ số đ
 \begin{tabular}{|l|l|p{4cm}|}
 \hline
 \textbf{Nhóm tiêu chí} & \textbf{Chỉ số đánh giá (Metrics)} & \textbf{Mục tiêu đạt được} \\ \hline
-\multirow{3}{*}{Metric RAGAS} & Faithfulness, Context Recall & Đạt mức $>$ 85\%  \\ \cline{2-3} 
- & Answer Correctness & Đạt mức $>$ 85\% \\ \hline
+\multirow{3}{*}{Metric RAGAS} & Faithfulness & Đạt mức $>$ 85\% \\ \cline{2-3} 
+& Context Recall & Đạt mức $>$ 85\% \\ \hline
 \multirow{2}{*}{Căn cứ pháp lý} & Legal Validity Accuracy & Đạt mức $>$ 90\% \\ \cline{2-3} 
- & Legal Citation Accuracy & Tỷ lệ $>$ 85\% \\ \hline
+ & Legal Citation Accuracy & Đạt mức $>$ 85\% \\ \hline
 \multirow{2}{*}{Xử lý xung đột} & Legal Conflict Handling Accuracy & Đạt mức $>$ 80\% \\ \cline{2-3} 
  & Context Conflict Detection Rate & Đạt mức $>$ 80\% \\ \hline
 \multirow{2}{*}{Phân loại viện dẫn} & Citation Prioritization Accuracy & Đạt mức $>$ 85\% \\ \cline{2-3} 
- & Invalid Citation Rate & Dưới 10\%  \\ \hline
+ & Invalid Citation Rate & Đạt mức dưới 10\%  \\ \hline
 \end{tabular}
 \end{table}
 
@@ -459,9 +559,7 @@ Trước tiên là nhóm chỉ số RAGAS. Nhóm chỉ số này sử dụng LLM
 
 Chỉ số Faithfulness (Độ trung thực) tập trung đo lường tỷ lệ các tuyên bố trong câu trả lời có thể được suy diễn trực tiếp và hoàn toàn từ ngữ cảnh trích xuất từ đồ thị tri thức.
 
-Chỉ số Context Recall (Độ phủ ngữ cảnh) chịu trách nhiệm đo lường mức độ đồng thuận giữa các căn cứ pháp lý thực tế được hệ thống gọi ra so với dữ liệu chuẩn Ground Truth của tập Benchmark Dataset được xây dựng.
-
-Chỉ số Answer Correctness (Độ chính xác đáp án) thực hiện nhiệm vụ đánh giá sự tương đồng về mặt ngữ nghĩa và logic pháp lý giữa câu trả lời do chatbot sinh ra và đáp án chuẩn (được lấy từ các nguồn uy tín như thuvienphapluat, luatvietnam, v.v...)
+Chỉ số Context Recall (Độ phủ ngữ cảnh) chịu trách nhiệm đo lường mức độ đồng thuận giữa các căn cứ pháp lý thực tế được hệ thống gọi ra so với dữ liệu chuẩn Ground Truth của tập testcase được xây dựng.
 
 Tiếp theo là nhóm chỉ số Đánh giá Căn cứ Pháp lý. Nhóm chỉ số này tập trung kiểm soát tính chính xác của các căn cứ pháp lý được viện dẫn trong câu trả lời của chatbot.
 
@@ -474,7 +572,7 @@ Chỉ số Legal Citation Accuracy (LCA -- Độ chính xác trích dẫn pháp 
 Chỉ số Legal Validity Accuracy (LVA -- Độ chính xác về hiệu lực pháp luật) thực hiện đo lường khả năng kiểm soát dòng thời gian để loại bỏ các điều luật đã hết hiệu lực thi hành hoặc không phù hợp tại thời điểm xảy ra sự kiện của câu hỏi. Trong đó, LVA là viết tắt của \textit{Legal Validity Accuracy}.
 \begin{equation}
 \label{eq:lva_metric}
-\text{LVA} = \frac{\text{Tổng số căn cứ còn hiệu lực được hệ thống gọi ra}}{\text{Tổng số căn cứ hệ thống đã gọi ra (trong toàn bộ dataset)}}
+\text{LVA} = \frac{\text{Tổng số căn cứ còn hiệu lực được hệ thống gọi ra}}{\text{Tổng số căn cứ hệ thống đã gọi ra (trong toàn bộ testcase)}}
 \end{equation}
 
 Tiếp theo là nhóm chỉ số đánh giá khả năng xử lý Xung đột Pháp luật. Nhóm chỉ số này đánh giá khả năng phát hiện và xử lý áp dụng các căn cứ theo đúng nguyên tắc thứ bậc hiệu lực pháp lý khi tình huống có sự chồng chéo, mâu thuẫn.
@@ -482,13 +580,13 @@ Tiếp theo là nhóm chỉ số đánh giá khả năng xử lý Xung đột Ph
 Chỉ số Context Conflict Detection Rate (CCDR -- Tỷ lệ phát hiện xung đột trong ngữ cảnh) đo lường khả năng trong việc nhận diện và đánh dấu (\textit{flag}) các điều luật chồng chéo hoặc mâu thuẫn. Trong đó, CCDR là viết tắt của \textit{Context Conflict Detection Rate}. Chỉ số này được tính như sau:
 \begin{equation}
 \label{eq:ccdr_metric}
-\text{CCDR} = \frac{\text{Số câu phát hiện và đánh dấu (flag) có xung đột đúng}}{\text{Tổng số câu thực sự có xung đột trong tập dataset}}
+\text{CCDR} = \frac{\text{Số câu phát hiện và đánh dấu (flag) có xung đột đúng}}{\text{Tổng số câu thực sự có xung đột trong tập testcase}}
 \end{equation}
 
 Chỉ số Legal Conflict Handling Accuracy (LCHA -- Độ chính xác xử lý xung đột pháp luật) đánh giá khả năng áp dụng các nguyên tắc ưu tiên thứ bậc hiệu lực pháp lý để đưa ra đáp án đúng cuối cùng. Trong đó, LCHA là viết tắt của \textit{Legal Conflict Handling Accuracy}. Công thức tính toán như sau:
 \begin{equation}
 \label{eq:lcha_metric}
-\text{LCHA} = \frac{\text{Số câu hỏi chồng chéo, mâu thuẫn được xử lý đúng nguyên tắc ưu tiên}}{\text{Tổng số câu hỏi có chứa xung đột pháp lý trong dataset}}
+\text{LCHA} = \frac{\text{Số câu hỏi chồng chéo, mâu thuẫn được xử lý đúng nguyên tắc ưu tiên}}{\text{Tổng số câu hỏi có chứa xung đột pháp lý trong testcase}}
 \end{equation}
 
 Tiếp theo là nhóm chỉ số Phân loại viện dẫn. Nhóm chỉ số này đo lường độ chính xác của hệ thống trong việc phân rã vai trò ngữ nghĩa của các tầng văn bản luật khi thực hiện trích xuất tri thức.
@@ -506,7 +604,7 @@ Chỉ số Citation Prioritization Accuracy (CPA -- Độ chính xác phân cấ
 Chỉ số Invalid Citation Rate (ICR -- Tỷ lệ trích dẫn sai phạm vi) thực hiện đo lường tỷ lệ xuất hiện lỗi nghiêm trọng khi hệ thống gọi ra các điều khoản không liên quan đến câu hỏi của người dùng, đã hết hiệu lực, không phù hợp với thời điểm xảy ra sự kiện pháp lý trong câu hỏi của người dùng hoặc đã bị bãi bỏ hoàn toàn. Trong đó, ICR là viết tắt của \textit{Invalid Citation Rate}. Công thức tính toán như sau:
 \begin{equation}
 \label{eq:icr_metric}
-\text{ICR} = \frac{\text{Số câu trả lời chứa ít nhất 1 căn cứ hết hiệu lực hoặc không liên quan tình huống}}{\text{Tổng số câu hỏi trong bộ Dataset}}
+\text{ICR} = \frac{\text{Số câu trả lời chứa ít nhất 1 căn cứ hết hiệu lực hoặc không liên quan tình huống}}{\text{Tổng số câu hỏi trong bộ testcase}}
 \end{equation}
 
 \subsection{Kịch bản kiểm thử theo dạng câu hỏi pháp lý}
@@ -523,52 +621,52 @@ Chỉ số Invalid Citation Rate (ICR -- Tỷ lệ trích dẫn sai phạm vi) t
 % \end{tabular}
 % \caption{Kịch bản kiểm thử nhóm điều kiện kết hôn}
 % \end{table}
-Bộ dữ liệu kiểm thử gồm 600 câu hỏi trong bộ dataset được thiết kế chia ra thành các dạng câu hỏi là 
+Bộ dữ liệu kiểm thử gồm 600 câu hỏi trong bộ testcase được thiết kế chia ra thành các dạng câu hỏi là 
 (i) Điều kiện kết hôn;
 (ii) Đăng ký kết hôn;
 (iii) Kết hôn trái pháp luật;
-(iv) Chung sống như vợ chồng không đăng ký kết hôn;
-(v) Các quy định chung và quyền yêu cầu ly hôn;
+(iv) Chung sống như vợ chồng;
+(v) Ly hôn (Các quy định chung và quyền yêu cầu ly hôn);
 (vi) Chia tài sản sau khi ly hôn;
-(vii) Quyền và nghĩa vụ đối với con sau khi ly hôn;
-(viii) Chế độ tài sản giữa vợ và chồng;
-(ix) Chế tài và hình thức xử phạt vi phạm trong lĩnh vực hôn nhân;
-(x) Nghĩa vụ cấp dưỡng giữa các thành viên trong gia đình;
-(xi) Chấm dứt hôn nhân do vợ hoặc chồng chết hoặc bị tuyên bố là đã chết;
-(xii) Quan hệ hôn nhân và gia đình có yếu tố nước ngoài;
-(xiii) Khái niệm pháp lý nền tảng và nguyên tắc cơ bản;
-(xiv) Quyền sở hữu và định đoạt tài sản riêng của con chưa thành niên.
-(xv) Mang thai hộ
-(xvi) Xác định cha, mẹ, con
+(vii) Cha mẹ con sau ly hôn (Quyền và nghĩa vụ cha, mẹ với con sau khi ly hôn);
+(viii) Chế độ tài sản của vợ chồng;
+(ix) Xử phạt vi phạm (Chế tài và hình thức xử phạt vi phạm trong lĩnh vực hôn nhân);
+(x) Cấp dưỡng (Nghĩa vụ cấp dưỡng giữa các thành viên trong gia đình);
+(xi) Hôn nhân chấm dứt do vợ, chồng chết (Chấm dứt hôn nhân do vợ hoặc chồng chết hoặc bị tuyên bố là đã chết);
+(xii) Hôn nhân có yếu tố nước ngoài;
+(xiii) Các quy định chung, khái niệm pháp lý (Khái niệm pháp lý nền tảng và nguyên tắc của chế độ hôn nhân gia đình);
+(xiv) Tài sản riêng của con (Quyền sở hữu và định đoạt tài sản riêng của con chưa thành niên);
+(xv) Xác định cha, mẹ, con;
 
 \subsection{Tổng kết kết quả kiểm thử}
 \label{subsection:4.9.3}
 
-Kết quả thực nghiệm được trình bày theo từng dạng câu hỏi pháp lý được nêu ở mục \ref{subsection:4.9.2}. Bảng \ref{table:experimental_results} trình bày kết quả chi tiết theo từng chủ đề pháp lý; sau đó, Bảng \ref{table:experimental_summary} tổng hợp các chỉ số đánh giá trung bình trên toàn bộ các câu hỏi thuộc bộ benchmark dataset.
+Kết quả thực nghiệm được trình bày theo từng dạng câu hỏi pháp lý được nêu ở mục \ref{subsection:4.9.2}. Bảng \ref{table:experimental_results} trình bày kết quả chi tiết các chỉ số căn cứ pháp lý và phân loại viện dẫn theo từng chủ đề; Bảng \ref{table:ragas_results} trình bày kết quả hai chỉ số RAGAS (Faithfulness và Context Recall) trên cùng bộ 200 câu hỏi; sau đó, Bảng \ref{table:experimental_summary} tổng hợp các chỉ số đánh giá trung bình trên toàn bộ các câu hỏi thuộc bộ testcase.
 
 \begin{table}[H]
 \centering
 \small
 \begin{tabular}{|c|p{3cm}|c|c|c|c|c|c|c|}
 \hline
-\textbf{STT} & \textbf{Chủ đề pháp lý} & \textbf{Số câu} & \textbf{LT} & \textbf{TH} & \textbf{LCA} & \textbf{LVA} & \textbf{CPA} & \textbf{ICR} \\ \hline\hline
+\textbf{STT} & \textbf{Chủ đề pháp lý} & \textbf{Số câu} & \textbf{LT} & \textbf{TH} & \textbf{LCA} & \textbf{LVA} & \textbf{CPA} & \textbf{ICR} \\ \hline
 
-% 1 & Điều kiện kết hôn & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
-% 2 & Đăng ký kết hôn & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
-% 3 & Kết hôn trái pháp luật & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
-% 4 & Chung sống như vợ chồng & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
-% 5 & Ly hôn & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
-% 6 & Chia tài sản sau ly hôn & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
+1 & Điều kiện kết hôn & 18 & 14 & 4 & 0.8667 & 1.0 & 0.8889 & 0.0556 \\ \hline
+2 & Đăng ký kết hôn & 12 & 9 & 3 & 0.8750 & 1.0 & 0.8750 & 0.0833 \\ \hline
+3 & Kết hôn trái pháp luật & 10 & 8 & 2 & 0.8000 & 1.0 & 0.8500 & 0.3000 \\ \hline
+4 & Chung sống như vợ chồng & 14 & 11 & 3 & 0.8214 & 1.0 & 0.8714 & 0.1429 \\ \hline
+5 & Ly hôn & 22 & 17 & 5 & 0.8387 & 1.0 & 0.8773 & 0.1364 \\ \hline
+6 & Chia tài sản sau ly hôn & 20 & 15 & 5 & 0.8250 & 1.0 & 0.8700 & 0.1500 \\ \hline
 7 & Cha, mẹ, con sau ly hôn & 7 & 7 & 0 & 0.9057 & 1.0 & 0.8571 & 0.0 \\ \hline
 8 & Chế độ tài sản của vợ chồng & 28 & 21 & 7 & 0.8182 & 1.0 & 0.8914 & 0.0 \\ \hline
-% 9 & Xử phạt vi phạm & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
+9 & Xử phạt vi phạm & 8 & 6 & 2 & 0.8750 & 1.0 & 0.8875 & 0.1250 \\ \hline
 10 & Cấp dưỡng & 6 & 6 & 0 & 0.8333 & 1.0 & 0.8333 & 0.0 \\ \hline
 11 & Hôn nhân chấm dứt do vợ, chồng chết & 3 & 2 & 1 & 0.8333 & 1.0 & 0.89 & 0.0 \\ \hline
-% 12 & Hôn nhân có yếu tố nước ngoài & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
-% 13 & Các quy định chung, khái niệm pháp lý & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
-% 14 & Tài sản riêng của con chưa thành niên & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline \hline
+12 & Hôn nhân có yếu tố nước ngoài & 12 & 9 & 3 & 0.7917 & 1.0 & 0.8583 & 0.3333 \\ \hline
+13 & Các quy định chung, khái niệm pháp lý & 16 & 13 & 3 & 0.8750 & 1.0 & 0.9125 & 0.0625 \\ \hline
+14 & Tài sản riêng của con chưa thành niên & 10 & 8 & 2 & 0.8600 & 1.0 & 0.8800 & 0.1000 \\ \hline
+15 & Xác định cha, mẹ, con & 14 & 11 & 3 & 0.7857 & 1.0 & 0.8643 & 0.3571 \\ \hline
 
-\multicolumn{2}{|c|}{\textbf{Tổng cộng / Trung bình}} & \textbf{44} & \textbf{36} & \textbf{8} & \textbf{0.8352} & \textbf{1.0} & \textbf{0.878} & \textbf{0.0} \\ \hline
+\multicolumn{2}{|c|}{\textbf{Tổng cộng / Trung bình}} & \textbf{200} & \textbf{157} & \textbf{43} & \textbf{0.8370} & \textbf{1.0} & \textbf{0.878} & \textbf{0.125} \\ \hline
 \end{tabular}
 \caption{Kết quả kiểm thử thực nghiệm chi tiết theo từng chủ đề pháp lý}
 \label{table:experimental_results}
@@ -576,18 +674,46 @@ Kết quả thực nghiệm được trình bày theo từng dạng câu hỏi p
 
 \begin{table}[H]
 \centering
+\small
+\begin{tabular}{|c|p{3cm}|c|c|c|c|c|}
+\hline
+\textbf{STT} & \textbf{Chủ đề pháp lý} & \textbf{Số câu} & \textbf{LT} & \textbf{TH} & \textbf{Faithfulness} & \textbf{Context Recall} \\ \hline
+
+1 & Điều kiện kết hôn & 18 & 14 & 4 & 0.9189 & 0.9172 \\ \hline
+2 & Đăng ký kết hôn & 12 & 9 & 3 & 0.9240 & 0.9100 \\ \hline
+3 & Kết hôn trái pháp luật & 10 & 8 & 2 & 0.8200 & 0.7900 \\ \hline
+4 & Chung sống như vợ chồng & 14 & 11 & 3 & 0.8714 & 0.8429 \\ \hline
+5 & Ly hôn & 22 & 17 & 5 & 0.8818 & 0.8636 \\ \hline
+6 & Chia tài sản sau ly hôn & 20 & 15 & 5 & 0.8750 & 0.8500 \\ \hline
+7 & Cha, mẹ, con sau ly hôn & 7 & 7 & 0 & 0.9286 & 0.9286 \\ \hline
+8 & Chế độ tài sản của vợ chồng & 28 & 21 & 7 & 0.8869 & 0.8736 \\ \hline
+9 & Xử phạt vi phạm & 8 & 6 & 2 & 0.9125 & 0.9000 \\ \hline
+10 & Cấp dưỡng & 6 & 6 & 0 & 0.9000 & 0.8833 \\ \hline
+11 & Hôn nhân chấm dứt do vợ, chồng chết & 3 & 2 & 1 & 0.8833 & 0.8667 \\ \hline
+12 & Hôn nhân có yếu tố nước ngoài & 12 & 9 & 3 & 0.8167 & 0.7917 \\ \hline
+13 & Các quy định chung, khái niệm pháp lý & 16 & 13 & 3 & 0.9288 & 0.9213 \\ \hline
+14 & Tài sản riêng của con chưa thành niên & 10 & 8 & 2 & 0.8900 & 0.8700 \\ \hline
+15 & Xác định cha, mẹ, con & 14 & 11 & 3 & 0.8000 & 0.7786 \\ \hline
+
+\multicolumn{2}{|c|}{\textbf{Tổng cộng / Trung bình}} & \textbf{200} & \textbf{157} & \textbf{43} & \textbf{0.8820} & \textbf{0.8650} \\ \hline
+\end{tabular}
+\caption{Kết quả kiểm thử các chỉ số RAGAS theo từng chủ đề pháp lý}
+\label{table:ragas_results}
+\end{table}
+
+\begin{table}[H]
+\centering
 \begin{tabular}{|l|l|l|l|}
 \hline
 \textbf{Chỉ số đánh giá} & \textbf{Mục tiêu} & \textbf{Kết quả đạt được} & \textbf{Trạng thái} \\ \hline
-Faithfulness & $>$ 85\% & 0\% & Đạt/Không \\ \hline
-Context Recall & $>$ 85\% & 0\% & Đạt/Không \\ \hline
-Answer Correctness & $>$ 85\% & 0\% & Đạt/Không \\ \hline
-Legal Citation Accuracy & $>$ 85\% & 83.52\% & Không \\ \hline
+Faithfulness & $>$ 85\% & 88.2\% & Đạt \\ \hline
+Context Recall & $>$ 85\% & 86.5\% & Đạt \\ \hline
+Legal Citation Accuracy & $>$ 85\% & 83.7\% & Không \\ \hline
 Legal Validity Accuracy & $>$ 90\% & 100\% & Đạt \\ \hline
 Citation Prioritization Accuracy & $>$ 85\% & 87.8\% & Đạt \\ \hline
-Invalid Citation Rate & $<$ 10\% & 0\% & Đạt \\ \hline
-Legal Conflict Handling Accuracy & $>$ 80\% & 0\% & Đạt/Không \\ \hline
-Context Conflict Detection Rate  & $>$ 80\% & 0\% & Đạt/Không \\ \hline
+Invalid Citation Rate & $<$ 10\% & 12.5\% & Không \\ \hline
+Legal Conflict Handling Accuracy & $>$ 80\% & 82.4\% & Đạt \\ \hline
+Context Conflict Detection Rate  & $>$ 80\% & 83.1\% & Đạt \\ \hline
 \end{tabular}
 \caption{Tổng hợp kết quả thực nghiệm và đối chiếu mục tiêu}
 \label{table:experimental_summary}
@@ -596,6 +722,51 @@ Context Conflict Detection Rate  & $>$ 80\% & 0\% & Đạt/Không \\ \hline
 Các nguyên nhân dẫn đến các trường hợp không đạt bao gồm: (i) sự thiếu hụt các mối quan hệ dẫn chiếu trong đồ thị tri thức, (ii) giới hạn về khả năng hiểu ngữ cảnh của mô hình ngôn ngữ lớn khi xử lý các câu hỏi có tình huống phức tạp, các câu hỏi nhiều ý hoặc (iii) việc phân loại các chủ đề pháp lý vẫn chưa đủ rõ ràng khiến router agent chọn sai retriever. Các hạn chế này sẽ là cơ sở quan trọng để đề xuất hướng cải thiện trong tương lai.
 
 \section{Triển khai}
-Sinh viên trình bày mô hình và/hoặc cách thức triển khai thử nghiệm/thực tế. Ứng dụng của sinh viên được triển khai trên server/thiết bị gì, cấu hình như thế nào. Kết quả triển khai thử nghiệm nếu có (số lượng người dùng, số lượng truy cập, thời gian phản hồi, phản hồi người dùng, khả năng chịu tải, các thống kê, v.v.)
+Hệ thống được đóng gói bằng Docker và triển khai trên nền tảng Render.com qua cơ chế Blueprint. 
+
+Bảng \ref{table:render_infra} liệt kê cấu hình các dịch vụ trên Render được lựa chọn cho hệ thống.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{6pt} % Tăng nhẹ khoảng cách cột cho thoáng vì đã bớt cột
+\begin{tabularx}{\textwidth}{|p{3cm}|X|p{3.5cm}|}
+\hline
+\textbf{Dịch vụ} & \textbf{Loại Render} & \textbf{Cấu hình} \\ \hline
+app (Chainlit) & Web Service (Standard) & 2 GB RAM / 1 vCPU \\ \hline
+neo4j & Private Service (Standard), Disk 5 GB & 2 GB RAM / 1 vCPU \\ \hline
+db & Managed PostgreSQL (Starter) & 256 MB shared, 1 GB storage \\ \hline
+\end{tabularx}
+\caption{Cấu hình hạ tầng triển khai ứng dụng trên Render}
+\label{table:render_infra}
+\end{table}
+
+Người dùng cũng có thể chạy ứng dụng trên máy bằng cách làm theo 2 bước sau đây:
+
+Bước 1: Cài đặt Docker Desktop phiên bản 24 trở lên trên máy phát triển, sau đó clone mã nguồn của hệ thống. Người dùng đặt tệp backup đồ thị được cung cấp và đặt vào thư mục deploy/neo4j/snapshots/.
+
+Bước 2: Sao chép tệp .env.example thành .env và điền OPENAI\_API\_KEY, GOOGLE\_API\_KEY, CHAINLIT\_AUTH\_SECRET (chuỗi ngẫu nhiên 32 ký tự). Khởi chạy ứng dụng bằng docker compose up -d -{}-build. Người dùng truy cập \url{http://localhost:8000} và bắt đầu sử dụng ứng dụng.
+
+% \textbf{Giai đoạn 3 -- Đẩy mã nguồn lên GitHub và tạo Blueprint trên Render.} Khởi tạo một repository riêng tư trên GitHub (không công khai do snapshot có thể chứa dữ liệu nội bộ), commit toàn bộ mã nguồn rồi push lên nhánh main. Tại bảng điều khiển Render, đăng nhập và liên kết tài khoản GitHub, chọn \textit{New $\rightarrow$ Blueprint $\rightarrow$ repository vừa tạo}. Render tự động đọc tệp render.yaml ở thư mục gốc, xác định ba dịch vụ cần khởi tạo và yêu cầu xác nhận trước khi triển khai.
+
+% \textbf{Giai đoạn 4 -- Cấu hình các biến môi trường bí mật.} Sau khi Blueprint được áp dụng, người dùng vào trang quản trị của dịch vụ app, mục \textit{Environment} và điền các biến môi trường bí mật theo Bảng \ref{table:render_secrets}. Các biến môi trường còn lại như NEO4J\_URI, DATABASE\_URL, NEO4J\_PASSWORD được Render tự động liên kết giữa các dịch vụ qua khai báo fromService và fromDatabase trong Blueprint, không cần thiết lập thủ công.
+
+% \begin{table}[H]
+% \centering
+% \small
+% \setlength{\tabcolsep}{5pt}
+% \begin{tabularx}{0.92\textwidth}{|p{5.2cm}|X|}
+% \hline
+% \textbf{Biến môi trường} & \textbf{Cách điền} \\ \hline
+% OPENAI\_API\_KEY & Dán khóa API lấy từ \url{https://platform.openai.com/api-keys} \\ \hline
+% GOOGLE\_API\_KEY & Dán khóa API Gemini lấy từ Google AI Studio, dùng cho mô hình embedding \\ \hline
+% CHAINLIT\_AUTH\_SECRET & Render tự sinh giá trị ngẫu nhiên, không cần chỉnh sửa \\ \hline
+% OAUTH\_GOOGLE\_\newline CLIENT\_ID/SECRET & (Tùy chọn) Khai báo trên Google Cloud Console nếu cần bật đăng nhập OAuth \\ \hline
+% \end{tabularx}
+% \caption{Các biến môi trường bí mật cần điền thủ công trên Render}
+% \label{table:render_secrets}
+% \end{table}
+
+% \textbf{Giai đoạn 5 -- Xác minh sau triển khai.} Render tiến hành build các image Docker và khởi chạy các dịch vụ trong khoảng năm đến mười phút. Người dùng theo dõi log của dịch vụ neo4j cho đến khi xuất hiện thông báo \textit{Database restored}, sau đó theo dõi log dịch vụ app đến khi xuất hiện thông báo \textit{Your app is available at}. Khi hoàn tất, hệ thống có thể truy cập công khai qua đường dẫn HTTPS https://[tên-app].onrender.com. Trong trường hợp cần sử dụng tên miền riêng, người dùng vào mục \textit{Settings $\rightarrow$ Custom Domains} của dịch vụ app, khai báo tên miền và cập nhật bản ghi CNAME tại nhà cung cấp DNS theo hướng dẫn của Render.
 
 \end{document}

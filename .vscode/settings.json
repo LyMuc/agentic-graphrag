@@ -42,6 +42,14 @@
   "latex-workshop.synctex.afterBuild.enabled": true,
   "latex-workshop.linting.chktex.enabled": false,
   "latex-workshop.linting.duplicateLabels.enabled": true,
+  "files.associations": {
+    "*.aux": "plaintext",
+    "*.log": "plaintext",
+    "*.blg": "plaintext",
+    "*.bcf": "plaintext",
+    "*.synctex.gz": "binary"
+  },
+  "latex-workshop.latex.watch.files.ignore": "**/*.aux,**/*.log,**/build/**",
   "files.exclude": {
     "**/data/viz_snapshots": true,
     "**/frontend/node_modules": true,

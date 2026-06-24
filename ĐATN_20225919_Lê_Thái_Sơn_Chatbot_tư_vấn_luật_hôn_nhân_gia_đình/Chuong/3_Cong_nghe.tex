@@ -25,6 +25,40 @@ Việc ứng dụng đồ thị tri thức giúp mô hình hóa mối quan hệ 
 
 Kiến trúc Agentic GraphRAG là sự kết hợp giữa mô hình RAG dựa trên tác nhân thông minh (Agentic RAG) và Đồ thị tri thức. Hệ thống phân rã các tác vụ tư vấn pháp lý thành các nhiệm vụ chuyên biệt nhỏ hơn như sau (i) Bộ định tuyến truy xuất (Router Agent): Phân tích đặc điểm và ý định của câu hỏi để quyết định kích hoạt các retrieval agents phù hợp. (ii) Các tác nhân truy xuất (Retrieval Agents): Đóng vai trò là trực tiếp truy xuất các vùng đồ thị tri thức chuyên biệt cho từng dạng câu hỏi để lấy về căn cứ pháp lý. (iii) Bộ đánh giá câu trả lời (Answer Critic): Kiểm tra ngữ cảnh được lấy về đã đủ để trả lời cho câu hỏi của người dùng chưa để tránh việc LLM bịa ra thông tin không có trong context để trả lời cho câu hỏi của người dùng (hallucination) (iv) Tác nhân trả lời câu hỏi của người dùng nhận vào context được truy xuất từ các Retrieval Agents để sinh câu trả lời cuối cùng cho người dùng \cite{bratanic2025essential}. 
 
+\section{Tập dữ liệu sử dụng}
+\label{section:3.2-dataset}
+
+Đồ án xây dựng đồ thị tri thức (Knowledge Graph) lưu trên Neo4j, bao gồm Luật Hôn nhân và gia đình số 52/2014/QH13 và các văn bản như sau: 
+\begin{enumerate}
+    \item Bộ luật Dân sự số 91/2015/QH13;
+    \item Bộ luật Hình sự số 100/2015/QH13;
+    \item Luật Cư trú số 68/2020/QH14;
+    \item Luật Hộ tịch số 60/2014/QH13;
+    \item Luật Hộ tịch số 03/2026/QH16;
+    \item Luật Nuôi con nuôi số 52/2010/QH12;
+    \item Luật Phòng, chống bạo lực gia đình số 13/2022/QH15;
+    \item Luật sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 12/2017/QH14;
+    \item Nghị quyết số 01/2024/NQ-HĐTP hướng dẫn áp dụng một số quy định của pháp luật trong giải quyết vụ việc về hôn nhân và gia đình;
+    \item Nghị quyết số 326/2016/UBTVQH14 quy định về mức thu, miễn, giảm, thu, nộp, quản lý và sử dụng án phí, lệ phí Tòa án;
+    \item Nghị định số 07/2025/NĐ-CP sửa đổi, bổ sung một số điều của các Nghị định trong lĩnh vực hộ tịch, quốc tịch, chứng thực;
+    \item Nghị định số 10/2015/NĐ-CP quy định về sinh con bằng kỹ thuật thụ tinh trong ống nghiệm và điều kiện mang thai hộ vì mục đích nhân đạo;
+    \item Nghị định số 120/2025/NĐ-CP quy định về phân định thẩm quyền của chính quyền địa phương 02 cấp trong lĩnh vực quản lý nhà nước của Bộ Tư pháp;
+    \item Nghị định số 123/2015/NĐ-CP quy định chi tiết một số điều và biện pháp thi hành Luật hộ tịch;
+    \item Nghị định số 126/2014/NĐ-CP quy định chi tiết thi hành một số điều của Luật Hôn nhân và gia đình;
+    \item Nghị định số 144/2021/NĐ-CP quy định xử phạt vi phạm hành chính trong lĩnh vực an ninh, trật tự, an toàn xã hội; phòng, chống tệ nạn xã hội; phòng cháy, chữa cháy; cứu nạn, cứu hộ; phòng, chống bạo lực gia đình;
+    \item Nghị định số 207/2025/NĐ-CP quy định về sinh con bằng kỹ thuật hỗ trợ sinh sản và điều kiện mang thai hộ vì mục đích nhân đạo;
+    \item Nghị định số 282/2025/NĐ-CP quy định xử phạt vi phạm hành chính trong lĩnh vực an ninh, trật tự, an toàn xã hội; phòng, chống tệ nạn xã hội; phòng, chống bạo lực gia đình;
+    \item Nghị định số 98/2016/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 10/2015/NĐ-CP quy định về sinh con bằng kỹ thuật thụ tinh trong ống nghiệm và điều kiện mang thai hộ vì mục đích nhân đạo;
+    \item Nghị định số 82/2020/NĐ-CP quy định xử phạt vi phạm hành chính trong lĩnh vực bổ trợ tư pháp; hành chính tư pháp; hôn nhân và gia đình; thi hành án dân sự; phá sản doanh nghiệp, hợp tác xã;
+    \item Thông tư số 04/2020/TT-BTP quy định chi tiết thi hành một số điều của Luật hộ tịch và Nghị định số 123/2015/NĐ-CP quy định chi tiết một số điều và biện pháp thi hành Luật hộ tịch;
+    \item Thông tư liên tịch số 01/2016/TTLT-TANDTC-VKSNDTC-BTP hướng dẫn thi hành một số quy định của Luật hôn nhân và gia đình.
+\label{subsection:3.2-dataset-legal-list}
+\end{enumerate}
+
+Các văn bản được bóc tách nội dung của các điều, với mỗi điều chi tiết tới từng điểm thuộc điều. Đồng thời, đồ thị cũng mô hình hóa các quan hệ pháp lý giữa các điều khoản thuộc các văn bản (tham chiếu, hướng dẫn, sửa đổi, bổ sung, thay thế, bãi bỏ, mâu thuẫn) nhằm phục vụ truy xuất căn cứ pháp lý theo thời gian hiệu lực và đưa ra các cảnh báo về hiệu lực, mâu thuẫn.
+
+Ngoài tập văn bản phục vụ truy xuất, đồ án xây dựng bộ testcase gồm 600 cặp câu hỏi--câu trả lời pháp lý làm căn cứ đánh giá chất lượng chatbot. Dữ liệu thô được thu thập tự động từ chuyên mục "Hỏi đáp pháp luật" trên cổng Thư viện Pháp luật \footnote{https://thuvienphapluat.vn/hoi-dap-phap-luat/} với các bài tư vấn được tổ chức theo chủ đề như điều kiện kết hôn, đăng ký kết hôn, chế độ tài sản vợ chồng, ly hôn, cấp dưỡng...
+
 \section{Hệ quản trị cơ sở dữ liệu}
 \label{section:3.2}
 
@@ -96,6 +130,7 @@ Chainlit chịu trách nhiệm xây dựng giao diện chatbot và đồng thờ
 Các giải pháp thay thế để xây dựng ứng dụng chatbot có thể kể đến là Streamlit. Tuy vậy, Streamlit sử dụng cơ chế rerun toàn bộ Python script mỗi khi trạng thái widget thay đổi \cite{StreamlitDoc}, gây khó khăn cho việc hiển thị luồng suy luận của các agent. Mặt khác, Chainlit sử dụng kiến trúc dựa trên WebSocket, hỗ trợ mặc định cấu trúc hiển thị phân cấp các Agent Steps, tích hợp sẵn phần quản lý xác thực (Oauth) và các chức năng cơ bản khác của chatbot, giúp tiết kiệm thời gian phát triển chatbot.
 
 \section{Thư viện RAGAS đánh giá các hệ thống RAG}
+\label{section:3.5}
 
 RAGAS (Retrieval-Augmented Generation Assessment) \cite{RAGASDoc} là một framework đánh giá thực nghiệm chuyên sâu cho hệ thống RAG, sử dụng năng lực của các mô hình LLM tiên tiến đóng vai trò làm trọng tài (LLM-as-a-judge) để tính toán các chỉ số chất lượng dữ liệu.
 
@@ -103,4 +138,31 @@ RAGAS (Retrieval-Augmented Generation Assessment) \cite{RAGASDoc} là một fram
 RAGAS trực tiếp giải quyết yêu cầu kiểm thử khả năng đưa ra các câu trả lời chính xác với đầy đủ các căn cứ pháp lý, vốn là một khó khăn đối với các chatbot hiện hành theo như khảo sát nêu tại mục \ref{subsection:2.4.3}). Thư viện thực hiện tính toán tự động ba chỉ số cốt lõi: độ phủ ngữ cảnh (Context Recall), độ trung thực không ảo giác (Faithfulness) và độ chính xác câu trả lời (Answer Correctness) trên bộ testcase 600 câu hỏi.
 
 Các Giải pháp thay thế có thể kể đến như DeepEval hoặc đánh giá thủ công nhờ luật sư. Phương pháp đánh giá thủ công mang có độ tin cậy cao nhưng tốn kém chi phí và thời gian lớn nên khó có thể thực hiện lặp lại mỗi khi hệ thống thực hiện các sửa đổi, cải tiến. RAGAS mang lại một quy trình đánh giá tự động hóa, phù hợp với việc đánh giá bộ câu hỏi benchmark dataset lớn gồm 600 câu.
+
+\section{Các API mô hình ngôn ngữ lớn được sử dụng}
+\label{section:3.7}
+
+Đồ án sử dụng các API mô hình ngôn ngữ lớn như được trình bày tại bảng \ref{table:llm-api}
+
+\begin{table}[H]
+\centering
+\caption{Các API LLM được sử dụng trong ứng dụng}
+\label{table:llm-api}
+\begin{tabular}{|p{2.7cm}|p{3.0cm}|p{8.0cm}|}
+\hline
+\textbf{Provider} & \textbf{Model} & \textbf{Vai trò} \\ \hline
+OpenAI & gpt-4o& Sử dụng cho Router Agent, phân tích câu hỏi và lịch sử hội thoại, sau đó sử dụng cơ chế tool calling để lựa chọn một hoặc nhiều công cụ truy xuất phù hợp. \\ \hline
+OpenAI & gpt-4o& Sử dụng cho các Retrieval Agents để phân loại Cypher template và trích xuất các tham số trước khi thực hiện truy vấn Neo4j. \\ \hline
+OpenAI & gpt-4.1 & Sinh câu trả lời cuối cùng \\ \hline
+Google & gemini-2.5-flash & Làm LLM-as-a-judge cho RAGAS. \\ \hline
+\end{tabular}
+\end{table}
+
+% \texttt{gpt-4o} được lựa chọn cho Router Agent vì hỗ trợ cơ chế gọi công cụ và trả về danh sách tool call có cấu trúc. Router không trực tiếp trả lời câu hỏi pháp lý mà chỉ quyết định retriever nào cần được kích hoạt. Cách phân tách này giúp giới hạn phạm vi suy luận của Router, đồng thời cho phép một câu hỏi phức hợp kích hoạt nhiều công cụ truy xuất khi cần thiết.
+
+% \texttt{o3} được sử dụng ở tầng truy xuất với nhiệt độ bằng 0 để giảm tính ngẫu nhiên. Tại mỗi Retrieval Agent, mô hình thực hiện hai tác vụ chính gồm lựa chọn mẫu truy vấn phù hợp và trích xuất các thực thể, tham số pháp lý từ câu hỏi. Kết quả được ràng buộc bởi lược đồ Pydantic trước khi điền vào Cypher template, nhờ đó hạn chế việc mô hình sinh trực tiếp câu lệnh Cypher không hợp lệ hoặc đưa ra giá trị nằm ngoài miền cho phép.
+
+% \texttt{gpt-4.1} đảm nhiệm bước sinh câu trả lời cuối cùng. Đầu vào của mô hình gồm câu hỏi người dùng, lịch sử hội thoại đã được giới hạn và phần ngữ cảnh pháp lý được chuẩn hóa từ Neo4j. Mô hình được yêu cầu chỉ sử dụng căn cứ có trong ngữ cảnh, giữ đúng cấu trúc Điều--Khoản--Điểm và trình bày thông tin hiệu lực của từng văn bản được viện dẫn. Phản hồi được truyền theo cơ chế streaming để giảm thời gian chờ cảm nhận trên giao diện Chainlit.
+
+% Đối với quá trình đánh giá, \texttt{gemini-2.5-flash} được sử dụng độc lập với ba mô hình vận hành nêu trên. Khi chạy RAGAS \cite{RAGASDoc}, mô hình nhận câu hỏi, câu trả lời tham chiếu, câu trả lời do hệ thống sinh và ngữ cảnh truy xuất để thực hiện vai trò LLM-as-a-judge. Việc tách mô hình đánh giá khỏi các mô hình tạo đầu ra giúp giảm hiện tượng mô hình tự ưu tiên phong cách trả lời của chính nó, đồng thời bảo đảm quá trình chấm điểm không ảnh hưởng đến luồng phục vụ người dùng.
 \end{document}
