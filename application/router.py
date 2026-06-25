@@ -32,6 +32,17 @@ def _render_retriever_contexts_for_ui(contexts: Iterable[Any]) -> str:
 
 _EXCLUSIVE_DIRECT_TOOLS = {"clarify", "respond"}
 
+RETRIEVER_QUERY_PARAM_DESCRIPTION = (
+    "Câu hỏi của người dùng. MẶC ĐỊNH copy NGUYÊN VĂN toàn bộ câu hỏi user "
+    "vừa nhập trong lượt hiện tại. Chỉ được thay đại từ tham chiếu "
+    "(anh ấy, cô ấy, họ, nó, cái đó, trường hợp đó, vậy, như vậy, vậy thì, "
+    "thế thì) hoặc ellipsis follow-up (ví dụ 'Còn X thì sao?') bằng chủ thể "
+    "tương ứng từ lịch sử khi câu hỏi là follow-up. KHÔNG paraphrase, KHÔNG "
+    "tóm tắt, KHÔNG tách thành sub-question, KHÔNG bỏ chi tiết tình huống. "
+    "Khi gọi nhiều retriever trong cùng lượt, mọi retriever nhận query GIỐNG "
+    "HỆT NHAU."
+)
+
 
 tool_picker_prompt = """
 Bạn là một hệ thống định tuyến (Router Agent) thông minh.
@@ -43,7 +54,11 @@ QUY TẮC BẮT BUỘC (CRITICAL RULES):
    - Công cụ cho BỐI CẢNH/TIỀN ĐỀ pháp lý của câu hỏi (ví dụ: tình trạng hôn nhân, quan hệ pháp lý đang tồn tại).
    - Công cụ cho NỘI DUNG CHÍNH mà người dùng muốn biết (ví dụ: quyền, nghĩa vụ, hậu quả pháp lý).
 3. KHÔNG gọi cùng 1 tool nhiều lần.
-4. GIẢI THAM CHIẾU FOLLOW-UP: Với MỖI tool, tham số `query` phải là một câu hỏi ĐỘC LẬP, đầy đủ chủ thể, đối tượng, tình tiết và thời gian lấy từ lịch sử. Không để đại từ mơ hồ như "nó", "cái đó", "trường hợp trên" trong `query`.
+4. THAM SỐ `query` — GIỮ NGUYÊN VĂN, CHỈ RESOLVE PRONOUN KHI FOLLOW-UP:
+   - MẶC ĐỊNH: tham số `query` cho MỌI tool được chọn PHẢI là TOÀN BỘ câu hỏi gốc của user trong lượt hiện tại, copy nguyên văn. Không paraphrase, không tóm tắt, không bỏ chi tiết, không tách thành sub-question.
+   - CHỈ SỬA KHI FOLLOW-UP CÓ PRONOUN/ANAPHORA: nếu câu hỏi hiện tại chứa đại từ tham chiếu (anh ấy, cô ấy, họ, nó, cái đó, trường hợp đó, vậy, như vậy, vậy thì, thế thì) HOẶC ellipsis kiểu "Còn X thì sao?", chỉ được thay phần đại từ/ellipsis đó bằng cụm danh từ tương ứng từ lịch sử gần. Giữ nguyên phần còn lại của câu.
+   - CẤM: tóm tắt nhiều vế thành một vế; chia một câu thành nhiều query khác nhau cho các retriever; thêm tình tiết LLM tự suy ra; bỏ kịch bản tình huống user mô tả.
+   - NHIỀU RETRIEVER → CÙNG MỘT `query`: khi gọi nhiều retriever cho cùng một lượt, tất cả nhận `query` GIỐNG HỆT NHAU. Phân biệt retriever bằng `name`, không bằng cách viết query khác nhau.
 5. TÁI SỬ DỤNG CONTEXT: Chỉ đặt `context_action="reuse"` khi BỘ NHỚ RETRIEVAL có `context_ref` của ĐÚNG retriever, cùng mốc thời gian và câu follow-up không mở thêm vấn đề pháp lý cần căn cứ mới. Nếu không chắc chắn, đặt `context_action="retrieve"`.
 6. THỜI GIAN: Đặt `time_scope="current"` nếu người dùng hỏi luật hiện tại; `time_scope="explicit"` và điền `target_date` nếu có mốc cụ thể; `time_scope="ambiguous"` nếu mốc thời gian không thể xác định.
 7. HỎI LÀM RÕ: Chỉ dùng `clarify` khi lịch sử gần và chỉ mục lượt cũ vẫn dẫn đến từ hai cách hiểu hợp lý trở lên. Không dùng `clarify` chỉ vì thiếu tình tiết mà có thể trả lời theo các trường hợp.
@@ -52,29 +67,36 @@ QUY TẮC BẮT BUỘC (CRITICAL RULES):
 
 Ví dụ tư duy:
 
-Ví dụ 1 (NHIỀU Ý HỎI):
+Ví dụ 1 (NHIỀU Ý HỎI — chọn nhiều tool, query NGUYÊN VĂN):
 - Câu hỏi: "Tôi là nam năm nay 18 tuổi thì có được kết hôn không? Và tôi có quyền được yêu cầu hủy kết hôn trái pháp luật của bố mẹ tôi không?"
-- Ý 1: Hỏi về độ tuổi kết hôn (Nam 18 tuổi) -> Dùng công cụ `dieu_kien_ket_hon`
-- Ý 2: Hỏi về quyền yêu cầu hủy kết hôn trái pháp luật -> Dùng công cụ `ket_hon_trai_phap_luat`
-=> BẠN PHẢI GỌI CẢ 2 CÔNG CỤ NÀY.
+- Tool: `dieu_kien_ket_hon`, `ket_hon_trai_phap_luat`
+- `query` cho CẢ HAI tool = nguyên văn toàn bộ câu hỏi trên. KHÔNG tách, KHÔNG tóm tắt.
 
-Ví dụ 2 (MỘT Ý HỎI nhưng CẦN NHIỀU BỐI CẢNH PHÁP LÝ):
+Ví dụ 2 (MỘT Ý HỎI, NHIỀU BỐI CẢNH PHÁP LÝ — query NGUYÊN VĂN):
 - Câu hỏi: "Không đăng ký kết hôn người cha có nghĩa vụ cấp dưỡng cho con không?"
-- Bối cảnh pháp lý: "Không đăng ký kết hôn" -> liên quan đến quy định về chung sống như vợ chồng -> Dùng công cụ `chung_song_nhu_vo_chong`
-- Nội dung chính: "nghĩa vụ cấp dưỡng cho con" -> Dùng công cụ `cap_duong`
-=> BẠN PHẢI GỌI CẢ 2 CÔNG CỤ NÀY để có đầy đủ căn cứ pháp lý cho câu trả lời.
+- Tool: `chung_song_nhu_vo_chong`, `cap_duong`
+- `query` cho CẢ HAI tool = nguyên văn toàn bộ câu hỏi trên.
 
-Ví dụ 3 (MỘT Ý HỎI nhưng CẦN NHIỀU BỐI CẢNH PHÁP LÝ):
+Ví dụ 3 (MỘT Ý HỎI, NHIỀU BỐI CẢNH PHÁP LÝ — query NGUYÊN VĂN):
 - Câu hỏi: "Vợ có được chia nhà đất mà chỉ chồng đứng tên khi ly hôn không?"
-- Bối cảnh pháp lý: Cần xác định việc chỉ một người đứng tên có làm nhà đất là tài sản riêng hay vẫn là tài sản chung -> Dùng công cụ `che_do_tai_san_cua_vo_chong`.
-- Nội dung chính: Hỏi tài sản đó có được chia và chia thế nào khi ly hôn -> Dùng công cụ `chia_tai_san_sau_ly_hon`.
-=> THƯỜNG PHẢI GỌI CẢ 2 CÔNG CỤ. Cách chọn này đặc biệt phù hợp khi câu hỏi có tình tiết về thời điểm tạo lập tài sản, nguồn tiền, người đứng tên, tặng cho hoặc thừa kế. Tuy nhiên, không phải mọi câu hỏi chia tài sản sau ly hôn đều bắt buộc gọi công cụ chế độ tài sản; nếu tính chất tài sản đã rõ và câu hỏi chỉ hỏi trực tiếp quy tắc chia thì có thể chỉ gọi `chia_tai_san_sau_ly_hon`.
+- Tool: thường `che_do_tai_san_cua_vo_chong` và `chia_tai_san_sau_ly_hon` (hoặc chỉ `chia_tai_san_sau_ly_hon` nếu tính chất tài sản đã rõ)
+- `query` cho mọi tool được chọn = nguyên văn toàn bộ câu hỏi trên.
 
-Ví dụ 4 (MỘT Ý HỎI nhưng CẦN NHIỀU BỐI CẢNH PHÁP LÝ):
+Ví dụ 4 (MỘT Ý HỎI, NHIỀU BỐI CẢNH PHÁP LÝ — query NGUYÊN VĂN):
 - Câu hỏi: "Trong thời kỳ hôn nhân chồng tôi vay tiền làm ăn; sau ly hôn tôi có phải cùng trả khoản nợ đó không?"
-- Bối cảnh pháp lý: Cần xác định khoản nợ/nghĩa vụ là chung hay riêng của vợ chồng và người vợ có trách nhiệm liên đới phải trả nợ hay không -> Dùng 2 công cụ `che_do_tai_san_cua_vo_chong` và `dai_dien_trach_nhiem_vo_chong`.
-- Nội dung chính: Hỏi người vợ SAU LY HÔN có vẫn phải chịu nghĩa vụ trả nợ hay không -> Dùng công cụ `chia_tai_san_sau_ly_hon`.
-=> THƯỜNG PHẢI GỌI CẢ 3 CÔNG CỤ NÀY.
+- Tool: thường `che_do_tai_san_cua_vo_chong`, `dai_dien_trach_nhiem_vo_chong`, `chia_tai_san_sau_ly_hon`
+- `query` cho mọi tool được chọn = nguyên văn toàn bộ câu hỏi trên.
+
+Ví dụ 5 (CÂU DÀI CÓ KỊCH BẢN — query NGUYÊN VĂN, KHÔNG TÓM TẮT):
+- Câu hỏi: "Sau khi kết hôn, anh Thắng yêu cầu vợ là chị Huyền ở nhà nội trợ, chăm sóc con nhỏ và bố mẹ chồng già yếu. ... Hỏi: ý kiến mẹ chồng tài sản là của anh Thắng đúng/sai? Tài sản vợ chồng anh Thắng và chị Huyền được pháp luật quy định thế nào?"
+- Tool: `che_do_tai_san_cua_vo_chong`, `quyen_nghia_vu_vo_chong`
+- `query` cho CẢ HAI tool = nguyên văn TOÀN BỘ đoạn câu hỏi (kể cả kịch bản tình huống). KHÔNG tách thành sub-question theo từng retriever.
+
+Ví dụ 6 (FOLLOW-UP CÓ PRONOUN/ELLIPSIS — CHỈ RESOLVE PHẦN THAM CHIẾU):
+- Lượt trước: "Nam 18 tuổi có được kết hôn không?"
+- Lượt hiện tại: "Còn nữ thì sao?"
+- Tool: `dieu_kien_ket_hon`
+- `query` = "Nữ 18 tuổi có được kết hôn không?" (chỉ thay ellipsis "Còn nữ thì sao?" bằng câu hỏi tương đương đầy đủ, không thêm/bớt tình tiết).
 """
 
 
@@ -346,6 +368,8 @@ def _router_tool_descriptions(tools: dict[str, Any] | None = None) -> list[dict[
             "type": "string",
             "description": "Ngày YYYY-MM-DD hoặc năm YYYY khi time_scope=explicit.",
         }
+        if "query" in properties:
+            properties["query"]["description"] = RETRIEVER_QUERY_PARAM_DESCRIPTION
     return descriptions
 
 

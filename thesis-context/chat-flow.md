@@ -91,7 +91,7 @@ OLDER_TURN_INDEX_LIMIT=20
 KG_VERSION=<optional>
 ```
 
-`build_working_history` dùng token estimator cục bộ, không gọi API tóm tắt lịch sử. `application/query_updater.py` còn tồn tại nhưng luồng hiện tại trong `presentation/main.py` không gọi Query Updater; Router LLM tự giải tham chiếu follow-up bằng working history và anchor.
+`build_working_history` dùng token estimator cục bộ, không gọi API tóm tắt lịch sử. `application/query_updater.py` còn tồn tại nhưng luồng hiện tại trong `presentation/main.py` không gọi Query Updater; Router giữ nguyên văn câu hỏi user cho retriever, chỉ resolve pronoun/ellipsis khi follow-up.
 
 Một `retrieval_memory` entry gồm:
 
@@ -101,7 +101,7 @@ Một `retrieval_memory` entry gồm:
   "turn_id": "uuid",
   "thread_id": "chainlit-thread-id",
   "retriever_name": "dieu_kien_ket_hon",
-  "resolved_query": "câu hỏi độc lập đã giải nghĩa",
+  "resolved_query": "câu hỏi gửi retriever (nguyên văn hoặc đã resolve pronoun)",
   "encoded_contexts": ["LEGAL_CONTEXT_BUNDLE_V1:..."],
   "target_dates": ["2026-06-21"],
   "kg_version": "2026-06-21.1",
@@ -126,6 +126,8 @@ Nếu `KG_VERSION` không được cấu hình, `current_kg_version()` dùng ver
 ```
 
 Các field này bị loại khỏi args trước khi gọi retriever. Router chỉ nên đặt `context_action="reuse"` khi context cũ cùng retriever, cùng mốc thời gian và câu follow-up không mở thêm vấn đề pháp lý mới.
+
+**Chính sách `query`:** mặc định truyền nguyên văn toàn bộ câu hỏi user cho mọi retriever (cùng một `query` khi gọi nhiều retriever). Chỉ resolve pronoun/ellipsis khi follow-up (ví dụ "Còn nữ thì sao?", "anh ấy", "cái đó"); không paraphrase, không tóm tắt, không tách sub-question theo retriever.
 
 Direct tool hiện tại: `clarify`, `respond`, `text2cypher`. Trong đó `clarify` và `respond` là phản hồi trực tiếp/exclusive: nếu Router chọn một trong hai thì không chạy thêm retriever; `clarify` chỉ dùng khi follow-up còn từ hai cách hiểu hợp lý trở lên sau khi xét lịch sử gần và anchor.
 

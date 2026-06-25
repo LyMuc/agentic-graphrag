@@ -19,7 +19,6 @@ User message
 → build_working_history
 → Router LLM hiện có
 → resolved query + tool + cache controls
-→ RetrieverPolicy trên resolved query
 → deterministic reuse validation
 → reuse hoặc gọi retriever
 → merge context bằng LegalContextBundle
@@ -34,7 +33,7 @@ Mỗi retriever tool có các field tùy chọn:
 
 ```json
 {
-  "query": "Câu hỏi độc lập đã giải nghĩa",
+  "query": "Nguyên văn câu hỏi user (hoặc bản đã resolve pronoun nếu follow-up)",
   "context_action": "retrieve | reuse",
   "context_refs": ["..."],
   "time_scope": "current | explicit | ambiguous",
@@ -44,6 +43,14 @@ Mỗi retriever tool có các field tùy chọn:
 
 Control fields bị loại trước khi gọi retriever. Retriever chỉ nhận `query` và
 các business argument vốn có.
+
+### Chính sách `query` (verbatim-unless-followup)
+
+Router mặc định truyền **nguyên văn toàn bộ** câu hỏi user trong lượt hiện tại
+cho mọi retriever được chọn (cùng một `query` khi gọi nhiều retriever). Chỉ
+khi câu hỏi là follow-up có đại từ tham chiếu hoặc ellipsis (ví dụ "Còn nữ thì
+sao?", "anh ấy", "cái đó") thì Router được phép thay phần tham chiếu bằng chủ
+thể từ lịch sử — không paraphrase, không tóm tắt, không tách sub-question.
 
 ## Retrieval memory
 

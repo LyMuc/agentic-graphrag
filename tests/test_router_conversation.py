@@ -3,9 +3,11 @@ from __future__ import annotations
 from copy import deepcopy
 
 from application.router import (
+    RETRIEVER_QUERY_PARAM_DESCRIPTION,
     _evaluate_tool_calls_policy,
     _router_tool_descriptions,
     _tool_function_args,
+    tool_picker_prompt,
 )
 from adapter.direct_tools import clarify_question
 
@@ -49,7 +51,39 @@ def test_router_schema_adds_controls_without_mutating_registry():
 
     assert "context_action" in properties
     assert "context_refs" in properties
+    assert properties["query"]["description"] == RETRIEVER_QUERY_PARAM_DESCRIPTION
     assert tools["dieu_kien_ket_hon"]["description"] == original
+
+
+def test_tool_picker_prompt_requires_verbatim_query_policy():
+    """Verify Router prompt instructs verbatim query unless follow-up pronoun."""
+
+    assert "GIỮ NGUYÊN VĂN" in tool_picker_prompt
+    assert "NHIỀU RETRIEVER → CÙNG MỘT `query`" in tool_picker_prompt
+    assert "Còn nữ thì sao?" in tool_picker_prompt
+    assert "KHÔNG tách thành sub-question" in tool_picker_prompt
+
+
+def test_function_args_fallback_to_raw_question_when_query_missing():
+    """Verify retriever receives raw user question when Router omits query."""
+
+    tools = {"dieu_kien_ket_hon": _tool_schema("dieu_kien_ket_hon")}
+    original = (
+        "Sau khi kết hôn, anh Thắng yêu cầu vợ là chị Huyền ở nhà nội trợ. "
+        "Hỏi: tài sản vợ chồng được pháp luật quy định thế nào?"
+    )
+    call = {
+        "name": "dieu_kien_ket_hon",
+        "args": {
+            "context_action": "retrieve",
+            "time_scope": "current",
+        },
+    }
+
+    function_args, resolved = _tool_function_args(tools, call, original)
+
+    assert resolved == original
+    assert function_args == {"query": original}
 
 
 def test_function_args_keep_resolved_query_and_strip_controls():
