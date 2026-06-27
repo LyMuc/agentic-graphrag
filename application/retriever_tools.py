@@ -10,8 +10,6 @@ from adapter.direct_tools import (
     answer_given_description,
     clarify_description,
     clarify_question,
-    text2cypher,
-    text2cypher_description,
 )
 from application.adapter_router_descriptions import ADAPTER_DESCRIPTION_SOURCES
 from application.retriever_catalog import PRIMARY_RETRIEVER_SPECS
@@ -39,10 +37,6 @@ def build_presentation_tools() -> dict[str, dict[str, Any]]:
         function = _load_retriever_callable(module_path, name)
         tools[name] = {"description": description, "function": function}
 
-    tools["text2cypher"] = {
-        "description": text2cypher_description,
-        "function": text2cypher,
-    }
     tools["respond"] = {
         "description": answer_given_description,
         "function": answer_given,

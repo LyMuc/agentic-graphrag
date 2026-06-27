@@ -10,7 +10,6 @@ Trọng tâm hiện tại: **Luật Hôn nhân và Gia đình** và các văn b�
 
 - **Agentic Router**: LLM phân tích câu hỏi (kể cả nhiều ý trong một câu), chọn **một hoặc nhiều** retriever phù hợp và chạy **song song**.
 - **GraphRAG theo domain**: Mỗi retriever có schema Cypher và danh sách Điều luật gợi ý riêng; hỗ trợ lọc theo **thời điểm sự kiện** (áp dụng luật tại thời điểm quá khứ nếu người dùng nêu).
-- **Text2Cypher dự phòng**: Retriever tổng quát khi không khớp domain cụ thể.
 - **Tổng hợp đáp án có kiểm soát**: Prompt phản hồi quy định cách trích dẫn Điều/Khoản/Điểm, thứ bậc văn bản, hiệu lực, văn bản sửa đổi và cảnh báo đa cấp pháp lý.
 - **Giao diện Chainlit**: Streaming câu trả lời, hiển thị từng bước (Router, Retriever, tổng hợp).
 - **Visualize đồ thị**: Sau mỗi câu trả lời từ retriever hỗ trợ trực quan hóa, link mở trang web riêng (Neo4j Browser-style) hiển thị node/quan hệ từ `Context_Tho` + lớp ngữ nghĩa.
@@ -29,11 +28,9 @@ Người dùng (Chainlit UI)
 presentation/main.py          ← Đăng ký tools, prompt, lifecycle
         │
         ├── application/router.py      ← Chọn tool (ROUTER_LLM)
-        ├── application/query_updater.py  ← (tùy chọn) làm rõ câu hỏi theo lịch sử
-        │
         ▼
 adapter/retrievers/*          ← Trích xuất Điều luật (RETRIEVER_LLM) → Cypher → Neo4j
-utils/general.py              ← text2cypher, answer_given
+adapter/direct_tools.py       ← clarify, respond (direct tools)
         │
         ▼
 adapter/config.py             ← Neo4j driver, LLM (Vercel AI Gateway)
@@ -45,10 +42,9 @@ LLM tổng hợp (RESPONSE_LLM)   ← Streaming câu trả lời cuối
 | Lớp | Thư mục | Vai trò |
 |-----|---------|---------|
 | **Presentation** | `presentation/` | Entry Chainlit, registry tools, OAuth, session |
-| **Application** | `application/` | Router, query updater |
-| **Adapter** | `adapter/` | Cấu hình Neo4j/LLM/DB, retriever theo chủ đề |
-| **Domain** | `domain/` | Schema DB (nếu dùng) |
-| **Utils** | `utils/` | Chuẩn hóa kết quả Cypher, text2cypher, tiện ích chung |
+| **Application** | `application/` | Router, retriever catalog, legal context |
+| **Adapter** | `adapter/` | Cấu hình Neo4j/LLM/DB, retriever theo chủ đề, direct tools |
+| **Utils** | `utils/` | Chuẩn hóa kết quả Cypher, tiện ích chung |
 
 ---
 
@@ -72,10 +68,10 @@ LLM tổng hợp (RESPONSE_LLM)   ← Streaming câu trả lời cuối
 | `dai_dien_trach_nhiem_vo_chong` | Đại diện, trách nhiệm vợ chồng |
 | `che_do_tai_san_cua_vo_chong` | Chế độ tài sản vợ chồng |
 | `xu_phat_vi_pham` | Xử phạt vi phạm hành chính |
-| `text2cypher` | Truy vấn đồ thị tổng quát |
-| `respond` | Trả lời không cần truy xuất (ít dùng) |
+| `clarify` | Hỏi lại khi câu follow-up còn mơ hồ |
+| `respond` | Trả lời trực tiếp / trò chuyện phiếm |
 
-Thêm retriever mới: tạo module trong `adapter/retrievers/`, khai báo `description` + hàm async, rồi đăng ký trong `presentation/main.py` (`tools` dict).
+Thêm retriever mới: tạo module trong `adapter/retrievers/`, khai báo `description` + hàm async; tool được đăng ký tự động qua `application/retriever_tools.py` (`build_presentation_tools()`).
 
 ---
 
@@ -195,12 +191,14 @@ không được lưu và không có lịch sử/Projects. Nút **Login** mở tr
 ├── presentation/main.py       # Entry Chainlit
 ├── application/
 │   ├── router.py              # Định tuyến tool
-│   └── query_updater.py         # Làm rõ câu hỏi theo lịch sử
+│   ├── retriever_catalog.py   # Catalog retriever + direct tools
+│   └── legal_context.py       # Hợp nhất/dedupe context pháp lý
 ├── adapter/
 │   ├── config.py                # Neo4j, LLM, DATABASE_URL
 │   ├── data_layer.py            # Chainlit ↔ PostgreSQL
+│   ├── direct_tools.py          # clarify, respond
 │   └── retrievers/              # Retriever theo chủ đề
-├── utils/                       # Chuẩn hóa context, text2cypher
+├── utils/                       # Chuẩn hóa context, tiện ích
 ├── benchmark_dataset/           # QA benchmark & script đánh giá
 │   ├── benchmark/               # Bộ câu hỏi gốc theo chủ đề
 │   ├── test_versions/           # Phiên bản test (JSON)
@@ -247,5 +245,4 @@ Các script khác: `build_test_version.py`, `build_grouped_benchmark.py`, `norma
 
 - Thiếu `VERCEL_AI_GATEWAY_API_KEY` → lỗi khi khởi tạo LLM.
 - Thiếu `DATABASE_URL` → chat vẫn chạy nhưng **không** lưu thread lâu dài (cảnh báo trong `adapter/data_layer.py`).
-- `query_update` theo lịch sử hiện **tắt** trong `main.py` (`updated_question = input_text`); có thể bật lại bằng cách gọi `query_update`.
 - Dữ liệu thô văn bản pháp luật nằm ở `data/`; đồ thị Neo4j cần được chuẩn bị/import riêng trước khi chạy chatbot.

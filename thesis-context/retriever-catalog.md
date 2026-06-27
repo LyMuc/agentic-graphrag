@@ -28,7 +28,7 @@ _Cập nhật lúc 2026-06-22 19:03 UTC_
 | `xac_dinh_cha_me_con` | `xac_dinh_cha_me_con` | `cha_me_con` | `adapter/retrievers/xac_dinh_cha_me_con.py` | `adapter/cypher_templates/xac_dinh_cha_me_con/` |
 | `xu_phat_vi_pham` | `xu_phat_vi_pham` | `vi_pham` | `adapter/retrievers/vi_pham/xu_phat_vi_pham.py` | `adapter/cypher_templates/xu_phat_vi_pham/` |
 
-**Direct tools (không qua retriever):** `clarify`, `respond`, `text2cypher`
+**Direct tools (không qua retriever):** `clarify`, `respond`
 
 Tổng retriever trong catalog: **20** (alias index: 21).
 

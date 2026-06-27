@@ -9,11 +9,6 @@ from chainlit import data as cl_data
 from chainlit.server import app
 import presentation.projects_api  # noqa: F401
 from presentation.viz_routes import register_viz_routes
-import presentation.compare_actions  # noqa: F401 — registers action callback
-from presentation.compare_actions import (
-    attach_compare_to_message,
-    restore_compare_actions_from_thread,
-)
 from presentation.guest_auth import guest_management_guard, router as guest_router
 from adapter.config import chat_stream
 from application.router import route_question_with_audit
@@ -328,7 +323,6 @@ async def on_chat_resume(thread: ThreadDict):
     cl.user_session.set("session_history", session_history)
     cl.user_session.set("retrieval_memory", retrieval_memory)
     cl.user_session.set("conversation_anchors", anchors)
-    await restore_compare_actions_from_thread(steps)
 
 
 def _viz_footer(tool_response: list) -> str:
@@ -504,7 +498,6 @@ async def main(message: cl.Message):
         if routing_metadata.get("retrieval_memory_entries") or routing_metadata.get("turn_anchor"):
             msg.metadata = routing_metadata
         await msg.send()
-        await attach_compare_to_message(msg, input_text, direct_answer + viz_extra)
         session_history.append({"role": "user", "content": input_text})
         session_history.append({"role": "assistant", "content": direct_answer + viz_extra})
         cl.user_session.set("session_history", session_history)
@@ -560,8 +553,6 @@ async def main(message: cl.Message):
         if legal_warnings:
             msg.metadata["legal_warnings"] = legal_warnings
     await msg.update()
-
-    await attach_compare_to_message(msg, input_text, llm_response)
 
     session_history.append({"role": "user", "content": input_text})
     session_history.append({"role": "assistant", "content": llm_response})

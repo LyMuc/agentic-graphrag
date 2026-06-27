@@ -25,7 +25,7 @@ User message
 → Response LLM hoặc direct clarify/respond
 ```
 
-Không có Query Updater và không có lượt LLM tóm tắt lịch sử.
+Lịch sử gần được rút gọn bằng `build_working_history`; không có lượt LLM tóm tắt lịch sử riêng.
 
 ## Router control fields
 

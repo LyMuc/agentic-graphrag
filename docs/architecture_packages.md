@@ -1,46 +1,39 @@
 # Kiến trúc Gói (Architecture Packages) - Agentic GraphRAG
 
-Tài liệu này mô tả chi tiết cấu trúc phân rã theo gói (packages) của dự án Chatbot tư vấn luật áp dụng **Clean Architecture** và **Domain-Driven Design (DDD)**. Hệ thống chia thành 5 lớp với quy tắc "Gói vòng ngoài gọi vào gói vòng trong", nhằm cô lập thư viện và logic nghiệp vụ.
+Tài liệu này mô tả chi tiết cấu trúc phân rã theo gói (packages) của dự án Chatbot tư vấn luật. Hệ thống chia thành 4 lớp chính với quy tắc "gói vòng ngoài gọi vào gói vòng trong", nhằm cô lập thư viện và logic nghiệp vụ.
 
 ## Sơ đồ phụ thuộc (Dependency)
-`presentation`, `adapter` --> `application` -> `domain`
+`presentation`, `adapter` --> `application`
 (Gói `utils` cung cấp tiện ích cho tất cả các gói).
 
 ---
 
 ## Chi tiết các Package
 
-### 1. `domain` (Lớp Lõi / Thực Thể)
-- **Mục đích:** Là linh hồn của hệ thống, chứa các định nghĩa lõi nhất. Không chứa logic gọi thư viện hay bất kì Database nào.
-- **Nhiệm vụ:**
-  - Định nghĩa cấu trúc Schema, Pydantic BaseModels (`db_schema.py` - chứa lược đồ CSDL).
-  - Đóng vai trò là Interface/Port cho các hệ thống vòng ngoài đăng ký theo dạng Contract (Hợp đồng).
-- **Phụ thuộc:** Đứng độc lập ở mức thấp nhất, không phụ thuộc vào bất cứ package nào.
-
-### 2. `application` (Lớp Ứng dụng / Use Case)
+### 1. `application` (Lớp Ứng dụng / Use Case)
 - **Mục đích:** Đóng vai trò điều phối luồng làm việc của Chatbot.
 - **Nhiệm vụ:** 
-  - Chứa bộ não Agentic Workflow: gồm việc phân tích câu hỏi (`query_updater.py`), chọn và định tuyến chức năng truy cập dữ liệu cần thiết dựa vào description của tools (`router.py`).
-  - Giao tiếp dữ liệu thông qua cấu trúc của `domain` do mình triệu gọi.
-- **Phụ thuộc:** Chỉ phụ thuộc vào `domain` và `utils`. Hoàn toàn không gọi chéo qua `presentation` hay gọi trực tiếp thư viện trong `adapter`.
+  - Chứa bộ não Agentic Workflow: Router chọn tool (`router.py`), catalog retriever (`retriever_catalog.py`), hợp nhất context pháp lý (`legal_context.py`).
+- **Phụ thuộc:** Phụ thuộc `utils`; không gọi trực tiếp Neo4j driver.
 
-### 3. `adapter` (Lớp Hạ tầng / Adapter)
-- **Mục đích:** Tương tác trực tiếp với các yếu tố thay đổi (Database, AI Model API, external framework). 
+### 2. `adapter` (Lớp Hạ tầng / Adapter)
+- **Mục đích:** Tương tác trực tiếp với Database, AI Model API và framework bên ngoài.
 - **Nhiệm vụ:**
-  - Kết nối Neo4j GrapDB (`config.py`), chuyển đổi Text sang Cypher GraphQL (`text2cypher.py`).
+  - Kết nối Neo4j GraphDB (`config.py`).
+  - Direct tools Chainlit: `clarify`, `respond` (`direct_tools.py`).
   - Kết nối PostgreSQL để tracking lịch sử (`data_layer.py`, `init_db.py`).
-  - Nơi cài đặt chi tiết cho các `retrievers` (vd: `retrievers/ket_hon`, `retrievers/vi_pham`). Do các file này trực tiếp gọi API và câu lệnh Cypher nên nó nằm tại lớp hạ tầng.
-- **Phụ thuộc:** Bắt buộc tuân thủ giao thức Interface từ `domain` đã cắm. Chịu phụ thuộc ở nhánh phụ để khởi tạo các service nếu cần chuyển giao tool. Không cho phép package khác gọi vào (trừ lúc khởi chạy App).
+  - Cài đặt chi tiết cho các `retrievers` và `cypher_templates` theo chủ đề pháp lý.
+- **Phụ thuộc:** Được `presentation` inject vào registry tool; không được các gói application gọi ngược trực tiếp ngoài luồng tool execution.
 
-### 4. `presentation` (Lớp Trình diễn / Giao diện & Controllers)
+### 3. `presentation` (Lớp Trình diễn / Giao diện & Controllers)
 - **Mục đích:** Giao tiếp với Client / Người dùng.
 - **Nhiệm vụ:**
-  - Cung cấp User Interface (Sử dụng Chainlit UI qua file `main.py`).
+  - Cung cấp User Interface (Chainlit UI qua `main.py`).
   - Chứa các Hooks bắt sự kiện hội thoại (on_chat_start, on_message).
-  - Đây cũng là khu vực Setup, tiến hành _Dependency Injection_ bằng cách load các adapter từ `adapter` và truyền (inject) vào logic luồng ở `application`. Do đó tránh cho hệ thống trực tiếp vướng gọi CSDL sau này.
-- **Phụ thuộc:** Gói này phụ thuộc vào `application` (để gọi run Use Case/Workflow) và `domain` (thao tác đối tượng DTOs/Data Types).
+  - Đăng ký 22 tool (20 retriever + `clarify` + `respond`) qua `build_presentation_tools()`.
+- **Phụ thuộc:** Gọi `application` để chạy Router/workflow và `adapter` qua registry tool.
 
-### 5. `utils` (Lớp Dùng Chung / Utilities)
-- **Mục đích:** Module độc quyền tái sử dụng mã (Reusability).
-- **Nhiệm vụ:** Khai thác các function và constant phổ quát (xử lý RegExp String như `utils.py`, hay các class cấu hình cơ sở `general.py`).
-- **Phụ thuộc:** Là thư viện trung gian thuần túy tiện ích, độc lập tuyệt tác không phụ thuộc logic gói nào, nhưng có quyền hỗ trợ tất cả các gói còn lại.
+### 4. `utils` (Lớp Dùng Chung / Utilities)
+- **Mục đích:** Module tái sử dụng mã thuần tiện ích.
+- **Nhiệm vụ:** Chuẩn hóa context pháp lý, helper string/regex, codec bundle (`legal_context_codec.py`).
+- **Phụ thuộc:** Không phụ thuộc logic gói nghiệp vụ; được mọi lớp khác import khi cần.

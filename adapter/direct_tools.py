@@ -1,6 +1,3 @@
-from adapter.text2cypher import Text2Cypher
-from adapter.config import driver
-
 answer_given_description = {
     "type": "function",
     "function": {
@@ -69,42 +66,3 @@ async def clarify_question(question: str, **kwargs):
     """
 
     return question
-
-text2cypher_description = {
-    "type": "function",
-    "function": {
-        "name": "text2cypher",
-        "description": "Truy vấn cơ sở dữ liệu đồ thị bằng câu hỏi của người dùng. Khi các công cụ khác không phù hợp, hãy sử dụng công cụ này làm phương án dự phòng (fallback).",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "query": {
-                    "type": "string",
-                    "description": "Câu hỏi của người dùng cần tìm câu trả lời",
-                }
-            },
-            "required": ["query"],
-        },
-    },
-}
-
-async def text2cypher(query: str, **kwargs):
-    """Sinh và thực thi Cypher fallback cho câu hỏi ngoài retriever chuyên biệt.
-
-    Args:
-        query: Câu hỏi độc lập đã được Router giải nghĩa.
-        **kwargs: Tham số điều khiển tùy chọn từ Router; bị bỏ qua.
-
-    Returns:
-        Danh sách record Neo4j dưới dạng dictionary, hoặc một phần tử chuỗi mô
-        tả lỗi Cypher khi truy vấn thất bại.
-    """
-    t2c = Text2Cypher(driver)
-    t2c.set_prompt_section("question", query)
-    cypher = await t2c.generate_cypher()
-    try:
-        records, _, _ = await driver.execute_query(cypher)
-        print('neo4j data:', [record.data() for record in records])
-        return [record.data() for record in records]
-    except Exception as e:
-        return [f"Câu lệnh {cypher} gây ra lỗi: {e}"]

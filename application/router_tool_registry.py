@@ -1,6 +1,6 @@
 """Lightweight tool descriptions for the Router LLM (no Chainlit, no retriever execution).
 
-Built from RETRIEVER_SPECS plus direct tools (clarify, respond, text2cypher).
+Built from RETRIEVER_SPECS plus direct tools (clarify, respond).
 Used by benchmark scripts that only need router output, not full chatbot runtime.
 """
 
@@ -34,28 +34,6 @@ RESPOND_DESCRIPTION: dict[str, Any] = {
     },
 }
 
-TEXT2CYPHER_DESCRIPTION: dict[str, Any] = {
-    "type": "function",
-    "function": {
-        "name": "text2cypher",
-        "description": (
-            "Truy vấn cơ sở dữ liệu đồ thị bằng câu hỏi của người dùng. "
-            "Khi các công cụ khác không phù hợp, hãy sử dụng công cụ này "
-            "làm phương án dự phòng (fallback)."
-        ),
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "query": {
-                    "type": "string",
-                    "description": "Câu hỏi của người dùng cần tìm câu trả lời",
-                }
-            },
-            "required": ["query"],
-        },
-    },
-}
-
 CLARIFY_DESCRIPTION: dict[str, Any] = {
     "type": "function",
     "function": {
@@ -81,7 +59,6 @@ CLARIFY_DESCRIPTION: dict[str, Any] = {
 DIRECT_TOOL_DESCRIPTIONS: dict[str, dict[str, Any]] = {
     "clarify": CLARIFY_DESCRIPTION,
     "respond": RESPOND_DESCRIPTION,
-    "text2cypher": TEXT2CYPHER_DESCRIPTION,
 }
 
 

@@ -24,7 +24,7 @@ Người dùng (frontend Chainlit)
 | Presentation | `presentation/` | Chainlit hooks, registry tools, OAuth/guest auth, project API |
 | Application | `application/` | Router, retriever catalog, policy helper/benchmark, conversation memory, legal context bundle |
 | Adapter | `adapter/` | Neo4j/LLM config, retrievers, cypher templates |
-| Utils | `utils/` | Text2cypher, chuẩn hóa context, tiện ích |
+| Utils | `utils/` | Chuẩn hóa context, tiện ích |
 
 ## Dữ liệu
 
@@ -39,12 +39,11 @@ Người dùng (frontend Chainlit)
 - Toàn bộ retriever đang sử dụng nằm trong `adapter/retrievers/`.
 - Mỗi retriever phân loại một hoặc nhiều Cypher template, trích xuất params cùng `thoi_diem_su_kien`, thực thi Neo4j và trả `Context_Tho`.
 - Router schema hiện có thêm `confidence_score`, `context_action`, `context_refs`, `time_scope`, `target_date` cho retriever; các field điều khiển bị loại trước khi gọi function thật.
-- Direct tool gồm `clarify`, `respond`, `text2cypher`; `clarify` và `respond` là phản hồi trực tiếp/exclusive.
+- Direct tool gồm `clarify`, `respond`; `clarify` và `respond` là phản hồi trực tiếp/exclusive.
 - Luồng chính hiện bỏ qua `RetrieverPolicy` filter trong `route_question_with_audit`; policy helper vẫn còn cho test/benchmark và tham khảo.
 - `retrieval_memory` lưu các `LegalContextBundle` đã encode theo `context_ref`; reuse chỉ được chấp nhận sau kiểm tra deterministic về thread, retriever, KG version và temporal scope.
 - Context từ nhiều retriever được đưa qua `process_context_strings` để merge/dedupe bundle theo căn cứ pháp lý trước khi render cho Response LLM.
 - Migration context đang ở trạng thái mixed-compatible: retriever dùng `encode_context_record` trả `LEGAL_CONTEXT_BUNDLE_V1`, retriever còn gọi `chuan_hoa_Context_cho_LLM` trả legacy text và được nối nguyên văn.
-- Fallback: `text2cypher` khi không khớp domain.
 
 ## Guest chat và quản lý hội thoại
 

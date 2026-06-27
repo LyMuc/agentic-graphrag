@@ -11,7 +11,7 @@
 
 - Code thực tế > mô tả cũ trong `.tex` nếu lệch nhau.
 - Chỉ sửa `.tex` khi được yêu cầu viết đồ án; không refactor codebase trừ khi được yêu cầu.
-- Với flow chat hiện tại: `presentation/main.py` không gọi `application/query_updater.py`; Router dùng `build_working_history`, `retrieval_memory`, `context_action/context_refs` và `LegalContextBundle`.
+- Với flow chat hiện tại: Router dùng `build_working_history`, `retrieval_memory`, `context_action/context_refs` và `LegalContextBundle`.
 - Guest chat dùng JWT `guest:<uuid>` và không persist thread/step/element vào PostgreSQL.
 
 ## LaTeX

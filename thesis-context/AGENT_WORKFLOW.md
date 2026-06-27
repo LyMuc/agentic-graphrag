@@ -26,7 +26,7 @@ Nguồn sự thật cho Cursor Agent, Codex (VS Code), và mọi prompt. Cập n
 - **Catalog / template / quan hệ / flags:** chạy `powershell -File scripts/sync-thesis-context.ps1` — không cập nhật tay các bảng AUTO trong `thesis-context/`.
 - **Chương 5 (.tex):** vẫn cần agent hoặc sinh viên (skill `sync-thesis-ch5`) — script không sửa LaTeX.
 - Chỉ sửa `.tex` khi nhiệm vụ là viết đồ án; không refactor codebase trừ khi được yêu cầu.
-- **Guest/chat memory/context dedupe:** đọc `chat-flow.md` trước; flow hiện tại dùng `retrieval_memory`, `conversation_anchors`, Router `confidence_score/context_action/context_refs` và `LegalContextBundle`. `application/query_updater.py` không nằm trong luồng hiện tại nếu `presentation/main.py` không gọi.
+- **Guest/chat memory/context dedupe:** đọc `chat-flow.md` trước; flow hiện tại dùng `retrieval_memory`, `conversation_anchors`, Router `confidence_score/context_action/context_refs` và `LegalContextBundle`.
 - **Không bịa** tên module, relationship Neo4j, flags — chỉ dùng tên có trong code hoặc `kg-schema.md`.
 - **Không** mô tả retriever trong `adapter/obsolete_retrievers/` (trừ khi ghi rõ legacy).
 - Thư mục **không** quét: `data/`, `extraction/`, `benchmark_dataset/benchmark/`, `public/chainlit-build/`.
@@ -51,7 +51,7 @@ Nguồn tóm tắt: `chat-flow.md`.
 - Guest chat: frontend gọi `/auth/guest`, backend tạo JWT `guest:<uuid>`, data layer không persist thread/step/element cho guest.
 - Conversation memory: `presentation/main.py` giữ `session_history`, `retrieval_memory`, `conversation_anchors`; resume thread đọc lại metadata bằng `restore_conversation_state`.
 - Router: mỗi retriever có metadata/control fields `confidence_score`, `context_action`, `context_refs`, `time_scope`, `target_date`; reuse phải qua `validate_reuse_request`.
-- Direct tool: `clarify`, `respond`, `text2cypher`; `clarify` và `respond` là phản hồi trực tiếp/exclusive.
+- Direct tool: `clarify`, `respond`; `clarify` và `respond` là phản hồi trực tiếp/exclusive.
 - `RetrieverPolicy` hiện là helper/test/benchmark; luồng chính trong `route_question_with_audit` đang bỏ qua policy filter.
 - Context merge/dedupe: `application/legal_context.py` xử lý `LEGAL_CONTEXT_BUNDLE_V1` theo `(target_date, is_user_provided_date)`, dedupe provision theo `id + amendment_id + effective_from + effective_until`, rồi render bằng `chuan_hoa_Context_cho_LLM`.
 - Trạng thái migration: một số retriever vẫn trả legacy text từ `chuan_hoa_Context_cho_LLM`; `process_context_strings` nối legacy nguyên văn và chỉ dedupe mạnh cho bundle.

@@ -30,31 +30,29 @@ Thay vì mô hình MVC thuần, hệ thống áp dụng Layered theo các lớp 
 2. **Application/Orchestration Layer (Điều phối)**
    - Thành phần: hàm điều phối pipeline trong `@cl.on_message`.
    - File chính: `main.py`
-   - Nhiệm vụ: điều phối chuỗi xử lý `query_update -> router -> tools/retrievers -> tổng hợp đáp án`.
+   - Nhiệm vụ: điều phối chuỗi xử lý `router -> tools/retrievers -> tổng hợp đáp án`.
 
 3. **Agent/Domain Service Layer (Nghiệp vụ pháp lý)**
    - Thành phần:
-     - Query Updater: `agents/query_updater.py`
-     - Router Agent: `agents/router.py`
-     - Text2Cypher Engine: `agents/text2cypher.py`
-     - Domain Retrievers: thư mục `retrievers/`
-   - Nhiệm vụ: hiểu ý định pháp lý, chọn công cụ phù hợp, tạo truy vấn và lấy đúng ngữ cảnh pháp lý.
+     - Router Agent: `application/router.py`
+     - Retriever catalog: `application/retriever_catalog.py`
+     - Domain Retrievers: `adapter/retrievers/` + `adapter/cypher_templates/`
+     - Direct tools: `adapter/direct_tools.py` (`clarify`, `respond`)
+   - Nhiệm vụ: hiểu ý định pháp lý, chọn công cụ phù hợp, thực thi Cypher template và lấy đúng ngữ cảnh pháp lý.
 
 4. **Data Access & adapter Layer (Dữ liệu - hạ tầng)**
    - Thành phần:
-     - Kết nối Neo4j + LLM: `config.py`
-     - Chainlit SQLAlchemy Data Layer (PostgreSQL): `data_layer.py`
-     - Truy vấn schema đồ thị: `db_schema.py`
+     - Kết nối Neo4j + LLM: `adapter/config.py`
+     - Chainlit SQLAlchemy Data Layer (PostgreSQL): `adapter/data_layer.py`
    - Nhiệm vụ: truy cập CSDL đồ thị pháp luật, lưu thread/steps lịch sử chat.
 
 ### 2.2. Luồng xử lý nghiệp vụ chính
 
 1. Người dùng nhập câu hỏi từ UI.
-2. `query_update` chuẩn hóa/làm rõ câu hỏi dựa trên lịch sử hội thoại.
-3. `route_question` dùng LLM tool-calling để chọn 1 hoặc nhiều retriever phù hợp.
-4. Retriever gọi `Text2Cypher` hoặc Cypher tĩnh để truy vấn Neo4j lấy căn cứ pháp lý.
-5. Hệ thống tổng hợp context và gọi LLM sinh câu trả lời cuối cùng.
-6. Dữ liệu hội thoại và các bước xử lý được lưu qua PostgreSQL data layer.
+2. Router (`application/router.py`) dùng LLM tool-calling để chọn một hoặc nhiều retriever, hoặc direct tool `clarify`/`respond`.
+3. Retriever thực thi Cypher template trên Neo4j và trả `Context_Tho` / `LEGAL_CONTEXT_BUNDLE_V1`.
+4. Hệ thống hợp nhất context qua `application/legal_context.py` và gọi LLM sinh câu trả lời cuối cùng.
+5. Dữ liệu hội thoại và các bước xử lý được lưu qua PostgreSQL data layer (user đăng nhập; guest không persist).
 
 ---
 
@@ -66,25 +64,20 @@ Thay vì mô hình MVC thuần, hệ thống áp dụng Layered theo các lớp 
   - Vai trò: entrypoint, quản lý session, tiếp nhận yêu cầu và hiển thị phản hồi.
 
 ### 3.2. Thành phần tương ứng lớp điều phối ứng dụng
-- `main.py` (hàm `main`)
-  - `query_update(...)` từ `agents/query_updater.py`
-  - `route_question(...)` từ `agents/router.py`
+- `presentation/main.py` (hàm `main`)
+  - `route_question_with_audit(...)` từ `application/router.py`
   - Vai trò: workflow orchestration của toàn bộ phiên hỏi đáp.
 
 ### 3.3. Thành phần tương ứng lớp nghiệp vụ/miền pháp lý
 - **Interface mức công cụ (tool contract)**: các biến `*_description` theo chuẩn function-calling JSON schema.
-  - Ví dụ: `dieu_kien_ket_hon_description`, `xu_phat_vi_pham_description`, `text2cypher_description`.
+  - Ví dụ: `dieu_kien_ket_hon_description`, `xu_phat_vi_pham_description`, `clarify_description`, `answer_given_description`.
 - **Các lớp/hàm triển khai nghiệp vụ cụ thể**:
-  - `dieu_kien_ket_hon(query)` trong `retrievers/ket_hon/dieu_kien_ket_hon.py`
-  - `dang_ky_ket_hon(query)` trong `retrievers/ket_hon/dang_ky_ket_hon.py`
-  - `ket_hon_trai_phap_luat(query)` trong `retrievers/ket_hon/ket_hon_trai_phap_luat.py`
-  - `chung_song_nhu_vo_chong(query)` trong `retrievers/ket_hon/chung_song_nhu_vo_chong.py`
-  - `xu_phat_vi_pham(query)` trong `retrievers/vi_pham/xu_phat_vi_pham.py`
-  - `Text2Cypher` class trong `agents/text2cypher.py`
+  - Retriever theo chủ đề trong `adapter/retrievers/`
+  - Direct tools `clarify_question`, `answer_given` trong `adapter/direct_tools.py`
 
 => Có thể xem tương đương tư duy “I + C1 + C2...” như sau:
 - **I (hợp đồng tool)**: `*_description` (mô tả tên, tham số, mục đích tool).
-- **C1..Cn (triển khai cụ thể)**: các hàm retriever và class `Text2Cypher`.
+- **C1..Cn (triển khai cụ thể)**: các hàm retriever và direct tool.
 
 ### 3.4. Thành phần tương ứng lớp dữ liệu
 - `config.py`: tạo `driver` Neo4j và hàm `chat(...)` kết nối LLM.

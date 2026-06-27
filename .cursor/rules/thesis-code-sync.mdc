@@ -13,6 +13,5 @@ alwaysApply: true
 - Code thực tế > mô tả cũ trong `.tex` nếu lệch nhau.
 - Không bịa tên module/relationship Neo4j.
 - Không mô tả `adapter/obsolete_retrievers/`.
-- Không coi `application/query_updater.py` là flow chính nếu `presentation/main.py` không gọi.
-- Router hiện có 20 retriever + direct tools `clarify`, `respond`, `text2cypher`; `clarify/respond` là direct response exclusive.
+- Router hiện có 20 retriever + direct tools `clarify`, `respond`; `clarify/respond` là direct response exclusive.
 - Không mô tả `RetrieverPolicy` là filter production bắt buộc nếu `route_question_with_audit` vẫn đang bypass policy.

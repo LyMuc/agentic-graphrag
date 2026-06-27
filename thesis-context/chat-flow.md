@@ -91,7 +91,7 @@ OLDER_TURN_INDEX_LIMIT=20
 KG_VERSION=<optional>
 ```
 
-`build_working_history` dùng token estimator cục bộ, không gọi API tóm tắt lịch sử. `application/query_updater.py` còn tồn tại nhưng luồng hiện tại trong `presentation/main.py` không gọi Query Updater; Router giữ nguyên văn câu hỏi user cho retriever, chỉ resolve pronoun/ellipsis khi follow-up.
+`build_working_history` dùng token estimator cục bộ, không gọi API tóm tắt lịch sử. Router giữ nguyên văn câu hỏi user cho retriever, chỉ resolve pronoun/ellipsis khi follow-up.
 
 Một `retrieval_memory` entry gồm:
 
@@ -129,7 +129,7 @@ Các field này bị loại khỏi args trước khi gọi retriever. Router ch�
 
 **Chính sách `query`:** mặc định truyền nguyên văn toàn bộ câu hỏi user cho mọi retriever (cùng một `query` khi gọi nhiều retriever). Chỉ resolve pronoun/ellipsis khi follow-up (ví dụ "Còn nữ thì sao?", "anh ấy", "cái đó"); không paraphrase, không tóm tắt, không tách sub-question theo retriever.
 
-Direct tool hiện tại: `clarify`, `respond`, `text2cypher`. Trong đó `clarify` và `respond` là phản hồi trực tiếp/exclusive: nếu Router chọn một trong hai thì không chạy thêm retriever; `clarify` chỉ dùng khi follow-up còn từ hai cách hiểu hợp lý trở lên sau khi xét lịch sử gần và anchor.
+Direct tool hiện tại: `clarify`, `respond`. Trong đó `clarify` và `respond` là phản hồi trực tiếp/exclusive: nếu Router chọn một trong hai thì không chạy thêm retriever; `clarify` chỉ dùng khi follow-up còn từ hai cách hiểu hợp lý trở lên sau khi xét lịch sử gần và anchor.
 
 Lưu ý trạng thái code hiện tại: `application/retriever_policy.py` và `_evaluate_tool_calls_policy` vẫn tồn tại cho helper/test/benchmark, nhưng `route_question_with_audit` trong luồng chính đang bỏ qua policy filter và chấp nhận các tool call đã loại trùng từ Router LLM. Vì vậy khi viết đồ án, không mô tả `RetrieverPolicy` là cổng lọc bắt buộc của production flow nếu chưa bật lại trong code.
 

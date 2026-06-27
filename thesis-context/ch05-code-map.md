@@ -2,7 +2,7 @@
 
 File đồ án: `ĐATN_20225919_Lê_Thái_Sơn_Chatbot_tư_vấn_luật_hôn_nhân_gia_đình/Chuong/5_Giai_phap_dong_gop.tex`
 
-**Quy mô hiện tại (2026-06):** **20 retriever** + 3 direct tool (`clarify`, `respond`, `text2cypher`); **20** `TemplateRegistry` trong `registry_index.py`. Bảng đầy đủ: `retriever-catalog.md`, `cypher-template-index.md` (chạy `sync-thesis-context.ps1` trước khi đối chiếu).
+**Quy mô hiện tại (2026-06):** **20 retriever** + 2 direct tool (`clarify`, `respond`); **20** `TemplateRegistry` trong `registry_index.py`. Bảng đầy đủ: `retriever-catalog.md`, `cypher-template-index.md` (chạy `sync-thesis-context.ps1` trước khi đối chiếu).
 
 ## §5.2 Legal reasoning (`section:5.2`)
 

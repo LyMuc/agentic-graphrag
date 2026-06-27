@@ -50,7 +50,7 @@ Phần này lần lượt trình bày: schema lớp pháp lý; thuật toán ki�
 % \textbf{Thành phần} & \textbf{Mô tả} \\ \hline
 % Đầu vào & Câu hỏi người dùng; danh sách retriever candidate do Router Agent trả về; điểm confidence\_score nếu Router Agent cung cấp; catalog trigger gồm required\_triggers và support\_triggers của từng retriever. \\ \hline
 % Đầu ra & Danh sách tool cuối cùng được phép chạy; danh sách tool bị loại và lý do loại; thông tin audit gồm candidate ban đầu, điểm tự tin, retriever được fallback nếu có. \\ \hline
-% Phạm vi & Chỉ đánh giá các retriever đã được Router Agent gọi; không tự thêm retriever mới ngoài candidate; không fallback cho tool không tồn tại trong catalog. Hai direct tool respond và text2cypher được giữ theo logic riêng vì không thuộc nhóm retriever miền. \\ \hline
+% Phạm vi & Chỉ đánh giá các retriever đã được Router Agent gọi; không tự thêm retriever mới ngoài candidate; không fallback cho tool không tồn tại trong catalog. Hai direct tool clarify và respond được giữ theo logic riêng vì không thuộc nhóm retriever miền. \\ \hline
 % \end{tabularx}
 % \caption{Đầu vào, đầu ra và phạm vi áp dụng của RetrieverPolicy}
 % \label{tab:retriever_policy_io}
@@ -196,7 +196,7 @@ Quy trình xây dựng mỗi miền tri thức gồm năm bước: (i)~khảo s�
 
 Luồng thực thi của một retriever gồm ba bước. Thứ nhất, LLM phân loại câu hỏi và chọn một hoặc nhiều template đã đăng ký; với retriever tài sản, danh sách lựa chọn bị giới hạn tối đa ba template và phần lớn câu hỏi chỉ chọn một. Thứ hai, hệ thống trích xuất tham số riêng của từng template cùng trường thoi\_diem\_su\_kien; các tác vụ trích xuất được thực hiện song song. Thứ ba, retriever truyền target\_date vào Cypher, thực thi các template và chuẩn hóa Context\_Tho trước khi đưa ngữ cảnh cho LLM sinh câu trả lời.
 
-Codebase hiện có 20 retriever, 20 TemplateRegistry và ba tool trực tiếp clarify, respond, text2cypher. Các tool trực tiếp không thuộc nhóm retriever theo schema miền. Trong phạm vi trình bày chi tiết dưới đây, đồ án tập trung vào retriever che\_do\_tai\_san\_cua\_vo\_chong như một trường hợp đại diện cho quy trình thiết kế schema miền và Cypher template.
+Codebase hiện có 20 retriever, 20 TemplateRegistry và hai tool trực tiếp clarify, respond. Các tool trực tiếp không thuộc nhóm retriever theo schema miền. Trong phạm vi trình bày chi tiết dưới đây, đồ án tập trung vào retriever che\_do\_tai\_san\_cua\_vo\_chong như một trường hợp đại diện cho quy trình thiết kế schema miền và Cypher template.
 
 \paragraph{Retriever che\_do\_tai\_san\_cua\_vo\_chong.}\mbox{}\\
 Retriever này xử lý chế độ tài sản trước và trong thời kỳ hôn nhân, không xử lý việc chia tài sản khi ly hôn. Đây là trường hợp ánh xạ đặc biệt: tên tool là che\_do\_tai\_san\_cua\_vo\_chong, còn khóa registry và thư mục template là tai\_san. Qua khảo sát các câu hỏi thuộc chủ đề chế độ tài sản của vợ chồng\footnote{https://thuvienphapluat.vn/hoi-dap-phap-luat/chu-de/che-do-tai-san-cua-vo-chong}, tài sản chung của vợ chồng\footnote{https://thuvienphapluat.vn/hoi-dap-phap-luat/chu-de/tai-san-chung-cua-vo-chong} và tài sản riêng của vợ chồng\footnote{https://thuvienphapluat.vn/phap-luat/tag/tai-san-rieng-cua-vo-chong}, miền này được chia thành tám template như Bảng~\ref{tab:intent_che_do_tai_san}.

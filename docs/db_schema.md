@@ -24,7 +24,7 @@ Lưu trữ thông tin người dùng hệ thống.
 ### 3. Bảng `steps` (Messages & Tracing)
 Đây là bảng **QUAN TRỌNG NHẤT** phục vụ mục đích Debug/Evaluation. Lưu trữ tin nhắn của User, Assistant, cũng như các hành động (Tool call, Router logic, LLM Prompt).
 - `id` (UUID): Khóa chính.
-- `name` (String): Tên bước (vd: `user`, `assistant`, `Query Updater`, `Khởi chạy Router`, `Truy vấn Điều kiện kết hôn`).
+- `name` (String): Tên bước (vd: `user`, `assistant`, `Router Agent`, `Retriever: ...`, `Tổng hợp đáp án`).
 - `type` (String): user_message, assistant_message, tool, llm, run.
 - `thread_id` (UUID): Foreign Key tới `threads`.
 - `parent_id` (UUID): ID của bước cha (giúp tạo dạng cây chain/suy nghĩ).
@@ -45,7 +45,5 @@ Lưu trữ đánh giá của người dùng (nếu bạn bật tính năng đán
 
 ---
 **Quy trình Mapping với Source Code:**
-1. Khi Agent **Query Updater** chạy: Ta tạo một `cl.Step(name="Query Updater", type="tool")`. Chainlit sẽ tự động INSERT 1 row vào bảng `steps` lưu lại câu hỏi ban đầu -> câu hỏi đã chuẩn hóa (output).
-2. Khi Tool **Router** chạy: Ta tạo `cl.Step(name="Router")`. Bảng `steps` ghi nhận Input (câu hỏi chuẩn hóa) -> Output (danh sách Retrievers được gọi).
-3. Các context pháp lý sinh từ Retriever sẽ chạy dưới danh nghĩa Step con của Router, lưu kết quả text vào `output`. 
-Việc này hoàn toàn tự động nhờ Chainlit Data Layer.
+1. Khi **Router** chạy: tạo `cl.Step` tương ứng; bảng `steps` ghi nhận input (câu hỏi + working history) và output (danh sách retriever/direct tool được gọi).
+2. Context pháp lý sinh từ retriever chạy dưới step con của Router, lưu kết quả vào `output`.

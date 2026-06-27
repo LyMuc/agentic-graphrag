@@ -18,16 +18,15 @@ Tài liệu mô tả cách các thành phần trong **Agentic GraphRAG Chatbot L
 ┌──────────────────────────────────────────────────────────────────────────┐
 │  presentation/main.py                                                    │
 │  • Chainlit hooks (@cl.on_message, @cl.on_chat_start, @cl.on_chat_resume)│
-│  • Registry tools (17 retriever + text2cypher + respond)                 │
+│  • Registry tools (20 retriever + clarify + respond)                     │
 │  • main_prompt → Response LLM stream                                     │
 └───────┬──────────────────┬─────────────────────┬───────────────────────┘
         │                  │                     │
         ▼                  ▼                     ▼
  application/         adapter/retrievers/*    adapter/config.py
  router.py            (domain retriever)      • Neo4j driver (Bolt)
- query_updater.py     utils/utils.py          • LLM (Vercel AI Gateway)
- (tắt mặc định)       utils/general.py        • DATABASE_URL
-                      (text2cypher)
+                      adapter/direct_tools.py • LLM (Vercel AI Gateway)
+                      utils/utils.py          • DATABASE_URL
         │                  │                     │
         ▼                  ▼                     ▼
  Vercel AI Gateway    Neo4j (Aura/local)    PostgreSQL
@@ -50,8 +49,7 @@ sequenceDiagram
     participant PG as PostgreSQL
 
     U->>CL: Gửi tin nhắn (cl.Message)
-    CL->>CL: Đọc session_history
-    Note over CL: Query Updater hiện bị tắt
+    CL->>CL: build_working_history(session_history)
     CL->>R: route_question(question, tools, session_history)
     R->>LLM_R: bind_tools + ainvoke (tool calling)
     LLM_R-->>R: tool_calls[] (1..n tool)
@@ -122,7 +120,7 @@ async def route_question(
 
 | Tham số | Kiểu | Mô tả |
 |---------|------|-------|
-| `question` | `str` | Câu hỏi đã làm rõ (hiện tại = nguyên văn input, vì Query Updater tắt) |
+| `question` | `str` | Câu hỏi người dùng (nguyên văn; Router tự xử lý follow-up qua working history) |
 | `tools` | `dict` | Registry từ `presentation/main.py`: `{ name: { description, function } }` |
 | `answers` | `list[dict]` | Lịch sử hội thoại, truyền vào prompt router |
 
@@ -210,12 +208,12 @@ Hầu hết retriever domain dùng cùng parameter:
 | `dai_dien_trach_nhiem_vo_chong` | `adapter/retrievers/quan_he_giua_vo_va_chong/dai_dien_trach_nhiem_vo_chong.py` | Đại diện, trách nhiệm vợ chồng |
 | `che_do_tai_san_cua_vo_chong` | `adapter/retrievers/quan_he_giua_vo_va_chong/che_do_tai_san_cua_vo_chong.py` | Chế độ tài sản vợ chồng |
 | `xu_phat_vi_pham` | `adapter/retrievers/vi_pham/xu_phat_vi_pham.py` | Xử phạt vi phạm hành chính |
-| `text2cypher` | `utils/general.py` | Truy vấn đồ thị tổng quát (fallback) |
-| `respond` | `utils/general.py` | Trả lời không cần truy xuất / trò chuyện phiếm |
+| `clarify` | `adapter/direct_tools.py` | Hỏi lại khi câu follow-up còn mơ hồ (exclusive) |
+| `respond` | `adapter/direct_tools.py` | Trả lời trực tiếp / trò chuyện phiếm (exclusive) |
 
 ### Tool đặc biệt
 
-**`text2cypher`** — parameter `query: str`; return `list[dict]` (raw Neo4j records) hoặc chuỗi lỗi, **không** qua `chuan_hoa_ket_qua_retriever`.
+**`clarify`** — parameter `question: str`; return câu hỏi làm rõ trực tiếp, không truy Neo4j.
 
 **`respond`** — parameter `answer: str`; return chuỗi trả lời trực tiếp, không truy Neo4j.
 
@@ -338,23 +336,7 @@ async def chat_stream(messages, **config) -> AsyncIterator[str]
 
 ---
 
-## 7. Query Updater (tùy chọn, hiện tắt)
-
-File: `application/query_updater.py`
-
-```python
-async def query_update(input: str, answers: list) -> str
-```
-
-| Input | Output |
-|-------|--------|
-| Câu hỏi gốc + `session_history` | Câu hỏi đã bổ sung ngữ cảnh (JSON `{"question": "..."}`) |
-
-Trong `presentation/main.py`, bước này **đang comment** — `updated_question = input_text`.
-
----
-
-## 8. Neo4j — giao tiếp đồ thị pháp luật
+## 7. Neo4j — giao tiếp đồ thị pháp luật
 
 File: `adapter/config.py`
 
@@ -430,15 +412,9 @@ RETURN { ... } AS Context_Tho
 | `can_cu_bo_tro` | Tham chiếu bổ trợ |
 | `quy_dinh_hien_hanh_doi_chieu` | ID văn bản thay thế (đối chiếu luật cũ) |
 
-### text2cypher (fallback)
-
-File: `utils/general.py` + `adapter/text2cypher.py`
-
-LLM sinh Cypher tự do từ câu hỏi → `driver.execute_query(cypher)` → trả raw records, không qua pipeline chuẩn hóa context.
-
 ---
 
-## 9. LLM Gateway — Vercel AI Gateway
+## 8. LLM Gateway — Vercel AI Gateway
 
 File: `adapter/config.py`
 
@@ -481,7 +457,7 @@ Giao thức: **OpenAI-compatible** (`langchain_openai.ChatOpenAI`).
 
 ---
 
-## 10. PostgreSQL — Chainlit Data Layer
+## 9. PostgreSQL — Chainlit Data Layer
 
 File: `adapter/data_layer.py`
 
@@ -523,7 +499,7 @@ Chainlit tự tạo schema khi khởi động lần đầu với `DATABASE_URL` 
 
 ---
 
-## 11. Luồng benchmark — programmatic interface
+## 10. Luồng benchmark — programmatic interface
 
 File: `benchmark_dataset/scripts/fill_test_answers.py`
 
@@ -560,7 +536,6 @@ row["chatbot_answer"] = answer
 | Entry point | `@cl.on_message` | `retrieve_context()` + `generate_answer()` |
 | Router | `route_question()` (có `cl.Step`) | `tool_choice()` + `execute_tool_call()` (không Step) |
 | Session history | Có — truyền vào router | Không — mỗi câu độc lập |
-| Query Updater | Tắt (`updated_question = input`) | Không dùng |
 | Response LLM | `chat_stream()` + UI stream | `chat_stream()` — gom token |
 | Persist | PostgreSQL (thread/steps) | Ghi file JSON |
 | Context lưu trữ | Trong step metadata | `row["context"]` = JSON raw `tool_response` |
@@ -573,7 +548,7 @@ python -m benchmark_dataset.scripts.fill_test_answers benchmark_dataset/test_ver
 
 ---
 
-## 12. Sơ đồ hợp đồng dữ liệu tổng hợp
+## 11. Sơ đồ hợp đồng dữ liệu tổng hợp
 
 ```text
 User Input (str)
@@ -606,24 +581,23 @@ PostgreSQL (threads, steps)  ← Chainlit Data Layer
 
 ---
 
-## 13. File tham chiếu
+## 12. File tham chiếu
 
 | File | Vai trò trong giao tiếp |
 |------|------------------------|
 | `presentation/main.py` | Chainlit hooks, tool registry, orchestration |
 | `application/router.py` | Router LLM + parallel tool execution |
-| `application/query_updater.py` | Làm rõ câu hỏi theo lịch sử (tắt) |
 | `adapter/config.py` | Neo4j driver, LLM builders, `chat_stream` |
 | `adapter/data_layer.py` | Chainlit ↔ PostgreSQL |
 | `adapter/retrievers/*` | Domain retriever + Cypher |
+| `adapter/direct_tools.py` | Direct tools `clarify`, `respond` |
 | `utils/utils.py` | `TrichXuatLuat`, `chuan_hoa_ket_qua_retriever` |
-| `utils/general.py` | `text2cypher`, `respond` |
 | `benchmark_dataset/scripts/fill_test_answers.py` | Programmatic interface (benchmark) |
 | `deploy.md` | Triển khai Docker, môi trường, truy cập |
 
 ---
 
-## 14. Ghi chú mở rộng
+## 13. Ghi chú mở rộng
 
 - **Thêm retriever mới:** Tạo module trong `adapter/retrievers/`, khai báo `{name}_description` + hàm async, đăng ký vào `tools` trong `presentation/main.py`.
 - **REST API cho bên thứ ba:** Hiện chưa có. Cần tách logic từ `route_question` + `chat_stream` ra service layer và bọc FastAPI nếu muốn expose HTTP.

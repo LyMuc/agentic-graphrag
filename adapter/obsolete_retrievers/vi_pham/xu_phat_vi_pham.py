@@ -1,4 +1,3 @@
-from adapter.text2cypher import Text2Cypher
 from adapter.config import driver, build_llm, RETRIEVER_LLM
 # Cấu hình Gemini (tạm comment): from adapter.config import driver, ainvoke_structured_retriever
 from utils.utils import TrichXuatLuat, chuan_hoa_ket_qua_retriever, lay_target_date_tu_extraction
