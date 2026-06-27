@@ -30,35 +30,8 @@ from application.conversation_context import (
 )
 from adapter.graph_viz import collect_viz_links
 from application.retriever_tools import build_presentation_tools
-from chainlit.input_widget import Switch
 from chainlit.types import ThreadDict
 from typing import Any, Dict, Optional
-
-EXPERT_MODE_SETTING_ID = "expert_mode"
-
-
-def _is_expert_mode() -> bool:
-    return bool(cl.user_session.get("expert_mode", False))
-
-
-def _apply_expert_mode_setting(settings: dict[str, Any]) -> None:
-    cl.user_session.set("expert_mode", settings.get(EXPERT_MODE_SETTING_ID, False))
-
-
-async def _send_chat_settings() -> None:
-    settings = await cl.ChatSettings(
-        [
-            Switch(
-                id=EXPERT_MODE_SETTING_ID,
-                label="Chế độ chuyên gia pháp lý",
-                initial=False,
-                description=(
-                    "Bật để xem luồng Router/Retriever và link visualize đồ thị tri thức."
-                ),
-            ),
-        ]
-    ).send()
-    _apply_expert_mode_setting(settings)
 
 app.middleware("http")(guest_management_guard)
 app.include_router(guest_router)
@@ -329,7 +302,6 @@ async def on_chat_start():
     cl.user_session.set("session_history", [])
     cl.user_session.set("retrieval_memory", {})
     cl.user_session.set("conversation_anchors", [])
-    await _send_chat_settings()
 
     user = cl.user_session.get("user")
     name = user.metadata.get("name") if user and user.metadata else "bạn"
@@ -338,10 +310,6 @@ async def on_chat_start():
 
     await cl.Message(content=f"Chào {name}, tôi là trợ lý ảo về Luật Hôn nhân và Gia đình Việt Nam. Tôi có thể giúp gì cho bạn?").send()
 
-
-@cl.on_settings_update
-async def on_settings_update(settings: dict[str, Any]):
-    _apply_expert_mode_setting(settings)
 
 @cl.on_chat_resume
 async def on_chat_resume(thread: ThreadDict):
@@ -360,9 +328,7 @@ async def on_chat_resume(thread: ThreadDict):
     cl.user_session.set("session_history", session_history)
     cl.user_session.set("retrieval_memory", retrieval_memory)
     cl.user_session.set("conversation_anchors", anchors)
-    cl.user_session.set("expert_mode", False)
     await restore_compare_actions_from_thread(steps)
-    await _send_chat_settings()
 
 
 def _viz_footer(tool_response: list) -> str:
@@ -376,8 +342,6 @@ def _viz_footer(tool_response: list) -> str:
         visualization snapshot is available.
     """
 
-    if not _is_expert_mode():
-        return ""
     base = os.environ.get("VIZ_BASE_URL", "").rstrip("/")
     links = collect_viz_links(tool_response)
     if not links:
@@ -432,9 +396,6 @@ async def _route_with_optional_steps(
         }
         return tool_response, router_policy, metadata
 
-    if not _is_expert_mode():
-        return await _route_and_update_memory()
-
     async with cl.Step(name="Luồng truy xuất ngữ cảnh") as p_step:
         async with cl.Step(name="Router Agent", type="tool") as step2:
             step2.input = f'Router Input: "{updated_question}"'
@@ -477,13 +438,10 @@ async def _stream_answer(
                 llm_response = fallback
                 await msg.stream_token(fallback)
 
-    if _is_expert_mode():
-        async with cl.Step(name="Tổng hợp đáp án", type="llm") as ans_step:
-            ans_step.input = "Context:\n" + contexts_text_for_llm
-            await _stream_tokens()
-            ans_step.output = llm_response
-    else:
+    async with cl.Step(name="Tổng hợp đáp án", type="llm") as ans_step:
+        ans_step.input = "Context:\n" + contexts_text_for_llm
         await _stream_tokens()
+        ans_step.output = llm_response
 
     return llm_response
 

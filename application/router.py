@@ -572,8 +572,6 @@ async def _execute_tool_call(
         updated_question,
     )
 
-    expert_mode = bool(cl.user_session.get("expert_mode", False))
-
     async def _run() -> Any:
         res = await function_to_call(**function_args)
         if isinstance(res, dict):
@@ -583,9 +581,6 @@ async def _execute_tool_call(
             if cache_fallback_reason:
                 res["cache_fallback_reason"] = cache_fallback_reason
         return res
-
-    if not expert_mode:
-        return await _run()
 
     async with cl.Step(name=f"Retriever: {tool_name}") as step:
         step.input = f"Tool Input: {function_args}"
@@ -645,8 +640,6 @@ async def _reuse_tool_call(
         "cache_status": "reused",
         "context_refs_used": context_refs,
     }
-    if not bool(cl.user_session.get("expert_mode", False)):
-        return result
 
     async with cl.Step(name=f"Retriever cache: {tool_name}") as step:
         step.input = {
