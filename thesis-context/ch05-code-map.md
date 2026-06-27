@@ -58,7 +58,7 @@ File đồ án: `ĐATN_20225919_Lê_Thái_Sơn_Chatbot_tư_vấn_luật_hôn_nh�
 
 - `application/router.py` — `route_question`, `tool_picker_prompt`
 - `application/retriever_catalog.py` — `RETRIEVER_SPECS` (**20** tool)
-- `application/retriever_policy.py` — policy helper/benchmark; luồng chính hiện bỏ qua policy filter trong `route_question_with_audit`
+- `retriever_policy/` — policy helper/benchmark (`evaluate_retriever_policy`, `evaluate_tool_calls_policy`); luồng chat production không gọi policy filter
 - `application/router_tool_registry.py` — schema tool cho LLM
 - Registry UI: `presentation/main.py`
 

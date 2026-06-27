@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from application.retriever_policy import PolicyCandidate, evaluate_retriever_policy
+from retriever_policy import PolicyCandidate, evaluate_retriever_policy
 
 
 DIVORCE_PROPERTY_QUESTION = (

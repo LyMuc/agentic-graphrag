@@ -13,11 +13,6 @@ from application.conversation_context import (
 )
 from application.legal_context import process_context_strings
 from application.retriever_catalog import DIRECT_TOOLS
-from application.retriever_policy import (
-    PolicyCandidate,
-    PolicyDecision,
-    evaluate_retriever_policy,
-)
 
 
 ROUTER_ONLY_ARGS = {"confidence_score"}
@@ -29,8 +24,6 @@ def _render_retriever_contexts_for_ui(contexts: Iterable[Any]) -> str:
     pipeline = process_context_strings(contexts)
     return pipeline.rendered_text or "Khong tim thay context phu hop."
 
-
-_EXCLUSIVE_DIRECT_TOOLS = {"clarify", "respond"}
 
 RETRIEVER_QUERY_PARAM_DESCRIPTION = (
     "Câu hỏi của người dùng. MẶC ĐỊNH copy NGUYÊN VĂN toàn bộ câu hỏi user "
@@ -185,51 +178,6 @@ def _with_router_confidence_schema(schema: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
-def _coerce_confidence_score(value: Any) -> float | None:
-    """Chuẩn hóa confidence_score trong tool call args về khoảng 0.0-1.0.
-
-    Args:
-        value: Giá trị thô do Router LLM trả về.
-
-    Returns:
-        Float đã clamp trong [0.0, 1.0], hoặc None nếu thiếu/không parse được.
-    """
-    if value is None:
-        return None
-    try:
-        score = float(value)
-    except (TypeError, ValueError):
-        return None
-    if score < 0.0:
-        return 0.0
-    if score > 1.0:
-        return 1.0
-    return score
-
-
-def _policy_candidates_from_tool_calls(tool_calls: list[dict[str, Any]]) -> list[PolicyCandidate]:
-    """Chuyển tool_calls thô của Router LLM thành PolicyCandidate.
-
-    Args:
-        tool_calls: Danh sách tool call do Router LLM trả về.
-
-    Returns:
-        Danh sách PolicyCandidate đã loại trùng tên tool, giữ thứ tự đầu tiên và
-        mang theo confidence_score hợp lệ nếu có.
-    """
-    candidates: list[PolicyCandidate] = []
-    for call in _unique_tool_calls(tool_calls):
-        name = _tool_call_name(call)
-        if not name:
-            continue
-        args = call.get("args", {})
-        confidence = None
-        if isinstance(args, dict):
-            confidence = _coerce_confidence_score(args.get("confidence_score"))
-        candidates.append(PolicyCandidate(name=name, confidence_score=confidence))
-    return candidates
-
-
 def _strip_router_only_args(args: dict[str, Any]) -> dict[str, Any]:
     """Loại metadata chỉ dùng cho router trước khi gọi function thật.
 
@@ -263,32 +211,8 @@ def _unique_tool_calls(tool_calls: list[dict[str, Any]]) -> list[dict[str, Any]]
     return unique_tool_calls
 
 
-def _build_policy_tool_calls(
-    llm_tool_calls: list[dict[str, Any]],
-    final_tools: list[str],
-) -> list[dict[str, Any]]:
-    """Build executable tool calls from policy output, giữ tên gốc từ router.
-
-    Args:
-        llm_tool_calls: Tool calls thô từ router LLM.
-        final_tools: Danh sách tên sau policy filter.
-
-    Returns:
-        Tool calls khớp final_tools, giữ nguyên args gốc nếu có.
-    """
-    by_name: dict[str, dict[str, Any]] = {}
-    for call in _unique_tool_calls(llm_tool_calls):
-        name = _tool_call_name(call)
-        by_name[name] = {**call, "name": name}
-
-    out: list[dict[str, Any]] = []
-    for tool_name in final_tools:
-        out.append(by_name.get(tool_name, {"name": tool_name, "args": {}}))
-    return out
-
-
 def _validate_registered_tools(tools: dict[str, Any], tool_calls: list[dict[str, Any]]) -> None:
-    """Ensure every policy-approved tool exists in the runtime registry.
+    """Ensure every router-selected tool exists in the runtime registry.
 
     Args:
         tools: Runtime tool registry.
@@ -309,7 +233,7 @@ def _validate_registered_tools(tools: dict[str, Any], tool_calls: list[dict[str,
     if missing:
         missing_list = ", ".join(sorted(set(missing)))
         raise RuntimeError(
-            "RetrieverPolicy selected tool(s) that are not registered in tools: "
+            "Router selected tool(s) that are not registered in tools: "
             f"{missing_list}. Register the corresponding retriever(s) before routing."
         )
 
@@ -427,110 +351,6 @@ def _tool_function_args(
     if _tool_accepts_query(tools, tool_name):
         function_args["query"] = resolved_query
     return function_args, resolved_query
-
-
-def _evaluate_tool_calls_policy(
-    question: str,
-    llm_tool_calls: list[dict[str, Any]],
-) -> PolicyDecision:
-    """Apply RetrieverPolicy independently to each resolved tool query.
-
-    Args:
-        question: Raw current user question for top-level audit metadata.
-        llm_tool_calls: Router tool calls containing per-tool resolved queries.
-
-    Returns:
-        Combined ``PolicyDecision``. Direct tools are retained unchanged while
-        each retriever is filtered against its own standalone ``args.query``.
-    """
-
-    unique_calls = _unique_tool_calls(llm_tool_calls)
-    candidates = [_tool_call_name(call) for call in unique_calls]
-    confidence_candidates = _policy_candidates_from_tool_calls(unique_calls)
-    candidate_confidences = {
-        candidate.name: candidate.confidence_score
-        for candidate in confidence_candidates
-        if candidate.confidence_score is not None
-    }
-    exclusive_call = next(
-        (
-            call
-            for call in unique_calls
-            if _tool_call_name(call) in _EXCLUSIVE_DIRECT_TOOLS
-        ),
-        None,
-    )
-    if exclusive_call is not None:
-        exclusive_name = _tool_call_name(exclusive_call)
-        rejected_tools = {
-            name: f"{exclusive_name} is an exclusive direct-response tool."
-            for name in candidates
-            if name != exclusive_name
-        }
-        return PolicyDecision(
-            question=question,
-            prepared_question="",
-            llm_candidates=candidates,
-            final_tools=[exclusive_name],
-            rejected_tools=rejected_tools,
-            audit=[
-                "LLM candidates: "
-                + (", ".join(candidates) if candidates else "(none)"),
-                f"Final retrievers: {exclusive_name}",
-                (
-                    f"{exclusive_name}: kept exclusively; retrievers and other "
-                    "direct tools were skipped."
-                ),
-            ],
-            candidate_confidences=candidate_confidences,
-        )
-
-    final_tools: list[str] = []
-    rejected_tools: dict[str, str] = {}
-    audit = [
-        "LLM candidates: " + (", ".join(candidates) if candidates else "(none)")
-    ]
-    prepared_parts: list[str] = []
-    for call in unique_calls:
-        name = _tool_call_name(call)
-        resolved = _resolved_query(call, question)
-        if name in DIRECT_TOOLS:
-            final_tools.append(name)
-            audit.append(f"{name}: direct tool kept.")
-            continue
-        args = call.get("args") or {}
-        confidence = (
-            _coerce_confidence_score(args.get("confidence_score"))
-            if isinstance(args, dict)
-            else None
-        )
-        decision = evaluate_retriever_policy(
-            resolved,
-            [PolicyCandidate(name=name, confidence_score=confidence)],
-        )
-        prepared_parts.append(decision.prepared_question)
-        if name in decision.final_tools:
-            final_tools.append(name)
-            audit.append(f"{name}: kept for resolved query '{resolved}'.")
-            if decision.fallback_reason:
-                audit.append(f"{name}: fallback kept - {decision.fallback_reason}")
-        else:
-            reason = decision.rejected_tools.get(name, "RetrieverPolicy rejected.")
-            rejected_tools[name] = reason
-            audit.append(f"{name}: rejected for resolved query '{resolved}' ({reason})")
-    audit.insert(
-        1,
-        "Final retrievers: " + (", ".join(final_tools) if final_tools else "(none)"),
-    )
-    return PolicyDecision(
-        question=question,
-        prepared_question=" | ".join(prepared_parts),
-        llm_candidates=candidates,
-        final_tools=final_tools,
-        rejected_tools=rejected_tools,
-        audit=audit,
-        candidate_confidences=candidate_confidences,
-    )
 
 
 async def _execute_tool_call(
@@ -850,7 +670,7 @@ async def route_question_with_audit(
     retrieval_memory: dict[str, dict[str, Any]] | None = None,
     thread_id: str = "",
     kg_version: str | None = None,
-) -> tuple[list[Any], PolicyDecision | None]:
+) -> tuple[list[Any], None]:
     """Route one question and execute or reuse router-selected tools.
 
     Args:
@@ -862,8 +682,7 @@ async def route_question_with_audit(
         kg_version: Current KG version used by deterministic cache validation.
 
     Returns:
-        Tuple of tool results and optional policy decision (``None`` when
-        RetrieverPolicy is disabled).
+        Tuple of tool results and ``None`` (policy audit slot kept for API compat).
     """
 
     memory = retrieval_memory or {}
@@ -892,31 +711,16 @@ async def route_question_with_audit(
         tools=_router_tool_descriptions(tools),
     )
 
-    # Không dùng RetrieverPolicy nữa — chấp nhận toàn bộ retriever router đề xuất.
-    # policy_decision = _evaluate_tool_calls_policy(question, llm_tool_calls)
-    # policy_tool_calls = _build_policy_tool_calls(
-    #     llm_tool_calls,
-    #     policy_decision.final_tools,
-    # )
-    policy_tool_calls = _unique_tool_calls(llm_tool_calls)
-    # policy_decision = PolicyDecision(
-    #     question=question,
-    #     prepared_question="",
-    #     llm_candidates=router_tool_names,
-    #     final_tools=router_tool_names,
-    #     rejected_tools={},
-    #     audit=[...],
-    # )
+    tool_calls = _unique_tool_calls(llm_tool_calls)
     tool_response = await handle_tool_calls(
         tools,
-        policy_tool_calls,
+        tool_calls,
         question,
         retrieval_memory=memory,
         thread_id=thread_id,
         kg_version=kg_version or current_kg_version(),
     )
     return tool_response, None
-    # return tool_response, policy_decision
 
 
 async def route_question(
@@ -932,7 +736,7 @@ async def route_question(
         answers: Working conversation history.
 
     Returns:
-        Tool execution results; policy audit information is discarded.
+        Tool execution results; policy audit slot is always ``None``.
     """
 
     tool_response, _ = await route_question_with_audit(question, tools, answers)

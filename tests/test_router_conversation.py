@@ -4,11 +4,11 @@ from copy import deepcopy
 
 from application.router import (
     RETRIEVER_QUERY_PARAM_DESCRIPTION,
-    _evaluate_tool_calls_policy,
     _router_tool_descriptions,
     _tool_function_args,
     tool_picker_prompt,
 )
+from retriever_policy import evaluate_tool_calls_policy
 from adapter.direct_tools import clarify_question
 
 
@@ -113,7 +113,7 @@ def test_function_args_keep_resolved_query_and_strip_controls():
 def test_policy_uses_resolved_follow_up_instead_of_raw_question():
     """Verify RetrieverPolicy evaluates the standalone follow-up query."""
 
-    decision = _evaluate_tool_calls_policy(
+    decision = evaluate_tool_calls_policy(
         "Còn nữ thì sao?",
         [
             {
@@ -133,7 +133,7 @@ def test_policy_uses_resolved_follow_up_instead_of_raw_question():
 def test_clarify_is_exclusive_when_router_also_selects_retriever():
     """Verify deterministic policy prevents retrieval beside clarification."""
 
-    decision = _evaluate_tool_calls_policy(
+    decision = evaluate_tool_calls_policy(
         "Còn trường hợp đó thì sao?",
         [
             {

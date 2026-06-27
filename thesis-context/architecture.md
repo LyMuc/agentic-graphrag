@@ -40,7 +40,7 @@ Người dùng (frontend Chainlit)
 - Mỗi retriever phân loại một hoặc nhiều Cypher template, trích xuất params cùng `thoi_diem_su_kien`, thực thi Neo4j và trả `Context_Tho`.
 - Router schema hiện có thêm `confidence_score`, `context_action`, `context_refs`, `time_scope`, `target_date` cho retriever; các field điều khiển bị loại trước khi gọi function thật.
 - Direct tool gồm `clarify`, `respond`; `clarify` và `respond` là phản hồi trực tiếp/exclusive.
-- Luồng chính hiện bỏ qua `RetrieverPolicy` filter trong `route_question_with_audit`; policy helper vẫn còn cho test/benchmark và tham khảo.
+- Luồng chat production không gọi `RetrieverPolicy`; package `retriever_policy/` ở repo root vẫn phục vụ test/benchmark.
 - `retrieval_memory` lưu các `LegalContextBundle` đã encode theo `context_ref`; reuse chỉ được chấp nhận sau kiểm tra deterministic về thread, retriever, KG version và temporal scope.
 - Context từ nhiều retriever được đưa qua `process_context_strings` để merge/dedupe bundle theo căn cứ pháp lý trước khi render cho Response LLM.
 - Migration context đang ở trạng thái mixed-compatible: retriever dùng `encode_context_record` trả `LEGAL_CONTEXT_BUNDLE_V1`, retriever còn gọi `chuan_hoa_Context_cho_LLM` trả legacy text và được nối nguyên văn.

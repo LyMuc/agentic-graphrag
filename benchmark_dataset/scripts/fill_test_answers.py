@@ -37,7 +37,7 @@ if hasattr(sys.stdout, "reconfigure"):
 
 from adapter.config import chat_stream  # noqa: E402
 from application.router import _router_tool_descriptions, tool_choice, tool_picker_prompt  # noqa: E402
-from application.retriever_policy import evaluate_retriever_policy  # noqa: E402
+from retriever_policy import evaluate_retriever_policy  # noqa: E402
 from scripts._common import (  # noqa: E402
     TEST_VERSIONS_DIR,
     backup_paths,

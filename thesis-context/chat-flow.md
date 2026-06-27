@@ -131,7 +131,7 @@ Các field này bị loại khỏi args trước khi gọi retriever. Router ch�
 
 Direct tool hiện tại: `clarify`, `respond`. Trong đó `clarify` và `respond` là phản hồi trực tiếp/exclusive: nếu Router chọn một trong hai thì không chạy thêm retriever; `clarify` chỉ dùng khi follow-up còn từ hai cách hiểu hợp lý trở lên sau khi xét lịch sử gần và anchor.
 
-Lưu ý trạng thái code hiện tại: `application/retriever_policy.py` và `_evaluate_tool_calls_policy` vẫn tồn tại cho helper/test/benchmark, nhưng `route_question_with_audit` trong luồng chính đang bỏ qua policy filter và chấp nhận các tool call đã loại trùng từ Router LLM. Vì vậy khi viết đồ án, không mô tả `RetrieverPolicy` là cổng lọc bắt buộc của production flow nếu chưa bật lại trong code.
+Lưu ý trạng thái code hiện tại: package `retriever_policy/` (`evaluate_retriever_policy`, `evaluate_tool_calls_policy`) vẫn tồn tại cho test/benchmark, nhưng `route_question_with_audit` trong luồng chính không gọi policy filter và chấp nhận các tool call đã loại trùng từ Router LLM. Vì vậy khi viết đồ án, không mô tả `RetrieverPolicy` là cổng lọc bắt buộc của production flow.
 
 `validate_reuse_request` kiểm tra quyết định reuse bằng luật deterministic:
 

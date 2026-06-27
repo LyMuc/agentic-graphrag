@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 from application.router import (
-    _policy_candidates_from_tool_calls,
     _strip_router_only_args,
     _with_router_confidence_schema,
 )
+from retriever_policy import policy_candidates_from_tool_calls
 
 
 def _retriever_schema() -> dict:
@@ -50,7 +50,7 @@ def test_does_not_add_confidence_score_to_direct_tool_schema():
 
 
 def test_policy_candidates_parse_and_clamp_confidence_score():
-    candidates = _policy_candidates_from_tool_calls(
+    candidates = policy_candidates_from_tool_calls(
         [
             {"name": "cap_duong", "args": {"confidence_score": "1.5"}},
             {"name": "cap_duong", "args": {"confidence_score": 0.2}},

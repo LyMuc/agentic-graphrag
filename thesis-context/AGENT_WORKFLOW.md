@@ -52,7 +52,7 @@ Nguồn tóm tắt: `chat-flow.md`.
 - Conversation memory: `presentation/main.py` giữ `session_history`, `retrieval_memory`, `conversation_anchors`; resume thread đọc lại metadata bằng `restore_conversation_state`.
 - Router: mỗi retriever có metadata/control fields `confidence_score`, `context_action`, `context_refs`, `time_scope`, `target_date`; reuse phải qua `validate_reuse_request`.
 - Direct tool: `clarify`, `respond`; `clarify` và `respond` là phản hồi trực tiếp/exclusive.
-- `RetrieverPolicy` hiện là helper/test/benchmark; luồng chính trong `route_question_with_audit` đang bỏ qua policy filter.
+- Package `retriever_policy/` (repo root) chỉ phục vụ test/benchmark; luồng chat trong `route_question_with_audit` không gọi policy filter.
 - Context merge/dedupe: `application/legal_context.py` xử lý `LEGAL_CONTEXT_BUNDLE_V1` theo `(target_date, is_user_provided_date)`, dedupe provision theo `id + amendment_id + effective_from + effective_until`, rồi render bằng `chuan_hoa_Context_cho_LLM`.
 - Trạng thái migration: một số retriever vẫn trả legacy text từ `chuan_hoa_Context_cho_LLM`; `process_context_strings` nối legacy nguyên văn và chỉ dedupe mạnh cho bundle.
 

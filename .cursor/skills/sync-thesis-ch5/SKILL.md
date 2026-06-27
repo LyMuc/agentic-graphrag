@@ -30,7 +30,7 @@ description: Đồng bộ Chương 5 đồ án với codebase Agentic GraphRAG. 
 - Không bịa tên relationship; dùng `DUOC_SUA_DOI_BOI`, `THAY_THE_BOI`, `HUONG_DAN_BOI`, `BAI_BO_BOI`.
 - Flow chat hiện tại: `presentation/main.py` dùng `session_history`, `retrieval_memory`, `conversation_anchors`, Router `confidence_score/context_action/context_refs` và `process_context_strings`.
 - Router hiện có 20 retriever + direct tools `clarify`, `respond`; `clarify/respond` là direct response exclusive. `confidence_score` là metadata định tuyến và bị loại trước khi gọi retriever thật.
-- `RetrieverPolicy`/`_evaluate_tool_calls_policy` hiện là helper/test/benchmark; không mô tả là filter production bắt buộc nếu `route_question_with_audit` vẫn bypass policy.
+- Package `retriever_policy/` hiện chỉ phục vụ test/benchmark; không mô tả là filter production bắt buộc vì `route_question_with_audit` không gọi policy.
 - Guest chat: JWT `guest:<uuid>`, không persist thread/step/element; quản lý project/thread/feedback yêu cầu login.
 - Context dedupe: `LEGAL_CONTEXT_BUNDLE_V1` merge theo temporal scope; trạng thái hiện tại mixed-compatible với retriever legacy còn trả text.
 - Không mô tả `adapter/obsolete_retrievers/`.

@@ -26,7 +26,7 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 from application.retriever_catalog import DIRECT_TOOLS  # noqa: E402
-from application.retriever_policy import evaluate_retriever_policy  # noqa: E402
+from retriever_policy import evaluate_retriever_policy  # noqa: E402
 from scripts._common import read_json, write_json  # noqa: E402
 from scripts._router_metrics import compute_metrics  # noqa: E402
 
