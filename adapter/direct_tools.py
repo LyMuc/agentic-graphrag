@@ -1,68 +1,15 @@
-answer_given_description = {
-    "type": "function",
-    "function": {
-        "name": "respond",
-        "description": "Nếu cuộc hội thoại đã chứa một câu trả lời hoàn chỉnh cho câu hỏi, hãy sử dụng công cụ này để trích xuất nó. Ngoài ra, nếu người dùng trò chuyện phiếm, hãy dùng công cụ này để nhắc họ rằng bạn chỉ có thể trả lời các câu hỏi liên quan đến luật hôn nhân gia đình.",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "answer": {
-                    "type": "string",
-                    "description": "Phản hồi trực tiếp bằng câu trả lời",
-                }
-            },
-            "required": ["answer"],
-        },
-    },
-}
+"""Back-compat shim — tách sang ``server.agents.direct`` (Phase 3).
 
-async def answer_given(answer: str, **kwargs):
-    """Trả trực tiếp câu trả lời Router đã lấy được từ lịch sử.
-
-    Args:
-        answer: Nội dung phản hồi hoàn chỉnh do Router cung cấp.
-        **kwargs: Tham số điều khiển tùy chọn từ Router; bị bỏ qua để giữ tương
-            thích với tool schema mở rộng.
-
-    Returns:
-        Chính chuỗi ``answer`` mà không gọi thêm LLM hoặc retriever.
-    """
-    return answer
-
-
-clarify_description = {
-    "type": "function",
-    "function": {
-        "name": "clarify",
-        "description": (
-            "Hỏi lại người dùng khi câu follow-up có từ hai cách hiểu hợp lý trở lên "
-            "và lịch sử gần cùng chỉ mục lượt cũ không đủ để xác định chắc chắn. "
-            "Không dùng nếu câu hỏi tự nó đã đầy đủ hoặc có thể trả lời theo các trường hợp."
-        ),
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "question": {
-                    "type": "string",
-                    "description": "Một câu hỏi làm rõ ngắn, nêu cụ thể các cách hiểu cần chọn.",
-                }
-            },
-            "required": ["question"],
-        },
-    },
-}
-
-
-async def clarify_question(question: str, **kwargs):
-    """Trả trực tiếp câu hỏi làm rõ mà không gọi retriever hay Response LLM.
-
-    Args:
-        question: Câu hỏi ngắn yêu cầu người dùng xác định đối tượng, mốc thời
-            gian hoặc ý hỏi đang mơ hồ.
-        **kwargs: Tham số điều khiển tùy chọn từ Router; bị bỏ qua.
-
-    Returns:
-        Chính chuỗi ``question`` để Chainlit gửi trực tiếp cho người dùng.
-    """
-
-    return question
+- ``respond`` (answer_given) -> ``server.agents.direct.respond``
+- ``clarify`` (clarify_question) -> ``server.agents.direct.clarify``
+"""
+from server.agents.direct.respond import (  # noqa: F401
+    RespondAgent,
+    answer_given,
+    answer_given_description,
+)
+from server.agents.direct.clarify import (  # noqa: F401
+    ClarifyAgent,
+    clarify_question,
+    clarify_description,
+)

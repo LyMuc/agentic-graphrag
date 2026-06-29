@@ -5,8 +5,8 @@ import json
 from typing import Any
 
 from server.infrastructure.neo4j.client import driver
-from adapter.cypher_templates import CypherTemplate, TemplateRegistry
-from adapter.cypher_templates.registry_index import ALL_TEMPLATE_REGISTRIES
+from server.infrastructure.neo4j.cypher_templates import CypherTemplate, TemplateRegistry
+from server.infrastructure.neo4j.cypher_templates.registry_index import ALL_TEMPLATE_REGISTRIES
 from server.infrastructure.viz.store import load_snapshot, save_snapshot, update_snapshot
 from utils.utils import _dieu_level_id
 

@@ -163,7 +163,8 @@ flowchart LR
       async def run(self, query) -> RetrieverResult: ...
   ```
   Export `cap_duong = CapDuongRetriever().run` để giữ chữ ký hàm cũ (shim re-export ngược về [adapter/retrievers/cap_duong.py](adapter/retrievers/cap_duong.py)).
-- [adapter/retrievers/_context_tho_common.py](adapter/retrievers/_context_tho_common.py), [adapter/retrievers/_runtime_dates.py](adapter/retrievers/_runtime_dates.py) -> `server/agents/retrievers/_shared/`.
+- [adapter/retrievers/_runtime_dates.py](adapter/retrievers/_runtime_dates.py) -> `server/agents/retrievers/_shared/` (tiêu thụ bởi RetrieverAgent pipeline).
+- [adapter/retrievers/_context_tho_common.py](adapter/retrievers/_context_tho_common.py) -> `server/infrastructure/neo4j/cypher_templates/_context_tho_common.py` (tiêu thụ bởi Cypher template — tầng infrastructure, không phải agents).
 - Tạo mới `server/agents/retrievers/base.py` — `RetrieverAgent` ABC định nghĩa contract `run(query) -> {contexts, debug, retriever_name, ...}`.
 - [adapter/cypher_templates/](adapter/cypher_templates/) -> [server/infrastructure/neo4j/cypher_templates/](server/infrastructure/neo4j/cypher_templates/) (giữ nguyên toàn bộ hierarchy).
 
@@ -229,7 +230,8 @@ Lý do:
 
 ### Phase 3 — Subagents layer (Retrievers + direct tools + Cypher templates)
 - Tạo `server/agents/retrievers/base.py` (RetrieverAgent ABC).
-- Tạo `server/agents/retrievers/_shared/` cho `_context_tho_common.py` + `_runtime_dates.py`.
+- Tạo `server/agents/retrievers/_shared/` cho `_runtime_dates.py`.
+- Move `_context_tho_common.py` -> `server/infrastructure/neo4j/cypher_templates/_context_tho_common.py` (gần Cypher template hơn là agents).
 - Move `adapter/cypher_templates/` -> `server/infrastructure/neo4j/cypher_templates/` (shim re-export ở root cũ).
 - Move 20 retriever, mỗi file:
   - Class hóa: hàm cũ `async def cap_duong(query)` -> method `CapDuongRetriever.run`.
