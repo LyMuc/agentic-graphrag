@@ -236,7 +236,7 @@ def _fetch_tvpl_links(dieu_ids: set[str]) -> dict[str, str]:
     if not dieu_ids:
         return {}
     try:
-        from adapter.config import driver  # lazy import tránh vòng phụ thuộc lúc import utils
+        from server.infrastructure.neo4j.client import driver  # lazy import tránh vòng phụ thuộc
     except ImportError:
         return {}
     cypher = """
@@ -258,7 +258,7 @@ def _fetch_provision_effective_dates(provision_ids: set[str]) -> dict[str, str]:
     if not provision_ids:
         return {}
     try:
-        from adapter.config import driver
+        from server.infrastructure.neo4j.client import driver
     except ImportError:
         return {}
     cypher = """

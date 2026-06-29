@@ -1,19 +1,9 @@
-import asyncio
-import sys
-from pathlib import Path
-
-if __package__ in (None, ""):
-    sys.path.append(str(Path(__file__).resolve().parent.parent))
-
-from adapter.data_layer import data_layer
-from adapter.projects import ProjectStore
-
-
-async def migrate_db() -> None:
-    """Apply non-destructive application migrations."""
-    await ProjectStore(data_layer).migrate()
-
+"""Back-compat shim — moved to ``server.infrastructure.persistence.init_db`` (Phase 2)."""
+from server.infrastructure.persistence.init_db import *  # noqa: F401,F403
+from server.infrastructure.persistence.init_db import migrate_db
 
 if __name__ == "__main__":
+    import asyncio
+
     asyncio.run(migrate_db())
     print("Database migrations completed successfully.")

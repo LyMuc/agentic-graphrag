@@ -174,6 +174,7 @@ flowchart LR
 - [utils/utils.py](utils/utils.py) -> split:
   - `chuan_hoa_Context_cho_LLM`, `_LOAI_TAC_DONG_*`, `_to_dieu_id`, `_format_date_vn` -> [server/domain/legal/render.py](server/domain/legal/render.py).
   - `chuan_hoa_thoi_diem_su_kien` + datetime helpers -> [server/shared/datetime_vn.py](server/shared/datetime_vn.py).
+  - `strip_code_fences`, `strip_code_cypher` -> [server/shared/llm_text.py](server/shared/llm_text.py).
 - [application/vi_phrase_match.py](application/vi_phrase_match.py) -> [server/shared/phrase_match.py](server/shared/phrase_match.py).
 
 ### Infrastructure
