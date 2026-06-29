@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Codex">
   <diagram id="activity-business-process-qa" name="Activity Diagram">
-    <mxGraphModel dx="1730" dy="857" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1360" pageHeight="2560" math="0" shadow="0">
+    <mxGraphModel dx="1793" dy="883" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1360" pageHeight="2560" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -39,21 +39,10 @@
         <mxCell id="s_prompt" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fontSize=19;" value="Tạo prompt từ câu hỏi,&lt;br&gt;lịch sử hội thoại và context chuẩn hóa" vertex="1">
           <mxGeometry height="70" width="330" x="150" y="1790" as="geometry" />
         </mxCell>
-        <mxCell id="s_retriever_fallback" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fontSize=19;" value="Fallback sử dụng retriever có confidence score cao nhất" vertex="1">
-          <mxGeometry height="62" width="330" x="340" y="900" as="geometry" />
-        </mxCell>
-        <mxCell id="d_retriever" parent="lane_system" style="rhombus;whiteSpace=wrap;html=1;fontSize=19;" value="Tất cả Retriever đều&amp;nbsp;&lt;div&gt;không&amp;nbsp; vượt qua Policy&lt;/div&gt;" vertex="1">
-          <mxGeometry height="105" width="210" x="180" y="820" as="geometry" />
-        </mxCell>
-        <mxCell id="e_retriever_no" edge="1" parent="lane_system" source="d_retriever" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;fontSize=19;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s_retriever_fallback" value="[Có]">
+        <mxCell id="2YrLvbv9Z07-n2Tzfg8f-12" edge="1" parent="lane_system" source="2YrLvbv9Z07-n2Tzfg8f-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=19;" target="s_template">
           <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="505" y="872" />
-            </Array>
+            <mxPoint x="285" y="820" as="targetPoint" />
           </mxGeometry>
-        </mxCell>
-        <mxCell id="2YrLvbv9Z07-n2Tzfg8f-12" edge="1" parent="lane_system" source="2YrLvbv9Z07-n2Tzfg8f-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=19;" target="d_retriever">
-          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="2YrLvbv9Z07-n2Tzfg8f-13" connectable="0" parent="2YrLvbv9Z07-n2Tzfg8f-12" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=19;" value="Có" vertex="1">
           <mxGeometry relative="1" x="-0.5359" y="5" as="geometry">
@@ -71,12 +60,14 @@
         <mxCell id="2YrLvbv9Z07-n2Tzfg8f-10" parent="lane_system" style="rhombus;whiteSpace=wrap;html=1;fontSize=19;" value="Retriever hợp lệ&lt;br&gt;và không trùng lặp" vertex="1">
           <mxGeometry height="105" width="210" x="180" y="620" as="geometry" />
         </mxCell>
-        <mxCell id="2YrLvbv9Z07-n2Tzfg8f-19" edge="1" parent="lane_system" source="2YrLvbv9Z07-n2Tzfg8f-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=19;" target="d_retriever">
+        <mxCell id="2YrLvbv9Z07-n2Tzfg8f-19" edge="1" parent="lane_system" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=19;">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="505" y="810" />
-              <mxPoint x="285" y="810" />
+              <mxPoint x="565" y="821" />
+              <mxPoint x="345" y="821" />
             </Array>
+            <mxPoint x="565" y="798" as="sourcePoint" />
+            <mxPoint x="284" y="821" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="2YrLvbv9Z07-n2Tzfg8f-14" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fontSize=19;" value="Fallback sử dụng retriever mặc định và (hoặc) khử trùng lặp" vertex="1">
@@ -87,12 +78,6 @@
         </mxCell>
         <mxCell id="s_template" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fontSize=19;" value="Retriever chọn template Cypher&lt;br&gt;và trích xuất tham số có cấu trúc" vertex="1">
           <mxGeometry height="70" width="330" x="120" y="1005" as="geometry" />
-        </mxCell>
-        <mxCell id="e_retriever_yes" edge="1" parent="lane_system" source="d_retriever" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;fontSize=19;" target="s_template" value="[Không]">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="e_retriever_fallback_template" edge="1" parent="lane_system" source="s_retriever_fallback" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;fontSize=19;" target="s_template" value="">
-          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="2YrLvbv9Z07-n2Tzfg8f-23" edge="1" parent="lane_system" source="d_template" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=19;" target="s_template_fallback">
           <mxGeometry relative="1" as="geometry" />

@@ -1,16 +1,35 @@
 \documentclass[../DoAn.tex]{subfiles}
 \begin{document}
 
+
 \begin{center}
     \Large{\textbf{TÓM TẮT NỘI DUNG ĐỒ ÁN}}\\
 \end{center}
-\vspace{1cm}
-Hệ thống pháp luật Hôn nhân và Gia đình Việt Nam hiện nay mang tính phức tạp cao và thường xuyên thay đổi, gây khó khăn cho người dân trong việc tra cứu và áp dụng đúng quy định. Các công cụ AI hiện hành như AI Luật, AI luật hay chatbot của Bộ Tư Pháp dù đã hỗ trợ tư vấn nhưng vẫn tồn tại hạn chế về tính cập nhật của điều luật, khả năng viện dẫn chính xác các điều luật làm căn cứ, giới hạn quyền truy cập... Nhằm khắc phục các vấn đề này, đồ án lựa chọn hướng tiếp cận Agentic GraphRAG. Hướng đi này cho phép sử dụng Đồ thị tri thức để mô hình hóa toàn diện quan hệ hiệu lực, sửa đổi, thay thế giữa các điều luật, đồng thời tận dụng Agentic AI để tối ưu hóa quy trình truy vấn cho từng dạng câu hỏi cụ thể. Giải pháp tổng thể của đồ án là xây dựng một hệ thống chatbot trên nền tảng Chainlit, kết hợp đồ thị tri thức được xây dựng bằng cơ sở dữ liệu Neo4j và các Agent để điều phối luồng xử lý từ phân loại câu hỏi đến khi lấy về dữ liệu phục vụ cho việc sinh câu trả lời.. Đóng góp chính của đồ án bao gồm việc hoàn thiện đồ thị tri thức của Luật Hôn nhân gia đình 2014 và xây dựng bộ dữ liệu benchmark 600 câu hỏi pháp lý. Kết quả cuối cùng cho thấy hệ thống đạt độ chính xác trên 85\% theo các metric RAGAS, tỷ lệ viện dẫn đúng các căn cứ pháp lý lực đạt trên 90\% và khả năng xử lý xung đột pháp lý đạt trên 80\%, đảm bảo độ tin cậy trong các câu trả lời cho người dùng.
-\begin{flushright}
-Sinh viên thực hiện\\
-\begin{tabular}{@{}c@{}}
-\textit{(Ký và ghi rõ họ tên)}
-\end{tabular}
-\end{flushright}
+\vspace{0.5cm}
+
+
+Nhu cầu được tư vấn chuyên sâu về lĩnh vực hôn nhân và gia đình hiện nay là rất lớn do những vướng mắc pháp lý có thể gặp phải trong các giai đoạn của mối quan hệ hôn nhân gia đình. Khi nhận tư vấn, người dùng thường yêu cầu các câu trả lời phải được lập luận dựa trên các căn cứ pháp lý chính xác, được trích dẫn cụ thể với số hiệu điều khoản rõ ràng đi kèm các cảnh báo về hiệu lực và mâu thuẫn (nếu có). Ngoài ra, do hiện tượng hallucination của trí tuệ nhân tạo nên để có thể tin tưởng hoàn toàn vào câu trả lời của chatbot, người dùng còn có nhu cầu được quan sát, kiểm chứng luồng suy luận, xử lý câu hỏi của chatbot trước khi đưa ra câu trả lời cuối cùng.
+
+
+Trên thị trường Việt Nam đã có các công cụ như AITracuuluat, AI Luật, Chatbot của Cổng Pháp luật Quốc gia và các mô hình ngôn ngữ lớn phổ biến như Gemini, nhưng qua khảo sát thực tế các sản phẩm này vẫn tồn tại những hạn chế như căn cứ pháp lý đôi khi thiếu chính xác, chưa có cơ chế cảnh báo hiệu lực văn bản và cảnh báo xung đột pháp lý khi một tình huống bị chi phối bởi nhiều quy định chồng chéo và cuối cùng là chưa có cơ chế hiển thị minh bạch luồng xử lý, suy luận của chatbot trước khi đưa ra câu trả lời cuối cùng.
+
+
+Để khắc phục các hạn chế trên, giải pháp tổng thể của đồ án là xây dựng một ứng dụng chatbot có khả năng tư vấn tự động về Luật Hôn nhân và Gia đình và có khả năng minh bạch hóa luồng suy luận trước khi đưa ra câu trả lời tư vấn đồ án lựa chọn. Đồ án lựa chọn xây dựng ứng dụng theo kiến trúc Agentic GraphRAG, kết hợp Đồ thị tri thức (Knowledge Graph) với Agentic AI. Đồ thị tri thức cho phép mô hình hóa thực thể pháp lý và quan hệ giữa các văn bản (tham chiếu, hướng dẫn, sửa đổi bổ sung, thay thế, bãi bỏ, mâu thuẫn), hỗ trợ truy xuất căn cứ pháp lý chính xác, còn hiệu lực và đưa ra các cảnh báo về hiệu lực, mâu thuẫn; Agentic AI để tối ưu việc truy vấn trên đồ thị tri thức bằng cách phân tách các retriever tương ứng với các dạng câu hỏi và sử dụng agent để đưa ra quyết định sẽ sử dụng (những) retriever nào để lấy về dữ liệu phục vụ cho việc sinh câu trả lời.
+
+
+% Các công nghệ chính được sử dụng cho việc xây dựng ứng dụng chatbot bao gồm thư viện Chainlit để xây dựng giao diện chatbot trực quan hóa luồng xử lý; vis-network để vẽ trực quan phần đồ thị tri thức đã truy xuất; API GPT-4o cho Router Agent và Retriever Agent, GPT-4.1 cho sinh câu trả lời; Neo4j để lưu trữ và truy xuất đồ thị tri thức; PostgreSQL cho việc lưu thông tin người dùng, phiên hội thoại và luồng xử lý của các agent; Chainlit cho giao diện chat. Đồ thị tri thức được xây dựng từ Luật Hôn nhân và Gia đình năm 2014 cùng hơn 20 văn bản liên quan (Bộ luật Dân sự, Luật Hộ tịch, Luật Phòng chống bạo lực gia đình, các Nghị định, Nghị quyết và Thông tư hướng dẫn) được bóc tách chi tiết tới cấp điểm của điều luật.
+Chatbot đã được đánh giá kết hợp kiểm thử hộp đen thủ công và đánh giá tự động trên bộ testcase 200 cặp câu hỏi--câu trả lời thu thập từ chuyên mục Hỏi đáp pháp luật trên Thư viện Pháp luật, sử dụng thư viện RAGAS và các chỉ số chuyên biệt về căn cứ pháp lý. Kết quả cho thấy hệ thống đạt Faithfulness 88,2\%, Context Recall 83,5\% trên RAGAS, Legal Citation Accuracy đạt 83.7\%, đảm bảo tính chính xác và độ tin cậy trong câu trả lời cho người dùng.
+
+
+% \begin{flushright}
+% Sinh viên thực hiện\\
+% \begin{tabular}{@{}c@{}}
+% \textit{(Ký và ghi rõ họ tên)}
+% \end{tabular}
+% \end{flushright}
+
 
 \end{document}
+
+
+

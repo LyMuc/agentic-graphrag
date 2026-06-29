@@ -36,6 +36,10 @@
 \usepackage{subcaption}
 \usepackage{xurl}
 
+% TikZ phục vụ Chương 4: package diagram, class diagram, sequence diagram, routing flow
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows, arrows.meta, shapes.geometric, fit, calc, backgrounds}
+
 \usepackage[nonumberlist, nopostdot, nogroupskip, acronym]{glossaries}
 \usepackage{glossary-superragged}
 \setglossarystyle{list}
@@ -307,9 +311,9 @@
 \printbibliography
 \phantomsection\addcontentsline{toc}{chapter}{TÀI LIỆU THAM KHẢO}
 
-\appendixpage
-\appendices
-\addappheadtotoc
+% \appendixpage
+% \appendices
+% \addappheadtotoc
 
 % \chapter*{PHỤ LỤC} %Kết luận và hướng phát triển}
 
@@ -325,7 +329,7 @@
 %     {\titlerule*[0.3pc]{.}\contentspage}         % filler-page-format, e.g dots
 % \chapter{HƯỚNG DẪN VIẾT ĐỒ ÁN TỐT NGHIỆP}
 % \subfile{Chuong/Phu_luc_A}
-\newpage
-\chapter{ĐẶC TẢ USE CASE}
-\subfile{Chuong/Phu_luc_B}
+% \newpage
+% \chapter{ĐẶC TẢ USE CASE}
+% \subfile{Chuong/Phu_luc_B}
 \end{document}

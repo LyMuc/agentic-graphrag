@@ -2,61 +2,79 @@
 \begin{document}
 
 \section{Thiết kế kiến trúc}
+\label{sec:thiet-ke-kien-truc}
+
 \subsection{Lựa chọn kiến trúc phần mềm}
 \label{subsection:4.1}
 Phần mềm được xây dựng dựa trên kiến trúc client–server. Trong kiến trúc này, phía client chịu trách nhiệm tương tác với người dùng, gửi yêu cầu và hiển thị kết quả, còn phía server đảm nhiệm xử lý nghiệp vụ, truy xuất dữ liệu và trả về phản hồi. Kiến trúc này giúp tách biệt rõ ràng giữa giao diện và logic xử lý, từ đó tăng khả năng bảo trì, mở rộng và phát triển hệ thống.
 
-Hình \ref{fig:Fig0} mô tả kiến trúc tổng quan của ứng dụng, dựa trên kiến trúc client-server. Cụ thể gồm 2 phần frontend (client) với các thành phần giao diện, hiển thị và backend (server) xử lý các yêu cầu.
+% TODO sinh vien hoan thien: mo ta lua chon kien truc Client-Server ket
+% hop Multi-Agent Architecture, dat trong khung mau ba lop (Presentation
+% - Application - Domain - Infrastructure). Co the trich dan bai
+% LangChain "Choosing the Right Multi-Agent Architecture" lam can cu
+% chon Router pattern.
+Kiến trúc tổng quan của ứng dụng đồ án xây dựng được trình bày tại Hình \ref{fig:client-server}.
+
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{Hinhve/Kiến trúc tổng quan.png}
+    \includegraphics[width=\textwidth]{Hinhve/Kiến trúc client-server.png}
     \caption{Kiến trúc tổng quan của hệ thống}
-    \label{fig:Fig0}
+    \label{fig:client-server}
 \end{figure}
 
-Phía frontend gồm giao diện chat được custom từ giao diện chat của thư viện Chainlit, cho phép đặt câu hỏi, xem câu trả lời và theo dõi Agent trace. Giao diện visualize đồ thị tri thức là trang web riêng dùng thư viện vis-network; người dùng mở qua link trong câu trả lời để xem phần đồ thị tri thức được retriever truy xuất. Frontend duy trì HTTP/WebSocket với server; trang viz gọi HTTP GET tới server để lấy dữ liệu vẽ đồ thị tri thức.
+Phía Frontend (Client) sử dụng giao diện mặc định của framework Chainlit \cite{ChainlitDoc}. Frontend chỉ đảm nhiệm việc hiển thị khung chat, nhận câu hỏi của người dùng, hiển thị câu trả lời và biểu diễn các bước xử lý trung gian của các agents.
 
-Phía backend có nhiệm vụ điều phối Agentic Workflow, quản lý session hỏi đáp, xử lý truy vấn của người dùng, gọi API LLM, truy vấn đồ thị tri thức và sinh câu trả lời có căn cứ pháp lý. Các thành phần chính: (i) Chat Orchestrator (Luồng điều phối chat) nhận câu hỏi từ người dùng, duy trì lịch sử hội thoại của đoạn chat, gọi Router Agent, xử lý và hợp nhất context nhận được từ các retriever, stream câu trả lời từ LLM (gpt-4.1); (ii) Router Agent gọi API LLM (gpt-4o) theo cơ chế tool-calling để chọn (các) retriever; (iii) Retriever Agents gồm 20 retrievers được chia theo dạng câu hỏi pháp lý, mỗi retriever phân loại template cần dùng để trả lời cho câu hỏi, trích xuất tham số bằng LLM (gpt-4o) rồi thực hiện truy vấn Cypher; (iv) Neo4j Knowledge Graph để lưu đồ thị tri thức Luật Hôn nhân và Gia đình 2014; (v) Session Storage bao gồm bộ nhớ Chainlit in-memory storage để lưu trữ các dữ liệu gắn liền với phiên chat hiện tại; PostgreSQL (Chainlit Data Layer) lưu trữ lịch sử hỏi đáp, input/output của agent, context truy xuất, câu trả lời cuối cùng và các thông tin cảnh báo nhằm khôi phục lại đoạn hội thoại cũ, kiểm thử, truy vết và đánh giá hệ thống.
+Phía Backend (Server) sử dụng Chainlit Backend, tiếp nhận yêu cầu từ Frontend, điều phối luồng Agentic GraphRAG và sinh câu trả lời cuối cùng, sau đó trả kết quả về Frontend theo cơ chế streaming.
+
+API LLM Là tập hợp các mô hình ngôn ngữ lớn cung cấp bởi OpenAI, được Backend gọi qua API mạng. Trong hệ thống, gpt-4o được dùng cho Router Agent và bước phân loại Cypher template trong các Retrieval Agent, còn gpt-4.1 đảm nhận sinh câu trả lời cuối cùng cho người dùng.
+
+Session Storage (PostgreSQL) Là cơ sở dữ liệu quan hệ chịu trách nhiệm lưu trữ lâu dài thông tin người dùng đăng nhập, danh sách các phiên hội thoại (threads), từng bước thực thi của Agent.
+
+Knowledge Graph (Neo4j): Là cơ sở dữ liệu đồ thị lưu trữ đồ thị tri thức Luật hôn nhân gia đình 2014. Các Retrieval Agent phía Backend thực thi các câu lệnh Cypher để truy xuất các căn cứ pháp lý từ Neo4j.
+
 
 \subsection{Thiết kế tổng quan}
 \label{subsection:4.2}
 
-% \subsubsection{Thiết kế gói phía server}
-% \label{subsubsection:4.2.1}
+Backend được thiết kế theo pattern Router của kiến trúc multi-agent architecture, cụ thể được minh họa ở Hình\ref{fig:routing-pattern}.
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.72\textwidth]{Hinhve/Sơ đồ gói server.png}
+    \includegraphics[width=\textwidth]{Hinhve/Kiến trúc multi-agent architecture theo pattern router.png}
+    \caption{Kiến trúc tổng quan phía server}
+    \label{fig:routing-pattern}
+\end{figure}
+
+Khi người dùng gửi một tin nhắn, Chainlit Backend sẽ bắt các sự kiện tin nhắn, sau đó ConversationOrchestrator đọc trạng thái phiên (lịch sử hội thoại, bộ nhớ ngữ cảnh đã truy xuất), dựng một bản lịch sử hội thoại rút gọn rồi giao câu hỏi cùng tóm tắt lịch sử hội thoại cho RouterAgent. (Cần bổ sung ConversationOrchestrator vì router trong pattern router thuộc kiến trúc multi-agent là stateless, kehông ghi nhớ trạng thái trước, tức không ghi nhớ lịch sử hội thoại). Tiếp theo Router gọi song song các retriever, mỗi retriever là một agent chuyên xử lý cho từng dạng câu hỏi pháp lý. Khi tất cả retriever trả về, các ngữ cảnh pháp lý được hợp nhất và khử trùng lặp, sau đó nối vào prompt rồi giao cho SynthesizerAgent stream câu trả lời cuối về Chainlit.
+
+Dựa trên kiến trúc tổng quan, phía server được chia thành bảy gói, biểu đồ phụ thuộc gói được mô tả trong Hình \ref{fig:package-diagram}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Hinhve/Biểu đồ phụ thuộc gói phía server.png}
     \caption{Biểu đồ phụ thuộc gói phía server}
-    \label{fig:Fig1}
+    \label{fig:package-diagram}
 \end{figure}
-Phía server được tổ chức thành bốn gói được thể hiện ở Hình \ref{fig:Fig1} bao gồm (i) Gói presentation để xây dựng các chức năng xử lý sự kiện hội thoại, xác thực OAuth và phiên đăng nhập guest, quản lý projects hội thoại. (ii) Gói application đảm nhiệm xử lý logic và điều phối Agentic Workflow. (iii) Gói adapter chịu trách nhiệm tương tác với cơ sở dữ liệu Neo4j để truy truy xuất đồ thị tri thức, quản lý lịch sử hội thoại trên cơ sở dữ liệu PostgreSQL, cấu hình API LLM, trực quan hóa đồ thị tri thức , nhận diện người dùng guest. (iv) Gói utils là gói dùng chung cho toàn hệ thống, cung cấp các hàm chuẩn hóa context pháp lý cho LLM, các hàm xử lý chuỗi và thời gian.
 
-% \subsubsection{Thiết kế gói phía client}
-% \label{subsubsection:4.2.2}
+Chức năng của từng gói được tóm tắt như sau: (i) gói app gồm các thành phần tiếp nhận sự kiện Chainlit (mở phiên, khôi phục thread, nhận tin nhắn) và các FastAPI route bổ sung cho đăng nhập khách, quản lý dự án và hiển thị đồ thị tri thức; (ii) gói conversation để xây dựng lớp ConversationOrchestrator, điều phối cuộc hội thoại có trạng thái phiên, giữ lịch sử hội thoại và bộ nhớ ngữ cảnh đã truy xuất, gọi RouterAgent rồi SynthesizerAgent mỗi lượt chat; (iii) gói agents gồm RouterAgent, hai mươi RetrieverAgent theo dạng câu hỏi pháp lý, SynthesizerAgent; (iv) gói domain cung cấp tiện ích hợp nhất ngữ cảnh và khử trùng lặp căn cứ pháp luật; (v) gói infrastructure là bộ adapter ra LLM, Neo4j, PostgreSQL và bộ lưu snapshot visualize của đồ thị tri thức; (vi) gói interface khai báo schema tool theo chuẩn OpenAI cho Router LLM; (vii) gói shared cung cấp tiện ích chéo lớp: chuẩn hoá thời điểm sự kiện pháp lý có trong câu hỏi.
+\subsection{Thiết kế chi tiết gói}
+\label{subsec:thiet-ke-chi-tiet-goi}
+Sơ đồ thiết kế chi tiết của gói agents được trình bày trong Hình~\ref{fig:package-detail-agents}. 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{Hinhve/Sơ đồ gói client.png}
-    \caption{Biểu đồ phụ thuộc gói phía client}
-    \label{fig:Fig1_client}
+    \includegraphics[width=\textwidth]{Hinhve/Biểu đồ thiết kế gói agents.png}
+    \caption{Biểu đồ thiết kế gói agents}
+    \label{fig:package-detail-agents}
 \end{figure}
 
-Phía client được xây dựng dựa trên frontend của Chainlit phiên bản 2.11.1 có tùy chỉnh lại. Ngoài giao diện chatbot chính dựa trên frontend của Chainlit, hệ thống còn có một trang web tĩnh độc lập dùng thư viện vis-network để trực quan hóa đồ thị tri thức và người dùng có thể mở liên kết tới trang web tĩnh tĩnh này trong câu trả lời của chatbot. Hình \ref{fig:Fig1_client} mô tả biểu đồ gói tổng quan phía client cùng phân loại các gói được tùy chỉnh/giữ nguyên từ frontend Chainlit. Các gói bao gồm (i) Gói pages chứa các màn hình định tuyến chính. (ii) Gói components gom các thành phần UI tái sử dụng, ở đây tùy chỉnh lại LeftSidebar, thêm xử lý cho projects hỏi đáp (iii) Gói api cung cấp api và WebSocket giao tiếp với Chainlit server. (iv) Gói lib chứa các tiện ích chia sẻ giữa pages và components, gồm các formatter và auth.ts cung cấp hàm canManageConversations dùng để ẩn quản lý hội thoại đối với guest. (v) Gói types định nghĩa các kiểu TypeScript dùng chung trong toàn ứng dụng, gói này được mở rộng bằng types/projects.ts cho chức năng project. (vi) Các gói hạ tầng state, contexts, hooks và i18n được giữ nguyên từ Chainlit frontend, phục vụ quản lý trạng thái, context react, custom hooks và đa ngôn ngữ.
+Lớp trừu tượng Agent đảm bảo mọi agents đều cài đặt một hàm async run duy nhất. Ba lớp kế thừa của Agent thể hiện ba vai trò khác nhau: RouterAgent quyết định và gọi các RetrieverAgent, SynthesizerAgent sinh câu trả lời, và RetrieverAgent là lớp trừu tượng, các retriever chuyên biệt cho từng dạng câu hỏi được kế thừa từ lớp này, tổng cộng cộng có 20 retriever. ConversationOrchestrator điều phối phiên chat, gọi tới RouterAgent và SynthesizerAgent.
 
-% % \subsection{Thiết kế chi tiết gói}
-% % Sinh viên thiết kế và lần lượt vẽ biểu đồ thiết kế cho từng package, hoặc một nhóm các package liên quan để giải quyết một vấn đề gì đó. Khi vẽ thiết kế gói, sinh viên chỉ cần đưa tên lớp, không cần chỉ ra các thành viên phương thức và thuộc tính. SV tham khảo ví dụ minh họa trong Hình \ref{fig:Fig2}.
 
-% % Sinh viên cần vẽ rõ ràng quan hệ giữa các lớp trong biểu đồ. Các quan hệ bao gồm: phụ thuộc (dependency), kết hợp (association), kết tập (aggregation), hợp thành (composition), kế thừa (inheritance), và thực thi (implementation). Các quan hệ này đều đã được minh họa trong \ref{fig:Fig2}.
-
-% % Sau khi vẽ hình minh họa, sinh viên cần giải thích ngắn gọn về thiết kế của mình. 
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.72\textwidth]{Hinhve/Picture2.png}
-%     \caption{Ví dụ thiết kế gói}
-%     \label{fig:Fig2}
-% \end{figure}
 
 \section{Thiết kế chi tiết}
+\label{sec:thiet-ke-chi-tiet}
+
 \subsection{Thiết kế giao diện}
 
 Giao diện ứng dụng được xây dựng nhờ thư viện chainlit, hỗ trợ responsive trên các màn hình thiết bị khác nhau. Ngoài ra ứng dụng cũng xây dựng giao diện hiển thị đồ thị tri thức. Màu sắc được sử dụng trong giao diện chatbot và trang visualize đồ thị tri thức được thể hiện trong Bảng \ref{table:ui_color_palette}.
@@ -123,183 +141,246 @@ Một trong những yêu cầu thiết kế cốt lõi của công cụ là kh�
     \caption{Thiết kế giao diện hiển thị đồ thị tri thức}
     \label{fig:ui_visualize_graph}
 \end{figure}
-% \subsection{Thiết kế lớp}
-% Trong phần này, ĐATN sẽ trình bày thiết kế chi tiết một số module chủ đạo. 
 
-% Đầu tiên là module main thuộc package Presentation. Module này đóng vai trò tiếp nhận câu hỏi từ người dùng và điều phối các agent. Hình \ref{fig:main_detail}, Bảng \ref{table:main_attributes}
-% và Bảng \ref{table:main_functions} mô tả chi tiết các biến và các hàm thuộc module này.
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=\textwidth]{Hinhve/thiết kế chi tiết cho module main.png}
-%     \caption{Thiết kế chi tiết module main}
-%     \label{fig:main_detail}
-% \end{figure}
+% TODO sinh vien hoan thien: dac ta man hinh, do phan giai, chuan hoa
+% phoi mau, hinh minh hoa cac giao dien chinh.
 
-% \begin{table}[H]
-% \centering
-% \caption{Đặc tả các biến của module main}
-% \begin{tabular}{|l|p{10cm}|}
-% \hline
-% \textbf{Biến} & \textbf{Ý nghĩa} \\ \hline
-% tools & Lưu trữ danh sách các retriever của hệ thống, bao gồm tên, mô tả chức năng (description) và hàm thực thi tương ứng. \\ \hline
-% main\_prompt & Chứa prompt định nghĩa các quy tắc lập luận cho LLM khi đưa ra câu trả lời  \\ \hline
-% session\_history & Quản lý và lưu trữ dữ liệu hội thoại trong phiên làm việc hiện tại để cung cấp ngữ cảnh đầy đủ cho LLM khi đưa ra câu trả lời. \\ \hline
-% \end{tabular}
-% \label{table:main_attributes}
-% \end{table}
+\subsection{Thiết kế lớp}
+\label{subsec:thiet-ke-lop}
 
-% \begin{table}[H]
-% \centering
-% \caption{Đặc tả các hàm của module main}
-% \begin{tabular}{|l|p{10cm}|}
-% \hline
-% \textbf{Hàm} & \textbf{Ý nghĩa} \\ \hline
-% oauth\_callback() & Xử lý xác thực qua Google/Github và ánh xạ dữ liệu vào hệ thống lưu trữ PostgreSQL. \\ \hline
-% on\_chat\_start() & Khởi tạo phiên làm việc, thiết lập lịch sử hội thoại mới và gửi thông điệp chào mừng. \\ \hline
-% on\_chat\_resume() & Khôi phục trạng thái hội thoại từ cơ sở dữ liệu khi người dùng truy cập lại phiên cũ. \\ \hline
-% main() & Phương thức điều phối thực hiện toàn bộ quy trình từ phân tích đến sinh câu trả lời. \\ \hline
-% \end{tabular}
-% \label{table:main_functions}
-% \end{table}
-
-% Tiếp theo sẽ trình bày về Module Router.
-
-% Mô-đun router thuộc gói application đảm nhận vai trò của một Tác nhân định tuyến (Router Agent) thông minh. Chức năng cốt lõi của thành phần này là bóc tách các câu hỏi đa ý của người dùng và kích hoạt chính xác các retrievers cần thiết để lấy về ngữ cảnh pháp lý từ đồ thị tri thức nhằm trả lời cho câu hỏi của người dùng. Hình \ref{fig:router_detail}, Bảng  \ref{table:router_attributes} và bảng \ref{table:router_methods} mô tả chi tiết các biến và hàm trong module.
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=\textwidth]{Hinhve/thiết kế chi tiết cho module router.png}
-%     \caption{Thiết kế chi tiết module router}
-%     \label{fig:router_detail}
-% \end{figure}
-
-% \begin{table}[H]
-% \centering
-% \begin{tabular}{|l|p{10cm}|}
-% \hline
-% \textbf{Biến} & \textbf{Ý nghĩa} \\ \hline
-% tool\_picker\_prompt & Chứa hệ thống các quy tắc bắt buộc để LLM thực hiện như việc phân tích đa ý và lựa chọn công cụ, đảm bảo không gọi lặp lại một công cụ nhiều lần. \\ \hline
-% \end{tabular}
-% \caption{Đặc tả thuộc tính của mô-đun Router}
-% \label{table:router_attributes}
-% \end{table}
-
-% \begin{table}[H]
-% \centering
-% \begin{tabular}{|l|p{10cm}|}
-% \hline
-% \textbf{Hàm} & \textbf{Ý nghĩa} \\ \hline
-% handle\_tool\_calls() & Phương thức bất đồng bộ thực hiện việc gọi các hàm chức năng của công cụ, truyền tham số là câu truy vấn của người dùng và ghi lại kết quả truy vấn của từng công cụ nhờ hook của Chainlit\\ \hline
-% tool\_choice() & Thực hiện việc liên kết (binding) danh sách công cụ với mô hình ngôn ngữ lớn và gọi mô hình để nhận về danh sách các công cụ cần kích hoạt. \\ \hline
-% route\_question() & Hàm đầu vào chính của mô-đun, chịu trách nhiệm tổng hợp lịch sử hội thoại, câu hỏi đã chuẩn hóa để điều phối quy trình định tuyến và truy xuất dữ liệu. \\ \hline
-% \end{tabular}
-% \caption{Đặc tả các phương thức của mô-đun Router}
-% \label{table:router_methods}
-% \end{table}
-
-% Đồ án thực hiện vẽ biểu đồ trình tự cho hai Use Case quan trọng nhất là Tư vấn pháp lý và Khôi phục phiên hội thoại nhằm minh họa luồng truyền thông điệp giữa các đối tượng.
-
-% Sơ đồ trình tự mô tả cách thức hệ thống tiếp nhận một câu hỏi và trải qua các bước phân tích tác nhân để đưa ra câu trả lời.
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=1\textwidth]{Hinhve/biểu đồ trình tự use case tư vấn pháp lý.png}
-%     \caption{Biểu đồ trình tự luồng tư vấn pháp lý}
-%     \label{fig:seq_consultation}
-% \end{figure}
-
-% Luồng thông điệp được thực hiện qua các bước: Người dùng gửi tin nhắn, sau đó Router Agent chọn retriever phù hợp với ý định câu hỏi của người dùng. Retriever truy xuất dữ liệu từ Neo4j, trả lại cho router agent. Router agent trả lại cho hàm main, tại đây main kết hợp context dữ liệu pháp lý truy vấn được với prompt rồi gửi cho LLM tổng hợp đáp án cuối cùng \ref{fig:seq_consultation}.
-
-% \subsubsection{Use Case: Khôi phục phiên hội thoại (Resume Session)}
-% Sơ đồ trình tự thể hiện sự tương tác giữa lớp trình diễn và lớp hạ tầng để đảm bảo tính liên tục của dữ liệu khi người dùng truy cập lại các hội thoại cũ.
-
-% \begin{figure}[H]
-%     \centering
-%     % \includegraphics[width=0.85\textwidth]{figures/seq_resume.png}
-%     \caption{Biểu đồ trình tự khôi phục phiên hội thoại}
-%     \label{fig:seq_resume}
-% \end{figure}
-
-% Quy trình khôi phục bao gồm: Người dùng chọn phiên cũ $\rightarrow$ Hook on\_chat\_resume() kích hoạt $\rightarrow$ Adapter truy xuất lịch sử từ PostgreSQL $\rightarrow$ Presentation tái cấu trúc session\_history và hiển thị lại nội dung cho người dùng.
-
-\subsection{Thiết kế chi tiết luồng Agentic Workflow}
-\label{subsection:agentic-workflow}
-
-Để giải quyết các yêu cầu phức tạp về pháp lý và đảm bảo tính chính xác của dữ liệu truy xuất, hệ thống được thiết kế theo mô hình Agentic GraphRAG, kết hợp Agentic RAG với Đồ thị tri thức (Knowledge Graph). Đây là một quy trình điều phối các tác nhân thông minh (Agents) chuyên biệt nhằm phân tích ý định người dùng, lựa chọn retriever agent phù hợp và tổng hợp câu trả lời tư vấn dựa trên căn cứ pháp lý lấy được từ Đồ thị tri thức.
-
-\subsubsection{Sơ đồ luồng tổng quan}
-
-Luồng hoạt động của hệ thống được chia thành 5 bước chính, được minh họa trong Hình \ref{fig:overview_flow}.
+ĐATN chọn ra bốn lớp chủ đạo để trình bày thuộc tính và phương thức ở mức chi tiết, bốn lớp được chọn gồm: ConversationOrchestrator, RouterAgent, RetrieverAgent và SynthesizerAgent. Sơ đồ lớp tổng hợp được trình bày trong Hình~\ref{fig:class-diagram}; chi tiết từng thuộc tính và phương thức được mô tả ở các bảng ngay sau hình.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{Hinhve/Luồng Agentic GraphRAG.png}
-    \caption{Sơ đồ luồng hoạt động Agentic GraphRAG}
-    \label{fig:overview_flow}
+    \includegraphics[width=\textwidth]{Hinhve/Thiết kế chi tiết lớp ConversationOrchestrator, RouterAgent, RetrieverAgent, SynthesizerAgent.png}
+    \caption{Thiết kế chi tiết lớp ConversationOrchestrator, RouterAgent, RetrieverAgent, SynthesizerAgent}
+    \label{fig:class-diagram}
 \end{figure}
 
-Cụ thể, Agentic Workflow gồm 5 bước như sau:
-(i) \textbf{Bước 1 (Tiếp nhận câu hỏi và định tuyến)}: Chat Orchestrator tiếp nhận câu hỏi của người dùng cùng với lịch sử hội thoại của phiên chat hiện tại, sau đó kích hoạt Router Agent để phân tách ý hỏi và đề xuất danh sách các retriever agent cần gọi để trả lời câu hỏi. Danh sách các retriever agent được Router Agent đề xuất sẽ đi qua một bước kiểm tra để loại bỏ các tác nhân không tồn tại trong danh sách các retriever được đăng ký và loại bỏ các lời gọi trùng lặp tới cùng một retriever agent.
-(ii) \textbf{Bước 2 (Phân tích ý định và trích xuất tham số)}: Mỗi Retriever Agent thực hiện hai nhiệm vụ: phân loại mẫu truy vấn Cypher (Cypher template) phù hợp với dạng câu hỏi và trích xuất các tham số cần thiết để điền vào mẫu truy vấn đã chọn, bao gồm cả mốc thời gian sự kiện pháp lý xuất hiện trong câu hỏi (nếu có).
-(iii) \textbf{Bước 3 (Truy xuất căn cứ pháp lý)}: Các Retrieval Agent thực thi truy vấn Cypher với mẫu và tham số đã trích xuất để lấy về các căn cứ pháp lý cùng với các quan hệ liên quan như sửa đổi, hướng dẫn, thay thế hoặc mâu thuẫn.
-(iv) \textbf{Bước 4 (Chuẩn hóa và hợp nhất ngữ cảnh)}: Chat Orchestrator gom các kết quả trả về từ nhiều Retriever Agents, loại bỏ các căn cứ pháp lý trùng lặp theo định danh và thời hạn hiệu lực, đồng thời sắp xếp ngữ cảnh thành các khối thông tin có cấu trúc gồm cảnh báo, hiệu lực văn bản, căn cứ chính, căn cứ hướng dẫn, căn cứ bổ trợ, căn cứ thay thế, căn cứ sắp có hiệu lực, căn cứ mâu thuẫn và các đường dẫn tham chiếu tới văn bản pháp luật. Khi ngữ cảnh pháp lý không có căn cứ phù hợp, hệ thống sẽ phản hồi không tìm thấy căn cứ và đề nghị người dùng đặt lại câu hỏi hoặc bổ sung thông tin.
-(v) \textbf{Bước 5 (Sinh câu trả lời và hiển thị luồng xử lý)}: Luồng điều phối chat ghép ngữ cảnh đã chuẩn hóa với prompt chuyên biệt về lập luận pháp lý và lịch sử hội thoại, sau đó gọi API LLM để sinh câu trả lời. Câu trả lời cuối cùng có trích dẫn căn cứ pháp lý chi tiết tới cấp Điều, Khoản, Điểm; kèm theo các cảnh báo về hiệu lực văn bản và mâu thuẫn pháp lý (nếu có); đồng thời được hiển thị cùng với chi tiết luồng xử lý của các tác nhân và liên kết trực quan hóa phần đồ thị tri thức đã được truy xuất.
 
-\subsubsection{Đặc tả chi tiết}
 
-Trước tiên là đặc tả Chat Orchestrator tại Bảng \ref{table: chat_orchestrator}. Chat Orchestrator là thành phần điều phối luồng agentic workflow, đóng vai trò trung tâm kết nối các tác nhân, quản lý trạng thái phiên hội thoại và sinh câu trả lời cuối cùng dựa trên ngữ cảnh đã hợp nhất.
+Chi tiết thuộc tính và phương thức của từng lớp được trình bày qua Bảng \ref{tab:class-conversation-orchestrator}--\ref{tab:class-synthesizer-agent}.
 
 \begin{table}[H]
 \centering
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}X|}
+\small
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{|p{4.8cm}|p{9.2cm}|}
 \hline
-\textbf{Thành phần} & \textbf{Mô tả chi tiết} \\ \hline
-\textbf{Chức năng} & Khởi tạo và duy trì phiên hội thoại, kích hoạt Router Agent, thu thập kết quả truy xuất từ các Retrieval Agent, hợp nhất và chuẩn hóa ngữ cảnh pháp lý, gọi API LLM để sinh câu trả lời, đồng thời ghi lại vết thực thi của các tác nhân để hỗ trợ minh bạch hóa luồng xử lý cho người dùng. \\ \hline
-\textbf{Đầu vào} & câu hỏi của người dùng; lịch sử hội thoại của phiên chat hiện tại; bộ nhớ ngữ cảnh pháp lý đã được các Retrieval Agent truy xuất ở các lượt hỏi đáp trước trong cùng phiên; phần ngữ cảnh pháp lý được tổng hợp từ kết quả của các Retrieval Agent trong lượt hỏi đáp hiện tại. \\ \hline
-\textbf{Prompt} & Quy định chi tiết các quy tắc lập luận pháp lý và cách trích dẫn căn cứ pháp lý. \\ \hline
-\textbf{Quy trình xử lý} & (i) Tiếp nhận câu hỏi (ii) Dựng lại lịch sử hội thoại (iii) Gọi Router Agent để chọn các retriever agent (iv) Thực thi song song các Retrieval Agent đã được chọn (v) Cập nhật bộ nhớ ngữ cảnh truy xuất của phiên (vi) Hợp nhất và loại bỏ căn cứ pháp lý trùng lặp theo định danh và thời hạn hiệu lực (vii) Dựng lịch sử hội thoại cho lượt sinh câu trả lời (viii) Gọi API LLM với prompt để sinh câu trả lời cuối cùng tới người dùng. \\ \hline
-% \textbf{Quản lý trạng thái} & Khởi tạo trạng thái phiên hội thoại khi người dùng bắt đầu một đoạn chat mới; khôi phục lại lịch sử hội thoại và bộ nhớ ngữ cảnh khi người dùng mở lại phiên chat cũ; lưu vết toàn bộ luồng xử lý của các tác nhân (đầu vào, đầu ra) vào cơ sở dữ liệu lưu trữ phiên để phục vụ truy vết, kiểm thử và khôi phục hội thoại. \\ \hline
-\textbf{Đầu ra} & Câu trả lời cho người dùng, link visualize đồ thị tri thức và các cảnh báo (nếu có). \\ \hline
-\end{tabularx}
-\caption{Đặc tả Chat Orchestrator}
-\label{table: chat_orchestrator}
+\textbf{Thuộc tính} & \textbf{Ý nghĩa} \\ \hline
+session\_history & Toàn bộ tin nhắn đã trao đổi trong phiên hội thoại hiện tại \\ \hline
+retrieval\_memory & Các ngữ cảnh pháp lý đã truy xuất ở các lượt trước, dùng cho câu hỏi tiếp theo \\ \hline
+conversation\_anchors & Tóm tắt ngắn từng lượt cũ để hỗ trợ định tuyến \\ \hline
+kg\_version & Phiên bản đồ thị tri thức đang áp dụng \\ \hline
+router & Tác tử định tuyến được gọi mỗi lượt \\ \hline
+synthesizer & Tác tử tổng hợp câu trả lời cuối \\ \hline
+\textbf{Phương thức} & \textbf{Ý nghĩa} \\ \hline
+on\_chat\_start() & Khởi tạo phiên hội thoại mới \\ \hline
+on\_chat\_resume() & Khôi phục trạng thái khi mở lại một cuộc hội thoại đã lưu \\ \hline
+on\_message() & Xử lý một tin nhắn mới từ người dùng \\ \hline
+build\_router\_history() & Dựng lịch sử hội thoại rút gọn trước khi gọi Router \\ \hline
+persist\_turn() & Ghi lại kết quả lượt vừa xử lý vào trạng thái phiên \\ \hline
+\end{tabular}
+\caption{Thuộc tính và phương thức của lớp ConversationOrchestrator}
+\label{tab:class-conversation-orchestrator}
 \end{table}
-
-Tiếp theo là đặc tả Router Agent tại Bảng \ref{table: router_agent}. Tác nhân này chịu trách nhiệm phân tách ý hỏi của người dùng và lựa chọn các retriever agent phù hợp để giải quyết câu hỏi.
 
 \begin{table}[H]
 \centering
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}X|}
+\small
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{|p{4.8cm}|p{9.2cm}|}
 \hline
-\textbf{Thành phần} & \textbf{Mô tả chi tiết} \\ \hline
-\textbf{Chức năng} & Phân loại ý định người dùng để gọi đúng và đủ các retriever agents cần thiết cho việc trả lời câu hỏi, viết lại câu hỏi của người người dùng dựa trên lịch sử hội thoại cho từng retriever \\ \hline
-\textbf{Đầu vào} & Lịch sử hội thoại; câu truy vấn của người dùng; danh sách các retriever agent cùng mô tả chức năng và schema tham số tương ứng của từng retriever. \\ \hline
-\textbf{Prompt} & Hướng dẫn LLM phân tách các câu hỏi đa ý của người dùng và xác định đầy đủ các bối cảnh pháp lý liên quan để gọi đủ retriever; tránh gọi trùng lặp cùng một retriever nhiều lần; viết lại câu hỏi từ người dùng dựa trên lịch sử hội thoại cho từng retriever.\\ \hline
-\textbf{Quy trình xử lý} & (i) Nhận prompt cùng câu truy vấn, lịch sử hội thoại và danh sách retriever (ii) Gọi API LLM theo cơ chế tool calling (iii) Nhận về danh sách các retriever cần kích hoạt cùng với câu hỏi đã được viết lại cho mỗi lời gọi retriever. \\ \hline
-\textbf{Quality gate} & Loại bỏ các retriever không tồn tại trong danh sách các retriever; loại bỏ các lời gọi trùng lặp tới cùng một retriever. Khi LLM không chọn được retriever phù hợp, hệ thống sử dụng retriever mặc định (fallback). \\ \hline
-\textbf{Đầu ra} & Một mảng các lời gọi retriever, mỗi lời gọi gồm tên retriever và câu hỏi của người dùng được viết lại cho retriever đó. \\ \hline
-\end{tabularx}
-\caption{Đặc tả Router Agent}
-\label{table: router_agent}
+\textbf{Thuộc tính} & \textbf{Ý nghĩa} \\ \hline
+llm & Mô hình ngôn ngữ dùng để chọn retriever phù hợp \\ \hline
+tool\_picker\_prompt & Nội dung hướng dẫn cho bước chọn tool \\ \hline
+tools & Danh sách retriever và hàm thực thi tương ứng \\ \hline
+direct\_tools & Tập tool trả lời trực tiếp, bỏ qua bước truy xuất \\ \hline
+control\_args & Tập tên tham số điều khiển cần tách khỏi lệnh gọi retriever \\ \hline
+\textbf{Phương thức} & \textbf{Ý nghĩa} \\ \hline
+decide() & Phân tích câu hỏi và quyết định gọi retriever nào \\ \hline
+dispatch() & Thực thi song song các lệnh gọi retriever đã chọn \\ \hline
+execute\_or\_reuse() & Gọi retriever hoặc lấy lại ngữ cảnh đã lưu nếu đủ điều kiện \\ \hline
+validate\_registered\_tools() & Kiểm tra các tool được chọn có tồn tại và hợp lệ \\ \hline
+\end{tabular}
+\caption{Thuộc tính và phương thức của lớp RouterAgent}
+\label{tab:class-router-agent}
 \end{table}
-
-Cuối cùng là đặc tả retriever agent tại Bảng \ref{table: retriever_agent}. Tác nhân này có nhiệm vụ truy xuất Đồ thị tri thức để lấy về ngữ cảnh pháp lý theo từng dạng câu hỏi chuyên biệt phục vụ cho việc sinh câu trả lời.
 
 \begin{table}[H]
 \centering
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}X|}
+\small
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{|p{4.8cm}|p{9.2cm}|}
 \hline
-\textbf{Thành phần} & \textbf{Mô tả chi tiết} \\ \hline
-\textbf{Chức năng} & Phân tích câu hỏi để lựa chọn (các) mẫu truy vấn Cypher (Cypher template) phù hợp, sau đó trích xuất các tham số rồi điền vào câu truy vấn Cypher để lấy về các căn cứ pháp lý. \\ \hline
-\textbf{Đầu vào} & Câu truy vấn độc lập đã được viết lại bởi router agent. \\ \hline
-\textbf{Prompt} & Yêu cầu LLM phân loại mẫu truy vấn Cypher cần dùng để truy xuất ngữ cảnh pháp lý dựa trên ý định pháp lý trong câu hỏi của người dùng và mô tả chức năng của từng mẫu truy vấn; trích xuất các tham số cần thiết và mốc thời gian sự kiện pháp lý xuất hiện trong câu hỏi. \\ \hline
-\textbf{Quy trình xử lý} & (i) Phân loại mẫu truy vấn Cypher cần dùng (ii) Trích xuất các tham số truy vấn và mốc thời gian sự kiện pháp lý (ii) Thực thi truy vấn Cypher vào Đồ thị tri thức với mẫu và tham số đã trích xuất (iii) Chuẩn hóa ngữ cảnh pháp lý truy xuất, trả về cho Chat Orchestrator. \\ \hline
-\textbf{Quality gate} & Khi LLM không chọn được mẫu truy vấn Cypher phù hợp, hệ thống sử dụng mẫu truy vấn Cypher mặc định (fallback). \\ \hline
-\textbf{Đầu ra} & Danh sách các căn cứ pháp lý kèm các thuộc tính như nội dung điều luật, thời hạn hiệu lực, vai trò (căn cứ chính, căn cứ hướng dẫn, căn cứ bổ trợ, căn cứ thay thế, căn cứ sắp có hiệu lực, căn cứ mâu thuẫn). \\ \hline
-\end{tabularx}
-\caption{Đặc tả Retriever Agent}
-\label{table: retriever_agent}
+\textbf{Thuộc tính} & \textbf{Ý nghĩa} \\ \hline
+name & Tên định danh của retriever \\ \hline
+description & Mô tả phạm vi pháp lý mà retriever xử lý \\ \hline
+registry & Tập các mẫu truy vấn đồ thị thuộc miền \\ \hline
+llm & Mô hình ngôn ngữ dùng trong bước phân loại và trích xuất tham số \\ \hline
+\textbf{Phương thức} & \textbf{Ý nghĩa} \\ \hline
+run() & Điểm vào thực thi truy xuất cho một câu hỏi \\ \hline
+classify() & Chọn mẫu truy vấn phù hợp với câu hỏi \\ \hline
+extract() & Trích xuất tham số cần thiết cho mẫu truy vấn đã chọn \\ \hline
+execute() & Chạy truy vấn trên đồ thị tri thức và trả về căn cứ pháp lý \\ \hline
+\end{tabular}
+\caption{Thuộc tính và phương thức của lớp RetrieverAgent}
+\label{tab:class-retriever-agent}
 \end{table}
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{|p{4.8cm}|p{9.2cm}|}
+\hline
+\textbf{Thuộc tính} & \textbf{Ý nghĩa} \\ \hline
+llm & Mô hình ngôn ngữ sinh câu trả lời cuối \\ \hline
+main\_prompt & Nội dung hướng dẫn soạn câu trả lời pháp lý \\ \hline
+\textbf{Phương thức} & \textbf{Ý nghĩa} \\ \hline
+stream() & Sinh và trả từng phần câu trả lời về giao diện \\ \hline
+apply\_warning\_rules() & Xác định cảnh báo hiệu lực và mâu thuẫn pháp lý cần gắn kèm \\ \hline
+\end{tabular}
+\caption{Thuộc tính và phương thức của lớp SynthesizerAgent}
+\label{tab:class-synthesizer-agent}
+\end{table}
+
+
+Để minh họa thiết kế lớp, hình \ref{fig:seq-single-retriever}dưới đây minh họa biểu đồ trình tự cho use case hỏi đáp luật hôn nhân gia đình.
+
+
+% \paragraph{Kịch bản 1 --- Câu hỏi đơn, gọi đúng một retriever.}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        actor/.style={rectangle, draw, thick, fill=gray!10, minimum width=2.2cm, minimum height=0.7cm, align=center, font=\scriptsize},
+        life/.style={dashed},
+        act/.style={rectangle, draw, thick, fill=gray!25, minimum width=0.2cm},
+        msg/.style={->, >=Stealth, thick},
+        ret/.style={->, >=Stealth, thick, dashed},
+    ]
+        % Registered user / guest (UML actor)
+        \coordinate (U) at (0,0);
+        \node[font=\scriptsize\bfseries, align=center] at (0,1.14) {Registered User/Guest};
+        \draw[thick] (0,0.42) -- (-0.18,0);
+        \draw[thick] (0,0.42) -- (0.18,0);
+        \draw[thick] (0,0.42) -- (0,0.75);
+        \draw[thick] (-0.22,0.53) -- (0.22,0.53);
+        \draw[thick] (0,0.87) circle (0.11);
+        \node[actor] (CA) at (3,0)   {ConversationOrchestrator};
+        \node[actor] (RA) at (6.5,0) {RouterAgent};
+        \node[actor] (RE) at (10,0)  {RetrieverAgent};
+        \node[actor] (SA) at (13.5,0){SynthesizerAgent};
+        % Lifelines
+        \foreach \n in {U,CA,RA,RE,SA} { \draw[life] (\n) -- ++(0,-7); }
+        % Messages
+        \draw[msg] (U     |- 0,-1)   -- node[above, font=\tiny] {on\_message(message)} (CA |- 0,-1);
+        \draw[msg] (CA    |- 0,-1.7) -- node[above, font=\tiny] {decide(query, memory, history)} (RA |- 0,-1.7);
+        \draw[ret] (RA    |- 0,-2.3) -- node[above, font=\tiny] {tool\_calls = dieu\_kien\_ket\_hon} (CA |- 0,-2.3);
+        \draw[msg] (CA    |- 0,-3.0) -- node[above, font=\tiny] {dispatch(tool\_calls)} (RA |- 0,-3.0);
+        \draw[msg] (RA    |- 0,-3.6) -- node[above, font=\tiny] {run(query)} (RE |- 0,-3.6);
+        \draw[ret] (RE    |- 0,-4.5) -- node[above, font=\tiny] {RetrieverResult} (RA |- 0,-4.5);
+        \draw[msg] (CA    |- 0,-5.8) -- node[above, font=\tiny] {stream(prompt, context)} (SA |- 0,-5.8);
+        \draw[ret] (SA    |- 0,-6.5) -- node[above, font=\tiny] {answer} (U  |- 0,-6.5);
+    \end{tikzpicture}
+    \caption{Biểu đồ trình tự use case hỏi đáp luật hôn nhân gia đình}
+    \label{fig:seq-single-retriever}
+\end{figure}
+
+% \paragraph{Kịch bản 2 --- Follow-up có tái sử dụng ngữ cảnh.}
+% Khi người dùng đặt câu follow-up dạng "Còn nam thì sao?" ngay sau một câu hỏi về độ tuổi kết hôn, RouterAgent có khả năng nhận ra ngữ cảnh đã tồn tại trong retrieval\_memory và đặt context\_action="reuse" trên tool call thay vì gọi retriever thật. Trước khi thực sự tái sử dụng, RouterAgent chạy validate\_reuse\_request --- một bộ kiểm tra deterministic so khớp thread\_id, retriever\_name, kg\_version, target\_date và is\_user\_provided\_date --- chỉ khi tất cả tiêu chí đều khớp, ngữ cảnh cũ mới được trả lại. Cơ chế này giúp tiết kiệm số lệnh gọi LLM cũng như độ trễ trên các lượt lặp lại, đồng thời tránh nhiễm chéo ngữ cảnh giữa các lượt --- là hai lợi ích chính mà LangChain đề cập khi đặt một Router không trạng thái bên trong một tác tử có trạng thái \cite{langchain_multi_agent_2026}. Trình tự được minh hoạ ở Hình~\ref{fig:seq-followup-reuse}.
+
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}[
+%         actor/.style={rectangle, draw, thick, fill=gray!10, minimum width=2.2cm, minimum height=0.7cm, align=center, font=\scriptsize},
+%         life/.style={dashed},
+%         msg/.style={->, >=Stealth, thick},
+%         ret/.style={->, >=Stealth, thick, dashed},
+%     ]
+%         \node[actor] (U)  at (0,0)   {User};
+%         \node[actor] (CA) at (3,0)   {ConversationOrchestrator};
+%         \node[actor] (RA) at (6.5,0) {RouterAgent};
+%         \node[actor] (MEM)at (10,0)  {retrieval\_memory};
+%         \node[actor] (SA) at (13.5,0){SynthesizerAgent};
+%         \foreach \n in {U,CA,RA,MEM,SA} { \draw[life] (\n) -- ++(0,-7.5); }
+
+%         \draw[msg] (U   |- 0,-1)   -- node[above, font=\tiny] {on\_message("Còn nam thì sao?")} (CA |- 0,-1);
+%         \draw[msg] (CA  |- 0,-1.7) -- node[above, font=\tiny] {decide(q, mem, hist)} (RA |- 0,-1.7);
+%         \draw[ret] (RA  |- 0,-2.3) -- node[above, font=\tiny] {tool\_calls = [(dieu\_kien\_ket\_hon, action="reuse")]} (CA |- 0,-2.3);
+%         \draw[msg] (CA  |- 0,-3.0) -- node[above, font=\tiny] {dispatch(tool\_calls)} (RA |- 0,-3.0);
+%         \draw[msg] (RA  |- 0,-3.6) -- node[above, font=\tiny] {validate\_reuse\_request(refs)} (MEM |- 0,-3.6);
+%         \draw[ret] (MEM |- 0,-4.3) -- node[above, font=\tiny] {ReuseValidation(allowed=True, contexts)} (RA |- 0,-4.3);
+%         \draw[ret] (RA  |- 0,-5.0) -- node[above, font=\tiny] {[result(cache\_status="reused")]} (CA |- 0,-5.0);
+%         \draw[msg] (CA  |- 0,-5.8) -- node[above, font=\tiny] {stream(prompt, context)} (SA |- 0,-5.8);
+%         \draw[ret] (SA  |- 0,-6.6) -- node[above, font=\tiny] {tokens\ldots} (U  |- 0,-6.6);
+%     \end{tikzpicture}
+%     \caption{Biểu đồ trình tự cho câu follow-up có tái sử dụng ngữ cảnh đã lưu (kịch bản 2).}
+%     \label{fig:seq-followup-reuse}
+% \end{figure}
+
+% \paragraph{Kịch bản 3 --- Fan-out song song nhiều retriever.}
+% Kịch bản này minh hoạ rõ nhất pattern Router: một câu hỏi phức hợp như "Vợ có được chia nhà đất khi ly hôn không?" sẽ kích hoạt cả che\_do\_tai\_san\_cua\_vo\_chong (nền tảng phân loại chung/riêng) và chia\_tai\_san\_sau\_ly\_hon (quy tắc chia khi ly hôn). RouterAgent đặt hai tool call vào danh sách và gọi chúng đồng thời bằng asyncio.gather. Hai tác tử con không nhìn thấy nhau, không chia sẻ trạng thái và tự chạy quy trình ba bước nội bộ của riêng mình. Hai kết quả trả về được tầng domain hợp nhất và khử trùng lặp căn cứ trước khi SynthesizerAgent xây câu trả lời cuối. Hình~\ref{fig:seq-multi-fanout} mô tả trình tự này.
+
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}[
+%         actor/.style={rectangle, draw, thick, fill=gray!10, minimum width=2.0cm, minimum height=0.7cm, align=center, font=\scriptsize},
+%         life/.style={dashed},
+%         msg/.style={->, >=Stealth, thick},
+%         ret/.style={->, >=Stealth, thick, dashed},
+%         par/.style={rectangle, draw, dashed, thick, inner sep=4pt},
+%     ]
+%         \node[actor] (U)  at (0,0)    {User};
+%         \node[actor] (CA) at (2.8,0)  {ConversationOrchestrator};
+%         \node[actor] (RA) at (5.8,0)  {RouterAgent};
+%         \node[actor] (R1) at (8.8,0)  {RetrieverAgent\\\textit{che\_do\_tai\_san}};
+%         \node[actor] (R2) at (11.8,0) {RetrieverAgent\\\textit{chia\_tai\_san}};
+%         \node[actor] (DM) at (14.6,0) {domain.legal};
+%         \node[actor] (SA) at (17.4,0) {SynthesizerAgent};
+%         \foreach \n in {U,CA,RA,R1,R2,DM,SA} { \draw[life] (\n) -- ++(0,-9); }
+
+%         \draw[msg] (U  |- 0,-1)   -- node[above, font=\tiny] {on\_message(q)} (CA |- 0,-1);
+%         \draw[msg] (CA |- 0,-1.7) -- node[above, font=\tiny] {decide(q)} (RA |- 0,-1.7);
+%         \draw[ret] (RA |- 0,-2.3) -- node[above, font=\tiny] {tool\_calls = [che\_do, chia]} (CA |- 0,-2.3);
+%         \draw[msg] (CA |- 0,-3.0) -- node[above, font=\tiny] {dispatch(tool\_calls)} (RA |- 0,-3.0);
+
+%         % parallel block
+%         \node[par, fit={(RA |- 0,-3.4) (R2 |- 0,-5.8)}, label={[font=\tiny\itshape]above:par (asyncio.gather)}] {};
+%         \draw[msg] (RA |- 0,-4.0) -- node[above, font=\tiny] {run(q)} (R1 |- 0,-4.0);
+%         \draw[msg] (RA |- 0,-4.6) -- node[above, font=\tiny] {run(q)} (R2 |- 0,-4.6);
+%         \draw[ret] (R1 |- 0,-5.2) -- node[above, font=\tiny] {bundle\_A} (RA |- 0,-5.2);
+%         \draw[ret] (R2 |- 0,-5.6) -- node[above, font=\tiny] {bundle\_B} (RA |- 0,-5.6);
+
+%         \draw[ret] (RA |- 0,-6.3) -- node[above, font=\tiny] {[result\_A, result\_B]} (CA |- 0,-6.3);
+%         \draw[msg] (CA |- 0,-7.0) -- node[above, font=\tiny] {process\_context\_strings([A,B])} (DM |- 0,-7.0);
+%         \draw[ret] (DM |- 0,-7.6) -- node[above, font=\tiny] {merged + deduped} (CA |- 0,-7.6);
+%         \draw[msg] (CA |- 0,-8.2) -- node[above, font=\tiny] {stream(prompt, merged)} (SA |- 0,-8.2);
+%         \draw[ret] (SA |- 0,-8.8) -- node[above, font=\tiny] {tokens\ldots} (U  |- 0,-8.8);
+%     \end{tikzpicture}
+%     \caption{Biểu đồ trình tự cho câu hỏi phức hợp với fan-out song song hai retriever (kịch bản 3). Khối nét đứt biểu thị đoạn chạy song song qua asyncio.gather.}
+%     \label{fig:seq-multi-fanout}
+% \end{figure}
+
+% Ba kịch bản nói trên tuy đơn giản nhưng đại diện cho toàn bộ phổ tình huống mà hệ thống xử lý hàng ngày. Đoạn mã sau là phần lõi của RouterAgent.dispatch hiện thực hoá bước fan-out song song; mã thực được tham chiếu trực tiếp từ tệp application/router.py của bản hiện tại và sẽ được di dời sang agents/router/agent.py ở phase refactor tiếp theo.
+
+% \begin{lstlisting}[language=Python, caption={Lõi fan-out song song trong RouterAgent.dispatch (rút gọn).}, label={lst:router-dispatch}]
+% async def dispatch(self, tool_calls, query, *, memory, thread_id, kg_version):
+%     if not tool_calls:
+%         return []
+%     unique = self._unique_tool_calls(tool_calls)
+%     self._validate_registered_tools(unique)
+%     return list(await asyncio.gather(*(
+%         self._execute_or_reuse(call, query,
+%                                memory=memory,
+%                                thread_id=thread_id,
+%                                kg_version=kg_version)
+%         for call in unique
+%     )))
+% \end{lstlisting}
+
+% Tính chất quan trọng cần lưu ý ở đoạn mã là dispatch không quyết định nội dung tool nào được gọi --- đó là việc của decide đã chạy trước đó với LLM --- mà chỉ chịu trách nhiệm hai việc: đảm bảo các tool call hợp lệ và thi hành đúng hợp đồng "fan-out song song" của pattern Router. Việc tái sử dụng ngữ cảnh đã lưu được giấu kín trong \_execute\_or\_reuse, cho phép phần còn lại của Router không cần biết khi nào dữ liệu được lấy từ Neo4j và khi nào dữ liệu được trả từ bộ nhớ.
 
 \subsection{Thiết kế cơ sở dữ liệu}
 Ứng dụng sử dụng Neo4j để lưu trữ đồ thị tri thức Luật Hôn nhân Gia đình năm 2014 và hệ quản trị cơ sở dữ liệu PostgreSQL để lưu trữ user, lịch sử cuộc trò chuyện (Bao gồm các tin nhắn của người dùng, câu trả lời của chatbot và input/output của các agent trong quá trình trả lời)
@@ -545,8 +626,8 @@ Bảng \ref{table:testing_metrics} liệt kê các tiêu chí vả chỉ số đ
 & Context Recall & Đạt mức $>$ 85\% \\ \hline
 \multirow{2}{*}{Căn cứ pháp lý} & Legal Validity Accuracy & Đạt mức $>$ 90\% \\ \cline{2-3} 
  & Legal Citation Accuracy & Đạt mức $>$ 85\% \\ \hline
-\multirow{2}{*}{Xử lý xung đột} & Legal Conflict Handling Accuracy & Đạt mức $>$ 80\% \\ \cline{2-3} 
- & Context Conflict Detection Rate & Đạt mức $>$ 80\% \\ \hline
+% \multirow{2}{*}{Xử lý xung đột} & Legal Conflict Handling Accuracy & Đạt mức $>$ 80\% \\ \cline{2-3} 
+%  & Context Conflict Detection Rate & Đạt mức $>$ 80\% \\ \hline
 \multirow{2}{*}{Phân loại viện dẫn} & Citation Prioritization Accuracy & Đạt mức $>$ 85\% \\ \cline{2-3} 
  & Invalid Citation Rate & Đạt mức dưới 10\%  \\ \hline
 \end{tabular}
@@ -575,19 +656,19 @@ Chỉ số Legal Validity Accuracy (LVA -- Độ chính xác về hiệu lực p
 \text{LVA} = \frac{\text{Tổng số căn cứ còn hiệu lực được hệ thống gọi ra}}{\text{Tổng số căn cứ hệ thống đã gọi ra (trong toàn bộ testcase)}}
 \end{equation}
 
-Tiếp theo là nhóm chỉ số đánh giá khả năng xử lý Xung đột Pháp luật. Nhóm chỉ số này đánh giá khả năng phát hiện và xử lý áp dụng các căn cứ theo đúng nguyên tắc thứ bậc hiệu lực pháp lý khi tình huống có sự chồng chéo, mâu thuẫn.
+% Tiếp theo là nhóm chỉ số đánh giá khả năng xử lý Xung đột Pháp luật. Nhóm chỉ số này đánh giá khả năng phát hiện và xử lý áp dụng các căn cứ theo đúng nguyên tắc thứ bậc hiệu lực pháp lý khi tình huống có sự chồng chéo, mâu thuẫn.
 
-Chỉ số Context Conflict Detection Rate (CCDR -- Tỷ lệ phát hiện xung đột trong ngữ cảnh) đo lường khả năng trong việc nhận diện và đánh dấu (\textit{flag}) các điều luật chồng chéo hoặc mâu thuẫn. Trong đó, CCDR là viết tắt của \textit{Context Conflict Detection Rate}. Chỉ số này được tính như sau:
-\begin{equation}
-\label{eq:ccdr_metric}
-\text{CCDR} = \frac{\text{Số câu phát hiện và đánh dấu (flag) có xung đột đúng}}{\text{Tổng số câu thực sự có xung đột trong tập testcase}}
-\end{equation}
+% Chỉ số Context Conflict Detection Rate (CCDR -- Tỷ lệ phát hiện xung đột trong ngữ cảnh) đo lường khả năng trong việc nhận diện và đánh dấu (\textit{flag}) các điều luật chồng chéo hoặc mâu thuẫn. Trong đó, CCDR là viết tắt của \textit{Context Conflict Detection Rate}. Chỉ số này được tính như sau:
+% \begin{equation}
+% \label{eq:ccdr_metric}
+% \text{CCDR} = \frac{\text{Số câu phát hiện và đánh dấu (flag) có xung đột đúng}}{\text{Tổng số câu thực sự có xung đột trong tập testcase}}
+% \end{equation}
 
-Chỉ số Legal Conflict Handling Accuracy (LCHA -- Độ chính xác xử lý xung đột pháp luật) đánh giá khả năng áp dụng các nguyên tắc ưu tiên thứ bậc hiệu lực pháp lý để đưa ra đáp án đúng cuối cùng. Trong đó, LCHA là viết tắt của \textit{Legal Conflict Handling Accuracy}. Công thức tính toán như sau:
-\begin{equation}
-\label{eq:lcha_metric}
-\text{LCHA} = \frac{\text{Số câu hỏi chồng chéo, mâu thuẫn được xử lý đúng nguyên tắc ưu tiên}}{\text{Tổng số câu hỏi có chứa xung đột pháp lý trong testcase}}
-\end{equation}
+% Chỉ số Legal Conflict Handling Accuracy (LCHA -- Độ chính xác xử lý xung đột pháp luật) đánh giá khả năng áp dụng các nguyên tắc ưu tiên thứ bậc hiệu lực pháp lý để đưa ra đáp án đúng cuối cùng. Trong đó, LCHA là viết tắt của \textit{Legal Conflict Handling Accuracy}. Công thức tính toán như sau:
+% \begin{equation}
+% \label{eq:lcha_metric}
+% \text{LCHA} = \frac{\text{Số câu hỏi chồng chéo, mâu thuẫn được xử lý đúng nguyên tắc ưu tiên}}{\text{Tổng số câu hỏi có chứa xung đột pháp lý trong testcase}}
+% \end{equation}
 
 Tiếp theo là nhóm chỉ số Phân loại viện dẫn. Nhóm chỉ số này đo lường độ chính xác của hệ thống trong việc phân rã vai trò ngữ nghĩa của các tầng văn bản luật khi thực hiện trích xuất tri thức.
 
@@ -707,13 +788,13 @@ Kết quả thực nghiệm được trình bày theo từng dạng câu hỏi p
 \hline
 \textbf{Chỉ số đánh giá} & \textbf{Mục tiêu} & \textbf{Kết quả đạt được} & \textbf{Trạng thái} \\ \hline
 Faithfulness & $>$ 85\% & 88.2\% & Đạt \\ \hline
-Context Recall & $>$ 85\% & 86.5\% & Đạt \\ \hline
+Context Recall & $>$ 85\% & 83.5\% & Không \\ \hline
 Legal Citation Accuracy & $>$ 85\% & 83.7\% & Không \\ \hline
 Legal Validity Accuracy & $>$ 90\% & 100\% & Đạt \\ \hline
 Citation Prioritization Accuracy & $>$ 85\% & 87.8\% & Đạt \\ \hline
 Invalid Citation Rate & $<$ 10\% & 12.5\% & Không \\ \hline
-Legal Conflict Handling Accuracy & $>$ 80\% & 82.4\% & Đạt \\ \hline
-Context Conflict Detection Rate  & $>$ 80\% & 83.1\% & Đạt \\ \hline
+% Legal Conflict Handling Accuracy & $>$ 80\% & 82.4\% & Đạt \\ \hline
+% Context Conflict Detection Rate  & $>$ 80\% & 83.1\% & Đạt \\ \hline
 \end{tabular}
 \caption{Tổng hợp kết quả thực nghiệm và đối chiếu mục tiêu}
 \label{table:experimental_summary}
@@ -746,27 +827,5 @@ Người dùng cũng có thể chạy ứng dụng trên máy bằng cách làm 
 Bước 1: Cài đặt Docker Desktop phiên bản 24 trở lên trên máy phát triển, sau đó clone mã nguồn của hệ thống. Người dùng đặt tệp backup đồ thị được cung cấp và đặt vào thư mục deploy/neo4j/snapshots/.
 
 Bước 2: Sao chép tệp .env.example thành .env và điền OPENAI\_API\_KEY, GOOGLE\_API\_KEY, CHAINLIT\_AUTH\_SECRET (chuỗi ngẫu nhiên 32 ký tự). Khởi chạy ứng dụng bằng docker compose up -d -{}-build. Người dùng truy cập \url{http://localhost:8000} và bắt đầu sử dụng ứng dụng.
-
-% \textbf{Giai đoạn 3 -- Đẩy mã nguồn lên GitHub và tạo Blueprint trên Render.} Khởi tạo một repository riêng tư trên GitHub (không công khai do snapshot có thể chứa dữ liệu nội bộ), commit toàn bộ mã nguồn rồi push lên nhánh main. Tại bảng điều khiển Render, đăng nhập và liên kết tài khoản GitHub, chọn \textit{New $\rightarrow$ Blueprint $\rightarrow$ repository vừa tạo}. Render tự động đọc tệp render.yaml ở thư mục gốc, xác định ba dịch vụ cần khởi tạo và yêu cầu xác nhận trước khi triển khai.
-
-% \textbf{Giai đoạn 4 -- Cấu hình các biến môi trường bí mật.} Sau khi Blueprint được áp dụng, người dùng vào trang quản trị của dịch vụ app, mục \textit{Environment} và điền các biến môi trường bí mật theo Bảng \ref{table:render_secrets}. Các biến môi trường còn lại như NEO4J\_URI, DATABASE\_URL, NEO4J\_PASSWORD được Render tự động liên kết giữa các dịch vụ qua khai báo fromService và fromDatabase trong Blueprint, không cần thiết lập thủ công.
-
-% \begin{table}[H]
-% \centering
-% \small
-% \setlength{\tabcolsep}{5pt}
-% \begin{tabularx}{0.92\textwidth}{|p{5.2cm}|X|}
-% \hline
-% \textbf{Biến môi trường} & \textbf{Cách điền} \\ \hline
-% OPENAI\_API\_KEY & Dán khóa API lấy từ \url{https://platform.openai.com/api-keys} \\ \hline
-% GOOGLE\_API\_KEY & Dán khóa API Gemini lấy từ Google AI Studio, dùng cho mô hình embedding \\ \hline
-% CHAINLIT\_AUTH\_SECRET & Render tự sinh giá trị ngẫu nhiên, không cần chỉnh sửa \\ \hline
-% OAUTH\_GOOGLE\_\newline CLIENT\_ID/SECRET & (Tùy chọn) Khai báo trên Google Cloud Console nếu cần bật đăng nhập OAuth \\ \hline
-% \end{tabularx}
-% \caption{Các biến môi trường bí mật cần điền thủ công trên Render}
-% \label{table:render_secrets}
-% \end{table}
-
-% \textbf{Giai đoạn 5 -- Xác minh sau triển khai.} Render tiến hành build các image Docker và khởi chạy các dịch vụ trong khoảng năm đến mười phút. Người dùng theo dõi log của dịch vụ neo4j cho đến khi xuất hiện thông báo \textit{Database restored}, sau đó theo dõi log dịch vụ app đến khi xuất hiện thông báo \textit{Your app is available at}. Khi hoàn tất, hệ thống có thể truy cập công khai qua đường dẫn HTTPS https://[tên-app].onrender.com. Trong trường hợp cần sử dụng tên miền riêng, người dùng vào mục \textit{Settings $\rightarrow$ Custom Domains} của dịch vụ app, khai báo tên miền và cập nhật bản ghi CNAME tại nhà cung cấp DNS theo hướng dẫn của Render.
 
 \end{document}

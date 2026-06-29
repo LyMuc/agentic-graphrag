@@ -1,0 +1,70 @@
+<mxfile host="app.diagrams.net" agent="manual">
+  <diagram name="D4-class-diagram" id="d4class">
+    <mxGraphModel dx="1133" dy="558" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ca" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontSize=14;" value="ConversationOrchestrator" vertex="1">
+          <mxGeometry height="260" width="350" x="190" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_a" parent="ca" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=14;" value="- session_history : list[dict]&#xa;- retrieval_memory : dict[str, MemoryEntry]&#xa;- conversation_anchors : list[Anchor]&#xa;- kg_version : str&#xa;- router : RouterAgent&#xa;- synthesizer : SynthesizerAgent" vertex="1">
+          <mxGeometry height="110" width="350" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_sep" parent="ca" style="line;strokeWidth=1;direction=east;html=1;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="8" width="350" y="136" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_m" parent="ca" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=14;" value="+ on_chat_start() : None&#xa;+ on_chat_resume(thread: uuid) : None&#xa;+ on_message(message: str) : None&#xa;- build_router_history() : list[dict]&#xa;- persist_turn(user_text: str, assistant_text: str, routing_metadata: dict, &#xa;legal_warnings: dict | None = None) -&gt; None" vertex="1">
+          <mxGeometry height="116" width="350" y="144" as="geometry" />
+        </mxCell>
+        <mxCell id="ra" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontSize=14;" value="RouterAgent" vertex="1">
+          <mxGeometry height="300" width="400" x="560" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ra_a" parent="ra" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;fontSize=14;" value="- llm : ChatOpenAI&#xa;- tool_picker_prompt : str&#xa;- tools : dict[str, ToolEntry]&#xa;- direct_tools : set[str]&#xa;- control_args : set[str]" vertex="1">
+          <mxGeometry height="84" width="400" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ra_sep" parent="ra" style="line;strokeWidth=1;direction=east;html=1;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="8" width="400" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="ra_m" parent="ra" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;fontSize=14;" value="+ decide(query: str, memory: dict[str, MemoryEntry],&#xa;history: list[dict[str, str]]) → list[ToolCall]&#xa;+ dispatch(tool_calls: list[ToolCall], query: str,&#xa;memory: dict[str, MemoryEntry], thread_id: str, kg_version: str) &#xa;→ list[RetrieverResult | str]&#xa;&#xa;- execute_or_reuse(tool_call: ToolCall, query: str,&#xa; memory: dict[str, MemoryEntry], thread_id: str, kg_version: str&#xa;  ) → RetrieverResult | str&#xa;- validate_registered_tools(tool_calls: list[ToolCall]) → None" vertex="1">
+          <mxGeometry height="182" width="400" y="118" as="geometry" />
+        </mxCell>
+        <mxCell id="rab" parent="1" style="swimlane;fontStyle=3;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontSize=14;" value="RetrieverAgent" vertex="1">
+          <mxGeometry height="188" width="470" x="140" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="rab_a" parent="rab" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;fontSize=14;" value="- name : str&#xa;- description : dict&#xa;- registry : TemplateRegistry&#xa;- llm : ChatOpenAI" vertex="1">
+          <mxGeometry height="74" width="470" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="rab_sep" parent="rab" style="line;strokeWidth=1;direction=east;html=1;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="8" width="470" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="rab_m" parent="rab" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;fontSize=14;" value="+ async run(query: str) : RetrieverResult&#xa;# async classify(query: str) : list[TemplateChoice]&#xa;# async extract(query: str, template: CypherTemplate) : tuple[TemplateParams, date]&#xa;# async execute(template: CypherTemplate, params: TemplateParams, target_date: str) : dict" vertex="1">
+          <mxGeometry height="80" width="470" y="108" as="geometry" />
+        </mxCell>
+        <mxCell id="cap" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" value="CapDuongRetriever" vertex="1">
+          <mxGeometry height="150" width="440" x="500" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="cap_a" parent="cap" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;fontSize=11;" value="- name = &quot;cap_duong&quot;&#xa;- description = cap_duong_description&#xa;- registry = CAP_DUONG_REGISTRY" vertex="1">
+          <mxGeometry height="54" width="440" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="cap_sep" parent="cap" style="line;strokeWidth=1;direction=east;html=1;" value="" vertex="1">
+          <mxGeometry height="8" width="440" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="cap_m" parent="cap" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;fontSize=11;" value="+ async run(query: str) : RetrieverResult&#xa;# async classify(query: str)&#xa;# async extract(query: str, template: CypherTemplate)&#xa;# async execute(template: CypherTemplate, params: TemplateParams, target_date: str)" vertex="1">
+          <mxGeometry height="62" width="440" y="88" as="geometry" />
+        </mxCell>
+        <mxCell id="sa" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontSize=14;" value="SynthesizerAgent" vertex="1">
+          <mxGeometry height="110" width="490" x="630" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="sa_a" parent="sa" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;fontSize=14;" value="- llm : ChatOpenAI&#xa;- main_prompt : str" vertex="1">
+          <mxGeometry height="34" width="490" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="sa_sep" parent="sa" style="line;strokeWidth=1;direction=east;html=1;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="8" width="490" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="sa_m" parent="sa" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;fontSize=14;" value="+ stream(messages: list[ChatMessage], contexts_text: str) : AsyncIterator[str]&#xa;- apply_warning_rules(bundles: list[list[dict[str, Any]]]) : dict[str, Any] | None" vertex="1">
+          <mxGeometry height="42" width="490" y="68" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

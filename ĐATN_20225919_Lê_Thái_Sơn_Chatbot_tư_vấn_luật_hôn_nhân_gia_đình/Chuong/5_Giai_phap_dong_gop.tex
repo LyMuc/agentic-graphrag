@@ -2,6 +2,214 @@
 \begin{document}
 \label{chapter:5}
 Chương này trình bày các đóng góp trọng tâm và các giải pháp kỹ thuật cốt lõi mà đồ án đã thiết kế và triển khai nhằm giải quyết những khó khăn đặc thù trong việc xây dựng chatbot tư vấn luật hôn nhân gia đình 2014.
+\section{Thiết kế chi tiết luồng Agentic Workflow}
+\label{section:agentic-workflow}
+
+Để giải quyết các yêu cầu phức tạp về pháp lý và đảm bảo tính chính xác của dữ liệu truy xuất, hệ thống được thiết kế theo mô hình Agentic GraphRAG kết hợp Agentic RAG với đồ thị tri thức. Phía server tổ chức theo pattern Router: ConversationOrchestrator là lớp điều phối có trạng thái phiên (không có mô hình ngôn ngữ riêng); RouterAgent phân giải câu hỏi và fan-out song song tới 20 RetrieverAgent theo miền pháp lý; SynthesizerAgent sinh câu trả lời cuối từ ngữ cảnh đã hợp nhất; hai công cụ phản hồi trực tiếp clarify và respond cho phép trả lời hoặc hỏi lại mà không qua bước tổng hợp.
+
+\subsubsection{Sơ đồ luồng tổng quan}
+
+Luồng hoạt động của một lượt hỏi đáp được chia thành năm bước chính như sau:
+(i) \textbf{Bước 1 (Tiếp nhận và định tuyến)}: ConversationOrchestrator tiếp nhận tin nhắn, đọc lịch sử phiên, bộ nhớ truy xuất và các anchor lượt cũ, rút gọn lịch sử theo ngân sách token rồi gọi RouterAgent để chọn công cụ cần kích hoạt. RouterAgent kiểm tra tên công cụ có trong registry, loại bỏ lời gọi trùng lặp, và có thể đánh dấu tái sử dụng ngữ cảnh đã lưu thay vì gọi retriever lại khi follow-up cùng miền và cùng phạm vi thời gian.
+(ii) \textbf{Bước 2 (Phân loại mẫu và trích xuất tham số)}: Mỗi RetrieverAgent được chọn thực hiện phân loại một đến ba mẫu truy vấn Cypher phù hợp, sau đó trích xuất tham số điền vào mẫu, bao gồm mốc thời gian sự kiện pháp lý nếu người dùng nêu trong câu hỏi.
+(iii) \textbf{Bước 3 (Truy xuất căn cứ pháp lý)}: RetrieverAgent thực thi Cypher trên Neo4j, mở rộng quan hệ pháp lý (sửa đổi, hướng dẫn, thay thế, mâu thuẫn) và mã hoá kết quả thành gói căn cứ pháp lý chuẩn.
+(iv) \textbf{Bước 4 (Hợp nhất và chuẩn hoá ngữ cảnh)}: ConversationOrchestrator gom kết quả từ nhiều RetrieverAgent qua tầng domain pháp lý thuần: gộp theo phạm vi thời gian, khử trùng lặp căn cứ theo định danh và hiệu lực, render thành văn bản có cấu trúc (cảnh báo, hiệu lực văn bản, căn cứ chính, hướng dẫn, bổ trợ, thay thế, sắp có hiệu lực, mâu thuẫn). Khi không có căn cứ phù hợp, luồng vẫn tiếp tục với thông báo không tìm thấy để mô hình phản hồi an toàn.
+(v) \textbf{Bước 5 (Sinh câu trả lời và hiển thị)}: Nếu RouterAgent chọn clarify hoặc respond, văn bản trả về được gửi thẳng tới người dùng. Ngược lại, SynthesizerAgent ghép ngữ cảnh đã chuẩn hoá với prompt lập luận pháp lý và lịch sử hội thoại, stream câu trả lời qua API LLM. Câu trả lời có trích dẫn tới cấp Điều, Khoản, Điểm; metadata cảnh báo hiệu lực và mâu thuẫn gắn trên message; Chainlit hiển thị các bước Router và retriever; cuối câu trả lời có thể có liên kết trực quan hoá đồ thị tri thức đã truy xuất.
+
+\subsubsection{Đặc tả chi tiết}
+
+Trước tiên là đặc tả ConversationOrchestrator tại Bảng \ref{table: chat_orchestrator}. Đây là lớp điều phối deterministic bọc quanh RouterAgent stateless theo kiểu quản lý trạng thái bên ngoài (external state management) trong pattern Router; không kế thừa lớp Agent vì không gọi LLM để suy luận.
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Thành phần} & \textbf{Mô tả chi tiết} \\ \hline
+\textbf{Chức năng} & Khởi tạo và khôi phục phiên hội thoại; dựng lịch sử rút gọn cho Router và cho bước sinh đáp án; uỷ quyền định tuyến và fan-out cho RouterAgent; cập nhật bộ nhớ truy xuất và anchor sau mỗi lượt; hợp nhất căn cứ pháp lý qua tầng domain; uỷ quyền sinh câu trả lời cho SynthesizerAgent hoặc chuyển thẳng kết quả từ công cụ phản hồi trực tiếp; ghi vết bước xử lý trên giao diện Chainlit. \\ \hline
+\textbf{Đầu vào} & Tin nhắn người dùng; lịch sử hội thoại đầy đủ trong phiên; bộ nhớ ngữ cảnh pháp lý các lượt trước (ánh xạ mã tham chiếu sang gói căn cứ đã mã hoá); các anchor nén của lượt cũ; khi mở lại thread, metadata các bước đã lưu từ PostgreSQL (đối với người dùng đăng ký). \\ \hline
+\textbf{Mô hình LLM} & Không sử dụng. Mọi suy luận ngôn ngữ do RouterAgent, RetrieverAgent, SynthesizerAgent hoặc công cụ phản hồi trực tiếp đảm nhiệm. \\ \hline
+\textbf{Quy trình xử lý} & (i) Tiếp nhận tin nhắn (ii) Dựng lịch sử làm việc cho Router (iii) RouterAgent quyết định và thực thi công cụ (iv) Cập nhật bộ nhớ truy xuất và anchor (v) Hợp nhất và khử trùng căn cứ pháp lý (vi) Dựng lịch sử cho lượt sinh đáp án (vii) Gọi SynthesizerAgent hoặc gửi kết quả direct tool (viii) Lưu lượt và metadata lên phiên và PostgreSQL (người dùng đăng ký). \\ \hline
+\textbf{Quản lý trạng thái} & Trong phiên: lịch sử đầy đủ, bộ nhớ truy xuất và anchor trong bộ nhớ Chainlit. Người dùng đăng ký: thread và step (kèm metadata bộ nhớ) persist qua PostgreSQL; khôi phục khi mở lại thread. Guest: chỉ bộ nhớ phiên hiện tại, không lưu lịch sử bền vững. \\ \hline
+\textbf{Đầu ra} & Câu trả lời stream hoặc văn bản direct tool; metadata cảnh báo pháp lý (nếu có); liên kết trực quan hoá đồ thị; vết thực thi Router và retriever trên UI. \\ \hline
+\end{tabularx}
+\caption{Đặc tả ConversationOrchestrator}
+\label{table: chat_orchestrator}
+\end{table}
+
+Tiếp theo là đặc tả RouterAgent tại Bảng \ref{table: router_agent}. Tác tử này stateless: chỉ phân giải câu hỏi thành lời gọi công cụ và thực thi song song; không tự sinh câu trả lời cho người dùng.
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Thành phần} & \textbf{Mô tả chi tiết} \\ \hline
+\textbf{Chức năng} & Phân tích câu hỏi và lịch sử để chọn đúng và đủ RetrieverAgent (hoặc công cụ phản hồi trực tiếp); gắn câu hỏi đã giải nghĩa cho từng retriever; thực thi song song các lời gọi; tái sử dụng ngữ cảnh cache khi Router đánh dấu reuse và kiểm tra deterministic thành công. \\ \hline
+\textbf{Đầu vào} & Câu hỏi hiện tại; lịch sử hội thoại rút gọn; tóm tắt bộ nhớ truy xuất khả dụng; danh sách 20 retriever và hai công cụ direct với mô tả chức năng; mã thread và phiên bản đồ thị tri thức để kiểm tra reuse. \\ \hline
+\textbf{Prompt} & Hướng dẫn mô hình Router phân tách câu hỏi đa ý, chọn đủ miền pháp lý, tránh gọi trùng một retriever, viết lại câu hỏi độc lập cho mỗi retriever, và khai báo khi muốn tái sử dụng ngữ cảnh đã truy xuất (hành động, mã tham chiếu, phạm vi thời gian, ngày áp dụng nếu có). \\ \hline
+\textbf{Quy trình xử lý} & (i) Gọi API LLM với tool calling (ii) Nhận danh sách lời gọi công cụ (iii) Kiểm tra công cụ đã đăng ký và loại trùng (iv) Với mỗi lời gọi: tái sử dụng cache hoặc gọi RetrieverAgent hoặc direct tool, chạy song song khi có nhiều retriever. \\ \hline
+\textbf{Kiểm soát chất lượng} & Loại bỏ retriever không có trong registry; mỗi retriever chỉ một lời gọi trên lượt; reuse chỉ thành công khi khớp thread, retriever, phiên bản KG, ngày áp dụng và phạm vi thời gian --- nếu không khớp thì truy xuất lại và ghi lý do fallback. Không có lớp RetrieverPolicy bắt buộc trên luồng production. \\ \hline
+\textbf{Đầu ra} & Danh sách kết quả từ retriever (gói căn cứ đã mã hoá và thông tin debug) hoặc văn bản từ clarify hoặc respond; metadata reuse và mã tham chiếu ngữ cảnh khi áp dụng. \\ \hline
+\end{tabularx}
+\caption{Đặc tả RouterAgent}
+\label{table: router_agent}
+\end{table}
+
+Tiếp theo là đặc tả RetrieverAgent tại Bảng \ref{table: retriever_agent}. Mỗi lớp cụ thể đại diện một miền pháp lý (20 miền); bên trong mỗi retriever, pattern Subagents được áp dụng ở quy mô nhỏ: classifier chọn mẫu Cypher, mỗi mẫu được trích xuất tham số riêng rồi chạy song song.
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Thành phần} & \textbf{Mô tả chi tiết} \\ \hline
+\textbf{Chức năng} & Nhận câu hỏi đã giải nghĩa từ RouterAgent; chọn mẫu truy vấn Cypher trong registry miền; trích xuất tham số; thực thi trên Neo4j; chuẩn hoá và mã hoá căn cứ pháp lý trả về. \\ \hline
+\textbf{Đầu vào} & Một câu hỏi độc lập do RouterAgent gắn cho retriever tương ứng. \\ \hline
+\textbf{Prompt} & Prompt phân loại mẫu: mô tả chức năng từng mẫu trong miền và quy tắc ưu tiên theo ý định câu hỏi. Prompt trích xuất: yêu cầu điền đủ trường tham số theo mẫu và nêu mốc thời gian sự kiện nếu có trong câu hỏi. \\ \hline
+\textbf{Quy trình xử lý} & (i) Phân loại một đến ba mẫu Cypher (ii) Trích xuất tham số và thời điểm sự kiện cho mỗi mẫu (iii) Thực thi Cypher trên Neo4j (iv) Mã hoá kết quả thành gói căn cứ pháp lý chuẩn và tạo stub trực quan hoá nếu có dữ liệu đồ thị. \\ \hline
+\textbf{Kiểm soát chất lượng} & Khi classifier không chọn mẫu hợp lệ, dùng mẫu mặc định an toàn trong miền; tên mẫu do LLM đề xuất phải nằm trong registry. Lỗi Cypher hoặc không có bản ghi vẫn trả thông báo để pipeline tổng hợp xử lý an toàn. \\ \hline
+\textbf{Đầu ra} & Danh sách gói căn cứ pháp lý đã mã hoá; văn bản debug phục vụ hiển thị bước retriever; mã snapshot đồ thị (nếu có). \\ \hline
+\end{tabularx}
+\caption{Đặc tả RetrieverAgent}
+\label{table: retriever_agent}
+\end{table}
+
+Cuối cùng là đặc tả SynthesizerAgent tại Bảng \ref{table: synthesizer_agent}. Tác tử này chỉ chạy khi RouterAgent không chọn clarify hoặc respond; nhiệm vụ là dệt một câu trả lời pháp lý duy nhất từ ngữ cảnh đã hợp nhất.
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Thành phần} & \textbf{Mô tả chi tiết} \\ \hline
+\textbf{Chức năng} & Ghép prompt lập luận pháp lý cố định với lịch sử hội thoại rút gọn và căn cứ pháp lý đã render; gọi API LLM Response để stream câu trả lời; trích metadata cảnh báo hiệu lực và mâu thuẫn cho giao diện (không nhúng vào prompt). \\ \hline
+\textbf{Đầu vào} & Văn bản căn cứ pháp lý đã hợp nhất và khử trùng; lịch sử hội thoại cho lượt sinh đáp án; câu hỏi nguyên văn và câu hỏi đã giải nghĩa; danh sách gói căn cứ pháp lý để tạo metadata cảnh báo. \\ \hline
+\textbf{Prompt} & Quy tắc lập luận pháp lý: chỉ dựa trên căn cứ hệ thống cung cấp; lọc Khoản Điểm liên quan; ghi ngày hiệu lực theo định dạng Việt Nam; trình bày theo thứ bậc văn bản; xử lý cảnh báo đa cấp bậc, văn bản sửa đổi và áp dụng luật cũ khi có trong dữ liệu. \\ \hline
+\textbf{Quy trình xử lý} & (i) Dựng danh sách message cho LLM (ii) Stream token qua API với cơ chế retry khi lỗi mạng (iii) Gắn metadata cảnh báo từ tầng domain lên message trả người dùng. \\ \hline
+\textbf{Đầu ra} & Câu trả lời hoàn chỉnh (stream); metadata cảnh báo pháp lý cho modal giao diện. \\ \hline
+\end{tabularx}
+\caption{Đặc tả SynthesizerAgent}
+\label{table: synthesizer_agent}
+\end{table}
+
+\section{Xây dựng cơ chế xử lý lịch sử hội thoại}
+\label{section:conversation-history}
+
+Hội thoại tư vấn pháp luật thường kéo dài nhiều lượt: người dùng hỏi tiếp bằng câu ngắn, tham chiếu ngược tới căn cứ đã nêu, hoặc chỉ thay đổi mốc thời gian áp dụng luật. Nếu mỗi lượt đều đưa toàn bộ lịch sử vào prompt hoặc gọi lại retriever, chi phí token và độ trễ tăng nhanh; nếu cắt bớt lịch sử tuỳ tiện, Router và SynthesizerAgent dễ mất ngữ cảnh follow-up. Đồ án thiết kế cơ chế xử lý lịch sử theo pattern quản lý trạng thái bên ngoài (external state management): ConversationOrchestrator giữ trạng thái phiên deterministic trong bộ nhớ Chainlit; tầng conversation (history và memory) dựng lịch sử rút gọn theo ngân sách token cục bộ và lưu căn cứ pháp lý đã truy xuất để tái sử dụng an toàn. Hệ thống không gọi thêm một lượt LLM chỉ để tóm tắt lịch sử.
+
+\subsubsection{Bài toán và kiến trúc bộ nhớ}
+
+Cơ chế tách ba lớp trạng thái bổ trợ cho nhau như Bảng~\ref{tab:conversation_state_layers}.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.08}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Lớp trạng thái} & \textbf{Vai trò trong phiên hội thoại} \\ \hline
+Lịch sử đầy đủ &
+Toàn bộ tin nhắn người dùng và trợ lý trong phiên hiện tại hoặc thread đã khôi phục. Dùng để hiển thị trên giao diện, ghi nhận audit và là nguồn khi dựng lịch sử làm việc ở các lượt sau. \\ \hline
+Lịch sử làm việc &
+Tập message rút gọn theo ngân sách token, được dựng lại mỗi lượt cho RouterAgent hoặc SynthesizerAgent. Gồm một số lượt gần ở dạng đầy đủ và chỉ mục anchor nén của các lượt cũ liên quan. Không lưu trữ bền vững riêng; sinh từ lịch sử đầy đủ và danh sách anchor. \\ \hline
+Bộ nhớ truy xuất &
+Ánh xạ mã tham chiếu ngữ cảnh sang gói căn cứ pháp lý đã mã hoá (LegalContextBundle), cùng metadata retriever, câu hỏi đã giải nghĩa, mốc thời gian áp dụng và phiên bản đồ thị tri thức. Cho phép RouterAgent tái sử dụng căn cứ đã truy xuất khi follow-up không mở thêm miền pháp lý mới. \\ \hline
+Anchor lượt cũ &
+Bản ghi nén mỗi lượt đã qua Router: mã lượt, câu hỏi đã gửi retriever, tên retriever được gọi và các mã tham chiếu ngữ cảnh. Giúp Router giải tham chiếu (đại từ, câu hỏi tiếp theo) mà không nhét toàn bộ căn cứ pháp lý cũ vào prompt lịch sử. \\ \hline
+\end{tabularx}
+\caption{Các lớp trạng thái hội thoại do ConversationOrchestrator quản lý}
+\label{tab:conversation_state_layers}
+\end{table}
+
+Ngân sách token được cấu hình qua biến môi trường: bốn lượt gần giữ nguyên văn (RECENT\_\allowbreak FULL\_\allowbreak TURNS), tối đa ba nghìn token cho lịch sử Router (ROUTER\_\allowbreak HISTORY\_\allowbreak MAX\_\allowbreak TOKENS), bốn nghìn token cho lịch sử Synthesizer (RESPONSE\_\allowbreak HISTORY\_\allowbreak MAX\_\allowbreak TOKENS), và giới hạn hai mươi anchor cũ được xét khi chọn chỉ mục (OLDER\_\allowbreak TURN\_\allowbreak INDEX\_\allowbreak LIMIT). Ước lượng token dùng heuristic cục bộ trên văn bản, không gọi tokenizer của mô hình.
+
+\subsubsection{Vòng đời phiên và luồng cập nhật mỗi lượt}
+
+Khi người dùng bắt đầu chat mới, ConversationOrchestrator khởi tạo rỗng lịch sử đầy đủ, bộ nhớ truy xuất và danh sách anchor, rồi gửi lời chào. Khi người dùng đăng ký mở lại một thread từ sidebar, hook resume đọc các step đã persist trong PostgreSQL, tái tạo ba cấu trúc trên từ metadata các bước assistant (lịch sử từ user\_message và assistant\_message; bộ nhớ và anchor từ retrieval\_\allowbreak memory\_\allowbreak entries và turn\_\allowbreak anchor). Thread cũ thiếu metadata mới vẫn khôi phục được phần hội thoại hiển thị; bộ nhớ truy xuất và anchor trả về rỗng.
+
+Mỗi lượt hỏi đáp, orchestrator thực hiện chuỗi xử lý như sau. Đầu tiên đọc trạng thái phiên và sinh mã lượt mới. Tiếp theo dựng lịch sử làm việc cho Router với ngân sách Router. RouterAgent nhận câu hỏi, lịch sử rút gọn và tóm tắt bộ nhớ truy xuất khả dụng (không lộ nội dung căn cứ pháp lý, chỉ mã tham chiếu, retriever, câu hỏi đã giải nghĩa và mốc thời gian). Sau khi Router thực thi công cụ, orchestrator tạo entry bộ nhớ cho các truy xuất mới, cập nhật anchor lượt hiện tại, rồi dựng lịch sử làm việc lần hai với ngân sách Response cho SynthesizerAgent (hoặc bỏ qua bước tổng hợp nếu Router chọn clarify hoặc respond). Cuối cùng orchestrator append cặp user--assistant vào lịch sử đầy đủ; đối với người dùng đăng ký, metadata bộ nhớ và anchor được ghi vào step assistant trong PostgreSQL để phục vụ resume. Guest dùng cùng luồng trong bộ nhớ phiên nhưng data layer không persist thread và step.
+
+\subsubsection{Giải thuật dựng lịch sử làm việc}
+
+Lịch sử làm việc không sao chép toàn bộ lịch sử đầy đủ mà kết hợp hai chiến lược: giữ nguyên văn các lượt gần và thay các lượt xa bằng anchor một dòng. Giải thuật dưới đây mô tả logic của tầng history trong kiến trúc refactor.
+
+\begin{algorithm}[H]
+\footnotesize
+\textbf{Input:} Lịch sử đầy đủ $H$; danh sách anchor $A$; câu hỏi hiện tại $q$; số lượt gần giữ nguyên văn $k$; ngân sách token $B$; giới hạn anchor cũ $L$.
+
+\textbf{Output:} Danh sách message $W$ đưa vào prompt Router hoặc Synthesizer.
+
+\begin{enumerate}[label=\textbf{Bước \arabic*.}, leftmargin=1.6cm]
+    \item Chia $H$ thành các lượt hội thoại: mỗi tin user mở một lượt mới; các tin assistant liền sau gộp vào cùng lượt.
+    \item Lấy $k$ lượt mới nhất làm ứng viên ``lượt gần''; chọn tuần tự từ mới về cũ sao cho tổng token ước lượng không vượt $B$. Nếu ngay lượt mới nhất đã vượt ngân sách, chỉ giữ tin user của lượt đó khi còn chỗ.
+    \item Coi các anchor tương ứng lượt cũ hơn $k$ (hoặc toàn bộ anchor nếu $k=0$) là ứng viên chỉ mục; giới hạn tập xét trong $L$ anchor gần nhất.
+    \item Xếp hạng anchor theo (i) số từ trùng với $q$ sau chuẩn hoá tiếng Việt và (ii) thứ tự thời gian; ưu tiên anchor liên quan hơn và mới hơn.
+    \item Trong phần ngân sách còn lại sau bước 2, ghép các dòng anchor đã chọn vào một message system có tiêu đề cảnh báo: chỉ mục lượt cũ phục vụ giải tham chiếu, không phải căn cứ pháp lý.
+    \item Trả $W$ = [message chỉ mục anchor (nếu có)] + [message lượt gần đã chọn].
+\end{enumerate}
+\caption{Giải thuật dựng lịch sử làm việc theo ngân sách token}
+\label{algo:build_working_history}
+\end{algorithm}
+
+RouterAgent và SynthesizerAgent gọi cùng giải thuật nhưng khác ngân sách token. Router nhận thêm tóm tắt bộ nhớ truy xuất: ưu tiên các mã tham chiếu đã xuất hiện trong chỉ mục anchor của lịch sử làm việc, sau đó bổ sung entry gần nhất trong bộ nhớ. Mục tiêu là cho Router biết cache nào có thể reuse mà không đổ toàn bộ LegalContextBundle vào prompt định tuyến.
+
+Chính sách truyền câu hỏi cho retriever: mặc định giữ nguyên văn câu hỏi người dùng cho mọi retriever trong cùng lượt; chỉ giải tham chiếu (đại từ, ellipsis) khi follow-up rõ ràng phụ thuộc lượt trước, không paraphrase hay tách sub-question theo retriever.
+
+\subsubsection{Bộ nhớ truy xuất và tái sử dụng căn cứ pháp lý}
+
+Sau mỗi lượt Router thực thi retriever, orchestrator chỉ tạo entry bộ nhớ mới khi retriever thật sự truy xuất (không phải reuse), kết quả có gói căn cứ đã mã hoá hợp lệ, và không phải công cụ phản hồi trực tiếp. Mỗi entry gồm các trường như Bảng~\ref{tab:retrieval_memory_entry}.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.08}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Trường} & \textbf{Ý nghĩa} \\ \hline
+context\_ref &
+Mã tham chiếu duy nhất; Router khai báo trong context\_refs khi muốn reuse. \\ \hline
+turn\_id, thread\_id &
+Gắn entry với lượt và thread Chainlit; reuse bị từ chối nếu khác thread. \\ \hline
+retriever\_name &
+Miền retriever tạo entry; phải trùng công cụ Router đang gọi khi reuse. \\ \hline
+resolved\_query &
+Câu hỏi đã gửi retriever (nguyên văn hoặc đã giải tham chiếu). \\ \hline
+encoded\_contexts &
+Danh sách chuỗi LegalContextBundle đã mã hoá. \\ \hline
+target\_dates, kg\_version &
+Mốc áp dụng luật và phiên bản đồ thị; dùng kiểm tra reuse deterministic. \\ \hline
+created\_at &
+Thời điểm tạo entry (ISO UTC). \\ \hline
+\end{tabularx}
+\caption{Cấu trúc một entry trong bộ nhớ truy xuất}
+\label{tab:retrieval_memory_entry}
+\end{table}
+
+RouterAgent có thể đặt context\_action là reuse và liệt kê context\_refs thay vì gọi lại Neo4j khi follow-up cùng miền, cùng phạm vi thời gian và không mở vấn đề pháp lý mới. Trước khi trả bundle cũ, tầng memory chạy kiểm tra deterministic; chỉ khi mọi điều kiện khớp mới coi reuse thành công.
+
+\begin{algorithm}[H]
+\footnotesize
+\textbf{Input:} Tên retriever $R$; tham số Router (context\_action, context\_refs, time\_scope, target\_date); bộ nhớ $M$; thread\_id $T$; phiên bản KG $G$; ngày hiện tại $D$.
+
+\textbf{Output:} Cho phép reuse hay không; nếu cho phép thì danh sách bundle đã mã hoá và mã tham chiếu hợp lệ.
+
+\begin{enumerate}[label=\textbf{Bước \arabic*.}, leftmargin=1.6cm]
+    \item Nếu context\_action khác reuse hoặc context\_refs rỗng, từ chối reuse và yêu cầu truy xuất lại.
+    \item Suy ra mốc áp dụng kỳ vọng từ time\_scope: current $\rightarrow$ $D$ và ngày do hệ thống chọn; explicit $\rightarrow$ target\_date người dùng nêu; ambiguous $\rightarrow$ từ chối reuse.
+    \item Với mỗi mã ref trong context\_refs: entry phải tồn tại trong $M$, cùng $T$, retriever trùng $R$, kg\_version trùng $G$, bundle parse được, target\_date và cờ ``người dùng đã nêu ngày'' khớp bước 2.
+    \item Gộp các bundle được chấp nhận qua cùng pipeline dedupe như lượt truy xuất mới; nếu gộp thất bại hoặc còn legacy text không bundle, từ chối reuse.
+    \item Nếu tất cả ref hợp lệ, chấp nhận reuse và đánh dấu cache\_status là reused; nếu không, fallback gọi retriever thật và ghi lý do fallback.
+\end{enumerate}
+\caption{Giải thuật kiểm tra tái sử dụng ngữ cảnh truy xuất}
+\label{algo:validate_reuse}
+\end{algorithm}
+
+Anchor lượt được dựng sau Router: gom resolved\_query, retriever\_name và context\_refs từ kết quả công cụ (kể cả ref từ reuse) và từ entry mới tạo. Anchor không chứa nội dung điều luật; chỉ phục vụ chỉ mục lịch sử và gợi ý reuse cho Router ở lượt sau.
+
+Phiên bản đồ thị tri thức (KG\_VERSION) đóng vai trò invalidate cache: khi cấu hình biến môi trường, mọi entry gắn version cố định; khi không cấu hình, mỗi process sinh version riêng nên cache không an toàn qua restart server --- phù hợp môi trường phát triển, còn production nên gắn version theo bản nạp đồ thị.
+
+\subsubsection{Phân biệt người dùng đăng ký và guest}
+
+Người dùng đăng ký và guest cùng đi qua ConversationOrchestrator và cùng cấu trúc bộ nhớ trong phiên Chainlit. Khác biệt nằm ở persist: guest nhận JWT guest:uuid, data layer bỏ qua ghi thread, step và element; khi đóng phiên, lịch sử đầy đủ, bộ nhớ truy xuất và anchor không còn trên server. Người dùng đăng ký có sidebar lịch sử; metadata retrieval\_\allowbreak memory\_\allowbreak entries, turn\_\allowbreak anchor và kg\_\allowbreak version lưu trên step assistant, cho phép resume đúng cả hội thoại hiển thị và cache pháp lý. Guest không mở thread cũ qua sidebar; shared route vẫn đọc thread chỉ đọc.
+
+Thiết kế này tách bạch trách nhiệm: tầng conversation chỉ quản lý cấu trúc lịch sử và cache deterministic; RouterAgent quyết định reuse bằng LLM nhưng bị ràng buộc bởi kiểm tra deterministic; SynthesizerAgent luôn nhận lịch sử làm việc đã rút gọn riêng, không phụ thuộc prompt Router. Nhờ vậy hệ thống vừa giữ được ngữ cảnh hội thoại dài, vừa tránh truy xuất Neo4j trùng lặp khi follow-up an toàn, vừa không đưa căn cứ pháp lý cũ tràn vào prompt định tuyến.
 
 \section{Xây dựng đồ thị tri thức cho Luật Hôn nhân và Gia đình năm 2014 và tập mẫu truy vấn Cypher (Cypher templates) cho từng dạng câu hỏi}
 \label{section:5.2}
@@ -28,7 +236,7 @@ Chương này trình bày các đóng góp trọng tâm và các giải pháp k�
 % \label{subsection:5.2.2}
 Đồ thị tri thức được xây dựng theo hai lớp liên kết. Lớp pháp lý mô hình hóa cấu trúc văn bản quy phạm pháp luật và các quan hệ tham chiếu, sửa đổi, hướng dẫn, thay thế, bãi bỏ. Lớp ngữ nghĩa mô hình hóa các thực thể như hành vi, nghĩa vụ, điều kiện, hậu quả và chủ thể pháp lý theo từng dạng câu hỏi. Lớp pháp lý dùng một schema thống nhất để kiểm tra hiệu lực và phân loại căn cứ; lớp ngữ nghĩa dùng schema chuyên biệt theo từng dạng câu hỏi, vì các thực thể và mối quan hệ giữa chúng là khác nhau đối với các dạng câu hỏi khác nhau (ví dụ: câu hỏi về chế độ tài sản của vợ chồng sẽ có các thực thể như loại tài sản, hành vi tác động lên tài sản, quyền và nghĩa vụ liên quan đến tài sản; trong khi câu hỏi về điều kiện kết hôn sẽ có các thực thể như điều kiện về độ tuổi, tình trạng hôn nhân, mối quan hệhuyết thống...).
 
-Hệ thống tổ chức thành các retriever theo miền câu hỏi; mỗi retriever có một hoặc nhiều TemplateRegistry chứa các Cypher template đã được thiết kế trước. Router Agent chọn trực tiếp retriever phù hợp với câu hỏi, sau đó retriever phân loại template, trích xuất tham số và thực thi truy vấn trên Neo4j. RetrieverPolicy hiện được duy trì như một thành phần hỗ trợ kiểm thử và đánh giá, chưa phải lớp lọc bắt buộc trong luồng thực thi chính.
+Hệ thống tổ chức thành các retriever theo miền câu hỏi; mỗi retriever có một hoặc nhiều TemplateRegistry chứa các Cypher template đã được thiết kế trước. Router Agent chọn trực tiếp retriever phù hợp với câu hỏi, sau đó retriever phân loại template, trích xuất tham số và thực thi truy vấn trên Neo4j.
 
 Đồ thị tri thức vì vậy được thiết kế theo hai lớp có vai trò khác nhau. Lớp pháp lý biểu diễn cấu trúc văn bản quy phạm pháp luật bằng các nút văn bản và nút Điều--Khoản--Điểm. Nhóm quan hệ cấu trúc gồm CO\_\allowbreak DIEU, CO\_\allowbreak KHOAN, CO\_\allowbreak DIEM; nhóm quan hệ pháp lý gồm THAM\_\allowbreak CHIEU\_\allowbreak DEN, DUOC\_\allowbreak SUA\_\allowbreak DOI\_\allowbreak BOI, HUONG\_\allowbreak DAN\_\allowbreak BOI, THAY\_\allowbreak THE\_\allowbreak BOI, BAI\_\allowbreak BO\_\allowbreak BOI và MAU\_\allowbreak THUAN\_\allowbreak VOI. Lớp này là nền tảng chung để kiểm tra hiệu lực, mở rộng văn bản hướng dẫn, phát hiện văn bản sửa đổi hoặc thay thế và phân loại căn cứ trước khi đưa cho LLM.
 
@@ -133,33 +341,42 @@ cap\_\allowbreak bac\_\allowbreak phap\_\allowbreak ly & INTEGER & Giá trị d�
 
 \subsection{Cơ chế kiểm tra tình trạng hiệu lực, xử lý phân loại các văn bản pháp luật (căn cứ chính, căn cứ bổ trợ, căn cứ hướng dẫn, sửa đổi, thay thế) và các căn cứ chồng chéo, xung đột}
 
-Cơ chế kiểm tra hiệu lực không được cài đặt như một retriever độc lập, mà là khối Cypher dùng chung được ghép vào các template miền. Mỗi template trước hết xác định các nút pháp lý gốc n\_goc từ đồ thị ngữ nghĩa qua quan hệ CAN\_CU\_TAI; sau đó khối EXPAND\_AND\_TIMEFILTER\_CYPHER mở rộng cấu trúc Điều--Khoản--Điểm, truy vết thay thế, lọc hiệu lực và trả về một bản ghi thô Context\_Tho. Mốc thời gian áp dụng luật là target\_date, được chuẩn hóa từ thoi\_diem\_su\_kien nếu người dùng nêu thời điểm, hoặc lấy ngày đặt câu hỏi nếu người dùng không nêu. Bên cạnh đó, truy vấn vẫn giữ query\_date là ngày hiện tại để phát hiện quy định hiện hành đối chiếu và văn bản đã ban hành nhưng chưa có hiệu lực.
+Cơ chế kiểm tra hiệu lực không được cài đặt như một retriever độc lập, mà là khối truy vấn Cypher dùng chung ghép vào các template miền. Mỗi template trước hết xác định các nút pháp lý gốc từ đồ thị ngữ nghĩa qua quan hệ CAN\_CU\_TAI; sau đó khối EXPAND\_AND\_TIMEFILTER\_CYPHER mở rộng cấu trúc Điều--Khoản--Điểm, truy vết thay thế, lọc hiệu lực và trả về một bản ghi thô gọi là Context\_Tho. Mốc thời gian áp dụng luật cho sự kiện người dùng hỏi (target\_date) được chuẩn hóa từ thời điểm sự kiện trong câu hỏi nếu có, hoặc lấy ngày đặt câu hỏi nếu người dùng không nêu. Song song, truy vấn giữ thêm mốc ngày đặt câu hỏi (query\_date, thường là ngày hiện tại) để phát hiện quy định hiện hành đối chiếu và văn bản đã ban hành nhưng chưa có hiệu lực.
+
+Sau Neo4j, mỗi RetrieverAgent không đưa Context\_Tho thẳng vào prompt mà mã hoá thành LegalContextBundle---định nghĩa: một gói căn cứ pháp lý có cấu trúc, gắn mốc áp dụng, vai trò từng điều luật (căn cứ chính, hướng dẫn, bổ trợ), quan hệ hướng dẫn, thay thế, mâu thuẫn, văn bản sắp hiệu lực và nguồn truy xuất (retriever, template). Ví dụ: câu hỏi ``Điều kiện kết hôn hiện nay là gì?'' kích hoạt template điều kiện kết hôn; Context\_Tho trả về Điều 8 Luật Hôn nhân và Gia đình 2014 làm căn cứ chính và một Thông tư hướng dẫn đăng ký kết hôn. Gói bundle tương ứng ghi mốc áp dụng là ngày hỏi, đánh dấu Điều 8 là căn cứ chính, Thông tư là căn cứ hướng dẫn, và lưu retriever cùng tên template đã chạy. Nếu Router gọi thêm một retriever khác trong cùng lượt, ConversationOrchestrator gộp nhiều bundle theo cùng mốc thời gian, khử trùng khi trùng định danh điều luật, phiên bản sửa đổi và khoảng hiệu lực, rồi mới chuyển sang bước render văn bản cho SynthesizerAgent. Cách tách bước này giúp tái sử dụng cache hội thoại và gộp căn cứ từ nhiều miền mà không làm mất phân loại pháp lý đã có trong Context\_Tho.
 
 \begin{algorithm}[H]
 \footnotesize
-\textbf{Input:} Tập nút pháp lý gốc $S$; mốc áp dụng $T_{target}$; ngày đặt câu hỏi $T_{query}$; biến $UserProvidedDate$.
+\textbf{Input:} Tập nút pháp lý gốc $S$; mốc áp dụng $T_{target}$; ngày đặt câu hỏi $T_{query}$; cờ người dùng đã nêu mốc thời gian $UserProvidedDate$.
 
 \textbf{Output:} Chuỗi ngữ cảnh pháp lý chuẩn hóa $C$ phục vụ LLM sinh câu trả lời.
 
 \textbf{Giai đoạn 1: Mở rộng đồ thị và tạo Context\_Tho}
 
 \begin{enumerate}[label=\textbf{Bước \arabic*.}, leftmargin=1.6cm]
-    \item Từ các seed pháp lý $S$, mở rộng Điều--Khoản--Điểm theo cấp seed và truy vết THAY\_THE\_BOI theo hai chiều để thu các phiên bản có thể áp dụng.
+    \item Từ các seed pháp lý $S$, mở rộng Điều--Khoản--Điểm theo cấp seed và truy vết THAY\_THE\_BOI theo hai chiều để thu các phiên bản có thể áp dụng; với heading cha (Điều/Khoản) còn đi theo quan hệ thay thế rồi bung toàn bộ cấu trúc con.
     \item Lọc các phiên bản còn hiệu lực tại $T_{target}$; đây là tập căn cứ pháp lý được phép dùng cho sự kiện người dùng hỏi.
-    \item Từ tập đã lọc, lấy sửa đổi DUOC\_SUA\_DOI\_BOI, hướng dẫn HUONG\_DAN\_BOI, tham chiếu THAM\_CHIEU\_DEN và mâu thuẫn MAU\_THUAN\_VOI còn hiệu lực tại $T_{target}$.
-    \item Dùng $T_{query}$ để lấy quy định hiện hành thay thế và văn bản sắp hiệu lực; sau đó khử trùng lặp, ưu tiên seed chi tiết hơn và trả về Context\_Tho.
+    \item Từ tập đã lọc, lấy sửa đổi DUOC\_SUA\_DOI\_BOI, hướng dẫn HUONG\_DAN\_BOI, tham chiếu THAM\_CHIEU\_DEN và mâu thuẫn MAU\_THUAN\_VOI còn hiệu lực tại $T_{target}$; với tham chiếu chéo, bổ sung heading cha (đi ngược CO\_KHOAN, CO\_DIEM) để căn cứ bổ trợ đủ ngữ cảnh cấp Điều/Khoản.
+    \item Dùng $T_{query}$ để lấy quy định hiện hành thay thế và văn bản sắp hiệu lực; khử trùng căn cứ chính theo thứ bậc chi tiết seed (Điểm trước Khoản trước Điều) và loại bỏ bản ghi con trùng prefix với seed Điều; trả về Context\_Tho.
 \end{enumerate}
 
-\textbf{Giai đoạn 2: Chuẩn hóa Context\_Tho thành prompt context}
+\textbf{Giai đoạn 2: Mã hoá LegalContextBundle và gộp ngữ cảnh}
 
 \begin{enumerate}[label=\textbf{Bước \arabic*.}, leftmargin=1.6cm, resume]
-    \item Chuẩn hóa căn cứ chính, hướng dẫn và bổ trợ; nếu có id\_sua\_doi thì hiển thị nội dung sửa đổi nhưng giữ định danh căn cứ gốc.
-    \item Bật các cờ cảnh báo về sửa đổi, mâu thuẫn, thứ tự ưu tiên, lịch sử hiệu lực và văn bản sắp hiệu lực theo dữ liệu trong Context\_Tho.
-    \item Thu thập thông tin hiệu lực theo văn bản, khử trùng lặp xuyên các nhóm và sắp xếp căn cứ theo cap\_bac\_phap\_ly.
-    \item Xuất $C$ thành các khối ổn định: cảnh báo, hiệu lực, căn cứ chính, căn cứ bổ trợ, hướng dẫn, văn bản thay thế, văn bản sắp hiệu lực, mâu thuẫn và link trích dẫn TVPL.
+    \item Từ Context\_Tho, gán vai trò căn cứ chính, hướng dẫn, bổ trợ; gắn $T_{target}$, $UserProvidedDate$, provenance retriever/template; bổ sung nội dung quy định thay thế nếu Cypher chỉ trả định danh; mã hoá thành chuỗi bundle phiên bản 1.
+    \item Khi một lượt có nhiều template hoặc retriever, gộp các bundle cùng mốc thời gian; khử trùng điều luật theo cặp định danh, phiên bản sửa đổi và khoảng hiệu lực; ưu tiên vai trò căn cứ chính hơn hướng dẫn, hướng dẫn hơn bổ trợ.
 \end{enumerate}
-\caption{Giải thuật truy xuất, lọc hiệu lực và phân loại căn cứ pháp lý trong codebase hiện tại}
-\label{table:algo_temporal}
+
+\textbf{Giai đoạn 3: Render văn bản căn cứ cho LLM}
+
+\begin{enumerate}[label=\textbf{Bước \arabic*.}, leftmargin=1.6cm, resume]
+    \item Chuyển bundle đã gộp về dạng Context\_Tho tương thích renderer; chuẩn hóa căn cứ chính, hướng dẫn và bổ trợ---nếu có văn bản sửa đổi thì hiển thị nội dung sửa đổi nhưng giữ định danh căn cứ gốc.
+    \item Bật các cờ cảnh báo về sửa đổi, mâu thuẫn, thứ tự ưu tiên, lịch sử hiệu lực và văn bản sắp hiệu lực theo dữ liệu trong bundle.
+    \item Thu thập thông tin hiệu lực theo văn bản, khử trùng lặp xuyên các nhóm và sắp xếp căn cứ theo cấp bậc pháp lý.
+    \item Xuất $C$ thành các khối ổn định: cảnh báo, hiệu lực, căn cứ chính, căn cứ bổ trợ, hướng dẫn, văn bản thay thế, văn bản sắp hiệu lực, mâu thuẫn và liên kết trích dẫn Thư viện Pháp luật.
+\end{enumerate}
+\caption{Giải thuật truy xuất, lọc hiệu lực, mã hoá bundle và phân loại căn cứ pháp lý}
+\label{algo:legal_temporal}
 \end{algorithm}
 
 \begin{table}[htbp]
@@ -170,25 +387,25 @@ Cơ chế kiểm tra hiệu lực không được cài đặt như một retriev
 \hline
 \textbf{Nhóm trong Context\_Tho} & \textbf{Cách sinh và vai trò khi chuẩn hóa cho LLM} \\ \hline
 can\_cu\_chinh &
-Sinh từ seed pháp lý sau khi mở rộng CO\_KHOAN, CO\_DIEM, THAY\_THE\_BOI và lọc tại $T_{target}$. Đây là căn cứ trả lời trực tiếp; nếu có id\_sua\_doi thì dùng nội dung sửa đổi nhưng vẫn giữ định danh căn cứ gốc. \\ \hline
+Sinh từ seed pháp lý sau khi mở rộng CO\_KHOAN, CO\_DIEM, THAY\_THE\_BOI và lọc tại $T_{target}$; khử trùng theo thứ bậc chi tiết seed. Đây là căn cứ trả lời trực tiếp; nếu có văn bản sửa đổi thì dùng nội dung sửa đổi nhưng vẫn giữ định danh căn cứ gốc. \\ \hline
 can\_cu\_huong\_dan, lien\_ket\_huong\_dan &
 HUONG\_DAN\_BOI từ căn cứ chính, kèm Khoản/Điểm hướng dẫn còn hiệu lực. Dòng liên kết được gom về cấp Điều để LLM nêu rõ văn bản nào hướng dẫn căn cứ nào. \\ \hline
 can\_cu\_bo\_tro &
-THAM\_CHIEU\_DEN từ căn cứ chính hoặc hướng dẫn, kèm heading Điều/Khoản cha. Nhóm này bổ sung quy định được viện dẫn chéo. \\ \hline
+THAM\_CHIEU\_DEN từ căn cứ chính hoặc hướng dẫn, có thể kèm heading Điều/Khoản cha khi tham chiếu trỏ tới Khoản/Điểm. Nhóm này bổ sung quy định được viện dẫn chéo. \\ \hline
 quy\_\allowbreak dinh\_\allowbreak hien\_\allowbreak hanh\_\allowbreak doi\_\allowbreak chieu, lien\_\allowbreak ket\_\allowbreak hien\_\allowbreak hanh &
 THAY\_THE\_BOI*1.. còn hiệu lực tại $T_{query}$. Nhóm này chỉ dùng để cảnh báo lịch sử, không làm thay đổi căn cứ chính tại $T_{target}$. \\ \hline
 can\_cu\_mau\_thuan &
-MAU\_THUAN\_VOI còn hiệu lực tại $T_{target}$; tạo khối mâu thuẫn pháp lý và bật FLAG\_MAU\_THUAN. \\ \hline
+MAU\_THUAN\_VOI còn hiệu lực tại $T_{target}$; tạo khối mâu thuẫn pháp lý và bật cờ cảnh báo mâu thuẫn. \\ \hline
 can\_cu\_sap\_hieu\_luc, lien\_ket\_sap\_hieu\_luc &
-Văn bản có ngày hiệu lực sau $T_{query}$ qua DUOC\_SUA\_DOI\_BOI, HUONG\_DAN\_BOI, THAY\_THE\_BOI, BAI\_BO\_BOI. Chỉ xuất hiện khi người dùng không nêu mốc thời gian và chỉ dùng cho phần lưu ý. \\ \hline
+Văn bản có ngày hiệu lực sau $T_{query}$ qua DUOC\_SUA\_DOI\_BOI, HUONG\_DAN\_BOI, THAY\_THE\_BOI, BAI\_BO\_BOI; hoặc quy định có ngày hết hiệu lực sau $T_{query}$ (hết hiệu lực trong tương lai so với ngày hỏi). Chỉ xuất hiện khi người dùng không nêu mốc thời gian và chỉ dùng cho phần lưu ý. \\ \hline
 \end{tabularx}
 \caption{Các nhóm dữ liệu thô được trả về trong Context\_Tho và cách dùng khi chuẩn hóa ngữ cảnh}
 \label{tab:context_tho_temporal_fields}
 \end{table}
 
-Điểm quan trọng của thiết kế này là tách rõ hai mốc thời gian. target\_date quyết định văn bản nào được coi là căn cứ áp dụng cho sự kiện pháp lý mà người dùng hỏi; mọi căn cứ chính, sửa đổi, hướng dẫn, tham chiếu bổ trợ và mâu thuẫn đều phải qua điều kiện hiệu lực tại mốc này. Ngược lại, query\_date phản ánh thời điểm hệ thống trả lời, nên chỉ dùng cho hai mục cảnh báo: quy định hiện hành đang thay thế căn cứ lịch sử và văn bản đã ban hành nhưng chưa có hiệu lực. Nhờ vậy, với câu hỏi có mốc quá khứ, hệ thống vẫn trả lời theo luật áp dụng tại quá khứ nhưng có thể nhắc rằng hiện nay đã có văn bản thay thế; với câu hỏi không có mốc thời gian, hệ thống trả lời theo luật hiện hành và chỉ đưa văn bản sắp hiệu lực vào phần lưu ý.
+Điểm quan trọng của thiết kế này là tách rõ hai mốc thời gian. Mốc áp dụng $T_{target}$ quyết định văn bản nào được coi là căn cứ cho sự kiện pháp lý người dùng hỏi; mọi căn cứ chính, sửa đổi, hướng dẫn, tham chiếu bổ trợ và mâu thuẫn đều phải qua điều kiện hiệu lực tại mốc này. Ngược lại, $T_{query}$ phản ánh thời điểm hệ thống trả lời, nên chỉ dùng cho hai mục cảnh báo: quy định hiện hành đang thay thế căn cứ lịch sử và văn bản đã ban hành nhưng chưa có hiệu lực (hoặc sắp hết hiệu lực). Nhờ vậy, với câu hỏi có mốc quá khứ, hệ thống vẫn trả lời theo luật áp dụng tại quá khứ nhưng có thể nhắc rằng hiện nay đã có văn bản thay thế; với câu hỏi không có mốc thời gian, hệ thống trả lời theo luật hiện hành và chỉ đưa văn bản sắp hiệu lực vào phần lưu ý.
 
-Hàm chuan\_\allowbreak hoa\_\allowbreak Context\_\allowbreak cho\_\allowbreak LLM tiếp tục làm sạch dữ liệu trước khi đưa vào prompt: khử trùng lặp xuyên các nhóm căn cứ, gom thông tin hiệu lực theo tên văn bản, định dạng lại ngày tháng, sắp xếp căn cứ theo cap\_\allowbreak bac\_\allowbreak phap\_\allowbreak ly, và tạo các cờ cảnh báo FLAG\_\allowbreak CANH\_\allowbreak BAO\_\allowbreak LICH\_\allowbreak SU, FLAG\_\allowbreak CANH\_\allowbreak BAO\_\allowbreak THU\_\allowbreak TU\_\allowbreak UU\_\allowbreak TIEN, FLAG\_\allowbreak CANH\_\allowbreak BAO\_\allowbreak SUA\_\allowbreak DOI, FLAG\_\allowbreak MAU\_\allowbreak THUAN, FLAG\_\allowbreak VAN\_\allowbreak BAN\_\allowbreak SAP\_\allowbreak HIEU\_\allowbreak LUC. Chuỗi ngữ cảnh cuối cùng được chia thành các khối có tiêu đề ổn định như THÔNG TIN CẢNH BÁO, CĂN CỨ CHÍNH, CĂN CỨ HƯỚNG DẪN, VĂN BẢN THAY THẾ và THÔNG TIN MÂU THUẪN PHÁP LÝ; đây là lớp trung gian giúp LLM vừa có đủ căn cứ pháp lý, vừa nhận được chỉ dẫn rõ ràng về thứ tự ưu tiên, lịch sử hiệu lực và phạm vi sử dụng của từng loại căn cứ.
+Bước render cuối (renderer pháp lý đã có sẵn trong codebase) làm sạch dữ liệu trước khi đưa vào prompt SynthesizerAgent: khử trùng lặp nội bộ trong từng nhóm căn cứ, gom thông tin hiệu lực theo tên văn bản, định dạng lại ngày tháng theo quy ước Việt Nam, sắp xếp căn cứ theo cấp bậc pháp lý, và bật các cờ cảnh báo lịch sử, thứ tự ưu tiên, sửa đổi, mâu thuẫn, văn bản sắp hiệu lực khi dữ liệu thỏa điều kiện. Chuỗi ngữ cảnh cuối cùng được chia thành các khối có tiêu đề ổn định như THÔNG TIN CẢNH BÁO, CĂN CỨ CHÍNH, CĂN CỨ HƯỚNG DẪN, VĂN BẢN THAY THẾ và THÔNG TIN MÂU THUẪN PHÁP LÝ. Đây là lớp trình bày giúp LLM vừa có đủ căn cứ pháp lý, vừa nhận chỉ dẫn rõ về thứ tự ưu tiên, lịch sử hiệu lực và phạm vi sử dụng của từng loại căn cứ; tầng LegalContextBundle phía trước đảm nhiệm cấu trúc và gộp dedupe xuyên retriever, còn renderer đảm nhiệm diễn đạt văn bản cho người đọc và mô hình.
 
 \subsection{Thiết kế schema đồ thị tri thức và Cypher template theo từng dạng câu hỏi pháp lý}
 
@@ -196,10 +413,12 @@ Quy trình xây dựng mỗi miền tri thức gồm năm bước: (i)~khảo s�
 
 Luồng thực thi của một retriever gồm ba bước. Thứ nhất, LLM phân loại câu hỏi và chọn một hoặc nhiều template đã đăng ký; với retriever tài sản, danh sách lựa chọn bị giới hạn tối đa ba template và phần lớn câu hỏi chỉ chọn một. Thứ hai, hệ thống trích xuất tham số riêng của từng template cùng trường thoi\_diem\_su\_kien; các tác vụ trích xuất được thực hiện song song. Thứ ba, retriever truyền target\_date vào Cypher, thực thi các template và chuẩn hóa Context\_Tho trước khi đưa ngữ cảnh cho LLM sinh câu trả lời.
 
-Codebase hiện có 20 retriever, 20 TemplateRegistry và hai tool trực tiếp clarify, respond. Các tool trực tiếp không thuộc nhóm retriever theo schema miền. Trong phạm vi trình bày chi tiết dưới đây, đồ án tập trung vào retriever che\_do\_tai\_san\_cua\_vo\_chong như một trường hợp đại diện cho quy trình thiết kế schema miền và Cypher template.
+Codebase hiện có 20 retriever tương ứng 20 miền tri thức và hai công cụ phản hồi trực tiếp clarify, respond. Mỗi miền có một TemplateRegistry chứa các Cypher template cho các nhóm ý định trong miền; Bảng~\ref{tab:cypher_template_counts} thống kê số template đã xây dựng theo dạng câu hỏi.
 
-\paragraph{Retriever che\_do\_tai\_san\_cua\_vo\_chong.}\mbox{}\\
-Retriever này xử lý chế độ tài sản trước và trong thời kỳ hôn nhân, không xử lý việc chia tài sản khi ly hôn. Đây là trường hợp ánh xạ đặc biệt: tên tool là che\_do\_tai\_san\_cua\_vo\_chong, còn khóa registry và thư mục template là tai\_san. Qua khảo sát các câu hỏi thuộc chủ đề chế độ tài sản của vợ chồng\footnote{https://thuvienphapluat.vn/hoi-dap-phap-luat/chu-de/che-do-tai-san-cua-vo-chong}, tài sản chung của vợ chồng\footnote{https://thuvienphapluat.vn/hoi-dap-phap-luat/chu-de/tai-san-chung-cua-vo-chong} và tài sản riêng của vợ chồng\footnote{https://thuvienphapluat.vn/phap-luat/tag/tai-san-rieng-cua-vo-chong}, miền này được chia thành tám template như Bảng~\ref{tab:intent_che_do_tai_san}.
+Trong phần dưới đây, đồ án chỉ minh họa đầy đủ quy trình thiết kế schema, tham số, mã giả và ví dụ end-to-end cho \textbf{một} template phân loại tài sản trong miền chế độ tài sản vợ chồng. Các template còn lại của miền này và các miền khác tuân theo cùng pattern (khảo sát ý định, schema ngữ nghĩa, khối EXPAND\_AND\_TIMEFILTER dùng chung, mã hoá LegalContextBundle) nhưng không trình bày chi tiết để tránh lặp cấu trúc.
+
+\paragraph{Miền chế độ tài sản vợ chồng.}\mbox{}\\
+Retriever che\_do\_tai\_san\_cua\_vo\_chong xử lý chế độ tài sản trước và trong thời kỳ hôn nhân, không xử lý việc chia tài sản khi ly hôn. Tên tool là che\_do\_tai\_san\_cua\_vo\_chong, còn khóa registry và thư mục template là tai\_san. Qua khảo sát các câu hỏi thuộc chủ đề chế độ tài sản của vợ chồng \cite{TVPLCheDoTaiSanVoChongDoc}, tài sản chung của vợ chồng \cite{TVPLTaiSanChungVoChongDoc} và tài sản riêng của vợ chồng \cite{TVPLTaiSanRiengVoChongDoc}, miền này được chia thành tám nhóm ý định như Bảng~\ref{tab:intent_che_do_tai_san}; phần trình bày chi tiết (schema, tham số, mã giả, ví dụ) chỉ dành cho nhóm phân loại tài sản.
 
 \begin{table}[htbp]
 \centering
@@ -458,7 +677,7 @@ Pseudocode được nêu ở Bảng~\ref{alg:phan-loai-seed} mô tả logic củ
     \item Khởi tạo tập căn cứ pháp lý gốc $n\_goc \leftarrow \varnothing$.
     \item Với mỗi node $sn \in seed\_nodes$, truy xuất các node luật liên kết với $sn$ qua quan hệ CAN\_CU\_TAI và thêm vào $n\_goc$.
     \item Trả về $DISTINCT(n\_goc)$.
-    \item $(n\_goc)$ tiếp tục được xử lý như mô tả ở bảng \ref{table:algo_temporal}
+    \item $(n\_goc)$ tiếp tục được xử lý như mô tả ở Giải thuật~\ref{algo:legal_temporal}
 \end{enumerate}
 \caption{Pseudocode câu Cypher query template cho dạng câu hỏi phân loại tài sản}
 \label{alg:phan-loai-seed}
@@ -494,7 +713,42 @@ Pseudocode được nêu ở Bảng~\ref{alg:phan-loai-seed} mô tả logic củ
 
 \textbf{Diễn giải kết quả truy vấn.}
 
-Với câu hỏi trên, retriever không phát hiện dấu hiệu tranh chấp hoặc yêu cầu đối chiếu hai nhánh, do đó giữ loai\_tai\_san = chung và ánh xạ ``tiền trúng số'' thành thu\_nhap\_hop\_phap\_khac. Cypher chọn các node LoaiTaiSan phù hợp theo ID, quan hệ cha--con LA\_LOAI\_CON\_CUA và thuộc tính tinh\_chat, sau đó đi qua CAN\_CU\_TAI để lấy căn cứ pháp lý. Nếu câu hỏi có dấu hiệu đối chiếu hoặc tranh chấp chung--riêng, lớp hậu xử lý mới ép loai\_tai\_san = tat\_ca và asset\_keyword = null. Các căn cứ seed tiếp tục được xử lý theo Bảng~\ref{table:algo_temporal}.
+Với câu hỏi trên, retriever không phát hiện dấu hiệu tranh chấp hoặc yêu cầu đối chiếu hai nhánh, do đó giữ loai\_tai\_san = chung và ánh xạ ``tiền trúng số'' thành thu\_nhap\_hop\_phap\_khac. Cypher chọn các node LoaiTaiSan phù hợp theo ID, quan hệ cha--con LA\_LOAI\_CON\_CUA và thuộc tính tinh\_chat, sau đó đi qua CAN\_CU\_TAI để lấy căn cứ pháp lý. Nếu câu hỏi có dấu hiệu đối chiếu hoặc tranh chấp chung--riêng, lớp hậu xử lý mới ép loai\_tai\_san = tat\_ca và asset\_keyword = null. Các căn cứ seed tiếp tục được xử lý theo Giải thuật~\ref{algo:legal_temporal}.
+
+Bảng~\ref{tab:cypher_template_counts} thống kê số Cypher template đã xây dựng cho mỗi dạng câu hỏi pháp lý (mỗi miền tri thức tương ứng một retriever). Tổng cộng có 164 template trên 20 miền.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.08}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{2.2cm}|}
+\hline
+\textbf{Dạng câu hỏi pháp lý} & \textbf{Số template} \\ \hline
+Quy định chung, khái niệm pháp lý & 5 \\ \hline
+Điều kiện kết hôn & 10 \\ \hline
+Đăng ký kết hôn & 9 \\ \hline
+Kết hôn trái pháp luật & 5 \\ \hline
+Chung sống như vợ chồng & 6 \\ \hline
+Quyền nghĩa vụ vợ chồng & 8 \\ \hline
+Đại diện trách nhiệm vợ chồng & 8 \\ \hline
+Chế độ tài sản vợ chồng & 8 \\ \hline
+Quy định chung ly hôn & 7 \\ \hline
+Chia tài sản sau ly hôn & 6 \\ \hline
+Cha mẹ con sau ly hôn & 6 \\ \hline
+Hôn nhân chấm dứt do vợ chồng chết & 4 \\ \hline
+Quan hệ hôn nhân có yếu tố nước ngoài & 10 \\ \hline
+Quan hệ giữa các thành viên khác trong gia đình & 8 \\ \hline
+Quyền nghĩa vụ cha mẹ con & 9 \\ \hline
+Xác định cha mẹ con & 8 \\ \hline
+Tài sản riêng của con & 8 \\ \hline
+Hạn chế quyền cha mẹ con chưa thành niên & 4 \\ \hline
+Cấp dưỡng & 6 \\ \hline
+Xử phạt vi phạm & 29 \\ \hline
+\textbf{Tổng cộng (20 miền)} & \textbf{164} \\ \hline
+\end{tabularx}
+\caption{Thống kê số Cypher template theo dạng câu hỏi pháp lý}
+\label{tab:cypher_template_counts}
+\end{table}
 
 % \paragraph{Retriever cap\_duong.}\mbox{}\\
 % Retriever này xử lý chủ thể, mức, phương thức, tạm ngừng, chấm dứt và cưỡng chế thực hiện nghĩa vụ cấp dưỡng. Registry có sáu template: cap\_duong\_cho\_con\_sau\_ly\_hon, cham\_dut\_nghia\_vu\_cap\_duong, muc\_va\_phan\_bo\_cap\_duong, nghia\_vu\_cap\_duong\_theo\_quan\_he, phuong\_thuc\_va\_tam\_ngung\_cap\_duong, quyen\_yeu\_cau\_va\_cuong\_che\_cap\_duong.
@@ -553,27 +807,68 @@ Với câu hỏi trên, retriever không phát hiện dấu hiệu tranh chấp 
 % \paragraph{Retriever xu\_phat\_vi\_pham.}\mbox{}\\
 % Retriever này bao quát các nhóm vi phạm hành chính, hình sự và phòng, chống bạo lực gia đình. Registry có 28 template nghiệp vụ: bao\_luc\_kinh\_te, bao\_luc\_nguoi\_bao\_tin\_giup\_do, bao\_luc\_the\_chat\_nguoc\_dai, bao\_luc\_tinh\_duc, bo\_mac\_khong\_cham\_soc\_giao\_duc, can\_tro\_cuong\_ep\_ket\_hon\_ly\_hon, co\_lap\_ap\_luc\_tam\_ly, cuong\_ep\_ra\_khoi\_cho\_o, ket\_hon\_ly\_hon\_gia\_tao, loi\_dung\_hoat\_dong\_phong\_chong\_bao\_luc, ngan\_can\_tham\_nom\_cham\_soc, quan\_he\_hon\_nhan\_bi\_cam\_vphc, sinh\_con\_mang\_thai\_ho\_thuong\_mai, tao\_hon\_va\_to\_chuc\_tao\_hon, tiet\_lo\_thong\_tin\_va\_bang\_gia, toi\_loan\_luan\_hinh\_su, truyen\_ba\_kich\_dong\_bao\_luc, vi\_pham\_cam\_tiep\_xuc, vi\_pham\_cap\_duong\_nuoi\_duong, vi\_pham\_dang\_ky\_co\_so\_tro\_giup, vi\_pham\_giam\_ho, vi\_pham\_mot\_vo\_mot\_chong, vi\_pham\_ngan\_chan\_bao\_tin\_xu\_ly, vi\_pham\_nuoi\_con\_nuoi, vi\_pham\_van\_phong\_con\_nuoi\_nuoc\_ngoai, xu\_phat\_ket\_hon\_ly\_hon\_tong\_quat, xuc\_pham\_danh\_du\_bi\_mat, xui\_giuc\_cuong\_ep\_bao\_luc.
 
-\section{Xây dựng tập Benchmark đánh giá ứng dụng}
-\label{subsection:benchmark}
-Ngoài cơ chế truy xuất theo thời gian trên đồ thị tri thức, đồ án đóng góp một tập benchmark dataset phục vụ đánh giá có hệ thống chất lượng câu trả lời của chatbot trong lĩnh vực Luật Hôn nhân và gia đình. Tập dữ liệu được xây dựng qua các giai đoạn như sau:
+% Retriever này bao quát các nhóm vi phạm hành chính, hình sự và phòng, chống bạo lực gia đình. Registry có 28 template nghiệp vụ: bao\_luc\_kinh\_te, bao\_luc\_nguoi\_bao\_tin\_giup\_do, bao\_luc\_the\_chat\_nguoc\_dai, bao\_luc\_tinh\_duc, bo\_mac\_khong\_cham\_soc\_giao\_duc, can\_tro\_cuong\_ep\_ket\_hon\_ly\_hon, co\_lap\_ap\_luc\_tam\_ly, cuong\_ep\_ra\_khoi\_cho\_o, ket\_hon\_ly\_hon\_gia\_tao, loi\_dung\_hoat\_dong\_phong\_chong\_bao\_luc, ngan\_can\_tham\_nom\_cham\_soc, quan\_he\_hon\_nhan\_bi\_cam\_vphc, sinh\_con\_mang\_thai\_ho\_thuong\_mai, tao\_hon\_va\_to\_chuc\_tao\_hon, tiet\_lo\_thong\_tin\_va\_bang\_gia, toi\_loan\_luan\_hinh\_su, truyen\_ba\_kich\_dong\_bao\_luc, vi\_pham\_cam\_tiep\_xuc, vi\_pham\_cap\_duong\_nuoi\_duong, vi\_pham\_dang\_ky\_co\_so\_tro\_giup, vi\_pham\_giam\_ho, vi\_pham\_mot\_vo\_mot\_chong, vi\_pham\_ngan\_chan\_bao\_tin\_xu\_ly, vi\_pham\_nuoi\_con\_nuoi, vi\_pham\_van\_phong\_con\_nuoi\_nuoc\_ngoai, xu\_phat\_ket\_hon\_ly\_hon\_tong\_quat, xuc\_pham\_danh\_du\_bi\_mat, xui\_giuc\_cuong\_ep\_bao\_luc.
+
+\section{Xây dựng chức năng hiển thị đồ thị tri thức đã truy xuất}
+\label{section:kg-viz}
+
+Sau mỗi lượt truy xuất thành công, hệ thống có thể đính kèm liên kết mở trang visualize đồ thị tri thức (KG) tương ứng với retriever đã chạy. Mục tiêu là minh bạch hóa ``retriever đã neo vào nút ngữ nghĩa nào, căn cứ pháp lý nào được kéo theo, và quan hệ giữa chúng'' --- không yêu cầu người dùng đọc raw Context\_Tho hay Cypher. Luồng visualize tách khỏi bước sinh câu trả lời: retriever chỉ lưu \textbf{stub} (dữ liệu thô cần thiết); đồ thị được \textbf{dựng khi người dùng mở link}, tránh tốn thêm truy vấn Neo4j và chi phí CPU trong lượt chat đang stream.
+
+\subsubsection{Vai trò trong pipeline chat}
+
+Khi RetrieverAgent thực thi template và có Context\_Tho hợp lệ, retriever gọi lưu stub lazy visualize gắn câu hỏi, mốc áp dụng và danh sách nguồn (miền template, tên template, tham số runtime, bản ghi Context\_Tho). Hàm trả về mã snapshot (viz\_id). Orchestrator đưa viz\_id vào kết quả retriever; bước cuối ghép liên kết Markdown dạng /viz/\{viz\_id\} vào câu trả lời assistant. Người dùng bấm link → trình duyệt mở trang SPA (vis-network) → gọi API /api/viz/\{viz\_id\} → nhận JSON nodes/edges và vẽ đồ thị. Nếu snapshot vẫn ở dạng lazy, API materialize lần đầu, ghi cache JSON đầy đủ rồi trả về.
+
+\subsubsection{Phân biệt seed\_node và leaf\_seed\_node}
+
+Trong giai đoạn seed của Cypher template (trước khối EXPAND\_AND\_TIMEFILTER), mỗi template semantic thường kết thúc bằng hai tập nút:
+
+\textbf{seed\_node}---định nghĩa: toàn bộ nút ngữ nghĩa (và đôi khi nút pháp lý whitelist) đã đi qua khi ``mở rộng'' từ câu hỏi trong lớp semantic, bao gồm cả nút trung gian trên đường đi. Ví dụ template quyền định đoạt tài sản có thể gom hành vi, thỏa thuận, hậu quả và loại tài sản vào seed\_nodes; đồ thị cần thấy cả chuỗi suy luận semantic chứ không chỉ điểm cuối.
+
+\textbf{leaf\_seed\_node}---định nghĩa: tập nút semantic \textbf{điểm neo} thực sự dùng để đi qua CAN\_CU\_TAI sang lớp pháp lý khi truy xuất căn cứ cho LLM. Thường là tập con của seed\_nodes. Ví dụ cùng template quyền định đoạt: seed\_nodes có thể chứa hành vi, thỏa thuận, hậu quả, loại tài sản; leaf\_seed\_nodes chỉ giữ hành vi --- vì chỉ hành vi được nối CAN\_CU\_TAI trong logic retrieval. Template phân loại tài sản đơn giản hơn: cả hai tập trùng nhau (chỉ các node LoaiTaiSan khớp tham số).
+
+Tóm lại: \textbf{leaf\_seed\_node quyết định căn cứ pháp lý được kéo về}; \textbf{seed\_node phục vụ visualize đầy đủ miền semantic}. Khối SEMANTIC\_TO\_LEGAL\_TAIL trong Cypher chỉ UNWIND leaf\_seed\_nodes trước CAN\_CU\_TAI; viz\_cypher của template lại dựng đồ thị từ seed\_nodes (và trả thêm leaf\_seed\_ids để lọc nhánh).
+
+\subsubsection{Các bước dựng đồ thị}
+
+Materialize (khi user mở link) ghép ba nguồn node/edge, sau đó gán màu theo nhóm (căn cứ chính, hướng dẫn, bổ trợ, semantic, sắp hiệu lực, hiện hành đối chiếu, mâu thuẫn):
+
+\begin{enumerate}[label=\textbf{Bước \arabic*.}, leftmargin=1.6cm]
+    \item \textbf{Lớp pháp lý từ Context\_Tho}: đọc các nhóm can\_cu\_chinh, can\_cu\_huong\_dan, can\_cu\_bo\_tro, can\_cu\_sap\_hieu\_luc, can\_cu\_mau\_thuan, liên kết hướng dẫn/thay thế/sắp hiệu lực đã có trong bản ghi thô; tạo node/edge pháp lý tương ứng (không cần query lại nội dung điều luật nếu đã có id).
+    \item \textbf{Mở rộng cạnh pháp lý trên Neo4j}: với danh sách id điều luật đã thu, chạy một truy vấn batch lấy mọi quan hệ giữa các nút pháp lý trong tập (CO\_KHOAN, CO\_DIEM, THAY\_THE\_BOI, \ldots) để đồ thị pháp lý không chỉ là danh sách rời.
+    \item \textbf{Lớp semantic từ viz\_cypher}: mỗi template đăng ký thêm truy vấn viz\_cypher (biến thể seed query, không chạy EXPAND\_AND\_TIMEFILTER). Kết quả trả viz\_graph: nodes, edges và leaf\_seed\_ids. Parser gắn nhóm semantic cho nút ngữ nghĩa; quan hệ semantic→pháp lý (CAN\_CU\_TAI) để pending, chỉ vẽ khi cả hai đầu đã tồn tại sau bước 1.
+    \item \textbf{Lọc nhánh semantic}: từ leaf\_seed\_ids, giữ các nút semantic nằm trên đường đi ngược từ lá về gốc; loại nhánh semantic không liên quan tới điểm neo retrieval (tránh đồ thị rối khi seed\_nodes rộng hơn leaf\_seed\_nodes).
+    \item \textbf{Gộp và metadata}: nếu một lượt chạy nhiều template, merge nodes/edges; ghi meta (template, tham số hiển thị, target\_date, câu hỏi, số node/edge).
+\end{enumerate}
+
+\subsubsection{Lưu snapshot và hiển thị}
+
+Stub lazy và payload đã materialize đều lưu dưới dạng file JSON trong thư mục data/viz\_snapshots (hoặc đường dẫn cấu hình VIZ\_SNAPSHOT\_DIR), tên file là viz\_id (UUID hex). TTL mặc định bảy ngày: file cũ bị xóa khi lưu snapshot mới. Sau materialize, nội dung JSON được ghi đè (cache) để lần mở sau không query Neo4j lại.
+
+Trang visualize (viz/index.html + vis-network) nhận viz\_id từ URL, gọi REST API, hiển thị tab Graph / Table / Raw; cảnh báo khi đồ thị lớn hơn 200 node. Route /viz/\{id\} và /api/viz/\{id\} đăng ký trên FastAPI của Chainlit (trước route catch-all SPA) để tab mới không bị redirect về chat UI.
+
+\textbf{Lưu ý refactor:} Kiến trúc Router + Subagents dự kiến chỉ \textbf{dời} module visualize (graph\_viz, viz\_store, viz\_routes) sang server/infrastructure/viz và server/app/routes/viz; \textbf{thuật toán dựng đồ thị, stub lazy, phân biệt seed\_node/leaf\_seed\_node và contract JSON snapshot không thay đổi}. RetrieverAgent vẫn lưu stub sau khi có Context\_Tho; Orchestrator vẫn ghép link visualize vào message assistant.
+
+\section{Xây dựng tập test case đánh giá ứng dụng}
+\label{subsection:testcase}
+Ngoài cơ chế truy xuất theo thời gian trên đồ thị tri thức, đồ án đóng góp một tập testcase phục vụ đánh giá có hệ thống chất lượng câu trả lời của chatbot trong lĩnh vực Luật Hôn nhân và gia đình. Tập dữ liệu được xây dựng qua các giai đoạn như sau:
 
 \subsection{Thu thập dữ liệu}
 
 Nguồn dữ liệu ban đầu lấy từ chuyên mục \textit{Hỏi đáp pháp luật} trên cổng thuvienphapluat.vn, được tổ chức theo dạng câu hỏi pháp lý, ví dụ: điều kiện kết hôn, đăng ký kết hôn, chế độ tài sản vợ chồng, ly hôn, cấp dưỡng\ldots
 
-Trong quá trình crawl dữ liệu, khó khăn phát sinh vì các câu hỏi, câu trả lời và đặc biệt là phần căn cứ pháp lý của mỗi câu hỏi trên trang thuvienphapluat.vn được trình bày theo ba kiểu HTML khác nhau tùy theo từng bài đăng. Script crawl dữ liệu phải xử lý và nhận diện được cả ba trường hợp này để lấy về đúng những thông tin cần thiết. Các thông tin được lấy về ở giai đoạn crawl gồm question (câu hỏi của người dùng) và ground\_truth (câu trả lời nguyên văn từ đội tư vấn Thư viện Pháp luật). Sau khi thu thập các câu hỏi đã được phân loại theo từng chủ đề ở chuyên mục hỏi đáp pháp luật, cần tiếp tục phân loại lại dạng (chủ đề) câu hỏi theo cách thủ công. Nguyên nhân là tuy mục hỏi đáp pháp luật của thuvienphapluat.vn đã được chia thành các chủ đề, các bài đăng thuộc cùng một chủ đề vẫn có thể chứa câu hỏi thuộc chủ đề khác. Ví dụ, bài đăng thuộc chủ đề điều kiện kết hôn vẫn có thể chứa câu hỏi về kết hôn trái pháp luật và ngược lại. Vì muốn chia và đánh giá các câu hỏi trong tập benchmark dataset theo chủ đề, đồ án phải thực hiện bước phân loại lại. Ở bước này có thể sử dụng LLM để phân loại câu hỏi theo chủ đề, nhưng khi xử lý số lượng lớn câu hỏi được lấy về (khoảng 700 câu), phương pháp này phát sinh chi phí lớn và vẫn cần đánh giá thủ công lại.
+Trong quá trình crawl dữ liệu, khó khăn phát sinh vì các câu hỏi, câu trả lời và đặc biệt là phần căn cứ pháp lý của mỗi câu hỏi trên trang thuvienphapluat.vn được trình bày theo ba kiểu HTML khác nhau tùy theo từng bài đăng. Script crawl dữ liệu phải xử lý và nhận diện được cả ba trường hợp này để lấy về đúng những thông tin cần thiết. Các thông tin được lấy về ở giai đoạn crawl gồm question (câu hỏi của người dùng) và ground\_truth (câu trả lời nguyên văn từ đội tư vấn Thư viện Pháp luật). Sau khi thu thập các câu hỏi đã được phân loại theo từng chủ đề ở chuyên mục hỏi đáp pháp luật, cần tiếp tục phân loại lại dạng (chủ đề) câu hỏi theo cách thủ công. Nguyên nhân là tuy mục hỏi đáp pháp luật của thuvienphapluat.vn đã được chia thành các chủ đề, các bài đăng thuộc cùng một chủ đề vẫn có thể chứa câu hỏi thuộc chủ đề khác. Ví dụ, bài đăng thuộc chủ đề điều kiện kết hôn vẫn có thể chứa câu hỏi về kết hôn trái pháp luật và ngược lại. Vì muốn chia và đánh giá các câu hỏi trong tập testcase theo chủ đề, đồ án phải thực hiện bước phân loại lại. Ở bước này có thể sử dụng LLM để phân loại câu hỏi theo chủ đề, nhưng khi xử lý số lượng lớn câu hỏi được lấy về (khoảng 700 câu), phương pháp này phát sinh chi phí lớn và vẫn cần đánh giá thủ công lại.
 
 Quá trình thu thập các câu hỏi và câu trả lời mẫu từ các trang web khác không gặp quá nhiều khó khăn vì định dạng câu hỏi, câu trả lời có bố cục rõ ràng.
 
-\subsection{Cấu trúc mẫu dữ liệu trong tập benchmark}
+\subsection{Cấu trúc mẫu dữ liệu trong tập testcase}
 
-Mỗi mẫu trong tập benchmark dataset là một đối tượng JSON gồm 11 trường chuẩn. Bảng~\ref{tab:benchmark_schema} mô tả tên trường, kiểu dữ liệu và ý nghĩa của từng trường trong một mẫu benchmark.
+Mỗi mẫu trong tập testcase là một đối tượng JSON gồm 11 trường chuẩn. Bảng~\ref{tab:testcase_schema} mô tả tên trường, kiểu dữ liệu và ý nghĩa của từng trường trong một mẫu testcase.
 
 \begin{table}[H]
 \centering
 \footnotesize
-\caption{Cấu trúc trường dữ liệu của một mẫu benchmark}
-\label{tab:benchmark_schema}
+\caption{Cấu trúc trường dữ liệu của một mẫu testcase}
+\label{tab:testcase_schema}
 \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{4.4cm}|>{\raggedright\arraybackslash}p{2.0cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ý nghĩa} \\
@@ -605,13 +900,13 @@ quan\_\allowbreak he\_\allowbreak chong\_\allowbreak cheo\_\allowbreak mau\_\all
 
 \subsection{Quy trình hiệu chỉnh và gán nhãn thủ công}
 
-Sau khi crawl, tập benchmark trải qua các bước hiệu chỉnh sau:
+Sau khi crawl, tập testcase trải qua các bước hiệu chỉnh sau:
 
 \textbf{Bước 1: Gán chủ đề pháp lý}
 Gán chu\_de\_phap\_ly cho từng câu hỏi; loại bỏ hoặc chỉnh sửa mẫu nhiễu (nội dung không thuộc HNGĐ, trùng lặp, lỗi phân tích cú pháp).
 
 \textbf{Bước 2 --- Cập nhật căn cứ pháp lý cho câu hỏi không có dữ kiện thời gian.}
-Đối với các câu hỏi không nêu mốc thời gian sự kiện, hệ thống chatbot mặc định truy xuất theo thời điểm hiện tại. Do đó, trong tập benchmark, người hiệu chỉnh phải tự cập nhật các căn cứ pháp lý trong ground\_\allowbreak truth và các trường metadata liên quan (can\_\allowbreak cu\_\allowbreak phap\_\allowbreak ly\_\allowbreak chinh, van\_\allowbreak ban\_\allowbreak phap\_\allowbreak luat\_\allowbreak lien\_\allowbreak quan, tinh\_\allowbreak trang\_\allowbreak hieu\_\allowbreak luc\ldots) theo phiên bản văn bản mới nhất còn hiệu lực, thay cho các viện dẫn luật cũ có thể còn sót trong bài tư vấn gốc.
+Đối với các câu hỏi không nêu mốc thời gian sự kiện, hệ thống chatbot mặc định truy xuất theo thời điểm hiện tại. Do đó, trong tập testcase, người hiệu chỉnh phải tự cập nhật các căn cứ pháp lý trong ground\_\allowbreak truth và các trường metadata liên quan (can\_\allowbreak cu\_\allowbreak phap\_\allowbreak ly\_\allowbreak chinh, van\_\allowbreak ban\_\allowbreak phap\_\allowbreak luat\_\allowbreak lien\_\allowbreak quan, tinh\_\allowbreak trang\_\allowbreak hieu\_\allowbreak luc\ldots) theo phiên bản văn bản mới nhất còn hiệu lực, thay cho các viện dẫn luật cũ có thể còn sót trong bài tư vấn gốc.
 
 \textbf{Bước 3 --- Gán nhãn pháp lý dựa trên ground truth.}
 Dựa trên nội dung ground\_truth từ đội ngũ tư vấn pháp luật, người hiệu chỉnh điền thủ công các trường:
@@ -623,13 +918,8 @@ Dựa trên nội dung ground\_truth từ đội ngũ tư vấn pháp luật, ng
     \item quan\_he\_chong\_cheo\_mau\_thuan: ghi nhận xung đột/chồng chéo giữa căn cứ (nếu phát hiện khi đối chiếu).
 \end{itemize}
 
-\subsection{Thiết kế test case cho các trường hợp ngoại lệ}
+% \subsection{Thiết kế test case cho các trường hợp ngoại lệ}
 
-Bên cạnh các mẫu Q\&A chuẩn từ nguồn tư vấn, đồ án dự kiến bổ sung nhóm test case ngoại lệ để kiểm tra và đánh giá quá trình tool selection của router agent, quá trình retrieve của retriever agent và các test case có các câu hỏi thuộc trường hợp đặc biệt (ví dụ chào hỏi, hỏi mình có thể làm gì, hỏi câu không liên quan luật hôn nhân gia đình. Những câu hỏi có liên quan nhưng không có thông tin, ví dụ hỏi tình huống năm 1998. Test các câu hỏi đòi hỏi aggregations và filtering (Có bao nhiêu điều? Có bao nhiêu nghị định ...) Cụ thể như sau:
-
-\subsection{Kết quả đạt được}
-\label{subsection:5.1.3}
-
-Giải pháp kiểm tra hiệu lực động đã mang lại những cải thiện về chất lượng tư vấn: (i)Tính minh bạch cao: hệ thống không chỉ trả lời kết quả mà còn giải thích được ``tại sao văn bản này được chọn'' dựa trên mốc thời gian; (ii)khắc phục hiện tượng ảo giác (Hallucination): bằng cách giới hạn LLM chỉ được suy luận trên ``ngữ cảnh sạch'' đã qua lọc hiệu lực từ Neo4j, tỷ lệ viện dẫn sai văn bản đã hết hiệu lực giảm xuống dưới 10\% (theo chỉ số Invalid Citation Rate); (iii)xử lý xung đột pháp lý: hệ thống đạt độ chính xác trên 80\% trong việc nhận diện và cảnh báo các trường hợp văn bản chồng chéo. Người dùng nhận được thông tin đầy đủ về việc một điều luật được sửa đổi bởi nghị định nào, giúp tăng tính thuyết phục của phản hồi.
+% Bên cạnh các mẫu Q\&A chuẩn từ nguồn tư vấn, đồ án dự kiến bổ sung nhóm test case ngoại lệ để kiểm tra và đánh giá quá trình tool selection của router agent, quá trình retrieve của retriever agent và các test case có các câu hỏi thuộc trường hợp đặc biệt (ví dụ chào hỏi, hỏi mình có thể làm gì, hỏi câu không liên quan luật hôn nhân gia đình. Những câu hỏi có liên quan nhưng không có thông tin, ví dụ hỏi tình huống năm 1998. Test các câu hỏi đòi hỏi aggregations và filtering (Có bao nhiêu điều? Có bao nhiêu nghị định ...) Cụ thể như sau:
 
 \end{document}
