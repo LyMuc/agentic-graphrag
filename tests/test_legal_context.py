@@ -273,7 +273,7 @@ def test_replacement_relations_encode_and_merge():
     assert merged["replacement_relations"] == [relation]
 
 
-@patch("utils.legal_context_codec._fetch_provision_effective_dates")
+@patch("server.domain.legal.codec._fetch_provision_effective_dates")
 def test_build_bundle_attaches_replacement_provisions(mock_fetch):
     mock_fetch.return_value = {"NghiDinh_109_2026_ND_CP_Dieu_61": "2026-05-18"}
     context = _context(
