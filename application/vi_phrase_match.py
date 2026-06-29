@@ -20,3 +20,13 @@ __all__ = [
     "match_phrase_groups",
     "prepare_question",
 ]
+
+
+import warnings as _warnings
+
+_warnings.warn(
+    f"{__name__} là shim back-compat (refactor sang cây server/); "
+    "hãy import từ vị trí server.* mới. Shim sẽ bị gỡ ở PR sau.",
+    DeprecationWarning,
+    stacklevel=2,
+)

@@ -40,3 +40,13 @@ from server.infrastructure.llm.factory import (
 # PostgreSQL (Chainlit Data Layer) — giữ ở shim để back-compat; nguồn thật ở
 # server.infrastructure.persistence.data_layer (đọc cùng biến môi trường).
 DATABASE_URL = os.environ.get("DATABASE_URL")
+
+
+import warnings as _warnings
+
+_warnings.warn(
+    f"{__name__} là shim back-compat (refactor sang cây server/); "
+    "hãy import từ vị trí server.* mới. Shim sẽ bị gỡ ở PR sau.",
+    DeprecationWarning,
+    stacklevel=2,
+)

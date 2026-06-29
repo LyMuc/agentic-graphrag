@@ -3,9 +3,13 @@
 ## Trước khi sửa nội dung kỹ thuật trong đồ án
 
 1. Đọc `thesis-context/AGENT_WORKFLOW.md` (quy trình đầy đủ).
-2. Đọc `thesis-context/ch05-code-map.md` (map section → file code).
+2. Đọc `thesis-context/ch05-code-map.md` (map section → file code) và `thesis-context/server-architecture.md` (kiến trúc cây `server/`).
 3. Nếu sửa/mô tả guest chat, context memory, cache reuse hoặc dedupe căn cứ pháp lý, đọc thêm `thesis-context/chat-flow.md`.
 4. Chỉ mở file code được map; không quét `data/`, `extraction/`, `adapter/obsolete_retrievers/`.
+
+> Code đã refactor vào cây `server/` (xem `server-architecture.md`). Các path cũ
+> `presentation/`, `application/`, `adapter/`, `utils/` chỉ còn là shim back-compat
+> (re-export sang `server.*`) — ưu tiên đọc/sửa ở `server/`.
 
 ## Ưu tiên
 

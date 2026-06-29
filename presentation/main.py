@@ -10,3 +10,13 @@ from server.agents.synthesizer.agent import main_prompt  # noqa: F401
 
 # Back-compat: benchmark cũ dùng ``from presentation.main import main_prompt, tools``.
 tools = orchestrator.tools
+
+
+import warnings as _warnings
+
+_warnings.warn(
+    f"{__name__} là shim back-compat (refactor sang cây server/); "
+    "hãy import từ vị trí server.* mới. Shim sẽ bị gỡ ở PR sau.",
+    DeprecationWarning,
+    stacklevel=2,
+)

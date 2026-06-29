@@ -16,3 +16,13 @@ __all__ = [
     "dedupe_rows_by_ancestor",
     "format_provision_label",
 ]
+
+
+import warnings as _warnings
+
+_warnings.warn(
+    f"{__name__} là shim back-compat (refactor sang cây server/); "
+    "hãy import từ vị trí server.* mới. Shim sẽ bị gỡ ở PR sau.",
+    DeprecationWarning,
+    stacklevel=2,
+)

@@ -190,7 +190,8 @@ trong bài LangChain.
 ## Lifecycle một lượt — ConversationOrchestrator
 
 Khi người dùng gửi một message, ConversationOrchestrator điều phối tám bước
-sau (đúng theo code hiện tại trong `presentation/main.py`):
+sau (`server/conversation/orchestrator.py`, được gọi từ Chainlit hook trong
+`server/app/main.py`):
 
 1. Đọc `session_history`, `retrieval_memory`, `conversation_anchors` từ
    Chainlit user session; sinh `turn_id` mới và lấy `thread_id`.

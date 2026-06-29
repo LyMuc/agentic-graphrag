@@ -7,7 +7,8 @@ alwaysApply: true
 
 Đọc `thesis-context/AGENT_WORKFLOW.md` §Quy trình đồng bộ code.
 
-- Trước khi sửa mô tả kỹ thuật: đọc `thesis-context/ch05-code-map.md`.
+- Trước khi sửa mô tả kỹ thuật: đọc `thesis-context/ch05-code-map.md` + `thesis-context/server-architecture.md`.
+- Code đã refactor vào cây `server/`; path cũ (`presentation/`, `application/`, `adapter/`, `utils/`) chỉ là shim back-compat — ưu tiên `server.*`.
 - Nếu task liên quan guest chat, context memory, cache reuse hoặc LegalContextBundle/dedupe: đọc `thesis-context/chat-flow.md`.
 - Chỉ mở file code được map; không quét toàn repo.
 - Code thực tế > mô tả cũ trong `.tex` nếu lệch nhau.

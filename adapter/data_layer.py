@@ -4,3 +4,13 @@ Import side-effect (đăng ký ``cl_data._data_layer``) chạy đúng một lầ
 được nạp lần đầu — giữ nguyên hành vi của ``from adapter import data_layer`` ở main.py.
 """
 from server.infrastructure.persistence.data_layer import *  # noqa: F401,F403
+
+
+import warnings as _warnings
+
+_warnings.warn(
+    f"{__name__} là shim back-compat (refactor sang cây server/); "
+    "hãy import từ vị trí server.* mới. Shim sẽ bị gỡ ở PR sau.",
+    DeprecationWarning,
+    stacklevel=2,
+)

@@ -4,6 +4,8 @@ File đồ án: `ĐATN_20225919_Lê_Thái_Sơn_Chatbot_tư_vấn_luật_hôn_nh�
 
 **Quy mô hiện tại (2026-06):** **20 retriever** + 2 direct tool (`clarify`, `respond`); **20** `TemplateRegistry` trong `registry_index.py`. Bảng đầy đủ: `retriever-catalog.md`, `cypher-template-index.md` (chạy `sync-thesis-context.ps1` trước khi đối chiếu).
 
+> **Refactor server (2026-06):** code đã chuyển vào cây `server/` (xem `server-architecture.md`). Các path cũ (`application/`, `adapter/`, `presentation/`, `utils/`) vẫn còn dưới dạng shim back-compat. Map dưới đây dùng path `server/` mới.
+
 ## §5.2 Legal reasoning (`section:5.2`)
 
 ### `subsection:5.2.1` — Dẫn dắt bài toán
@@ -23,26 +25,26 @@ File đồ án: `ĐATN_20225919_Lê_Thái_Sơn_Chatbot_tư_vấn_luật_hôn_nh�
 
 | Đồ án | Code |
 |---|---|
-| Algorithm 2 giai đoạn | `adapter/cypher_templates/*/_common.py` + `utils/utils.py` |
+| Algorithm 2 giai đoạn | `server/infrastructure/neo4j/cypher_templates/*/_common.py` + `server/domain/legal/render.py` |
 | Truy vết thay thế | `THAY_THE_BOI*0..` / `*1..` trong `_common.py` |
 | Sửa đổi / hướng dẫn | `DUOC_SUA_DOI_BOI`, `HUONG_DAN_BOI` |
-| Chuẩn hóa LLM | `chuan_hoa_Context_cho_LLM` in `utils/utils.py` |
-| Snippet shared | `adapter/retrievers/_context_tho_common.py` |
+| Chuẩn hóa LLM | `chuan_hoa_Context_cho_LLM` in `server/domain/legal/render.py` |
+| Snippet shared | `server/infrastructure/neo4j/cypher_templates/_context_tho_common.py` |
 | Test | `scripts/test_tham_chieu_ancestor.py` |
 
 #### Subsubsection — Schema theo dạng câu hỏi (che_do_tai_san)
 
 - Bảng intent/nodes: `tab:intent_che_do_tai_san`, `tab:nodes_che_do_tai_san`, `tab:relationship_che_do_tai_san`
 - Code:
-  - `adapter/cypher_templates/tai_san/_common.py` (`TOPIC_LABEL`, `EXPAND_AND_TIMEFILTER_CYPHER`)
-  - `adapter/retrievers/quan_he_giua_vo_va_chong/che_do_tai_san_cua_vo_chong.py`
-  - Registry: `adapter/cypher_templates/tai_san/__init__.py`
+  - `server/infrastructure/neo4j/cypher_templates/tai_san/_common.py` (`TOPIC_LABEL`, `EXPAND_AND_TIMEFILTER_CYPHER`)
+  - `server/agents/retrievers/quan_he_giua_vo_va_chong/che_do_tai_san_cua_vo_chong.py`
+  - Registry: `server/infrastructure/neo4j/cypher_templates/tai_san/__init__.py`
 
 ## §Template phan_loai_tai_san (trong cùng file, ~dòng 345+)
 
 | Đồ án | Code |
 |---|---|
-| `alg:phan-loai-seed` pseudocode | Templates trong `adapter/cypher_templates/tai_san/*.py` |
+| `alg:phan-loai-seed` pseudocode | Templates trong `server/infrastructure/neo4j/cypher_templates/tai_san/*.py` |
 | Params bảng | `term_mapping.py`, từng template module |
 
 ## §Benchmark (`subsection:benchmark`)
@@ -56,11 +58,11 @@ File đồ án: `ĐATN_20225919_Lê_Thái_Sơn_Chatbot_tư_vấn_luật_hôn_nh�
 
 ## Router (Chương 4/5 — mô tả hệ retriever)
 
-- `application/router.py` — `route_question`, `tool_picker_prompt`
-- `application/retriever_catalog.py` — `RETRIEVER_SPECS` (**20** tool)
+- `server/agents/router/agent.py` — `RouterAgent`, `route_question`; `server/agents/router/prompt.py` — `tool_picker_prompt`
+- `server/agents/router/catalog.py` — `RETRIEVER_SPECS` (**20** tool)
 - `retriever_policy/` — policy helper/benchmark (`evaluate_retriever_policy`, `evaluate_tool_calls_policy`); luồng chat production không gọi policy filter
-- `application/router_tool_registry.py` — schema tool cho LLM
-- Registry UI: `presentation/main.py`
+- `server/interface/router_tools.py` — schema tool cho LLM
+- Tool registry runtime: `server/agents/router/tool_factory.py` (`build_presentation_tools`), khởi tạo trong `ConversationOrchestrator`
 
 Danh sách tool ↔ file ↔ template: **`retriever-catalog.md`** (auto).
 
@@ -72,8 +74,8 @@ Nguồn tóm tắt bắt buộc khi viết phần flow mới: `thesis-context/ch
 
 | Đồ án | Code |
 |---|---|
-| Guest không cần login để hỏi đáp | `frontend/src/AppWrapper.tsx`, `presentation/guest_auth.py`, `adapter/guest.py` |
-| Guest không persist lịch sử/project/feedback | `adapter/data_layer.py`, `presentation/projects_api.py`, `presentation/guest_auth.py` |
+| Guest không cần login để hỏi đáp | `frontend/src/AppWrapper.tsx`, `server/app/routes/guest_auth.py`, `server/infrastructure/persistence/guest.py` |
+| Guest không persist lịch sử/project/feedback | `server/infrastructure/persistence/data_layer.py`, `server/app/routes/projects.py`, `server/app/routes/guest_auth.py` |
 | UI ẩn quản lý hội thoại cho guest | `frontend/src/lib/auth.ts`, `frontend/src/pages/Page.tsx`, `frontend/src/pages/Thread.tsx`, `frontend/src/components/header/UserNav.tsx` |
 | Test | `tests/test_guest_access.py`, `frontend/tests/auth.spec.ts`, `frontend/tests/UserNav.spec.tsx` |
 
@@ -81,36 +83,36 @@ Nguồn tóm tắt bắt buộc khi viết phần flow mới: `thesis-context/ch
 
 | Đồ án | Code |
 |---|---|
-| `session_history`, `retrieval_memory`, `conversation_anchors` | `presentation/main.py`, `application/conversation_context.py` |
-| Router control fields `confidence_score/context_action/context_refs/time_scope/target_date` | `application/router.py` |
-| Reuse validation theo thread, retriever, KG version, temporal scope | `application/conversation_context.py` |
-| Persist/restore memory qua Chainlit step metadata | `presentation/main.py`, `application/conversation_context.py` |
+| `session_history`, `retrieval_memory`, `conversation_anchors` | `server/conversation/orchestrator.py`, `server/conversation/{memory,history}.py` |
+| Router control fields `confidence_score/context_action/context_refs/time_scope/target_date` | `server/agents/router/schema.py` |
+| Reuse validation theo thread, retriever, KG version, temporal scope | `server/conversation/memory.py` |
+| Persist/restore memory qua Chainlit step metadata | `server/conversation/orchestrator.py`, `server/conversation/memory.py` |
 | Test | `tests/test_conversation_context.py`, `tests/test_router_conversation.py` |
 
 ### LegalContextBundle và dedupe context
 
 | Đồ án | Code |
 |---|---|
-| Encode/decode `LEGAL_CONTEXT_BUNDLE_V1` | `application/legal_context.py` |
-| Merge theo temporal scope và dedupe provision | `application/legal_context.py` |
-| Render lại qua `chuan_hoa_Context_cho_LLM` | `application/legal_context.py`, `utils/utils.py` |
-| Retriever đã migrate sang bundle | kiểm tra bằng `rg "encode_context_record" adapter/retrievers` |
-| Retriever legacy còn trả text | kiểm tra bằng `rg "chuan_hoa_Context_cho_LLM" adapter/retrievers` |
+| Encode/decode `LEGAL_CONTEXT_BUNDLE_V1` | `server/domain/legal/codec.py` |
+| Merge theo temporal scope và dedupe provision | `server/domain/legal/bundle.py` |
+| Render lại qua `chuan_hoa_Context_cho_LLM` | `server/domain/legal/bundle.py`, `server/domain/legal/render.py` |
+| Retriever đã migrate sang bundle | kiểm tra bằng `rg "encode_context_record" server/agents/retrievers` |
+| Retriever legacy còn trả text | kiểm tra bằng `rg "chuan_hoa_Context_cho_LLM" server/agents/retrievers` |
 | Test | `tests/test_legal_context.py`, `scripts/test_context_dedupe.py` |
 
 Lưu ý khi viết: không nói toàn bộ retriever đã trả bundle nếu code còn import trực tiếp `chuan_hoa_Context_cho_LLM`; luồng hiện tại là mixed-compatible.
 
 ## Retriever đang sử dụng + Cypher templates
 
-Toàn bộ retriever đang sử dụng nằm trong `adapter/retrievers/`. Mọi retriever chính đều có thư mục `adapter/cypher_templates/<topic>/` và đăng ký trong `ALL_TEMPLATE_REGISTRIES` — **trừ mapping đặc biệt**:
+Toàn bộ retriever đang sử dụng nằm trong `server/agents/retrievers/`. Mọi retriever chính đều có thư mục `server/infrastructure/neo4j/cypher_templates/<topic>/` và đăng ký trong `ALL_TEMPLATE_REGISTRIES` — **trừ mapping đặc biệt**:
 
 | Tool | Thư mục template | Ghi chú |
 |---|---|---|
-| `che_do_tai_san_cua_vo_chong` | `adapter/cypher_templates/tai_san/` | Registry key `tai_san`, không trùng tên tool |
+| `che_do_tai_san_cua_vo_chong` | `server/infrastructure/neo4j/cypher_templates/tai_san/` | Registry key `tai_san`, không trùng tên tool |
 
 Các domain mới (2026): `xac_dinh_cha_me_con`, `tai_san_rieng_cua_con`, `ket_hon_trai_phap_luat`, `quyen_nghia_vu_vo_chong`, `dai_dien_trach_nhiem_vo_chong`, `quyen_nghia_vu_cha_me_con`, `quan_he_hon_nhan_co_yeu_to_nuoc_ngoai`, `quan_he_giua_cac_thanh_vien_khac_trong_gia_dinh`, `xu_phat_vi_pham`, `quy_dinh_chung_khai_niem_phap_ly` — xem số template trong `cypher-template-index.md`.
 
-Snippet hiệu lực / tham chiếu chung vẫn dùng `adapter/retrievers/_context_tho_common.py` trong `_common.py` từng domain.
+Snippet hiệu lực / tham chiếu chung vẫn dùng `server/infrastructure/neo4j/cypher_templates/_context_tho_common.py` trong `_common.py` từng domain.
 
 ## Files KHÔNG dùng
 
