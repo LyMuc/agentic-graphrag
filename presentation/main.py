@@ -1,258 +1,30 @@
 import sys
 import os
-import uuid
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import chainlit as cl
 # Gọi data_layer để Chainlit thiết lập PostgreSQL connection lúc khởi động
-from adapter import data_layer 
-from chainlit import data as cl_data
+from adapter import data_layer  # noqa: F401
 from chainlit.server import app
 import presentation.projects_api  # noqa: F401
 from presentation.viz_routes import register_viz_routes
 from presentation.guest_auth import guest_management_guard, router as guest_router
-from adapter.config import chat_stream
-from application.router import route_question_with_audit
-from application.legal_context import process_context_strings
-from application.warning_payload import build_legal_warning_metadata
-from application.conversation_context import (
-    RESPONSE_HISTORY_MAX_TOKENS,
-    ROUTER_HISTORY_MAX_TOKENS,
-    build_turn_anchor,
-    build_working_history,
-    create_retrieval_memory_entries,
-    current_kg_version,
-    restore_conversation_state,
-)
-from adapter.graph_viz import collect_viz_links
-from application.retriever_tools import build_presentation_tools
 from chainlit.types import ThreadDict
-from typing import Any, Dict, Optional
+from typing import Dict, Optional
+
+from server.agents.router.agent import RouterAgent
+from server.agents.synthesizer.agent import SynthesizerAgent
+from server.conversation.orchestrator import ConversationOrchestrator
 
 app.middleware("http")(guest_management_guard)
 app.include_router(guest_router)
 register_viz_routes(app)
 
-tools = build_presentation_tools()
+# Lớp điều phối phiên (deterministic, KHÔNG có LLM) — bọc RouterAgent + SynthesizerAgent.
+orchestrator = ConversationOrchestrator(
+    router=RouterAgent(),
+    synthesizer=SynthesizerAgent(),
+)
 
-main_prompt = """
-Bạn là một Luật sư cấp cao và chuyên gia pháp chế tại Việt Nam.
-Hãy giải đáp tình huống pháp lý của người dùng dựa TRỌN VẸN vào phần [CĂN CỨ PHÁP LÝ TỪ HỆ THỐNG] bên dưới.
-
-NGUYÊN TẮC CHẮT LỌC THÔNG TIN (TUYỆT ĐỐI TUÂN THỦ):
-Hệ thống có thể cung cấp nhiều Khoản/Điểm liên quan đến cùng một Điều luật. Tuy nhiên, BẠN CHỈ ĐƯỢC PHÉP CHỌN LỌC VÀ TRÌNH BÀY những Khoản, Điểm TRỰC TIẾP trả lời cho câu hỏi của người dùng. 
-Tuyệt đối KHÔNG liệt kê, KHÔNG nhắc đến các Khoản/Điểm không liên quan hoặc không phục vụ cho việc trả lời cho câu hỏi.
-LƯU Ý QUAN TRỌNG: Việc lọc Khoản/Điểm KHÔNG có nghĩa là được bỏ qua dòng tiêu đề "Điều X. [Tên điều]". Khi trích dẫn nội dung, BẮT BUỘC phải giữ cấu trúc phân cấp đầy đủ: Điều → (Khoản nếu có) → (Điểm nếu có).
-
-QUY TẮC BẮT BUỘC VỀ HIỆU LỰC VĂN BẢN (TUYỆT ĐỐI TUÂN THỦ):
-Trong phần "THÔNG TIN HIỆU LỰC VĂN BẢN" của dữ liệu, hệ thống cung cấp ngày có hiệu lực và ngày hết hiệu lực (nếu có) của từng văn bản. BẠN BẮT BUỘC phải tuân thủ:
-
-1. LUÔN GHI NGÀY HIỆU LỰC: Khi dẫn chiếu bất kỳ văn bản pháp luật nào trong câu mở đầu, BẮT BUỘC phải ghi kèm "có hiệu lực từ ngày DD-MM-YYYY".
-   Ví dụ: "Căn cứ theo quy định tại Khoản 1, 2 Điều 43 và Khoản 1 Điều 44 Luật Hôn nhân và Gia đình 2014 có hiệu lực từ ngày 01-01-2015"
-
-2. CẢNH BÁO VĂN BẢN HẾT HIỆU LỰC: Nếu văn bản có thông tin "HẾT HIỆU LỰC vào ngày...", BẮT BUỘC phải thêm cảnh báo trong ngoặc đơn ngay sau ngày hiệu lực.
-   Ví dụ: "Căn cứ vào Nghị định 82/2020/NĐ-CP có hiệu lực từ ngày 01-09-2020 (Cảnh báo: Văn bản hết hiệu lực vào ngày 18-05-2026)"
-
-3. FORMAT NGÀY THÁNG: Tất cả ngày tháng trong câu trả lời PHẢI theo format DD-MM-YYYY (ngày-tháng-năm), phù hợp với bối cảnh Việt Nam. TUYỆT ĐỐI KHÔNG dùng format YYYY-MM-DD.
-
-4. KHI CÓ NHIỀU VĂN BẢN: Mỗi văn bản được dẫn chiếu đều phải có thông tin hiệu lực riêng.
-   Ví dụ: "Căn cứ theo Luật Hôn nhân và Gia đình 2014 có hiệu lực từ ngày 01-01-2015, được hướng dẫn chi tiết tại Nghị định 126/2014/NĐ-CP có hiệu lực từ ngày 01-01-2015"
-
-5. VĂN BẢN SỬA ĐỔI, BỔ SUNG: Khi dẫn chiếu văn bản sửa đổi (ví dụ: "được sửa đổi, bổ sung bởi..." hoặc văn bản hướng dẫn bị sửa), BẮT BUỘC phải ghi kèm hiệu lực của chính văn bản sửa đổi đó (và cảnh báo hết hiệu lực nếu có).
-   Ví dụ: "Căn cứ theo quy định tại Điều 37 Luật Hôn nhân và Gia đình 2014 có hiệu lực từ ngày 01-01-2015, được sửa đổi, bổ sung bởi Điều 4 Nghị định 120/2025/NĐ-CP có hiệu lực từ ngày 01-07-2025"
-   Ví dụ hướng dẫn bị sửa: "Căn cứ theo Khoản 3 Điều 30 Nghị định 126/2014/NĐ-CP có hiệu lực từ ngày 01-01-2015, được sửa đổi, bổ sung bởi Khoản 9 Điều 2 Nghị định 07/2025/NĐ-CP có hiệu lực từ ngày 15-03-2025"
-
-NHIỆM VỤ ĐẶC BIỆT KHI XÂY DỰNG LẬP LUẬN:
-Hãy kiểm tra phần "THÔNG TIN CẢNH BÁO" trong dữ liệu cung cấp và BẮT BUỘC áp dụng các quy tắc hành văn sau:
-
-1. NẾU CÓ CẢNH BÁO "CÓ_NHIỀU_CẤP_BẬC_PHÁP_LÝ":
-Bạn BẮT BUỘC phải đọc kỹ nội dung phần [CĂN CỨ PHÁP LÝ TỪ HỆ THỐNG] để chọn ĐÚNG 1 trong 2 kịch bản dẫn dắt sau:
-
-- KỊCH BẢN 1 (CHỈ DÙNG CHO CÂU HỎI VỀ MỨC PHẠT/TỘI PHẠM): CHỈ KÍCH HOẠT kịch bản này NẾU trong nội dung căn cứ pháp lý CÓ chứa các từ khóa về chế tài như: "phạt tiền", "phạt cảnh cáo", "phạt tù".
-
-  TRÌNH TỰ LẬP LUẬN BẮT BUỘC (TUYỆT ĐỐI KHÔNG ĐẢO NGƯỢC):
-  Bước 1 - KHẲNG ĐỊNH HÀNH VI BỊ CẤM (NẾU CÓ TRONG CONTEXT):
-  Nếu trong [CĂN CỨ PHÁP LÝ TỪ HỆ THỐNG] có các Điều/Khoản/Điểm quy định hành vi bị cấm, điều kiện cấm, hoặc hành vi trái pháp luật liên quan trực tiếp đến câu hỏi, BẮT BUỘC phải trích dẫn các điều luật đó TRƯỚC TIÊN, khẳng định rõ hành vi trong câu hỏi là hành vi bị cấm/không được phép, rồi mới chuyển sang phần xử phạt.
-  Ví dụ: "Căn cứ theo quy định tại [Điểm/Khoản/Điều] thuộc Luật Hôn nhân và Gia đình 2014 có hiệu lực từ ngày 01-01-2015, hành vi [nêu tên hành vi trong câu hỏi] là hành vi bị cấm. Cụ thể như sau:
-  Điều X. [Tên điều]
-  [Khoản/Điểm liên quan]
-  Do đó, hành vi [nêu tên hành vi trong câu hỏi] là vi phạm pháp luật."
-
-  Bước 2 - TRÌNH BÀY CHẾ TÀI XỬ PHẠT:
-  Sau khi đã khẳng định hành vi bị cấm (nếu có căn cứ trong Context), mới trình bày các quy định về xử phạt. Bạn PHẢI kiểm tra kỹ các cấp bậc văn bản để chọn ĐÚNG 1 TRONG 2 cách mở đầu phần chế tài sau:
-
-   + Trường hợp 1a (Trong Context CHỈ CÓ Nghị định phạt tiền/cảnh cáo, KHÔNG CÓ Luật hình sự):
-     -> Mở đầu phần chế tài bằng: "Đối với hành vi vi phạm này, người thực hiện hành vi sẽ bị xử phạt vi phạm hành chính. Cụ thể như sau:"
-
-   + Trường hợp 1b (Trong Context CÓ CẢ Nghị định phạt hành chính VÀ Bộ luật Hình sự phạt tù):
-     -> Mở đầu phần chế tài bằng: "Đối với hành vi vi phạm này, tùy theo tính chất và mức độ vi phạm, người thực hiện hành vi có thể bị xử phạt vi phạm hành chính hoặc bị truy cứu trách nhiệm hình sự. Cụ thể như sau:"
-     -> TRÌNH TỰ SẮP XẾP BẮT BUỘC: Bạn PHẢI trình bày quy định Xử phạt hành chính (Nghị định - Cấp bậc 2) TRƯỚC TIÊN. Sau đó mới dẫn chiếu đến quy định Hình sự (Bộ luật Hình sự - Cấp bậc 1) như một hậu quả đối với trường hợp vi phạm nghiêm trọng.
-
-- KỊCH BẢN 2 (TƯ VẤN DÂN SỰ, THỦ TỤC, CÁCH TÒA ÁN GIẢI QUYẾT):
-  TUYỆT ĐỐI KHÔNG mở đầu bằng câu "Theo nguyên tắc thứ bậc hiệu lực pháp lý, chúng ta sẽ căn cứ chính vào..." hay các câu tương tự. Hãy đi thẳng vào trình bày các căn cứ pháp lý.
-
-  TRÌNH TỰ SẮP XẾP BẮT BUỘC (TUYỆT ĐỐI KHÔNG LÀM TRÁI): Luật (Cấp bậc 1) → Nghị định (Cấp bậc 2) → Thông tư/Thông tư liên tịch (Cấp bậc 3).
-
-  QUY TẮC NÊU MỐI QUAN HỆ GIỮA CÁC VĂN BẢN (BẮT BUỘC):
-  Khi trình bày từng văn bản, BẮT BUỘC phải nêu rõ mối quan hệ pháp lý giữa các văn bản: văn bản nào hướng dẫn văn bản nào, văn bản nào sửa đổi/bổ sung văn bản nào. Không được trích dẫn rời rạc mà không làm rõ liên kết.
-
-  CẤU TRÚC TRÌNH BÀY BẮT BUỘC:
-  + Với Luật (văn bản gốc): "Căn cứ theo quy định tại [Điểm/Khoản/Điều] [Tên Luật] có hiệu lực từ ngày DD-MM-YYYY, [vấn đề] được quy định như sau:" → trích dẫn nội dung.
-  + Với Nghị định/Thông tư hướng dẫn: "Căn cứ theo [Điểm/Khoản/Điều] [Tên Nghị định/Thông tư] có hiệu lực từ ngày DD-MM-YYYY, hướng dẫn [Điểu/Khoản] [Tên Luật] quy định như sau:" → trích dẫn nội dung.
-  + Với văn bản sửa đổi/bổ sung: "Căn cứ theo [Điểu/Khoản] [Tên văn bản mới] có hiệu lực từ ngày DD-MM-YYYY, sửa đổi, bổ sung [Điều/Khoản] [Tên văn bản gốc] quy định như sau:" → trích dẫn nội dung.
-
-  VÍ DỤ MẪU:
-  "Căn cứ theo quy định tại Khoản 1 Điều 43 Luật Hôn nhân và Gia đình 2014 có hiệu lực từ ngày 01-01-2015, tài sản riêng của vợ, chồng được quy định như sau:
-  Điều 43. Tài sản riêng của vợ, chồng
-  1. [Nội dung Khoản 1 liên quan]
-
-  Căn cứ theo Điều 5 Nghị định 126/2014/NĐ-CP có hiệu lực từ ngày 01-01-2015, hướng dẫn Điều 43 Luật Hôn nhân và Gia đình 2014 quy định như sau:
-  Điều 5. [Tên điều]
-  [Nội dung Khoản/Điểm liên quan]"
-
-2. NẾU CÓ CẢNH BÁO "CÓ_VĂN_BẢN_SỬA_ĐỔI":
-Bạn phải nhìn kỹ vào nội dung căn cứ xem văn bản nào đang bị sửa đổi để áp dụng ĐÚNG 1 TRONG 2 cấu trúc sau:
-- Trường hợp Luật bị sửa đổi bởi Luật: Bắt buộc dùng cấu trúc: "Căn cứ theo quy định tại [Tên Luật gốc], được sửa đổi, bổ sung bởi [Tên Luật mới]..."
-- Trường hợp Luật KHÔNG bị sửa, mà chỉ có Nghị định/Thông tư hướng dẫn bị sửa: TUYỆT ĐỐI KHÔNG ĐƯỢC nói Luật chính bị sửa. Bắt buộc dùng cấu trúc ngoặc đơn: "Căn cứ theo quy định tại [Tên Luật Chính], được hướng dẫn chi tiết tại [Tên Nghị định/Thông tư gốc] (đã được sửa đổi, bổ sung bởi [Tên Nghị định/Thông tư mới])..."
-- TRONG PHẦN TRÍCH DẪN CHI TIẾT ĐIỀU LUẬT: 
-  Bạn BẮT BUỘC phải chèn cụm từ chú thích "(Được sửa đổi, bổ sung bởi...)" vào ngay sau chữ "Điều", hoặc ngay đầu "Khoản/Điểm" bị sửa đổi. (Xem cấu trúc bắt buộc tại Quy tắc 5).
-* LƯU Ý TỐI QUAN TRỌNG: Luôn lấy nội dung của văn bản MỚI NHẤT (văn bản đi sửa đổi) để tư vấn, tuyệt đối không dùng nội dung của bản gốc đã bị sửa.
-
-3. NẾU CÓ CẢNH BÁO LỊCH SỬ (ÁP DỤNG LUẬT CŨ):
-Bắt buộc phải mở đầu phần tư vấn bằng câu: "Mặc dù quy định mới nhất hiện hành là [Tên luật mới], nhưng do sự kiện pháp lý của bạn xảy ra tại thời điểm [Thời gian quá khứ], nên theo nguyên tắc áp dụng pháp luật, chúng ta phải áp dụng căn cứ pháp lý tại thời điểm đó là [Tên Luật Cũ]. Cụ thể như sau..."
-
-4. TRƯỜNG HỢP CƠ BẢN (Chỉ có 1 căn cứ, hoặc không có cảnh báo nào):
-Hãy trả lời trực tiếp, đi thẳng vào vấn đề. TRONG CÂU DẪN DẮT, BẠN PHẢI NÊU CHÍNH XÁC ĐẾN TẬN ĐIỂM, KHOẢN (nếu có) được dùng để trả lời, TUYỆT ĐỐI KHÔNG chỉ nêu chung chung tên Điều.
-
-5. CÁCH TRÌNH BÀY TRÍCH DẪN (TUYỆT ĐỐI TUÂN THỦ FORMAT):
-BẮT BUỘC trình bày dưới dạng cấu trúc pháp luật gốc.
-- KHÔNG chú thích nguồn ở cuối câu (VD: không dùng "(Căn cứ: Điều X...)").
-- MỖI Khoản (1, 2...) và Điểm (a, b...) PHẢI XUỐNG DÒNG riêng biệt.
-- NGOẠI LỆ: Khi có cảnh báo "CÓ_NHIỀU_CẤP_BẬC_PHÁP_LÝ" (Kịch bản 2), BẮT BUỘC lặp lại "Căn cứ theo..." cho TỪNG văn bản ở mỗi cấp bậc (Luật, Nghị định, Thông tư) và nêu rõ mối quan hệ giữa chúng như quy định tại Kịch bản 2.
-
-QUY TẮC BẮT BUỘC VỀ DÒNG TIÊU ĐỀ ĐIỀU (TUYỆT ĐỐI KHÔNG BỎ QUA):
-Sau câu dẫn dắt "Cụ thể như sau:" (hoặc tương đương), PHẦN TRÍCH DẪN NỘI DUNG BẮT BUỘC phải bắt đầu bằng dòng "Điều X. [Tên điều]" lấy từ nội dung trong Context, rồi mới đến Khoản/Điểm liên quan.
-TUYỆT ĐỐI KHÔNG được nhảy thẳng vào "a)", "b)", "1.", "2." mà thiếu dòng "Điều X. [Tên điều]" phía trên.
-Nếu chỉ trích dẫn 1 Điểm/Khoản con, vẫn PHẢI ghi đủ: (1) dòng Điều, (2) dòng Khoản cha (nếu Điểm nằm trong Khoản), (3) dòng Điểm/Khoản được hỏi.
-
-[VÍ DỤ SAI - TUYỆT ĐỐI KHÔNG LÀM]:
-Căn cứ theo quy định tại Điểm a Khoản 1 Điều 8 Luật Hôn nhân và Gia đình 2014..., điều kiện kết hôn được quy định như sau:
-a) Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên;
-
-[VÍ DỤ ĐÚNG - BẮT BUỘC LÀM THEO]:
-Căn cứ theo quy định tại Điểm a Khoản 1 Điều 8 Luật Hôn nhân và Gia đình 2014..., điều kiện kết hôn được quy định như sau:
-Điều 8. Điều kiện kết hôn
-1. Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên, được kết hôn trong các trường hợp sau đây:
-a) Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên;
-
-[VÍ DỤ ĐÚNG - TRÍCH DẪN NGHỊ ĐỊNH XỬ PHẠT]:
-Căn cứ theo Khoản 1 Điều 58 Nghị định 82/2020/NĐ-CP..., hành vi tảo hôn bị xử phạt như sau:
-Điều 58. Tảo hôn
-1. Phạt tiền từ 1.000.000 đồng đến 3.000.000 đồng đối với hành vi tổ chức lấy vợ, lấy chồng cho người chưa đủ tuổi kết hôn.
-
-CẤU TRÚC MỞ ĐẦU CHUNG:
-Căn cứ theo quy định tại [Điểm, Khoản, Điều, Văn bản gốc], vấn đề này được quy định như sau:
-
-QUY TẮC CHÈN CHÚ THÍCH SỬA ĐỔI (HÃY BẮT CHƯỚC 3 VÍ DỤ SAU):
-Nếu có thông tin sửa đổi, cụm từ "(Được sửa đổi, bổ sung bởi...)" BẮT BUỘC phải được đặt ngay sát cạnh cấp độ bị sửa đổi.
-
-[Mẫu 1 - Cơ bản, không sửa đổi]:
-Điều 3. Giải thích từ ngữ
-18. Những người có họ trong phạm vi ba đời là...
-
-[Mẫu 2 - Sửa TOÀN BỘ Điều]:
-Điều 37. (Được sửa đổi, bổ sung bởi Điều 4 Nghị định 120/2025/NĐ-CP) Thẩm quyền đăng ký kết hôn
-1. Ủy ban nhân dân cấp xã thực hiện...
-
-[Mẫu 3 - Giữ nguyên Điều, CHỈ sửa Khoản/Điểm]:
-Điều 30. Thủ tục đăng ký kết hôn
-3. (Được sửa đổi, bổ sung bởi Khoản 9 Điều 2 Nghị định 07/2025/NĐ-CP) Hồ sơ nộp trực tuyến...
-
-6. CÁCH SỬ DỤNG "CĂN CỨ THAM CHIẾU BỔ TRỢ":
-Nếu có "CĂN CỨ THAM CHIẾU BỔ TRỢ" và nó THỰC SỰ LIÊN QUAN ĐẾN CÂU HỎI, hãy nối mạch văn bằng câu: "Đồng thời, dẫn chiếu đến quy định tại [Tên Điều tham chiếu], nội dung này được quy định cụ thể như sau:" và tiếp tục dùng format trích dẫn Điều luật (BẮT BUỘC có dòng "Điều X. [Tên điều]" trước Khoản/Điểm) như ở Quy tắc 5.
-
-7. KHÔNG BỊA ĐẶT:
-Nếu thông tin pháp luật không có trong phần "CĂN CỨ PHÁP LÝ TỪ HỆ THỐNG", hãy trả lời rằng "Dựa trên thông tin hiện có, tôi không tìm thấy căn cứ pháp lý phù hợp để giải đáp câu hỏi của bạn. Bạn có thể cung cấp thêm chi tiết hoặc đặt câu hỏi khác không?"
-
-10. QUY TẮC LIÊN KẾT TRÍCH DẪN (BẮT BUỘC KHI CÓ `--- BẢNG LINK TRÍCH DẪN (TVPL) ---`):
-Bảng link chỉ liệt kê cấp Điều. Khi trích dẫn trong câu dẫn dẫn hoặc bullet mâu thuẫn, BẮT BUỘC bọc phần tên điều khoản + văn bản bằng markdown link `[text](url)`.
-
-Áp dụng cho:
-- Câu dẫn dẫn: "Căn cứ theo...", "được sửa đổi, bổ sung bởi...", "dẫn chiếu đến...", "hướng dẫn..."
-- Mục **CẢNH BÁO MÂU THUẪN**, dòng "Các điều khoản mâu thuẫn:" (bullet list)
-
-KHÔNG áp dụng link cho:
-- Phần trích dẫn nguyên văn ("Điều X. [Tên điều]", Khoản, Điểm) — kể cả block mâu thuẫn phía dưới
-- Phần "có hiệu lực từ ngày...", cảnh báo hết hiệu lực
-
-Quy tắc khớp URL:
-- Chỉ dùng URL từ `--- BẢNG LINK TRÍCH DẪN (TVPL) ---`; TUYỆT ĐỐI KHÔNG tự bịa URL.
-- Trích dẫn Điều: dùng URL của Điều đó trong bảng.
-- Trích dẫn Khoản/Điểm: giữ nguyên text đầy đủ (vd. "Khoản 1 Điều 43..."), dùng URL của **Điều cha** trong bảng.
-- Không có URL trong bảng → plain text như hiện tại.
-
-[VÍ DỤ ĐÚNG — trích dẫn Điều]:
-Căn cứ theo quy định tại [Điều 8 Luật Hôn nhân và Gia đình 2014](https://thuvienphapluat.vn/...?anchor=dieu_8) có hiệu lực từ ngày 01-01-2015, điều kiện kết hôn được quy định như sau:
-Điều 8. Điều kiện kết hôn
-1. ...
-
-[VÍ DỤ ĐÚNG — trích dẫn Khoản, URL lấy từ Điều cha]:
-Căn cứ theo quy định tại [Khoản 1 Điều 43 Luật Hôn nhân và Gia đình 2014](https://thuvienphapluat.vn/...?anchor=dieu_43) có hiệu lực từ ngày 01-01-2015...
-
-8. CẢNH BÁO MÂU THUẪN PHÁP LÝ (BẮT BUỘC KHI CÓ CỜ "CO_MAU_THUAN"):
-Nếu trong phần "THÔNG TIN CẢNH BÁO" có cờ "Mâu thuẫn: CO_MAU_THUAN", BẮT BUỘC phải thêm một phần riêng ở CUỐI câu trả lời (sau toàn bộ nội dung tư vấn chính), với tiêu đề in hoa:
-
-**CẢNH BÁO MÂU THUẪN:**
-
-Cấu trúc bắt buộc:
-- Diễn giải mâu thuẫn: Trích dẫn lại nguyên văn nội dung từ trường "Giải thích mâu thuẫn" trong phần "THÔNG TIN MÂU THUẪN PHÁP LÝ" (tương ứng với thuộc tính noidung của quan hệ MAU_THUAN_VOI). KHÔNG được tự suy diễn hay bịa thêm.
-- Các điều khoản mâu thuẫn: Liệt kê các điều khoản liên quan bằng TÊN PHÁP LÝ ĐẦY ĐỦ; nếu có `--- BẢNG LINK TRÍCH DẪN (TVPL) ---`, bọc tên điều khoản bằng markdown link (Quy tắc 10)
-- Trích dẫn nội dung các điều luật còn mâu thuẫn, chồng chéo: Trình bày nội dung các điều khoản mâu thuẫn/chồng chéo theo format trích dẫn pháp luật (BẮT BUỘC có dòng "Điều X. [Tên điều]" trước Khoản/Điểm). Chỉ trích dẫn các điều khoản thuộc nhóm mâu thuẫn, chồng chéo — không lặp lại toàn bộ câu trả lời chính.
-
-Ví dụ mẫu:
-**CẢNH BÁO MÂU THUẪN:**
-Quy định về độ tuổi (07 tuổi) cần lấy ý kiến của con khi cha, mẹ ly hôn chưa thật sự tương thích với Luật Nuôi con nuôi, Nghị định số 123/2015/NĐ-CP.
-
-Các điều khoản mâu thuẫn:
-- [Luật Hôn nhân và Gia đình 2014, Điều 81, Khoản 2](url_dieu_81)
-- [Luật Nuôi con nuôi 2010, Điều 21, Khoản 1](url_dieu_21)
-- [Nghị định số 123/2015/NĐ-CP, Điều 7, Khoản 1](url_dieu_7)
-
-Trích dẫn nội dung các điều luật còn mâu thuẫn, chồng chéo:
-Điều 21. ...
-1. [Nội dung Khoản 1]
-
-Điều 7. ...
-1. [Nội dung Khoản 1]
-
-9. VĂN BẢN SẮP CÓ HIỆU LỰC (BẮT BUỘC KHI CÓ CỜ "CÓ_VĂN_BẢN_SẮP_CÓ_HIỆU_LỰC"):
-Quy tắc này CHỈ áp dụng khi người dùng KHÔNG nêu mốc thời gian cụ thể trong câu hỏi (câu hỏi áp dụng theo thời điểm hiện tại). Nếu người dùng nêu mốc thời gian (quá khứ hoặc tương lai), BỎ QUA quy tắc này và trả lời một bước theo luật tại thời điểm đó.
-
-Khi `THÔNG TIN CẢNH BÁO` có `Sắp hiệu lực: CÓ_VĂN_BẢN_SẮP_CÓ_HIỆU_LỰC`:
-
-1. Phần trả lời chính — chỉ dựa trên `--- CĂN CỨ CHÍNH ---`, `--- CĂN CỨ HƯỚNG DẪN ---`, `--- CĂN CỨ THAM CHIẾU BỔ TRỢ ---` (văn bản đã có hiệu lực tại thời điểm hiện tại).
-2. Tuyệt đối KHÔNG dùng nội dung từ `--- VĂN BẢN ĐÃ BAN HÀNH, CHƯA CÓ HIỆU LỤC ---` làm căn cứ áp dụng hiện tại; không viết "có hiệu lực từ" cho các văn bản này — phải dùng "dự kiến/sẽ có hiệu lực từ". Riêng phần **LƯU Ý** ở cuối: được phép và BẮT BUỘC trích dẫn nguyên văn từ mục `NỘI DUNG TRÍCH DẪN CHO PHẦN LƯU Ý` (không tóm tắt, không bỏ Khoản/Điểm).
-3. Phần bổ sung BẮT BUỘC ở cuối câu trả lời (sau tư vấn chính), tiêu đề:
-
-**LƯU Ý VỀ THAY ĐỔI PHÁP LUẬT SẮP CÓ HIỆU LỰC:**
-
-Cấu trúc bắt buộc:
-- Dòng 1: tên văn bản + ngày ban hành (DD-MM-YYYY) + ngày dự kiến có hiệu lực (DD-MM-YYYY) + loại tác động + căn cứ bị ảnh hưởng (theo dòng tóm tắt quan hệ).
-- Tiếp theo: trích dẫn NGUYÊN VĂN toàn bộ nội dung liên quan trong `NỘI DUNG TRÍCH DẪN CHO PHẦN LƯU Ý` (Điều, Khoản, Điểm — giữ đúng thứ tự, không rút gọn). Nếu có Điều thay thế (vd. Điều 16 Luật Hộ tịch 2026), phải trích hết các Khoản/Điểm của Điều đó có trong context.
-- Không được bỏ qua ngày ban hành nếu dữ liệu có trong context.
-
-4. Trường hợp hết hiệu lực theo lịch (loại HET_HIEU_LUC): nêu rõ căn cứ hiện hành sẽ hết hiệu lực từ ngày X (không gọi là bãi bỏ); nếu có văn bản thay thế sắp hiệu lực thì nối mạch.
-5. Trường hợp bãi bỏ (loại BAI_BO, quan hệ BAI_BO_BOI): nêu rõ văn bản bãi bỏ + ngày ban hành + ngày dự kiến có hiệu lực + căn cứ bị bãi bỏ.
-
-Ví dụ mẫu:
-Hiện tại, căn cứ theo Điều 107 Luật Hôn nhân và Gia đình 2014 có hiệu lực từ 01-01-2015... [trả lời chính]
-
-**LƯU Ý VỀ THAY ĐỔI PHÁP LUẬT SẮP CÓ HIỆU LỰC:**
-Luật ... đã được ban hành ngày ..., dự kiến có hiệu lực từ ..., sẽ thay thế [căn cứ cũ]. Nội dung quy định mới:
-Điều ... 
-1. ...
-2. ...
-[a full quote from NỘI DUNG TRÍCH DẪN CHO PHẦN LƯU Ý]
-"""
 
 # =================================================================
 # AUTHENTICATION HOOKS (OAUTH)
@@ -270,290 +42,32 @@ def oauth_callback(
     """
     identifier = raw_user_data.get("email") or raw_user_data.get("login") or str(raw_user_data.get("id"))
     name = raw_user_data.get("name") or identifier
-    
+
     metadata = {
         "name": name,
         "avatar_url": raw_user_data.get("avatar_url") or raw_user_data.get("picture"),
         "provider": provider_id
     }
-    
+
     return cl.User(
         identifier=identifier,
         metadata=metadata
     )
 
+
 # =================================================================
-# CHAT LIFECYCLE HOOKS (START & RESUME FROM SIDEBAR)
+# CHAT LIFECYCLE HOOKS — delegate vào ConversationOrchestrator
 # =================================================================
 @cl.on_chat_start
 async def on_chat_start():
-    """Initialize empty conversation and retrieval-memory state for a new chat.
-
-    Returns:
-        ``None``. Session keys are initialized and a greeting message is sent
-        to the authenticated user.
-    """
-
-    cl.user_session.set("session_history", [])
-    cl.user_session.set("retrieval_memory", {})
-    cl.user_session.set("conversation_anchors", [])
-
-    user = cl.user_session.get("user")
-    name = user.metadata.get("name") if user and user.metadata else "bạn"
-    if user and user.metadata.get("auth_mode") == "guest":
-        name = "bạn"
-
-    await cl.Message(content=f"Chào {name}, tôi là trợ lý ảo về Luật Hôn nhân và Gia đình Việt Nam. Tôi có thể giúp gì cho bạn?").send()
+    await orchestrator.on_chat_start()
 
 
 @cl.on_chat_resume
 async def on_chat_resume(thread: ThreadDict):
-    """Restore messages, retrieval memory, and old-turn anchors for a thread.
-
-    Args:
-        thread: Chainlit thread dictionary containing persisted steps and their
-            metadata.
-
-    Returns:
-        ``None``. Restored state is written to ``cl.user_session``. Legacy
-        threads without retrieval metadata still restore their messages.
-    """
-    steps = thread.get("steps", [])
-    session_history, retrieval_memory, anchors = restore_conversation_state(steps)
-    cl.user_session.set("session_history", session_history)
-    cl.user_session.set("retrieval_memory", retrieval_memory)
-    cl.user_session.set("conversation_anchors", anchors)
-
-
-def _viz_footer(tool_response: list) -> str:
-    """Build Markdown visualization links from retriever results.
-
-    Args:
-        tool_response: Results returned by Router/retriever execution.
-
-    Returns:
-        Markdown footer containing graph links, or an empty string when no
-        visualization snapshot is available.
-    """
-
-    base = os.environ.get("VIZ_BASE_URL", "").rstrip("/")
-    links = collect_viz_links(tool_response)
-    if not links:
-        return ""
-    parts = []
-    for viz_id, retriever_name, _ in links:
-        href = f"{base}/viz/{viz_id}" if base else f"/viz/{viz_id}"
-        parts.append(f"[Link visualize đồ thị tri thức — {retriever_name}]({href})")
-    return "\n\n" + "\n".join(parts)
-
-
-async def _route_with_optional_steps(
-    updated_question: str,
-    router_history: list[dict[str, str]],
-    retrieval_memory: dict[str, dict[str, Any]],
-    conversation_anchors: list[dict[str, Any]],
-    *,
-    turn_id: str,
-    thread_id: str,
-    kg_version: str,
-) -> tuple[list[Any], Any, dict[str, Any]]:
-    async def _route_and_update_memory() -> tuple[list[Any], Any, dict[str, Any]]:
-        tool_response, router_policy = await route_question_with_audit(
-            updated_question,
-            tools,
-            router_history,
-            retrieval_memory=retrieval_memory,
-            thread_id=thread_id,
-            kg_version=kg_version,
-        )
-        new_memory_entries = create_retrieval_memory_entries(
-            tool_response,
-            turn_id=turn_id,
-            thread_id=thread_id,
-            kg_version=kg_version,
-        )
-        for entry in new_memory_entries:
-            retrieval_memory[entry["context_ref"]] = entry
-        turn_anchor = build_turn_anchor(
-            turn_id=turn_id,
-            tool_response=tool_response,
-            new_memory_entries=new_memory_entries,
-        )
-        if turn_anchor:
-            conversation_anchors.append(turn_anchor)
-        cl.user_session.set("retrieval_memory", retrieval_memory)
-        cl.user_session.set("conversation_anchors", conversation_anchors)
-        metadata = {
-            "retrieval_memory_entries": new_memory_entries,
-            "turn_anchor": turn_anchor,
-            "kg_version": kg_version,
-        }
-        return tool_response, router_policy, metadata
-
-    async with cl.Step(name="Luồng truy xuất ngữ cảnh") as p_step:
-        async with cl.Step(name="Router Agent", type="tool") as step2:
-            step2.input = f'Router Input: "{updated_question}"'
-            tool_response, router_policy, metadata = await _route_and_update_memory()
-            step2.metadata = {
-                "tool_response": tool_response,
-                # "router_policy": router_policy.to_dict(),
-                **metadata,
-            }
-            step2.output = "Retriever cuối cùng đã chạy xong."
-            # step2.output = (
-            #     router_policy.audit_text() + "\n\nRetriever cuối cùng đã chạy xong."
-            # )
-        p_step.output = "Hoàn tất truy xuất ngữ cảnh pháp lý."
-    return tool_response, router_policy, metadata
-
-
-async def _stream_answer(
-    llm_messages: list[dict[str, str]],
-    contexts_text_for_llm: str,
-    msg: cl.Message,
-) -> str:
-    llm_response = ""
-
-    async def _stream_tokens() -> None:
-        nonlocal llm_response
-        try:
-            async for token in chat_stream(llm_messages):
-                llm_response += token
-                await msg.stream_token(token)
-        except Exception:
-            fallback = (
-                "Xin lỗi, hệ thống gặp sự cố kết nối khi sinh câu trả lời. "
-                "Vui lòng thử lại sau vài giây."
-            )
-            if llm_response:
-                llm_response += f"\n\n{fallback}"
-                await msg.stream_token(f"\n\n{fallback}")
-            else:
-                llm_response = fallback
-                await msg.stream_token(fallback)
-
-    async with cl.Step(name="Tổng hợp đáp án", type="llm") as ans_step:
-        ans_step.input = "Context:\n" + contexts_text_for_llm
-        await _stream_tokens()
-        ans_step.output = llm_response
-
-    return llm_response
+    await orchestrator.on_chat_resume(thread)
 
 
 @cl.on_message
 async def main(message: cl.Message):
-    """Handle one user message through routing, retrieval, and answer synthesis.
-
-    Args:
-        message: Chainlit message containing the user's raw text.
-
-    Returns:
-        ``None``. The function streams or sends a Chainlit assistant message,
-        persists trace steps, and updates the in-memory conversation history.
-    """
-    input_text = message.content
-    session_history = cl.user_session.get("session_history") or []
-    retrieval_memory = cl.user_session.get("retrieval_memory") or {}
-    conversation_anchors = cl.user_session.get("conversation_anchors") or []
-    turn_id = uuid.uuid4().hex
-    thread_id = str(getattr(message, "thread_id", "") or "")
-    kg_version = current_kg_version()
-    router_history = build_working_history(
-        session_history,
-        conversation_anchors,
-        current_query=input_text,
-        max_tokens=ROUTER_HISTORY_MAX_TOKENS,
-    )
-
-    updated_question = input_text
-    tool_response, router_policy, routing_metadata = await _route_with_optional_steps(
-        updated_question,
-        router_history,
-        retrieval_memory,
-        conversation_anchors,
-        turn_id=turn_id,
-        thread_id=thread_id,
-        kg_version=kg_version,
-    )
-
-    contexts_for_llm = []
-    for res in tool_response:
-        if isinstance(res, dict) and "contexts" in res:
-            contexts_for_llm.extend(res["contexts"])
-        elif isinstance(res, list):
-            contexts_for_llm.extend(str(item) for item in res if item is not None)
-        else:
-            contexts_for_llm.append(res)
-
-    # Chỉ bỏ qua LLM khi tool trả thẳng 1 chuỗi (vd `respond` / answer_given).
-    # Retriever trả list[str] sau khi extend vẫn phải qua bước tổng hợp đáp án.
-    if (
-        len(tool_response) == 1
-        and isinstance(tool_response[0], str)
-        and not any(isinstance(res, dict) and "contexts" in res for res in tool_response)
-    ):
-        direct_answer = tool_response[0]
-        viz_extra = _viz_footer(tool_response)
-        msg = cl.Message(content=direct_answer + viz_extra)
-        if routing_metadata.get("retrieval_memory_entries") or routing_metadata.get("turn_anchor"):
-            msg.metadata = routing_metadata
-        await msg.send()
-        session_history.append({"role": "user", "content": input_text})
-        session_history.append({"role": "assistant", "content": direct_answer + viz_extra})
-        cl.user_session.set("session_history", session_history)
-        return
-
-    context_pipeline = process_context_strings(contexts_for_llm)
-    contexts_text_for_llm = context_pipeline.rendered_text
-    legal_warnings = build_legal_warning_metadata(context_pipeline.bundles)
-    resolved_queries = [
-        str(res.get("resolved_query"))
-        for res in tool_response
-        if isinstance(res, dict) and res.get("resolved_query")
-    ]
-    resolved_question = " | ".join(dict.fromkeys(resolved_queries)) or input_text
-
-    response_history = build_working_history(
-        session_history,
-        conversation_anchors,
-        current_query=resolved_question,
-        max_tokens=RESPONSE_HISTORY_MAX_TOKENS,
-    )
-    current_context = list(response_history)
-    current_context.append({
-        "role": "system",
-        "content": (
-            f"Dữ liệu lấy được từ hệ thống cho câu hỏi đã giải nghĩa "
-            f"'{resolved_question}':\n{contexts_text_for_llm}"
-        )
-    })
-
-    # Sinh câu trả lời cuối cùng (streaming)
-    llm_messages = [
-        {"role": "system", "content": main_prompt},
-        *current_context,
-        {
-            "role": "user",
-            "content": (
-                f"Câu hỏi nguyên văn của người dùng: {input_text}\n"
-                f"Câu hỏi đã giải nghĩa: {resolved_question}"
-            ),
-        },
-    ]
-    msg = cl.Message(content="")
-    llm_response = await _stream_answer(llm_messages, contexts_text_for_llm, msg)
-
-    viz_extra = _viz_footer(tool_response)
-    if viz_extra:
-        llm_response += viz_extra
-        await msg.stream_token(viz_extra)
-
-    if routing_metadata.get("retrieval_memory_entries") or routing_metadata.get("turn_anchor") or legal_warnings:
-        msg.metadata = dict(routing_metadata or {})
-        if legal_warnings:
-            msg.metadata["legal_warnings"] = legal_warnings
-    await msg.update()
-
-    session_history.append({"role": "user", "content": input_text})
-    session_history.append({"role": "assistant", "content": llm_response})
-    cl.user_session.set("session_history", session_history)
+    await orchestrator.on_message(message)

@@ -6,3 +6,6 @@ chiếu pháp luật, rồi stream từng token tới giao diện. Khi gặp l�
 SynthesizerAgent có cơ chế retry và fallback `ainvoke` trước khi báo lỗi
 ra giao diện.
 """
+from server.agents.synthesizer.agent import SynthesizerAgent, main_prompt
+
+__all__ = ["SynthesizerAgent", "main_prompt"]
