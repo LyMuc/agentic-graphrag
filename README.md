@@ -25,26 +25,33 @@ Trọng tâm hiện tại: **Luật Hôn nhân và Gia đình** và các văn b�
 Người dùng (Chainlit UI)
         │
         ▼
-presentation/main.py          ← Đăng ký tools, prompt, lifecycle
-        │
-        ├── application/router.py      ← Chọn tool (ROUTER_LLM)
-        ▼
-adapter/retrievers/*          ← Trích xuất Điều luật (RETRIEVER_LLM) → Cypher → Neo4j
-adapter/direct_tools.py       ← clarify, respond (direct tools)
+server/app/main.py                    ← Chainlit hooks, mount FastAPI routes
         │
         ▼
-adapter/config.py             ← Neo4j driver, LLM (Vercel AI Gateway)
+server/conversation/orchestrator.py   ← ConversationOrchestrator (điều phối phiên, KHÔNG LLM)
+        │
+        ├── server/agents/router/             ← RouterAgent chọn tool (ROUTER_LLM)
+        ▼
+server/agents/retrievers/*            ← RetrieverAgent: trích Điều luật (RETRIEVER_LLM) → Cypher → Neo4j
+server/agents/direct/                 ← clarify, respond (direct tools)
         │
         ▼
-LLM tổng hợp (RESPONSE_LLM)   ← Streaming câu trả lời cuối
+server/infrastructure/                ← Neo4j driver, LLM factory (Vercel AI Gateway), Postgres
+        │
+        ▼
+server/agents/synthesizer/            ← SynthesizerAgent stream câu trả lời cuối (RESPONSE_LLM)
 ```
 
 | Lớp | Thư mục | Vai trò |
 |-----|---------|---------|
-| **Presentation** | `presentation/` | Entry Chainlit, registry tools, OAuth, session |
-| **Application** | `application/` | Router, retriever catalog, legal context |
-| **Adapter** | `adapter/` | Cấu hình Neo4j/LLM/DB, retriever theo chủ đề, direct tools |
-| **Utils** | `utils/` | Chuẩn hóa kết quả Cypher, tiện ích chung |
+| **App** | `server/app/` | Entry Chainlit hooks + FastAPI routes (guest, projects, viz), OAuth |
+| **Conversation** | `server/conversation/` | `ConversationOrchestrator` (điều phối phiên, deterministic), memory, history |
+| **Agents** | `server/agents/` | `RouterAgent`, 20 `RetrieverAgent`, `SynthesizerAgent`, direct tools |
+| **Domain** | `server/domain/` | Kiểu dữ liệu pháp lý thuần (bundle, codec, render, warnings) |
+| **Infrastructure** | `server/infrastructure/` | Neo4j driver, LLM factory, Postgres data layer, viz store |
+| **Shared / Interface** | `server/shared/`, `server/interface/` | Tiện ích chung (datetime VN, phrase match), tool schema cho Router |
+
+> Các thư mục `presentation/`, `application/`, `adapter/`, `utils/` được giữ lại làm **shim back-compat** (re-export về `server/`) cho test và script benchmark cũ.
 
 ---
 
@@ -71,7 +78,7 @@ LLM tổng hợp (RESPONSE_LLM)   ← Streaming câu trả lời cuối
 | `clarify` | Hỏi lại khi câu follow-up còn mơ hồ |
 | `respond` | Trả lời trực tiếp / trò chuyện phiếm |
 
-Thêm retriever mới: tạo module trong `adapter/retrievers/`, khai báo `description` + hàm async; tool được đăng ký tự động qua `application/retriever_tools.py` (`build_presentation_tools()`).
+Thêm retriever mới: tạo class kế thừa `RetrieverAgent` trong `server/agents/retrievers/`, khai báo `description`; tool được đăng ký tự động qua `server/agents/router/tool_factory.py` (`build_presentation_tools()`).
 
 ---
 
@@ -119,7 +126,7 @@ Copy `.env.example` thành `.env` và điền giá trị:
 VERCEL_AI_GATEWAY_API_KEY=your-vercel-ai-gateway-key
 AI_GATEWAY_BASE_URL=https://ai-gateway.vercel.sh/v1
 
-# Model (tùy chọn, mặc định trong adapter/config.py)
+# Model (tùy chọn, mặc định trong server/infrastructure/llm/factory.py)
 RESPONSE_LLM=openai/gpt-4.1
 ROUTER_LLM=openai/gpt-4o
 RETRIEVER_LLM=openai/o3
@@ -141,15 +148,17 @@ OAUTH_GITHUB_CLIENT_ID=
 OAUTH_GITHUB_CLIENT_SECRET=
 ```
 
-Trong `adapter/config.py` có sẵn khối cấu hình **Gemini API trực tiếp** (đang comment) nếu muốn chuyển provider sau này.
+Trong `server/infrastructure/llm/factory.py` có sẵn khối cấu hình **Gemini API trực tiếp** (đang comment) nếu muốn chuyển provider sau này.
 
 ### 5. Khởi chạy ứng dụng
 
 **Terminal 1 — Chatbot Chainlit:**
 
 ```bash
-chainlit run presentation/main.py -w
+chainlit run server/app/main.py -w
 ```
+
+> Lệnh cũ `chainlit run presentation/main.py -w` vẫn chạy được qua shim back-compat.
 
 ### Build frontend Chainlit tùy biến
 
@@ -188,17 +197,25 @@ không được lưu và không có lịch sử/Projects. Nút **Login** mở tr
 ## Cấu trúc thư mục (phần chính)
 
 ```text
-├── presentation/main.py       # Entry Chainlit
-├── application/
-│   ├── router.py              # Định tuyến tool
-│   ├── retriever_catalog.py   # Catalog retriever + direct tools
-│   └── legal_context.py       # Hợp nhất/dedupe context pháp lý
-├── adapter/
-│   ├── config.py                # Neo4j, LLM, DATABASE_URL
-│   ├── data_layer.py            # Chainlit ↔ PostgreSQL
-│   ├── direct_tools.py          # clarify, respond
-│   └── retrievers/              # Retriever theo chủ đề
-├── utils/                       # Chuẩn hóa context, tiện ích
+├── server/
+│   ├── app/                     # Entry Chainlit hooks + FastAPI routes
+│   │   ├── main.py              #   ConversationOrchestrator singleton + hooks
+│   │   └── routes/             #   guest_auth, projects, viz
+│   ├── conversation/            # ConversationOrchestrator, memory, history
+│   ├── agents/
+│   │   ├── router/             #   RouterAgent (decide/dispatch), catalog, tool_factory
+│   │   ├── retrievers/         #   20 RetrieverAgent theo chủ đề
+│   │   ├── direct/             #   clarify, respond
+│   │   └── synthesizer/        #   SynthesizerAgent (main_prompt, stream)
+│   ├── domain/legal/            # bundle, codec, render, warnings (kiểu thuần)
+│   ├── infrastructure/
+│   │   ├── llm/factory.py      #   LLM builders (Vercel AI Gateway)
+│   │   ├── neo4j/              #   driver + cypher_templates
+│   │   ├── persistence/        #   data_layer, projects, guest, init_db
+│   │   └── viz/                #   graph_viz, snapshot store
+│   ├── interface/router_tools.py # tool schema cho Router
+│   └── shared/                  # datetime VN, phrase match, llm_text
+├── presentation/ application/ adapter/ utils/  # shim back-compat → server/
 ├── benchmark_dataset/           # QA benchmark & script đánh giá
 │   ├── benchmark/               # Bộ câu hỏi gốc theo chủ đề
 │   ├── test_versions/           # Phiên bản test (JSON)
@@ -244,5 +261,5 @@ Các script khác: `build_test_version.py`, `build_grouped_benchmark.py`, `norma
 ## Ghi chú vận hành
 
 - Thiếu `VERCEL_AI_GATEWAY_API_KEY` → lỗi khi khởi tạo LLM.
-- Thiếu `DATABASE_URL` → chat vẫn chạy nhưng **không** lưu thread lâu dài (cảnh báo trong `adapter/data_layer.py`).
+- Thiếu `DATABASE_URL` → chat vẫn chạy nhưng **không** lưu thread lâu dài (cảnh báo trong `server/infrastructure/persistence/data_layer.py`).
 - Dữ liệu thô văn bản pháp luật nằm ở `data/`; đồ thị Neo4j cần được chuẩn bị/import riêng trước khi chạy chatbot.

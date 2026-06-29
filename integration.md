@@ -16,17 +16,17 @@ Tài liệu mô tả cách các thành phần trong **Agentic GraphRAG Chatbot L
                                   │
                                   ▼
 ┌──────────────────────────────────────────────────────────────────────────┐
-│  presentation/main.py                                                    │
+│  server/app/main.py  →  server/conversation/orchestrator.py             │
 │  • Chainlit hooks (@cl.on_message, @cl.on_chat_start, @cl.on_chat_resume)│
+│  • ConversationOrchestrator điều phối (Router → Retriever → Synthesizer) │
 │  • Registry tools (20 retriever + clarify + respond)                     │
-│  • main_prompt → Response LLM stream                                     │
 └───────┬──────────────────┬─────────────────────┬───────────────────────┘
         │                  │                     │
         ▼                  ▼                     ▼
- application/         adapter/retrievers/*    adapter/config.py
- router.py            (domain retriever)      • Neo4j driver (Bolt)
-                      adapter/direct_tools.py • LLM (Vercel AI Gateway)
-                      utils/utils.py          • DATABASE_URL
+ server/agents/       server/agents/          server/infrastructure/
+ router/              retrievers/* (domain)   • neo4j/client.py (Bolt)
+                      server/agents/direct/   • llm/factory.py (AI Gateway)
+                      utils/utils.py          • persistence/ (DATABASE_URL)
         │                  │                     │
         ▼                  ▼                     ▼
  Vercel AI Gateway    Neo4j (Aura/local)    PostgreSQL
@@ -73,7 +73,7 @@ sequenceDiagram
 
 ## 2. Chainlit hooks — giao diện người dùng
 
-File: `presentation/main.py`
+File: `server/app/main.py` (hooks) → `server/conversation/orchestrator.py` (`ConversationOrchestrator`)
 
 Chainlit là **entry point** duy nhất khi người dùng tương tác qua UI. Không có endpoint REST `/api/chat` trong production.
 
@@ -106,7 +106,7 @@ Trong `@cl.on_message`, hệ thống tạo các step lồng nhau:
 
 ## 3. Router contract
 
-File: `application/router.py`
+File: `server/agents/router/agent.py` (`RouterAgent`; vẫn export `route_question` / `tool_choice` để tương thích ngược)
 
 ### Hàm chính
 
@@ -121,7 +121,7 @@ async def route_question(
 | Tham số | Kiểu | Mô tả |
 |---------|------|-------|
 | `question` | `str` | Câu hỏi người dùng (nguyên văn; Router tự xử lý follow-up qua working history) |
-| `tools` | `dict` | Registry từ `presentation/main.py`: `{ name: { description, function } }` |
+| `tools` | `dict` | Registry từ `server/agents/router/tool_factory.py` (`build_presentation_tools()`): `{ name: { description, function } }` |
 | `answers` | `list[dict]` | Lịch sử hội thoại, truyền vào prompt router |
 
 **Return:** Danh sách kết quả từ từng retriever được gọi **song song** (`asyncio.gather`). Mỗi phần tử thường là `RetrieverResult` (dict có `contexts`).
@@ -157,7 +157,7 @@ Tools truyền vào LLM là danh sách schema OpenAI function: `[tool["descripti
 
 ## 4. Tool schema — Tool Catalog
 
-Mỗi retriever đăng ký trong `presentation/main.py` (`tools` dict) gồm:
+Mỗi retriever đăng ký trong `server/agents/router/tool_factory.py` (`tools` dict) gồm:
 
 | Field | Kiểu | Mô tả |
 |-------|------|-------|
@@ -192,24 +192,24 @@ Hầu hết retriever domain dùng cùng parameter:
 
 | Tool name | Module | Chủ đề |
 |-----------|--------|--------|
-| `quy_dinh_chung_khai_niem_phap_ly` | `adapter/retrievers/quy_dinh_chung_khai_niem_phap_ly.py` | Quy định chung, khái niệm pháp lý |
-| `dieu_kien_ket_hon` | `adapter/retrievers/ket_hon/dieu_kien_ket_hon.py` | Điều kiện kết hôn |
-| `dang_ky_ket_hon` | `adapter/retrievers/ket_hon/dang_ky_ket_hon.py` | Đăng ký kết hôn |
-| `ket_hon_trai_phap_luat` | `adapter/retrievers/ket_hon/ket_hon_trai_phap_luat.py` | Kết hôn trái pháp luật |
-| `chung_song_nhu_vo_chong` | `adapter/retrievers/ket_hon/chung_song_nhu_vo_chong.py` | Chung sống như vợ chồng |
-| `hon_nhan_cham_dut_do_vo_chong_chet` | `adapter/retrievers/hon_nhan_cham_dut_do_vo_chong_chet.py` | Hôn nhân chấm dứt do vợ/chồng chết |
-| `cap_duong` | `adapter/retrievers/cap_duong.py` | Nghĩa vụ cấp dưỡng |
-| `quan_he_hon_nhan_co_yeu_to_nuoc_ngoai` | `adapter/retrievers/quan_he_hon_nhan_co_yeu_to_nuoc_ngoai.py` | Hôn nhân có yếu tố nước ngoài |
-| `tai_san_rieng_cua_con` | `adapter/retrievers/tai_san_rieng_cua_con.py` | Tài sản riêng của con |
-| `quy_dinh_chung_ly_hon` | `adapter/retrievers/ly_hon/quy_dinh_chung_ly_hon.py` | Quy định chung ly hôn |
-| `chia_tai_san_sau_ly_hon` | `adapter/retrievers/ly_hon/chia_tai_san_sau_ly_hon.py` | Chia tài sản sau ly hôn |
-| `cha_me_con_sau_ly_hon` | `adapter/retrievers/ly_hon/cha_me_con_sau_ly_hon.py` | Cha mẹ, con sau ly hôn |
-| `quyen_nghia_vu_vo_chong` | `adapter/retrievers/quan_he_giua_vo_va_chong/quyen_nghia_vu_vo_chong.py` | Quyền, nghĩa vụ vợ chồng |
-| `dai_dien_trach_nhiem_vo_chong` | `adapter/retrievers/quan_he_giua_vo_va_chong/dai_dien_trach_nhiem_vo_chong.py` | Đại diện, trách nhiệm vợ chồng |
-| `che_do_tai_san_cua_vo_chong` | `adapter/retrievers/quan_he_giua_vo_va_chong/che_do_tai_san_cua_vo_chong.py` | Chế độ tài sản vợ chồng |
-| `xu_phat_vi_pham` | `adapter/retrievers/vi_pham/xu_phat_vi_pham.py` | Xử phạt vi phạm hành chính |
-| `clarify` | `adapter/direct_tools.py` | Hỏi lại khi câu follow-up còn mơ hồ (exclusive) |
-| `respond` | `adapter/direct_tools.py` | Trả lời trực tiếp / trò chuyện phiếm (exclusive) |
+| `quy_dinh_chung_khai_niem_phap_ly` | `server/agents/retrievers/quy_dinh_chung_khai_niem_phap_ly.py` | Quy định chung, khái niệm pháp lý |
+| `dieu_kien_ket_hon` | `server/agents/retrievers/ket_hon/dieu_kien_ket_hon.py` | Điều kiện kết hôn |
+| `dang_ky_ket_hon` | `server/agents/retrievers/ket_hon/dang_ky_ket_hon.py` | Đăng ký kết hôn |
+| `ket_hon_trai_phap_luat` | `server/agents/retrievers/ket_hon/ket_hon_trai_phap_luat.py` | Kết hôn trái pháp luật |
+| `chung_song_nhu_vo_chong` | `server/agents/retrievers/ket_hon/chung_song_nhu_vo_chong.py` | Chung sống như vợ chồng |
+| `hon_nhan_cham_dut_do_vo_chong_chet` | `server/agents/retrievers/hon_nhan_cham_dut_do_vo_chong_chet.py` | Hôn nhân chấm dứt do vợ/chồng chết |
+| `cap_duong` | `server/agents/retrievers/cap_duong.py` | Nghĩa vụ cấp dưỡng |
+| `quan_he_hon_nhan_co_yeu_to_nuoc_ngoai` | `server/agents/retrievers/quan_he_hon_nhan_co_yeu_to_nuoc_ngoai.py` | Hôn nhân có yếu tố nước ngoài |
+| `tai_san_rieng_cua_con` | `server/agents/retrievers/tai_san_rieng_cua_con.py` | Tài sản riêng của con |
+| `quy_dinh_chung_ly_hon` | `server/agents/retrievers/ly_hon/quy_dinh_chung_ly_hon.py` | Quy định chung ly hôn |
+| `chia_tai_san_sau_ly_hon` | `server/agents/retrievers/ly_hon/chia_tai_san_sau_ly_hon.py` | Chia tài sản sau ly hôn |
+| `cha_me_con_sau_ly_hon` | `server/agents/retrievers/ly_hon/cha_me_con_sau_ly_hon.py` | Cha mẹ, con sau ly hôn |
+| `quyen_nghia_vu_vo_chong` | `server/agents/retrievers/quan_he_giua_vo_va_chong/quyen_nghia_vu_vo_chong.py` | Quyền, nghĩa vụ vợ chồng |
+| `dai_dien_trach_nhiem_vo_chong` | `server/agents/retrievers/quan_he_giua_vo_va_chong/dai_dien_trach_nhiem_vo_chong.py` | Đại diện, trách nhiệm vợ chồng |
+| `che_do_tai_san_cua_vo_chong` | `server/agents/retrievers/quan_he_giua_vo_va_chong/che_do_tai_san_cua_vo_chong.py` | Chế độ tài sản vợ chồng |
+| `xu_phat_vi_pham` | `server/agents/retrievers/vi_pham/xu_phat_vi_pham.py` | Xử phạt vi phạm hành chính |
+| `clarify` | `server/agents/direct/clarify.py` | Hỏi lại khi câu follow-up còn mơ hồ (exclusive) |
+| `respond` | `server/agents/direct/respond.py` | Trả lời trực tiếp / trò chuyện phiếm (exclusive) |
 
 ### Tool đặc biệt
 
@@ -292,7 +292,7 @@ Mỗi phần tử trong `contexts` chứa các section:
 
 ### Gộp context cho Response LLM
 
-File: `presentation/main.py`
+File: `server/conversation/orchestrator.py`
 
 ```python
 contexts_for_llm = []
@@ -309,7 +309,7 @@ contexts_text_for_llm = "\n\n".join(str(ctx) for ctx in contexts_for_llm)
 
 ## 6. Response LLM contract
 
-File: `adapter/config.py`, gọi từ `presentation/main.py`
+File: `server/infrastructure/llm/factory.py` (`chat_stream`), gọi từ `server/agents/synthesizer/agent.py` (`SynthesizerAgent`)
 
 ### Hàm stream
 
@@ -338,7 +338,7 @@ async def chat_stream(messages, **config) -> AsyncIterator[str]
 
 ## 7. Neo4j — giao tiếp đồ thị pháp luật
 
-File: `adapter/config.py`
+File: `server/infrastructure/neo4j/client.py`
 
 ### Kết nối
 
@@ -416,7 +416,7 @@ RETURN { ... } AS Context_Tho
 
 ## 8. LLM Gateway — Vercel AI Gateway
 
-File: `adapter/config.py`
+File: `server/infrastructure/llm/factory.py`
 
 ### Endpoint
 
@@ -459,7 +459,7 @@ Giao thức: **OpenAI-compatible** (`langchain_openai.ChatOpenAI`).
 
 ## 9. PostgreSQL — Chainlit Data Layer
 
-File: `adapter/data_layer.py`
+File: `server/infrastructure/persistence/data_layer.py`
 
 ### Kết nối
 
@@ -476,7 +476,7 @@ Nếu thiếu `DATABASE_URL`: chat vẫn chạy, **không** persist thread.
 
 ### Schema (Chainlit)
 
-File tham khảo: `adapter/init_db.py`
+File tham khảo: `server/infrastructure/persistence/init_db.py`
 
 | Bảng | Mục đích |
 |------|----------|
@@ -506,11 +506,11 @@ File: `benchmark_dataset/scripts/fill_test_answers.py`
 Script benchmark **bypass Chainlit UI**, gọi trực tiếp cùng logic nghiệp vụ:
 
 ```text
-fill_test_answers.py
+fill_test_answers.py   (import path cũ — phân giải qua shim back-compat về server/)
     │
-    ├─ import tools, main_prompt từ presentation/main.py
-    ├─ import tool_choice, tool_picker_prompt từ application/router.py
-    └─ import chat_stream từ adapter/config.py
+    ├─ import tools, main_prompt từ presentation/main.py      → server/app/main.py
+    ├─ import tool_choice, tool_picker_prompt từ application/router.py → server/agents/router/
+    └─ import chat_stream từ adapter/config.py                → server/infrastructure/llm/factory.py
 ```
 
 ### Pipeline mỗi câu hỏi benchmark
@@ -585,20 +585,22 @@ PostgreSQL (threads, steps)  ← Chainlit Data Layer
 
 | File | Vai trò trong giao tiếp |
 |------|------------------------|
-| `presentation/main.py` | Chainlit hooks, tool registry, orchestration |
-| `application/router.py` | Router LLM + parallel tool execution |
-| `adapter/config.py` | Neo4j driver, LLM builders, `chat_stream` |
-| `adapter/data_layer.py` | Chainlit ↔ PostgreSQL |
-| `adapter/retrievers/*` | Domain retriever + Cypher |
-| `adapter/direct_tools.py` | Direct tools `clarify`, `respond` |
+| `server/app/main.py` | Chainlit hooks, mount routes |
+| `server/conversation/orchestrator.py` | `ConversationOrchestrator` — orchestration một lượt hội thoại |
+| `server/agents/router/` | `RouterAgent` — Router LLM + parallel tool execution |
+| `server/agents/synthesizer/agent.py` | `SynthesizerAgent` — `main_prompt` + Response LLM stream |
+| `server/infrastructure/llm/factory.py` | LLM builders, `chat_stream` |
+| `server/infrastructure/neo4j/client.py` | Neo4j driver (Bolt) |
+| `server/infrastructure/persistence/data_layer.py` | Chainlit ↔ PostgreSQL |
+| `server/agents/retrievers/*` | Domain retriever (`RetrieverAgent`) + Cypher |
+| `server/agents/direct/` | Direct tools `clarify`, `respond` |
 | `utils/utils.py` | `TrichXuatLuat`, `chuan_hoa_ket_qua_retriever` |
 | `benchmark_dataset/scripts/fill_test_answers.py` | Programmatic interface (benchmark) |
-| `deploy.md` | Triển khai Docker, môi trường, truy cập |
 
 ---
 
 ## 13. Ghi chú mở rộng
 
-- **Thêm retriever mới:** Tạo module trong `adapter/retrievers/`, khai báo `{name}_description` + hàm async, đăng ký vào `tools` trong `presentation/main.py`.
+- **Thêm retriever mới:** Tạo class kế thừa `RetrieverAgent` trong `server/agents/retrievers/`, khai báo `{name}_description`; tool tự đăng ký qua `server/agents/router/tool_factory.py` (`build_presentation_tools()`).
 - **REST API cho bên thứ ba:** Hiện chưa có. Cần tách logic từ `route_question` + `chat_stream` ra service layer và bọc FastAPI nếu muốn expose HTTP.
 - **Chainlit WebSocket:** Không document chi tiết ở đây — protocol nội bộ phục vụ UI, không phải integration point cho hệ thống khác.

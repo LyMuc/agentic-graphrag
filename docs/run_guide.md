@@ -36,10 +36,11 @@ Khi dùng SQLAlchemy Data Layer, Chainlit yêu cầu việc khởi tạo các ta
 
 ## 3. Khởi chạy Chatbot
 
-Chạy lệnh sau tại thư mục gốc (file chinh nam trong `presentation`):
+Chạy lệnh sau tại thư mục gốc (entrypoint nằm ở `server/app/main.py`):
 ```bash
-chainlit run presentation/main.py -w
+chainlit run server/app/main.py -w
 ```
+> Lệnh cũ `chainlit run presentation/main.py -w` vẫn chạy được qua shim back-compat.
 > Option `-w` chỉ ra bật auto-reload (watch) khi dev.
 
 Khi khởi động thành công, Chainlit sẽ báo:
