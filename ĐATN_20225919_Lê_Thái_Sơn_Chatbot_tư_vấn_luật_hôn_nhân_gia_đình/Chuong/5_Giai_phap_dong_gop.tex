@@ -79,11 +79,11 @@ Cuối cùng là đặc tả SynthesizerAgent tại Bảng \ref{table: synthesiz
 \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Thành phần} & \textbf{Mô tả chi tiết} \\ \hline
-\textbf{Chức năng} & Ghép prompt lập luận pháp lý cố định với lịch sử hội thoại rút gọn và căn cứ pháp lý đã render; gọi API LLM Response để stream câu trả lời; trích metadata cảnh báo hiệu lực và mâu thuẫn cho giao diện (không nhúng vào prompt). \\ \hline
-\textbf{Đầu vào} & Văn bản căn cứ pháp lý đã hợp nhất và khử trùng; lịch sử hội thoại cho lượt sinh đáp án; câu hỏi nguyên văn và câu hỏi đã giải nghĩa; danh sách gói căn cứ pháp lý để tạo metadata cảnh báo. \\ \hline
+\textbf{Chức năng} & Ghép prompt lập luận pháp lý cố định với lịch sử hội thoại rút gọn và căn cứ pháp lý đã render; gọi API LLM Response để stream câu trả lời. Việc trích metadata cảnh báo hiệu lực và mâu thuẫn cho giao diện do ConversationOrchestrator đảm nhiệm từ các gói căn cứ (không nhúng vào prompt sinh đáp án). \\ \hline
+\textbf{Đầu vào} & Văn bản căn cứ pháp lý đã hợp nhất, khử trùng và render; lịch sử hội thoại cho lượt sinh đáp án; câu hỏi nguyên văn và câu hỏi đã giải nghĩa. \\ \hline
 \textbf{Prompt} & Quy tắc lập luận pháp lý: chỉ dựa trên căn cứ hệ thống cung cấp; lọc Khoản Điểm liên quan; ghi ngày hiệu lực theo định dạng Việt Nam; trình bày theo thứ bậc văn bản; xử lý cảnh báo đa cấp bậc, văn bản sửa đổi và áp dụng luật cũ khi có trong dữ liệu. \\ \hline
-\textbf{Quy trình xử lý} & (i) Dựng danh sách message cho LLM (ii) Stream token qua API với cơ chế retry khi lỗi mạng (iii) Gắn metadata cảnh báo từ tầng domain lên message trả người dùng. \\ \hline
-\textbf{Đầu ra} & Câu trả lời hoàn chỉnh (stream); metadata cảnh báo pháp lý cho modal giao diện. \\ \hline
+\textbf{Quy trình xử lý} & (i) Dựng danh sách message cho LLM (ii) Stream token qua API với cơ chế retry khi lỗi mạng; sau khi hết số lần thử thì trả thông báo fallback. \\ \hline
+\textbf{Đầu ra} & Câu trả lời hoàn chỉnh (stream). Metadata cảnh báo pháp lý cho modal giao diện do ConversationOrchestrator gắn lên message sau khi nhận chuỗi trả lời. \\ \hline
 \end{tabularx}
 \caption{Đặc tả SynthesizerAgent}
 \label{table: synthesizer_agent}
@@ -274,7 +274,7 @@ Phần này lần lượt trình bày: schema lớp pháp lý; thuật toán ki�
 Tiếp theo sẽ trình bày về thiết kế đồ thị tri thức được dùng để lưu trữ thông tin, mối quan hệ của luật hôn nhân gia đình 2014 và các văn bản liên quan.
 Đồ thị tri thức đóng vai trò lưu trữ và biểu diễn mạng lưới các quy định pháp luật. Khác với cơ sở dữ liệu quan hệ truyền thống, mô hình đồ thị cho phép thể hiện trực quan các quan hệ đa chiều như sự dẫn chiếu, hướng dẫn hoặc thay thế giữa các văn bản quy phạm pháp luật.
 
-Các nhãn nút (Node Labels) và quan hệ (Relationships) tương ứng với cấu trúc và các loại văn bản quy phạm pháp luật Việt Nam. Các nút được kết nối bởi hai nhóm quan hệ chính. Nhóm quan hệ cấu trúc gồm CO\_\allowbreak DIEU, CO\_\allowbreak KHOAN, CO\_\allowbreak DIEM, dùng để biểu diễn thứ bậc từ văn bản đến điều, khoản và điểm. Nhóm quan hệ pháp lý gồm THAM\_\allowbreak CHIEU\_\allowbreak DEN, DUOC\_\allowbreak SUA\_\allowbreak DOI\_\allowbreak BOI, HUONG\_\allowbreak DAN\_\allowbreak BOI, THAY\_\allowbreak THE\_\allowbreak BOI và BAI\_\allowbreak BO\_\allowbreak BOI. Các quan hệ này cho phép xác định quy định được tham chiếu, hướng dẫn, sửa đổi, thay thế hoặc bãi bỏ.
+Các nhãn nút (Node Labels) và quan hệ (Relationships) tương ứng với cấu trúc và các loại văn bản quy phạm pháp luật Việt Nam. Các nút được kết nối bởi hai nhóm quan hệ chính. Nhóm quan hệ cấu trúc gồm CO\_\allowbreak DIEU, CO\_\allowbreak KHOAN, CO\_\allowbreak DIEM, dùng để biểu diễn thứ bậc từ văn bản đến điều, khoản và điểm. Nhóm quan hệ pháp lý gồm THAM\_\allowbreak CHIEU\_\allowbreak DEN, DUOC\_\allowbreak SUA\_\allowbreak DOI\_\allowbreak BOI, HUONG\_\allowbreak DAN\_\allowbreak BOI, THAY\_\allowbreak THE\_\allowbreak BOI, BAI\_\allowbreak BO\_\allowbreak BOI và MAU\_\allowbreak THUAN\_\allowbreak VOI. Các quan hệ này cho phép xác định quy định được tham chiếu, hướng dẫn, sửa đổi, thay thế, bãi bỏ hoặc mâu thuẫn với nhau.
 
 Bảng \ref{table: Bảng nhãn nút KG} dưới đây là danh sách các nhãn nút và ý nghĩa tương ứng trong hệ thống đồ thị tri thức.
 
@@ -363,7 +363,7 @@ Sau Neo4j, mỗi RetrieverAgent không đưa Context\_Tho thẳng vào prompt m�
 \textbf{Giai đoạn 2: Mã hoá LegalContextBundle và gộp ngữ cảnh}
 
 \begin{enumerate}[label=\textbf{Bước \arabic*.}, leftmargin=1.6cm, resume]
-    \item Từ Context\_Tho, gán vai trò căn cứ chính, hướng dẫn, bổ trợ; gắn $T_{target}$, $UserProvidedDate$, provenance retriever/template; bổ sung nội dung quy định thay thế nếu Cypher chỉ trả định danh; mã hoá thành chuỗi bundle phiên bản 1.
+    \item Từ Context\_Tho, gán vai trò căn cứ chính, hướng dẫn, bổ trợ; gắn $T_{target}$, $UserProvidedDate$, provenance retriever/template; bổ sung thông tin hiệu lực (ngày có hiệu lực) cho quy định hiện hành thay thế khi Cypher chỉ trả về định danh; mã hoá thành chuỗi bundle phiên bản 1.
     \item Khi một lượt có nhiều template hoặc retriever, gộp các bundle cùng mốc thời gian; khử trùng điều luật theo cặp định danh, phiên bản sửa đổi và khoảng hiệu lực; ưu tiên vai trò căn cứ chính hơn hướng dẫn, hướng dẫn hơn bổ trợ.
 \end{enumerate}
 
@@ -846,7 +846,7 @@ Stub lazy và payload đã materialize đều lưu dưới dạng file JSON tron
 
 Trang visualize (viz/index.html + vis-network) nhận viz\_id từ URL, gọi REST API, hiển thị tab Graph / Table / Raw; cảnh báo khi đồ thị lớn hơn 200 node. Route /viz/\{id\} và /api/viz/\{id\} đăng ký trên FastAPI của Chainlit (trước route catch-all SPA) để tab mới không bị redirect về chat UI.
 
-\textbf{Lưu ý refactor:} Kiến trúc Router + Subagents dự kiến chỉ \textbf{dời} module visualize (graph\_viz, viz\_store, viz\_routes) sang server/infrastructure/viz và server/app/routes/viz; \textbf{thuật toán dựng đồ thị, stub lazy, phân biệt seed\_node/leaf\_seed\_node và contract JSON snapshot không thay đổi}. RetrieverAgent vẫn lưu stub sau khi có Context\_Tho; Orchestrator vẫn ghép link visualize vào message assistant.
+\textbf{Lưu ý refactor:} Sau khi tái cấu trúc theo kiến trúc Router + Subagents, module visualize đã được \textbf{dời} sang server/infrastructure/viz (graph\_viz, store) và server/app/routes/viz; \textbf{thuật toán dựng đồ thị, stub lazy, phân biệt seed\_node/leaf\_seed\_node và contract JSON snapshot giữ nguyên không thay đổi}. RetrieverAgent vẫn lưu stub sau khi có Context\_Tho; Orchestrator vẫn ghép link visualize vào message assistant.
 
 \section{Xây dựng tập test case đánh giá ứng dụng}
 \label{subsection:testcase}
